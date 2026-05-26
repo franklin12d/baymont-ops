@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexStay PMS — Baymont by Wyndham Orlando North Millenia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+/* ===========================
+   NEXSTAY PMS — DESIGN SYSTEM
+   =========================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:       #0b1e3d;
+  --navy2:      #162e56;
+  --navy3:      #1e3f70;
+  --teal:       #0ea5a0;
+  --teal2:      #0c8a86;
+  --teal3:      #0a706c;
+  --teal-glow:  rgba(14,165,160,.15);
+  --gold:       #f59e0b;
+  --gold2:      #d97706;
+  --green:      #16a34a;
+  --green-bg:   rgba(22,163,74,.1);
+  --red:        #dc2626;
+  --red-bg:     rgba(220,38,38,.1);
+  --amber:      #d97706;
+  --amber-bg:   rgba(217,119,6,.1);
+  --blue:       #2563eb;
+  --blue-bg:    rgba(37,99,235,.1);
+  --purple:     #7c3aed;
+
+  --bg-app:     #0d1117;
+  --bg-sidebar: #0b1e3d;
+  --bg-main:    #0f1923;
+  --bg-card:    #131f2e;
+  --bg-card2:   #162740;
+  --bg-input:   #0d1117;
+
+  --txt:        #e8edf5;
+  --txt2:       #7a90b0;
+  --txt3:       #4a607e;
+
+  --bdr:        rgba(255,255,255,.06);
+  --bdr2:       rgba(255,255,255,.12);
+  --bdr3:       rgba(255,255,255,.18);
+
+  --r:          8px;
+  --rl:         12px;
+  --rxl:        16px;
+
+  --font:       'DM Sans', sans-serif;
+  --mono:       'DM Mono', monospace;
+
+  --shadow-card: 0 1px 3px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.25);
+  --shadow-glow: 0 0 20px rgba(14,165,160,.2);
+}
+
+html, body {
+  font-family: var(--font);
+  background: var(--bg-app);
+  color: var(--txt);
+  height: 100%;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+/* ===========================
+   APP SHELL
+   =========================== */
+.app {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===========================
+   SIDEBAR
+   =========================== */
+.sidebar {
+  width: 220px;
+  background: var(--bg-sidebar);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  border-right: 0.5px solid var(--bdr);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.sidebar::-webkit-scrollbar { width: 0; }
+
+.brand {
+  padding: 20px 18px 16px;
+  border-bottom: 0.5px solid var(--bdr);
+  position: sticky;
+  top: 0;
+  background: var(--bg-sidebar);
+  z-index: 5;
+}
+.brand-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--teal), var(--teal3));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 14px rgba(14,165,160,.35);
+}
+.brand-icon i { color: #fff; font-size: 18px; }
+.brand-text .name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: .2px;
+}
+.brand-text .tagline {
+  font-size: 10px;
+  color: var(--teal);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.nav { flex: 1; padding: 8px 0; }
+
+.nav-section {
+  font-size: 9px;
+  color: var(--txt3);
+  padding: 14px 18px 5px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 18px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--txt2);
+  transition: all .15s;
+  border-left: 2px solid transparent;
+  position: relative;
+}
+.nav-item:hover {
+  background: rgba(255,255,255,.04);
+  color: var(--txt);
+}
+.nav-item.active {
+  background: var(--teal-glow);
+  color: #fff;
+  border-left-color: var(--teal);
+}
+.nav-item i { font-size: 15px; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto;
+  font-size: 10px;
+  background: var(--red);
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+.nav-badge.info { background: var(--teal); }
+
+.sidebar-footer {
+  padding: 14px 18px;
+  border-top: 0.5px solid var(--bdr);
+}
+.prop-card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--bdr2);
+  border-radius: var(--rl);
+  padding: 10px 12px;
+}
+.prop-card .prop-name { font-size: 12px; font-weight: 500; color: var(--txt); }
+.prop-card .prop-addr { font-size: 10px; color: var(--txt2); margin-top: 2px; line-height: 1.4; }
+.prop-card .prop-meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.prop-chip {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--teal-glow);
+  color: var(--teal);
+  border: 0.5px solid rgba(14,165,160,.25);
+}
+
+/* ===========================
+   MAIN CONTENT
+   =========================== */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-main);
+  min-width: 0;
+}
+
+/* TOPBAR */
+.topbar {
+  background: var(--bg-card);
+  border-bottom: 0.5px solid var(--bdr);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.page-title { font-size: 15px; font-weight: 500; color: var(--txt); white-space: nowrap; }
+.date-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--txt2);
+  background: var(--bg-input);
+  border: 0.5px solid var(--bdr);
+  border-radius: 6px;
+  padding: 3px 9px;
+}
+.topbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r);
+  border: 0.5px solid var(--bdr2);
+  background: var(--bg-input);
+  color: var(--txt2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .15s;
+  position: relative;
+}
+.icon-btn:hover { border-color: var(--bdr3); color: var(--txt); background: var(--bg-card2); }
+.notif-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  background: var(--red);
+  border-radius: 50%;
+}
+.btn {
+  font-family: var(--font);
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: var(--r);
+  border: 0.5px solid var(--bdr2);
+  background: var(--bg-input);
+  color: var(--txt2);
+  cursor: pointer;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.btn:hover { border-color: var(--bdr3); color: var(--txt); background: var(--bg-card2); }
+.btn-primary {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal2);
+  font-weight: 500;
+}
+.btn-primary:hover { background: var(--teal2); }
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--navy3);
+  border: 1.5px solid var(--teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* SCROLL AREA */
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.scroll-area::-webkit-scrollbar { width: 5px; }
+.scroll-area::-webkit-scrollbar-track { background: transparent; }
+.scroll-area::-webkit-scrollbar-thumb { background: var(--bdr2); border-radius: 3px; }
+
+/* ===========================
+   PAGES
+   =========================== */
+.page { display: none; padding: 20px 24px; }
+.page.active { display: block; animation: fadeIn .2s ease; }
+@keyframes fadeIn { from { opacity:.6; transform: translateY(4px); } to { opacity:1; transform:none; } }
+
+/* CARDS */
+.card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--bdr);
+  border-radius: var(--rl);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-card);
+}
+.card-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--txt2);
+  letter-spacing: .7px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-action {
+  font-size: 11px;
+  color: var(--teal);
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  transition: color .15s;
+}
+.card-action:hover { color: var(--txt); }
+
+/* ===========================
+   DASHBOARD PAGE
+   =========================== */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+@media (max-width:900px) { .metrics-grid { grid-template-columns: repeat(2,1fr); } }
+
+.metric-card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--bdr);
+  border-radius: var(--rl);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: var(--rl) var(--rl) 0 0;
+}
+.metric-card.teal::before  { background: var(--teal); }
+.metric-card.gold::before  { background: var(--gold); }
+.metric-card.blue::before  { background: var(--blue); }
+.metric-card.green::before { background: var(--green); }
+.metric-card:hover { border-color: var(--bdr2); }
+
+.metric-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.metric-icon.teal  { background: var(--teal-glow); color: var(--teal); }
+.metric-icon.gold  { background: rgba(245,158,11,.12); color: var(--gold); }
+.metric-icon.blue  { background: var(--blue-bg); color: var(--blue); }
+.metric-icon.green { background: var(--green-bg); color: var(--green); }
+.metric-icon i { font-size: 16px; }
+
+.metric-label { font-size: 11px; color: var(--txt2); margin-bottom: 4px; }
+.metric-value { font-size: 26px; font-weight: 600; color: var(--txt); line-height: 1; margin-bottom: 6px; }
+.metric-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--txt2);
+}
+.trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+.trend-up   { color: var(--green); background: var(--green-bg); }
+.trend-dn   { color: var(--red);   background: var(--red-bg); }
+.trend-neu  { color: var(--amber); background: var(--amber-bg); }
+
+/* DASH GRIDS */
+.dash-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.dash-grid3 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 14px; margin-bottom: 14px; }
+.dash-grid4 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* OCC BARS */
+.occ-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.occ-bar-row:last-child { margin-bottom: 0; }
+.occ-floor-label { font-size: 12px; color: var(--txt2); width: 84px; flex-shrink: 0; }
+.occ-track {
+  flex: 1;
+  height: 7px;
+  background: rgba(255,255,255,.05);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.occ-fill { height: 100%; border-radius: 4px; transition: width .5s ease; }
+.occ-pct { font-family: var(--mono); font-size: 11px; color: var(--txt2); width: 34px; text-align: right; }
+
+/* ALERTS */
+.alert-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 0.5px solid var(--bdr);
+}
+.alert-row:last-child { border-bottom: none; padding-bottom: 0; }
+.alert-indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.ai-high { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.ai-med  { background: var(--amber); }
+.ai-low  { background: var(--blue); }
+.ai-ok   { background: var(--green); }
+.alert-content { flex: 1; min-width: 0; }
+.alert-text { font-size: 12px; color: var(--txt); line-height: 1.4; }
+.alert-time { font-size: 10px; color: var(--txt2); margin-top: 2px; }
+
+/* REVENUE CHART */
+.rev-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 90px;
+}
+.rev-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.rev-bar-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  transition: height .4s ease, background .3s;
+}
+.rev-bar-lbl { font-size: 9px; color: var(--txt3); }
+
+/* STATUS BOXES */
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+.status-box {
+  text-align: center;
+  padding: 10px 6px;
+  border-radius: var(--r);
+  border: 0.5px solid var(--bdr);
+  transition: border-color .2s;
+}
+.status-box:hover { border-color: var(--bdr2); }
+.status-box .sb-num { font-size: 22px; font-weight: 600; line-height: 1; margin-bottom: 3px; }
+.status-box .sb-lbl { font-size: 10px; color: var(--txt2); }
+.sb-occ { background: rgba(14,165,160,.06); color: var(--teal); }
+.sb-dep { background: rgba(245,158,11,.06); color: var(--gold); }
+.sb-arr { background: rgba(37,99,235,.06); color: var(--blue); }
+.sb-vac { background: var(--bg-card); color: var(--txt); }
+.sb-mt  { background: rgba(220,38,38,.06); color: var(--red); }
+
+/* MINI FLOOR MAP */
+.mini-floor { display: flex; gap: 3px; flex-wrap: wrap; }
+.mini-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: transform .1s, opacity .1s;
+}
+.mini-dot:hover { transform: scale(1.25); opacity: 1 !important; }
+
+/* GUEST LIST */
+.guest-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 0.5px solid var(--bdr);
+  cursor: default;
+  transition: background .1s;
+}
+.guest-row:last-child { border-bottom: none; padding-bottom: 0; }
+.guest-row:hover { background: rgba(255,255,255,.02); border-radius: 6px; }
+.guest-init {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--navy3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+}
+.guest-info { flex: 1; min-width: 0; }
+.guest-name { font-size: 12px; font-weight: 500; color: var(--txt); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.guest-detail { font-size: 10px; color: var(--txt2); margin-top: 1px; }
+.badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.b-ci   { background: var(--green-bg); color: var(--green); }
+.b-co   { background: var(--red-bg);   color: var(--red); }
+.b-ib   { background: var(--blue-bg);  color: var(--blue); }
+.b-mt   { background: var(--amber-bg); color: var(--amber); }
+.b-vip  { background: rgba(124,58,237,.15); color: var(--purple); }
+
+/* LEGEND */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+.leg-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--txt2); }
+.leg-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+
+/* ===========================
+   ROOM GRID PAGE
+   =========================== */
+.rg-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 12px;
+}
+.rg-title { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+.rg-sub   { font-size: 12px; color: var(--txt2); }
+
+.drag-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--teal);
+  background: var(--teal-glow);
+  border: 0.5px solid rgba(14,165,160,.25);
+  border-radius: var(--r);
+  padding: 8px 12px;
+  margin-bottom: 16px;
+}
+
+.floor-section { margin-bottom: 20px; }
+.floor-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--txt2);
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  background: var(--bg-card);
+  border-radius: 6px;
+  border: 0.5px solid var(--bdr);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.floor-label .fl-stats { margin-left: auto; font-size: 10px; color: var(--txt3); text-transform: none; letter-spacing: 0; }
+
+.rooms-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  gap: 7px;
+}
+
+/* ROOM CARDS */
+.room-card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--bdr);
+  border-radius: var(--r);
+  padding: 9px 10px;
+  cursor: grab;
+  transition: transform .15s, border-color .15s, background .15s;
+  user-select: none;
+  position: relative;
+}
+.room-card:active { cursor: grabbing; }
+.room-card:hover  { transform: translateY(-1px); border-color: var(--bdr2); }
+.room-card.dragging { opacity: .45; transform: scale(.94); }
+.room-card.dragover {
+  border-color: var(--teal) !important;
+  background: rgba(14,165,160,.08) !important;
+  box-shadow: 0 0 0 1px var(--teal);
+}
+.rc-num  { font-size: 13px; font-weight: 600; line-height: 1; }
+.rc-type { font-size: 9px; color: var(--txt2); margin-top: 2px; }
+.rc-guest { font-size: 9px; color: var(--txt2); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rc-bar  { height: 3px; border-radius: 2px; margin-top: 7px; }
+
+.rc-occ { background: rgba(14,165,160,.07); border-color: rgba(14,165,160,.25); }
+.rc-occ .rc-num { color: var(--teal); }
+.rc-occ .rc-bar { background: var(--teal); }
+
+.rc-dep { background: rgba(245,158,11,.07); border-color: rgba(245,158,11,.25); }
+.rc-dep .rc-num { color: var(--gold); }
+.rc-dep .rc-bar { background: var(--gold); }
+
+.rc-arr { background: rgba(37,99,235,.07); border-color: rgba(37,99,235,.25); }
+.rc-arr .rc-num { color: var(--blue); }
+.rc-arr .rc-bar { background: var(--blue); }
+
+.rc-vac .rc-bar { background: rgba(255,255,255,.1); }
+
+.rc-mt  { background: rgba(220,38,38,.07); border-color: rgba(220,38,38,.25); }
+.rc-mt  .rc-num { color: var(--red); }
+.rc-mt  .rc-bar { background: var(--red); }
+
+/* ===========================
+   ARRIVALS PAGE
+   =========================== */
+.arrivals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.checklist-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 0.5px solid var(--bdr);
+}
+.checklist-row:last-child { border-bottom: none; }
+.cl-room {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--teal);
+  width: 38px;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+.cl-info { flex: 1; min-width: 0; }
+.cl-name { font-size: 12px; font-weight: 500; color: var(--txt); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cl-meta { font-size: 10px; color: var(--txt2); margin-top: 1px; }
+.cl-badge { flex-shrink: 0; }
+.cl-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 0.5px solid var(--bdr2);
+  background: var(--bg-input);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all .15s;
+}
+.cl-check:hover { border-color: var(--teal); }
+.cl-check.checked { background: var(--teal); border-color: var(--teal); }
+.cl-check.checked::after { content: '✓'; font-size: 10px; color: #fff; font-weight: 600; }
+
+/* ===========================
+   MODAL
+   =========================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+.modal {
+  background: var(--bg-card2);
+  border: 0.5px solid var(--bdr2);
+  border-radius: var(--rxl);
+  padding: 22px 24px;
+  width: 340px;
+  max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 0 0.5px rgba(255,255,255,.06);
+  animation: modalIn .2s ease;
+}
+@keyframes modalIn { from { opacity:0; transform:scale(.96) translateY(8px); } to { opacity:1; transform:none; } }
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.modal-title { font-size: 14px; font-weight: 500; }
+.modal-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 0.5px solid var(--bdr2);
+  background: transparent;
+  color: var(--txt2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  transition: all .15s;
+}
+.modal-close:hover { color: var(--txt); border-color: var(--bdr3); background: var(--bg-input); }
+.modal-info {
+  background: var(--bg-input);
+  border: 0.5px solid var(--bdr);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.modal-info .info-label { font-size: 10px; color: var(--txt2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .6px; }
+.modal-info .info-val  { font-size: 13px; font-weight: 500; color: var(--txt); }
+.modal-info .info-sub  { font-size: 11px; color: var(--txt2); margin-top: 3px; }
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+.modal-divider { height: 0.5px; background: var(--bdr); margin: 12px 0; }
+.transfer-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--txt2);
+  margin: 8px 0;
+}
+.transfer-arrow i { font-size: 18px; color: var(--teal); }
+
+/* ===========================
+   FOOTER / DISCLAIMER
+   =========================== */
+.app-footer {
+  background: var(--bg-card);
+  border-top: 0.5px solid var(--bdr);
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 12px;
+}
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: var(--txt3);
+}
+.footer-brand {
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: .3px;
+}
+.footer-sep { color: var(--bdr2); }
+.footer-disclaimer {
+  font-size: 10px;
+  color: var(--txt3);
+  text-align: right;
+  line-height: 1.4;
+}
+.footer-disclaimer a { color: var(--teal); text-decoration: none; }
+.footer-disclaimer a:hover { text-decoration: underline; }
+
+/* ===========================
+   TOAST
+   =========================== */
+.toast-container {
+  position: fixed;
+  bottom: 60px;
+  right: 24px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  background: var(--bg-card2);
+  border: 0.5px solid var(--bdr2);
+  border-left: 2px solid var(--teal);
+  border-radius: var(--r);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--txt);
+  box-shadow: var(--shadow-card);
+  animation: toastIn .3s ease, toastOut .3s ease 2.5s forwards;
+  max-width: 280px;
+}
+@keyframes toastIn   { from { opacity:0; transform:translateX(16px); } to { opacity:1; transform:none; } }
+@keyframes toastOut  { from { opacity:1; } to { opacity:0; transform:translateX(16px); } }
+
+/* MISC UTILITIES */
+.text-teal  { color: var(--teal); }
+.text-gold  { color: var(--gold); }
+.text-red   { color: var(--red); }
+.text-green { color: var(--green); }
+.text-blue  { color: var(--blue); }
+.text-muted { color: var(--txt2); }
+.fw-500 { font-weight: 500; }
+.mono   { font-family: var(--mono); }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ======= SIDEBAR ======= -->
+  <nav class="sidebar">
+    <div class="brand">
+      <div class="brand-inner">
+        <div class="brand-icon"><i class="ti ti-building"></i></div>
+        <div class="brand-text">
+          <div class="name">NexStay</div>
+          <div class="tagline">PMS v2.0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <div class="nav-section">Operations</div>
+      <div class="nav-item active" onclick="showPage('dashboard')">
+        <i class="ti ti-layout-dashboard"></i>Command center
+      </div>
+      <div class="nav-item" onclick="showPage('rooms')">
+        <i class="ti ti-door"></i>Room grid
+        <span class="nav-badge info">4F</span>
+      </div>
+      <div class="nav-item" onclick="showPage('arrivals')">
+        <i class="ti ti-calendar-check"></i>Arrivals / departs
+        <span class="nav-badge">38</span>
+      </div>
+
+      <div class="nav-section">Management</div>
+      <div class="nav-item" onclick="noPage()"><i class="ti ti-users"></i>Guest profiles</div>
+      <div class="nav-item" onclick="noPage()"><i class="ti ti-report-money"></i>Revenue</div>
+      <div class="nav-item" onclick="noPage()">
+        <i class="ti ti-tools"></i>Housekeeping
+        <span class="nav-badge">6</span>
+      </div>
+      <div class="nav-item" onclick="noPage()"><i class="ti ti-chart-bar"></i>Reports</div>
+      <div class="nav-item" onclick="noPage()"><i class="ti ti-currency-dollar"></i>Night audit</div>
+
+      <div class="nav-section">Configuration</div>
+      <div class="nav-item" onclick="noPage()"><i class="ti ti-plug"></i>Integrations</div>
+      <div class="nav-item" onclick="noPage()"><i class="ti ti-settings"></i>Settings</div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="prop-card">
+        <div class="prop-name">Baymont by Wyndham</div>
+        <div class="prop-addr">2500 33rd St, Orlando FL 32839</div>
+        <div class="prop-meta">
+          <span class="prop-chip">200 rooms</span>
+          <span class="prop-chip">4 floors</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======= MAIN ======= -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="page-title" id="page-title">Command center</span>
+        <span class="date-badge" id="top-date"></span>
+      </div>
+      <div class="topbar-right">
+        <div class="icon-btn" title="Notifications">
+          <i class="ti ti-bell" style="font-size:16px"></i>
+          <div class="notif-dot"></div>
+        </div>
+        <div class="icon-btn" title="Search"><i class="ti ti-search" style="font-size:16px"></i></div>
+        <button class="btn btn-primary" onclick="toast('New reservation form coming soon')">
+          <i class="ti ti-plus"></i>New reservation
+        </button>
+        <div class="avatar" title="Jose Rodriguez — Front Desk Manager">JR</div>
+      </div>
+    </header>
+
+    <!-- SCROLL AREA -->
+    <div class="scroll-area">
+
+      <!-- ============ DASHBOARD PAGE ============ -->
+      <div class="page active" id="page-dashboard">
+
+        <!-- KPI METRICS -->
+        <div class="metrics-grid">
+          <div class="metric-card teal">
+            <div class="metric-icon teal"><i class="ti ti-percentage"></i></div>
+            <div class="metric-label">Occupancy rate</div>
+            <div class="metric-value">78<span style="font-size:16px;font-weight:400;color:var(--txt2)">%</span></div>
+            <div class="metric-footer">
+              <span>156 / 200 rooms</span>
+              <span class="trend trend-up"><i class="ti ti-trending-up" style="font-size:11px"></i>+4%</span>
+            </div>
+          </div>
+          <div class="metric-card gold">
+            <div class="metric-icon gold"><i class="ti ti-coin"></i></div>
+            <div class="metric-label">ADR (avg daily rate)</div>
+            <div class="metric-value">$112</div>
+            <div class="metric-footer">
+              <span>Per occupied room</span>
+              <span class="trend trend-up">↑ $8 vs yesterday</span>
+            </div>
+          </div>
+          <div class="metric-card blue">
+            <div class="metric-icon blue"><i class="ti ti-chart-line"></i></div>
+            <div class="metric-label">RevPAR</div>
+            <div class="metric-value">$87</div>
+            <div class="metric-footer">
+              <span>Revenue per avail. room</span>
+              <span class="trend trend-up">↑ 6% vs last week</span>
+            </div>
+          </div>
+          <div class="metric-card green">
+            <div class="metric-icon green"><i class="ti ti-star"></i></div>
+            <div class="metric-label">Guest score</div>
+            <div class="metric-value">7.8</div>
+            <div class="metric-footer">
+              <span>Booking.com avg · 1,404 rev.</span>
+              <span class="trend trend-neu">→ Stable</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 2 -->
+        <div class="dash-grid2">
+          <div class="card">
+            <div class="card-title">
+              Floor occupancy
+              <span class="card-action" onclick="showPage('rooms')">room grid →</span>
+            </div>
+            <div id="occ-bars"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              Live alerts
+              <span class="card-action">view all</span>
+            </div>
+            <div id="alerts-list"></div>
+          </div>
+        </div>
+
+        <!-- ROW 3 -->
+        <div class="dash-grid3">
+          <div class="card">
+            <div class="card-title">
+              Weekly revenue
+              <span class="card-action">full report →</span>
+            </div>
+            <div class="rev-bars" id="rev-chart"></div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px">
+              <span style="font-size:11px;color:var(--txt2)">Mon — Sun · this week</span>
+              <span style="font-size:11px;color:var(--teal);font-weight:500">Total: $17,840</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Today's activity</div>
+            <div id="guest-list"></div>
+          </div>
+        </div>
+
+        <!-- ROW 4 -->
+        <div class="dash-grid4">
+          <div class="card">
+            <div class="card-title">Room status breakdown</div>
+            <div class="status-grid">
+              <div class="status-box sb-occ">
+                <div class="sb-num">118</div>
+                <div class="sb-lbl">Occupied</div>
+              </div>
+              <div class="status-box sb-dep">
+                <div class="sb-num">22</div>
+                <div class="sb-lbl">Departing</div>
+              </div>
+              <div class="status-box sb-arr">
+                <div class="sb-num">16</div>
+                <div class="sb-lbl">Arriving</div>
+              </div>
+              <div class="status-box sb-vac">
+                <div class="sb-num">38</div>
+                <div class="sb-lbl">Vacant</div>
+              </div>
+              <div class="status-box sb-mt">
+                <div class="sb-num">6</div>
+                <div class="sb-lbl">Maint.</div>
+              </div>
+            </div>
+            <div style="margin-top:14px">
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--txt2);margin-bottom:5px">
+                <span>Rooms clean &amp; ready</span><span class="text-teal">82 / 156</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--txt2);margin-bottom:5px">
+                <span>Check-ins today</span><span>16</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--txt2)">
+                <span>Check-outs today</span><span>22</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              Property live map
+              <span class="card-action" onclick="showPage('rooms')">full grid →</span>
+            </div>
+            <div class="mini-floor" id="mini-floor"></div>
+            <div class="legend">
+              <div class="leg-item"><div class="leg-dot" style="background:var(--teal)"></div>Occupied</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div>Depart</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--blue)"></div>Arriving</div>
+              <div class="leg-item"><div class="leg-dot" style="background:rgba(255,255,255,.1);border:0.5px solid var(--bdr2)"></div>Vacant</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>Maint.</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /dashboard -->
+
+
+      <!-- ============ ROOM GRID PAGE ============ -->
+      <div class="page" id="page-rooms">
+        <div class="rg-header">
+          <div>
+            <div class="rg-title">Room assignment grid — 200 rooms · 4 floors</div>
+            <div class="rg-sub">Baymont by Wyndham Orlando North Millenia</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <div class="legend" style="margin-top:0">
+              <div class="leg-item"><div class="leg-dot" style="background:var(--teal)"></div>Occupied</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div>Depart</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--blue)"></div>Arriving</div>
+              <div class="leg-item"><div class="leg-dot" style="background:rgba(255,255,255,.1);border:0.5px solid var(--bdr2)"></div>Vacant</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>Maint</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="drag-hint">
+          <i class="ti ti-hand-finger"></i>
+          Drag any room card and drop it onto a <strong>vacant</strong> room to move a guest, or onto an <strong>occupied</strong> room to swap assignments.
+        </div>
+
+        <div id="room-grid-container"></div>
+      </div><!-- /rooms -->
+
+
+      <!-- ============ ARRIVALS PAGE ============ -->
+      <div class="page" id="page-arrivals">
+        <div class="arrivals-grid">
+          <div class="card">
+            <div class="card-title" style="color:var(--green)">
+              <span><i class="ti ti-door-enter" style="font-size:13px;margin-right:5px"></i>Arrivals today — 16</span>
+              <span class="card-action">print list</span>
+            </div>
+            <div id="arrivals-list"></div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:var(--red)">
+              <span><i class="ti ti-door-exit" style="font-size:13px;margin-right:5px"></i>Departures today — 22</span>
+              <span class="card-action">print list</span>
+            </div>
+            <div id="departures-list"></div>
+          </div>
+        </div>
+      </div><!-- /arrivals -->
+
+    </div><!-- /scroll-area -->
+
+    <!-- FOOTER / DISCLAIMER -->
+    <footer class="app-footer">
+      <div class="footer-left">
+        <span class="footer-brand">NexStay PMS</span>
+        <span class="footer-sep">·</span>
+        <span>Developed by <strong style="color:var(--txt2)">Jose Rodriguez</strong></span>
+        <span class="footer-sep">·</span>
+        <span>Baymont by Wyndham Orlando North Millenia</span>
+        <span class="footer-sep">·</span>
+        <span>v2.0.0 · 2026</span>
+      </div>
+      <div class="footer-disclaimer">
+        This system is intended for internal hotel operations use only. All guest data is confidential.
+        Unauthorized access is prohibited. &copy; 2026 Jose Rodriguez. All rights reserved.
+      </div>
+    </footer>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- MODAL -->
+<div id="modal" style="display:none">
+  <div class="modal-overlay" onclick="handleOverlayClick(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <span class="modal-title" id="modal-title">Room assignment</span>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div id="modal-body"></div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmAssign()">
+          <i class="ti ti-check"></i>Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+/* ============================================================
+   NEXSTAY PMS — MAIN APPLICATION SCRIPT
+   Developed by Jose Rodriguez
+   Baymont by Wyndham Orlando North Millenia — Orlando, FL
+   ============================================================ */
+
+const FLOORS       = [1,2,3,4];
+const ROOMS_PER_FL = 50;
+const TYPES        = ['King','Queen','DblQ','Suite','ADA K','ADA Q'];
+const GUESTS       = [
+  'Maria Garcia','James Torres','Linda Martin','Carlos Ramirez','Anna Smith',
+  'Robert Kim','Susan Lopez','Michael Brown','Jennifer Pierce','David Wilson',
+  'Patricia Nguyen','Thomas Harris','Barbara Chen','Kevin Young','Nancy Foster',
+  'Steven Anderson','Jessica Zhang','Daniel Evans','Sarah Ortiz','Christopher Vega',
+  'Michelle Davis','Anthony Clark','Sandra White','Joshua Taylor','Amanda Johnson',
+  'Brian Martinez','Melissa Thomas','Ryan Jackson','Stephanie Lee','Justin Moore'
+];
+const STATUS_WEIGHTS = ['occ','occ','occ','dep','arr','vac','vac','mt'];
+
+let rooms = [];
+let dragSrcId = null;
+let pendingMove = null;
+
+/* ---- INIT ---- */
+function init() {
+  seedRooms();
+  setDate();
+  renderDashboard();
+  renderRoomGrid();
+  renderArrivalsPage();
+}
+
+function seedRooms() {
+  rooms = [];
+  for (const f of FLOORS) {
+    for (let r = 1; r <= ROOMS_PER_FL; r++) {
+      const num = f * 100 + r;
+      const status = STATUS_WEIGHTS[Math.floor(Math.random() * STATUS_WEIGHTS.length)];
+      const type   = TYPES[Math.floor(Math.random() * TYPES.length)];
+      const g      = GUESTS[Math.floor(Math.random() * GUESTS.length)];
+      rooms.push({
+        id:       num,
+        floor:    f,
+        num:      num,
+        type:     type,
+        status:   status,
+        guest:    (status === 'occ' || status === 'dep') ? g : null,
+        arriving: (status === 'arr') ? GUESTS[Math.floor(Math.random()*GUESTS.length)] : null
+      });
+    }
+  }
+}
+
+function setDate() {
+  const d = new Date();
+  document.getElementById('top-date').textContent =
+    d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+}
+
+/* ---- NAVIGATION ---- */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const titles = { dashboard:'Command center', rooms:'Room grid', arrivals:'Arrivals & departures' };
+  document.getElementById('page-title').textContent = titles[id] || id;
+  const navOrder = ['dashboard','rooms','arrivals'];
+  const idx = navOrder.indexOf(id);
+  if (idx >= 0) document.querySelectorAll('.nav-item')[idx].classList.add('active');
+}
+
+function noPage() { toast('Module coming in next release'); }
+
+/* ---- DASHBOARD ---- */
+function renderDashboard() {
+  buildOccBars();
+  buildAlerts();
+  buildRevChart();
+  buildGuestList();
+  buildMiniFloor();
+}
+
+function buildOccBars() {
+  const el = document.getElementById('occ-bars');
+  const rows = FLOORS.map(f => {
+    const flr   = rooms.filter(r => r.floor === f);
+    const occ   = flr.filter(r => r.status === 'occ' || r.status === 'dep').length;
+    const pct   = Math.round(occ / flr.length * 100);
+    const color = pct > 80 ? 'var(--teal)' : pct > 60 ? 'var(--blue)' : 'var(--amber)';
+    return `
+      <div class="occ-bar-row">
+        <div class="occ-floor-label">Floor ${f} &nbsp;<span style="font-size:10px;color:var(--txt3)">${occ}/${flr.length}</span></div>
+        <div class="occ-track"><div class="occ-fill" style="width:${pct}%;background:${color}"></div></div>
+        <div class="occ-pct">${pct}%</div>
+      </div>`;
+  });
+  el.innerHTML = rows.join('');
+}
+
+function buildAlerts() {
+  const alerts = [
+    { level:'high', text:'Room 214 — AC malfunction reported by guest', time:'8 min ago' },
+    { level:'high', text:'VIP arrival: Suite 401 — Mr. Thompson at 2:00 PM', time:'1h ago' },
+    { level:'med',  text:'15 departures pending checkout (cutoff: 11:00 AM)', time:'2h ago' },
+    { level:'ok',   text:'Pool heater maintenance complete — open at 10:00 AM', time:'3h ago' },
+    { level:'low',  text:'Breakfast station restocked (OJ + pastries)', time:'4h ago' },
+  ];
+  document.getElementById('alerts-list').innerHTML = alerts.map(a => `
+    <div class="alert-row">
+      <div class="alert-indicator ai-${a.level}"></div>
+      <div class="alert-content">
+        <div class="alert-text">${a.text}</div>
+        <div class="alert-time">${a.time}</div>
+      </div>
+    </div>`).join('');
+}
+
+function buildRevChart() {
+  const revs = [2100, 2450, 2800, 1950, 2600, 3100, 2840];
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const max  = Math.max(...revs);
+  document.getElementById('rev-chart').innerHTML = revs.map((v, i) => `
+    <div class="rev-bar-col">
+      <div class="rev-bar-bar" style="height:${Math.round(v/max*80)}px;background:${i>=4?'var(--teal)':'var(--navy3)'}"></div>
+      <div class="rev-bar-lbl">${days[i]}</div>
+    </div>`).join('');
+}
+
+function buildGuestList() {
+  const entries = [
+    { init:'MG', name:'Maria Garcia',   detail:'Rm 312 · 3 nights · King',     badge:'b-ci',  label:'Check-in' },
+    { init:'JT', name:'James Torres',   detail:'Rm 118 · checkout 11am',        badge:'b-co',  label:'Checkout' },
+    { init:'AS', name:'Anna Smith',     detail:'Rm 204 · housekeeping request', badge:'b-mt',  label:'Request' },
+    { init:'RK', name:'Robert Kim',     detail:'Rm 401 · VIP · Suite',          badge:'b-vip', label:'VIP' },
+    { init:'LP', name:'Linda Parker',   detail:'Rm 233 · arriving 3pm',         badge:'b-ci',  label:'Arriving' },
+    { init:'DW', name:'David Wilson',   detail:'Rm 315 · in-house · 2 nights',  badge:'b-ib',  label:'In-house' },
+  ];
+  document.getElementById('guest-list').innerHTML = entries.map(e => `
+    <div class="guest-row">
+      <div class="guest-init">${e.init}</div>
+      <div class="guest-info">
+        <div class="guest-name">${e.name}</div>
+        <div class="guest-detail">${e.detail}</div>
+      </div>
+      <div class="badge ${e.badge}">${e.label}</div>
+    </div>`).join('');
+}
+
+function buildMiniFloor() {
+  const colMap = {
+    occ: 'var(--teal)', dep: 'var(--gold)',
+    arr: 'var(--blue)', vac: 'rgba(255,255,255,.08)',
+    mt:  'var(--red)'
+  };
+  const bdrMap = {
+    occ:'transparent', dep:'transparent',
+    arr:'transparent', vac:'var(--bdr2)', mt:'transparent'
+  };
+  document.getElementById('mini-floor').innerHTML = rooms.slice(0, 100).map(r => `
+    <div class="mini-dot" style="background:${colMap[r.status]};border:0.5px solid ${bdrMap[r.status]}"
+         title="Rm ${r.num} · ${r.type} · ${r.status}"></div>`).join('');
+}
+
+/* ---- ROOM GRID ---- */
+function renderRoomGrid() {
+  const container = document.getElementById('room-grid-container');
+  container.innerHTML = FLOORS.map(f => {
+    const flr    = rooms.filter(r => r.floor === f);
+    const occCnt = flr.filter(r => r.status === 'occ').length;
+    const depCnt = flr.filter(r => r.status === 'dep').length;
+    const arrCnt = flr.filter(r => r.status === 'arr').length;
+    return `
+      <div class="floor-section">
+        <div class="floor-label">
+          <i class="ti ti-building-skyscraper"></i>
+          Floor ${f} &mdash; Rooms ${f}01&ndash;${f}50
+          <span class="fl-stats">${occCnt} occ &middot; ${depCnt} dep &middot; ${arrCnt} arr</span>
+        </div>
+        <div class="rooms-row" id="floor-${f}" data-floor="${f}"></div>
+      </div>`;
+  }).join('');
+
+  rooms.forEach(r => {
+    const el = createRoomCard(r);
+    document.getElementById('floor-' + r.floor).appendChild(el);
+  });
+}
+
+function createRoomCard(r) {
+  const clsMap   = { occ:'rc-occ', dep:'rc-dep', arr:'rc-arr', vac:'rc-vac', mt:'rc-mt' };
+  const lblMap   = { occ:'Occupied', dep:'Departing', arr:'Arriving', vac:'Vacant', mt:'Maintenance' };
+  const guestTxt = r.guest || r.arriving || lblMap[r.status];
+
+  const div = document.createElement('div');
+  div.className  = 'room-card ' + clsMap[r.status];
+  div.draggable  = true;
+  div.dataset.id = r.id;
+  div.innerHTML  = `
+    <div class="rc-num">${r.num}</div>
+    <div class="rc-type">${r.type}</div>
+    <div class="rc-guest">${guestTxt}</div>
+    <div class="rc-bar"></div>`;
+
+  div.addEventListener('dragstart', e => {
+    dragSrcId = r.id;
+    div.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  div.addEventListener('dragend', () => div.classList.remove('dragging'));
+  div.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragSrcId !== r.id) div.classList.add('dragover');
+  });
+  div.addEventListener('dragleave', () => div.classList.remove('dragover'));
+  div.addEventListener('drop', e => {
+    e.preventDefault();
+    div.classList.remove('dragover');
+    if (!dragSrcId || dragSrcId === r.id) return;
+    const src = rooms.find(x => x.id === dragSrcId);
+    const tgt = r;
+    if (!src || !tgt) return;
+    if (tgt.status === 'vac') {
+      openMoveModal(src, tgt);
+    } else if (tgt.status === 'occ' || tgt.status === 'dep' || tgt.status === 'arr') {
+      openSwapModal(src, tgt);
+    } else {
+      toast('Cannot assign to a maintenance room');
+    }
+    dragSrcId = null;
+  });
+  return div;
+}
+
+function openMoveModal(src, tgt) {
+  const guest = src.guest || src.arriving || 'Guest';
+  document.getElementById('modal-title').textContent = 'Move guest to vacant room';
+  document.getElementById('modal-body').innerHTML = `
+    <div style="font-size:11px;color:var(--txt2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Transfer details</div>
+    <div class="modal-info">
+      <div class="info-label">Guest</div>
+      <div class="info-val">${guest}</div>
+    </div>
+    <div class="transfer-arrow">
+      <div style="flex:1;text-align:center">
+        <div style="font-size:10px;color:var(--txt2);margin-bottom:3px">From</div>
+        <div style="font-family:var(--mono);font-size:14px;color:var(--gold)">Rm ${src.num}</div>
+        <div style="font-size:10px;color:var(--txt2)">${src.type} · Floor ${src.floor}</div>
+      </div>
+      <i class="ti ti-arrow-right"></i>
+      <div style="flex:1;text-align:center">
+        <div style="font-size:10px;color:var(--txt2);margin-bottom:3px">To</div>
+        <div style="font-family:var(--mono);font-size:14px;color:var(--teal)">Rm ${tgt.num}</div>
+        <div style="font-size:10px;color:var(--txt2)">${tgt.type} · Floor ${tgt.floor}</div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--txt2);margin-top:10px">
+      Room status will be updated and housekeeping notified automatically.
+    </div>`;
+  pendingMove = { src, tgt, type: 'move' };
+  document.getElementById('modal').style.display = 'block';
+}
+
+function openSwapModal(src, tgt) {
+  const g1 = src.guest || src.arriving || 'Guest A';
+  const g2 = tgt.guest || tgt.arriving || 'Guest B';
+  document.getElementById('modal-title').textContent = 'Swap room assignments';
+  document.getElementById('modal-body').innerHTML = `
+    <div style="font-size:11px;color:var(--txt2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Swap details</div>
+    <div class="transfer-arrow">
+      <div style="flex:1;text-align:center">
+        <div style="font-size:10px;color:var(--txt2);margin-bottom:3px">${g1}</div>
+        <div style="font-family:var(--mono);font-size:14px;color:var(--gold)">Rm ${src.num}</div>
+        <div style="font-size:10px;color:var(--txt2)">${src.type}</div>
+      </div>
+      <i class="ti ti-arrows-exchange"></i>
+      <div style="flex:1;text-align:center">
+        <div style="font-size:10px;color:var(--txt2);margin-bottom:3px">${g2}</div>
+        <div style="font-family:var(--mono);font-size:14px;color:var(--blue)">Rm ${tgt.num}</div>
+        <div style="font-size:10px;color:var(--txt2)">${tgt.type}</div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--txt2);margin-top:10px">
+      Both guests and housekeeping will be notified of this change.
+    </div>`;
+  pendingMove = { src, tgt, type: 'swap' };
+  document.getElementById('modal').style.display = 'block';
+}
+
+function confirmAssign() {
+  if (!pendingMove) return;
+  const { src, tgt, type } = pendingMove;
+  if (type === 'move') {
+    tgt.guest    = src.guest;
+    tgt.arriving = src.arriving;
+    tgt.status   = src.status;
+    src.guest    = null;
+    src.arriving = null;
+    src.status   = 'vac';
+    toast(`${tgt.guest || 'Guest'} moved to Room ${tgt.num}`);
+  } else {
+    [src.guest,    tgt.guest]    = [tgt.guest,    src.guest];
+    [src.arriving, tgt.arriving] = [tgt.arriving, src.arriving];
+    [src.status,   tgt.status]   = [tgt.status,   src.status];
+    toast(`Rooms ${src.num} and ${tgt.num} swapped`);
+  }
+  closeModal();
+  renderRoomGrid();
+  buildMiniFloor();
+  buildOccBars();
+  pendingMove = null;
+}
+
+function handleOverlayClick(e) {
+  if (e.target === e.currentTarget) closeModal();
+}
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+  pendingMove = null;
+}
+
+/* ---- ARRIVALS PAGE ---- */
+function renderArrivalsPage() {
+  const arrs = rooms.filter(r => r.status === 'arr').slice(0, 14);
+  const deps = rooms.filter(r => r.status === 'dep').slice(0, 14);
+
+  const makeRow = (r, badgeClass, badgeLabel) => {
+    const name = r.arriving || r.guest || 'Guest';
+    const ini  = name.split(' ').map(x => x[0]).join('').slice(0,2).toUpperCase();
+    return `
+      <div class="checklist-row">
+        <div class="cl-room">${r.num}</div>
+        <div class="cl-info">
+          <div class="cl-name">${name}</div>
+          <div class="cl-meta">${r.type} · Floor ${r.floor}</div>
+        </div>
+        <div class="badge ${badgeClass}" style="margin-right:8px">${badgeLabel}</div>
+        <div class="cl-check" onclick="this.classList.toggle('checked')" title="Mark as processed"></div>
+      </div>`;
+  };
+
+  document.getElementById('arrivals-list').innerHTML =
+    arrs.map(r => makeRow(r, 'b-ci', 'Arriving')).join('');
+  document.getElementById('departures-list').innerHTML =
+    deps.map(r => makeRow(r, 'b-co', 'Departing')).join('');
+}
+
+/* ---- TOAST ---- */
+function toast(msg) {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className   = 'toast';
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+/* ---- KEYBOARD SHORTCUT ---- */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ---- START ---- */
+init();
+</script>
+</body>
+</html>
