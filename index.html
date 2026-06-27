@@ -127,6 +127,26 @@ input,select,textarea,button{font-family:inherit}
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#1E293B;border:1px solid rgba(255,255,255,0.1);color:var(--white);font-size:13px;font-weight:600;padding:12px 20px;border-radius:12px;z-index:200;opacity:0;transition:all 0.25s ease;white-space:nowrap;box-shadow:var(--shadow);pointer-events:none;max-width:320px;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.success{border-color:#22C55E44}.toast.error{border-color:#EF444444}
+.user-card{background:var(--navy-2);border-radius:var(--radius);border:1px solid rgba(255,255,255,0.08);padding:16px;margin-bottom:12px}
+.user-card-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:rgba(13,148,136,0.2);border:1.5px solid var(--teal);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--teal-hi);flex-shrink:0}
+.user-avatar.admin{background:rgba(168,85,247,0.2);border-color:#A855F7;color:#D8B4FE}
+.user-card-title{font-size:13px;font-weight:700;color:var(--white)}
+.user-card-role{font-size:10px;color:var(--slate);margin-top:1px}
+.pin-row{display:flex;gap:8px}
+.pin-row .form-input{flex:1;font-family:'JetBrains Mono',monospace;letter-spacing:0.2em;text-align:center;font-size:20px;padding:10px}
+.save-user-btn{width:100%;margin-top:12px;padding:12px;border-radius:var(--radius-sm);border:none;background:rgba(13,148,136,0.2);border:1.5px solid var(--teal);color:var(--teal-hi);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.save-user-btn:active{transform:scale(0.98)}
+.save-user-btn.saved{background:rgba(22,163,74,0.2);border-color:#22C55E;color:#4ADE80}
+.report-section{background:var(--navy-2);border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.07);margin-bottom:14px;overflow:hidden}
+.report-table{width:100%;border-collapse:collapse;font-size:12px}
+.report-table th{background:var(--navy-3);padding:8px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--slate)}
+.report-table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.report-table tr:last-child td{border-bottom:none}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.badge-vr{background:rgba(22,163,74,0.2);color:#4ADE80;border:1px solid #16A34A44}
+.badge-oos{background:rgba(217,119,6,0.2);color:#FCD34D;border:1px solid #D9770644}
+.badge-ooo{background:rgba(220,38,38,0.2);color:#F87171;border:1px solid #DC262644}
 </style>
 </head>
 <body>
@@ -142,30 +162,11 @@ input,select,textarea,button{font-family:inherit}
   </div>
   <div class="login-card">
     <h2>Staff Sign-In</h2>
-    <p>Select your name and enter your PIN. Every entry is stamped with your identity and synced to the cloud.</p>
+    <p>Select your name and enter your PIN.</p>
     <div class="form-group">
       <label class="form-label">Staff Member</label>
       <select class="form-select" id="login-staff">
-        <option value="">&#8212; Select Your Name &#8212;</option>
-        <option>Heidy Martinez &middot; Room Attendant</option>
-        <option>Ysmayga Pierre &middot; Room Attendant</option>
-        <option>Nasaret Meturde &middot; Room Attendant</option>
-        <option>Miladys Castro &middot; Room Attendant</option>
-        <option>Yslene Yslene &middot; Room Attendant</option>
-        <option>Rosendia Vincent &middot; Room Attendant</option>
-        <option>Honcyse Honcyse &middot; Room Attendant</option>
-        <option>Manuela Matir &middot; Room Attendant</option>
-        <option>Nadine Pochette &middot; Room Attendant</option>
-        <option>Junette Feodin &middot; Room Attendant</option>
-        <option>Aurianne Lafleur &middot; Room Attendant</option>
-        <option>Lovely Jean &middot; Room Attendant</option>
-        <option>Marie Joseph Pierre &middot; Room Attendant</option>
-        <option>Mario C. &middot; Maintenance Tech</option>
-        <option>Franklin Alvarez &middot; Operations Manager</option>
-        <option>Inspector (AM Shift)</option>
-        <option>Inspector (PM Shift)</option>
-        <option>Front Desk Agent (AM)</option>
-        <option>Front Desk Agent (PM)</option>
+        <option value="">&#8212; Loading staff... &#8212;</option>
       </select>
     </div>
     <div class="form-group">
@@ -184,7 +185,7 @@ input,select,textarea,button{font-family:inherit}
     <div class="flex-between">
       <div class="topbar-title">Incident Logger</div>
       <div class="flex-row" style="gap:6px">
-        <div class="sync-dot" id="sync-dot-log" title="Cloud sync"></div>
+        <div class="sync-dot" id="sync-dot-log"></div>
         <div class="badge-pill" id="user-pill" style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;"></div>
       </div>
     </div>
@@ -229,17 +230,7 @@ input,select,textarea,button{font-family:inherit}
     <button class="btn btn-primary" id="submit-btn" onclick="submitLog()">Submit Log &middot; Update Status</button>
     <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
   </div>
-  <div class="bottom-nav">
-    <button class="nav-btn active" onclick="gotoScreen('log')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Log
-    </button>
-    <button class="nav-btn" onclick="gotoScreen('dashboard')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard
-    </button>
-    <button class="nav-btn" onclick="doLogout()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out
-    </button>
-  </div>
+  <div class="bottom-nav" id="nav-log"></div>
 </div>
 
 <!-- DASHBOARD -->
@@ -249,7 +240,7 @@ input,select,textarea,button{font-family:inherit}
     <div class="flex-between">
       <div class="topbar-title">Room Dashboard</div>
       <div class="flex-row" style="gap:6px">
-        <div class="sync-dot" id="sync-dot-dash" title="Cloud sync"></div>
+        <div class="sync-dot" id="sync-dot-dash"></div>
         <div class="badge-pill" id="user-pill-dash" style="max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;"></div>
       </div>
     </div>
@@ -261,17 +252,7 @@ input,select,textarea,button{font-family:inherit}
   <div class="scroll-body" style="padding-top:4px;" id="room-grid-container">
     <div style="color:var(--slate-2);text-align:center;padding:40px 0;font-size:13px;">Loading rooms from cloud&#8230;</div>
   </div>
-  <div class="bottom-nav">
-    <button class="nav-btn" onclick="gotoScreen('log')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Log
-    </button>
-    <button class="nav-btn active" onclick="gotoScreen('dashboard')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard
-    </button>
-    <button class="nav-btn" onclick="doLogout()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out
-    </button>
-  </div>
+  <div class="bottom-nav" id="nav-dashboard"></div>
 </div>
 
 <!-- DETAIL -->
@@ -285,60 +266,113 @@ input,select,textarea,button{font-family:inherit}
   <div class="scroll-body" id="detail-body"></div>
 </div>
 
+<!-- REPORT -->
+<div id="screen-report" class="screen">
+  <div class="topbar">
+    <div class="topbar-brand">Room Maintenance &amp; Asset Tracker</div>
+    <div class="flex-between">
+      <div class="topbar-title">Room Status Report</div>
+      <div class="sync-dot" id="sync-dot-report"></div>
+    </div>
+    <div id="report-meta" style="font-size:11px;color:var(--slate);margin-top:4px;"></div>
+  </div>
+  <div class="scroll-body" id="report-body"></div>
+  <div class="bottom-nav" id="nav-report"></div>
+</div>
+
+<!-- CONFIG (admin only) -->
+<div id="screen-config" class="screen">
+  <div class="topbar">
+    <div class="topbar-brand">Room Maintenance &amp; Asset Tracker</div>
+    <div class="flex-between">
+      <div class="topbar-title">Configuration</div>
+      <div style="background:rgba(168,85,247,0.2);border:1px solid #A855F7;color:#D8B4FE;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">ADMIN</div>
+    </div>
+  </div>
+  <div class="scroll-body">
+    <div class="section-head" style="margin-bottom:14px;">Staff Accounts</div>
+    <div id="config-users"></div>
+    <div style="height:20px;"></div>
+  </div>
+  <div class="bottom-nav" id="nav-config"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 <input type="file" id="media-input" accept="image/*" capture="environment" class="hidden" onchange="handleMediaCapture(event)"/>
 </div>
-
 <script>
-const SUPA_URL = 'https://wpriwhjwkwdsoiiffcrq.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indwcml3aGp3a3dkc29paWZmY3JxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2NzQyOTgsImV4cCI6MjA5NTI1MDI5OH0.PgKCMIODcEFBhAvuAmcxHcomzOtmva87oGJCRqNFIQA';
-const H = {'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
+const SUPA_URL='https://wpriwhjwkwdsoiiffcrq.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indwcml3aGp3a3dkc29paWZmY3JxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2NzQyOTgsImV4cCI6MjA5NTI1MDI5OH0.PgKCMIODcEFBhAvuAmcxHcomzOtmva87oGJCRqNFIQA';
+const H={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
 
-async function sbGet(t,p=''){const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?'+p,{headers:H});if(!r.ok)throw new Error(await r.text());return r.json();}
+async function sbGet(t,p){const r=await fetch(SUPA_URL+'/rest/v1/'+t+(p?'?'+p:''),{headers:H});if(!r.ok)throw new Error(await r.text());return r.json();}
 async function sbUpsert(t,b){const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:{...H,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());}
 async function sbInsert(t,b){const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());}
+async function sbPatch(t,id,b){const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());}
 
+let currentUser=null,currentUserId=null,isAdmin=false;
+let selectedStatus=null,activeFilter='all',detailRoom=null;
+let roomCache={},logsCache={},mediaCache={};
+let staffList=[];
 let rtWs=null;
+
+const ROOM_TYPES={100:'AC2',101:'AC2',102:'RM1',103:'RM3',104:'RM3',105:'RM3',106:'RM1',107:'RM1',108:'RM3',110:'RM1',111:'RM1',112:'RM3',113:'RM3',114:'RM3',115:'RM3',116:'RM3',117:'RM3',118:'RM3',119:'RM3',120:'AC1',121:'AC1',122:'RM3',123:'RM3',124:'RM3',125:'RM3',126:'RM3',127:'RM3',128:'RM3',129:'RM3',130:'RM3',131:'RM3',132:'RM3',133:'RM3',134:'RM3',135:'RM3',140:'RM3',141:'RM3',142:'RM3',143:'RM3',144:'RM3',145:'RM3',146:'RM3',147:'RM3',148:'RM3',149:'RM3',150:'RM3',151:'RM3',200:'RM3',201:'RM3',202:'RM3',203:'RM3',204:'RM3',205:'RM3',206:'RM1',207:'RM1',208:'RM3',209:'RM3',210:'RM1',211:'RM1',212:'RM3',213:'RM3',214:'RM3',215:'RM3',216:'RM3',217:'RM3',218:'RM3',219:'RM3',220:'AC1',221:'AC1',222:'RM3',223:'RM3',224:'RM3',225:'RM3',226:'RM3',227:'RM3',228:'RM3',229:'RM3',230:'RM3',231:'RM3',232:'RM3',233:'RM3',234:'RM3',235:'RM3',240:'RM3',241:'RM3',242:'RM3',243:'RM3',244:'RM3',245:'RM3',246:'RM3',247:'RM3',248:'RM3',249:'RM3',250:'RM3',251:'RM3',300:'RM3',301:'RM3',302:'RM3',303:'RM3',304:'RM3',305:'RM3',306:'RM3',307:'RM3',308:'RM3',309:'RM3',310:'RM3',311:'RM3',312:'RM3',313:'RM3',314:'RM3',315:'RM3',316:'RM3',317:'RM3',318:'RM3',319:'RM3',320:'RM2',321:'RM2',322:'RM3',323:'RM3',324:'RM3',325:'RM3',326:'RM3',327:'RM3',328:'RM3',329:'RM3',330:'RM3',331:'RM3',332:'RM3',333:'RM3',334:'RM3',335:'RM3',340:'RM3',341:'RM3',342:'RM3',343:'RM3',344:'RM3',345:'RM3',346:'RM3',347:'RM3',348:'RM3',349:'RM3',350:'RM3',351:'RM3',400:'RM3',401:'RM3',402:'RM3',403:'RM3',404:'RM3',405:'RM3',406:'RM3',407:'RM3',408:'RM3',409:'RM3',410:'RM3',411:'RM3',412:'RM3',413:'RM3',414:'RM3',415:'RM3',416:'RM3',417:'RM3',418:'RM3',419:'RM3',420:'RM2',421:'RM2',422:'RM3',423:'RM3',424:'RM3',425:'RM3',426:'RM3',427:'RM3',428:'RM3',429:'RM3',430:'RM3',431:'RM3',432:'RM3',433:'RM3',434:'RM3',435:'RM3',440:'RM3',441:'RM3',442:'RM3',443:'RM3',444:'RM3',445:'RM3',446:'RM3',447:'RM3',448:'RM3',449:'RM3',450:'RM3',451:'RM3'};
+const TYPE_LABELS={RM1:'King',RM2:'Single Queen',RM3:'Double Queen',AC1:'Queen ADA',AC2:'ADA Suite'};
+const OSE_ITEMS=['Room Telephone - Functional','Telephone Faceplate - Present & Clean','Single-Cup Coffeemaker - Present & Working','Microwave - Present, Clean & Functional','Refrigerator - Present, Clean & Functional','Wyndham-Approved Coffee Cups - Stocked (2 per guest)','TV Remote - Present & Functional','Hair Dryer - Present & Working','Iron & Ironing Board - Present','Do Not Disturb Sign - Present'];
+
+async function loadStaff(){
+  try{
+    staffList=await sbGet('staff_config','order=is_admin.desc,id.asc');
+    const sel=document.getElementById('login-staff');
+    sel.innerHTML='<option value="">&#8212; Select Your Name &#8212;</option>';
+    staffList.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name+' · '+s.role;sel.appendChild(o);});
+  }catch(e){document.getElementById('login-status').textContent='Cannot load staff: '+e.message;}
+}
+
 function connectRealtime(){
   const url=SUPA_URL.replace('https','wss')+'/realtime/v1/websocket?apikey='+SUPA_KEY+'&vsn=1.0.0';
   rtWs=new WebSocket(url);
-  rtWs.onopen=()=>{rtWs.send(JSON.stringify({topic:'realtime:public:room_state',event:'phx_join',payload:{},ref:'1'}));setSyncDots('ok');};
-  rtWs.onmessage=(e)=>{
+  rtWs.onopen=function(){rtWs.send(JSON.stringify({topic:'realtime:public:room_state',event:'phx_join',payload:{},ref:'1'}));setSyncDots('ok');};
+  rtWs.onmessage=function(e){
     try{const m=JSON.parse(e.data);
       if(m.event==='INSERT'||m.event==='UPDATE'){const row=m.payload&&m.payload.record;
         if(row){roomCache[row.room_number]={status:row.status,ose_flags:row.ose_flags||[]};
           if(document.getElementById('screen-dashboard').classList.contains('active'))renderDashboard();
           if(detailRoom&&detailRoom===row.room_number&&document.getElementById('screen-detail').classList.contains('active'))renderDetailHeader();
         }}}catch(_){}};
-  rtWs.onerror=()=>setSyncDots('err');
-  rtWs.onclose=()=>{setSyncDots('err');setTimeout(connectRealtime,5000);};}
-function setSyncDots(s){['sync-dot-log','sync-dot-dash'].forEach(id=>{const el=document.getElementById(id);if(el)el.className='sync-dot '+(s==='ok'?'ok':s==='pulse'?'pulse':'err');});}
+  rtWs.onerror=function(){setSyncDots('err');};
+  rtWs.onclose=function(){setSyncDots('err');setTimeout(connectRealtime,5000);};
+}
+function setSyncDots(s){['sync-dot-log','sync-dot-dash','sync-dot-report'].forEach(function(id){var el=document.getElementById(id);if(el)el.className='sync-dot '+(s==='ok'?'ok':s==='pulse'?'pulse':'err');});}
 
-const ROOM_TYPES={100:'AC2',101:'AC2',102:'RM1',103:'RM3',104:'RM3',105:'RM3',106:'RM1',107:'RM1',108:'RM3',110:'RM1',111:'RM1',112:'RM3',113:'RM3',114:'RM3',115:'RM3',116:'RM3',117:'RM3',118:'RM3',119:'RM3',120:'AC1',121:'AC1',122:'RM3',123:'RM3',124:'RM3',125:'RM3',126:'RM3',127:'RM3',128:'RM3',129:'RM3',130:'RM3',131:'RM3',132:'RM3',133:'RM3',134:'RM3',135:'RM3',140:'RM3',141:'RM3',142:'RM3',143:'RM3',144:'RM3',145:'RM3',146:'RM3',147:'RM3',148:'RM3',149:'RM3',150:'RM3',151:'RM3',200:'RM3',201:'RM3',202:'RM3',203:'RM3',204:'RM3',205:'RM3',206:'RM1',207:'RM1',208:'RM3',209:'RM3',210:'RM1',211:'RM1',212:'RM3',213:'RM3',214:'RM3',215:'RM3',216:'RM3',217:'RM3',218:'RM3',219:'RM3',220:'AC1',221:'AC1',222:'RM3',223:'RM3',224:'RM3',225:'RM3',226:'RM3',227:'RM3',228:'RM3',229:'RM3',230:'RM3',231:'RM3',232:'RM3',233:'RM3',234:'RM3',235:'RM3',240:'RM3',241:'RM3',242:'RM3',243:'RM3',244:'RM3',245:'RM3',246:'RM3',247:'RM3',248:'RM3',249:'RM3',250:'RM3',251:'RM3',300:'RM3',301:'RM3',302:'RM3',303:'RM3',304:'RM3',305:'RM3',306:'RM3',307:'RM3',308:'RM3',309:'RM3',310:'RM3',311:'RM3',312:'RM3',313:'RM3',314:'RM3',315:'RM3',316:'RM3',317:'RM3',318:'RM3',319:'RM3',320:'RM2',321:'RM2',322:'RM3',323:'RM3',324:'RM3',325:'RM3',326:'RM3',327:'RM3',328:'RM3',329:'RM3',330:'RM3',331:'RM3',332:'RM3',333:'RM3',334:'RM3',335:'RM3',340:'RM3',341:'RM3',342:'RM3',343:'RM3',344:'RM3',345:'RM3',346:'RM3',347:'RM3',348:'RM3',349:'RM3',350:'RM3',351:'RM3',400:'RM3',401:'RM3',402:'RM3',403:'RM3',404:'RM3',405:'RM3',406:'RM3',407:'RM3',408:'RM3',409:'RM3',410:'RM3',411:'RM3',412:'RM3',413:'RM3',414:'RM3',415:'RM3',416:'RM3',417:'RM3',418:'RM3',419:'RM3',420:'RM2',421:'RM2',422:'RM3',423:'RM3',424:'RM3',425:'RM3',426:'RM3',427:'RM3',428:'RM3',429:'RM3',430:'RM3',431:'RM3',432:'RM3',433:'RM3',434:'RM3',435:'RM3',440:'RM3',441:'RM3',442:'RM3',443:'RM3',444:'RM3',445:'RM3',446:'RM3',447:'RM3',448:'RM3',449:'RM3',450:'RM3',451:'RM3'};
-const TYPE_LABELS={RM1:'King',RM2:'Single Queen',RM3:'Double Queen',AC1:'Queen ADA',AC2:'ADA Suite'};
-const OSE_ITEMS=['Room Telephone - Functional','Telephone Faceplate - Present & Clean','Single-Cup Coffeemaker - Present & Working','Microwave - Present, Clean & Functional','Refrigerator - Present, Clean & Functional','Wyndham-Approved Coffee Cups - Stocked (2 per guest)','TV Remote - Present & Functional','Hair Dryer - Present & Working','Iron & Ironing Board - Present','Do Not Disturb Sign - Present'];
-
-let currentUser=null,selectedStatus=null,activeFilter='all',detailRoom=null;
-let roomCache={},logsCache={},mediaCache={};
+async function loadAllRoomStates(){
+  const rows=await sbGet('room_state','select=room_number,status,ose_flags');
+  rows.forEach(function(r){roomCache[r.room_number]={status:r.status,ose_flags:r.ose_flags||[]};});
+}
+function getRoomStatus(n){return(roomCache[String(n)]&&roomCache[String(n)].status)||'VR';}
 
 async function doLogin(){
   const sEl=document.getElementById('login-staff'),pEl=document.getElementById('login-pin');
   const btn=document.getElementById('login-btn'),st=document.getElementById('login-status');
-  if(!sEl.value){showToast('Please select your name.','error');return;}
+  if(!sEl.value){showToast('Select your name.','error');return;}
   if(pEl.value.length!==4){showToast('Enter a 4-digit PIN.','error');return;}
-  if(pEl.value!=='1234'){showToast('Incorrect PIN.','error');return;}
-  currentUser=sEl.value.split('\u00b7')[0].trim();
+  const staff=staffList.find(function(s){return s.id===sEl.value;});
+  if(!staff){showToast('User not found.','error');return;}
+  if(pEl.value!==staff.pin){showToast('Incorrect PIN.','error');return;}
+  currentUser=staff.name;currentUserId=staff.id;isAdmin=staff.is_admin;
   btn.disabled=true;btn.textContent='Connecting...';st.textContent='Connecting to cloud...';
   try{
     await loadAllRoomStates();
     connectRealtime();
     document.getElementById('user-pill').textContent=currentUser;
     document.getElementById('user-pill-dash').textContent=currentUser;
+    buildNav();
     gotoScreen('log');
   }catch(err){st.textContent='Connection error: '+err.message;btn.disabled=false;btn.textContent='Sign In to Room Tracker';}
 }
+
 function doLogout(){
-  currentUser=null;selectedStatus=null;detailRoom=null;
+  currentUser=null;currentUserId=null;isAdmin=false;selectedStatus=null;detailRoom=null;
   if(rtWs){rtWs.close();rtWs=null;}
   clearForm();
   document.getElementById('login-staff').value='';
@@ -346,60 +380,79 @@ function doLogout(){
   document.getElementById('login-btn').disabled=false;
   document.getElementById('login-btn').textContent='Sign In to Room Tracker';
   document.getElementById('login-status').textContent='';
-  gotoScreen('login');
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('screen-login').classList.add('active');
 }
-async function loadAllRoomStates(){
-  const rows=await sbGet('room_state','select=room_number,status,ose_flags');
-  rows.forEach(r=>{roomCache[r.room_number]={status:r.status,ose_flags:r.ose_flags||[]};});
+
+function buildNav(){
+  var tabs=[
+    {id:'log',label:'Log',icon:'<path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>'},
+    {id:'dashboard',label:'Rooms',icon:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>'},
+    {id:'report',label:'Report',icon:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'}
+  ];
+  if(isAdmin){tabs.push({id:'config',label:'Config',icon:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>'});}
+  tabs.push({id:'logout',label:'Sign Out',icon:'<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>'});
+  var screens=['log','dashboard','report','config'];
+  screens.forEach(function(sc){
+    var el=document.getElementById('nav-'+sc);
+    if(!el)return;
+    el.innerHTML=tabs.map(function(t){
+      var act=t.id===sc?' active':'';
+      var click=t.id==='logout'?'doLogout()':'gotoScreen(\''+t.id+'\')';
+      return '<button class="nav-btn'+act+'" onclick="'+click+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">'+t.icon+'</svg>'+t.label+'</button>';
+    }).join('');
+  });
 }
-function getRoomStatus(n){return(roomCache[String(n)]&&roomCache[String(n)].status)||'VR';}
-async function loadLogsForRoom(n){const rows=await sbGet('room_logs','room_number=eq.'+n+'&select=*&order=created_at.desc');logsCache[String(n)]=rows;return rows;}
-async function loadMediaForRoom(n){const rows=await sbGet('room_media','room_number=eq.'+n+'&select=*&order=created_at.desc');mediaCache[String(n)]=rows;return rows;}
 
 function gotoScreen(name){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
   document.getElementById('screen-'+name).classList.add('active');
+  buildNav();
   if(name==='dashboard')renderDashboard();
+  if(name==='report')renderReport();
+  if(name==='config')renderConfig();
 }
+
 function onRoomInput(val){
-  const b=document.getElementById('room-type-display');
+  var b=document.getElementById('room-type-display');
   if(!val||val.length<3){b.classList.add('hidden');return;}
-  const t=ROOM_TYPES[parseInt(val)];
+  var t=ROOM_TYPES[parseInt(val)];
   b.classList.remove('hidden','error');
-  if(t){b.textContent=t+' \u00b7 '+TYPE_LABELS[t];b.classList.remove('error');}
+  if(t){b.textContent=t+' · '+TYPE_LABELS[t];b.classList.remove('error');}
   else{b.textContent='Room not found in inventory';b.classList.add('error');}
 }
 function onIssueChange(val){
-  const p=document.getElementById('ose-panel');
+  var p=document.getElementById('ose-panel');
   if(val==='OS&E Deficiency'){p.classList.remove('hidden');buildOseChecks();}else p.classList.add('hidden');
 }
 function buildOseChecks(){
-  document.getElementById('ose-checks').innerHTML=OSE_ITEMS.map((item,i)=>
-    '<label class="ose-label"><input type="checkbox" id="ose-'+i+'"/><span style="font-size:13px">'+item+'</span></label>'
-  ).join('');
+  document.getElementById('ose-checks').innerHTML=OSE_ITEMS.map(function(item,i){
+    return '<label class="ose-label"><input type="checkbox" id="ose-'+i+'"/><span style="font-size:13px">'+item+'</span></label>';
+  }).join('');
 }
-function selectStatus(s){selectedStatus=s;['VR','OOS','OOO'].forEach(k=>document.getElementById('stg-'+k).classList.toggle('selected',k===s));}
-function getOseFlags(){return OSE_ITEMS.filter((_,i)=>{const el=document.getElementById('ose-'+i);return el&&el.checked;});}
+function selectStatus(s){selectedStatus=s;['VR','OOS','OOO'].forEach(function(k){document.getElementById('stg-'+k).classList.toggle('selected',k===s);});}
+function getOseFlags(){return OSE_ITEMS.filter(function(_,i){var el=document.getElementById('ose-'+i);return el&&el.checked;});}
+
 async function submitLog(){
-  const rn=document.getElementById('room-num-input').value;
-  const ic=document.getElementById('issue-class').value;
-  const nt=document.getElementById('log-notes').value.trim();
+  var rn=document.getElementById('room-num-input').value;
+  var ic=document.getElementById('issue-class').value;
+  var nt=document.getElementById('log-notes').value.trim();
   if(!rn){showToast('Enter a room number.','error');return;}
   if(!ROOM_TYPES[parseInt(rn)]){showToast('Room not in inventory.','error');return;}
   if(!ic){showToast('Select a classification.','error');return;}
   if(!selectedStatus){showToast('Select a room status.','error');return;}
   if(!nt){showToast('Add a remark.','error');return;}
-  const flags=ic==='OS&E Deficiency'?getOseFlags():[];
-  const btn=document.getElementById('submit-btn');
+  var flags=ic==='OS&E Deficiency'?getOseFlags():[];
+  var btn=document.getElementById('submit-btn');
   btn.disabled=true;btn.textContent='Saving...';setSyncDots('pulse');
   try{
     await sbUpsert('room_state',{room_number:rn,room_type:ROOM_TYPES[parseInt(rn)],status:selectedStatus,ose_flags:flags,updated_at:new Date().toISOString()});
     await sbInsert('room_logs',{room_number:rn,staff_name:currentUser,issue_class:ic,status_at_log:selectedStatus,notes:nt,ose_flags:flags});
     roomCache[rn]={status:selectedStatus,ose_flags:flags};
     delete logsCache[rn];
-    setSyncDots('ok');showToast('Room '+rn+' \u2192 '+selectedStatus+' \u00b7 Saved','success');clearForm();
+    setSyncDots('ok');showToast('Room '+rn+' → '+selectedStatus+' · Saved','success');clearForm();
   }catch(err){setSyncDots('err');showToast('Save failed: '+err.message,'error');}
-  finally{btn.disabled=false;btn.textContent='Submit Log \u00b7 Update Status';}
+  finally{btn.disabled=false;btn.textContent='Submit Log · Update Status';}
 }
 function clearForm(){
   document.getElementById('room-num-input').value='';
@@ -408,101 +461,161 @@ function clearForm(){
   document.getElementById('ose-panel').classList.add('hidden');
   document.getElementById('log-notes').value='';
   selectedStatus=null;
-  ['VR','OOS','OOO'].forEach(k=>document.getElementById('stg-'+k).classList.remove('selected'));
+  ['VR','OOS','OOO'].forEach(function(k){document.getElementById('stg-'+k).classList.remove('selected');});
 }
-function allRooms(){return Object.keys(ROOM_TYPES).map(Number).sort((a,b)=>a-b);}
+
+function allRooms(){return Object.keys(ROOM_TYPES).map(Number).sort(function(a,b){return a-b;});}
 function getFloor(n){return Math.floor(n/100);}
-function isADA(n){return['AC1','AC2'].includes(ROOM_TYPES[n]);}
-function filteredRooms(){return allRooms().filter(n=>{
+function isADA(n){return['AC1','AC2'].indexOf(ROOM_TYPES[n])>=0;}
+function filteredRooms(){return allRooms().filter(function(n){
   if(activeFilter==='ada')return isADA(n);
-  if(['1','2','3','4'].includes(activeFilter))return getFloor(n)===parseInt(activeFilter);
+  if(['1','2','3','4'].indexOf(activeFilter)>=0)return getFloor(n)===parseInt(activeFilter);
   return true;});}
 function statusColor(s){return s==='OOO'?'red':s==='OOS'?'amber':'green';}
+
 function renderDashboard(){
-  const all=allRooms();let vr=0,oos=0,ooo=0;
-  all.forEach(n=>{const s=getRoomStatus(n);if(s==='OOO')ooo++;else if(s==='OOS')oos++;else vr++;});
+  var all=allRooms(),vr=0,oos=0,ooo=0;
+  all.forEach(function(n){var s=getRoomStatus(n);if(s==='OOO')ooo++;else if(s==='OOS')oos++;else vr++;});
   document.getElementById('summary-strip').innerHTML='<div class="sum-card"><div class="sum-num green">'+vr+'</div><div class="sum-lbl">Ready</div></div><div class="sum-card"><div class="sum-num amber">'+oos+'</div><div class="sum-lbl">OOS</div></div><div class="sum-card"><div class="sum-num red">'+ooo+'</div><div class="sum-lbl">OOO</div></div><div class="sum-card"><div class="sum-num" style="color:var(--teal-hi)">'+all.length+'</div><div class="sum-lbl">Total</div></div>';
-  const filters=[{key:'all',label:'All'},{key:'1',label:'1st Floor'},{key:'2',label:'2nd Floor'},{key:'3',label:'3rd Floor'},{key:'4',label:'4th Floor'},{key:'ada',label:'ADA / AC',extra:'ada'}];
-  document.getElementById('filter-row').innerHTML=filters.map(f=>'<div class="chip '+(f.extra||'')+' '+(activeFilter===f.key?'active':'')+'" onclick="setFilter(\''+f.key+'\')">'+f.label+'</div>').join('');
-  const rooms=filteredRooms();const byFloor={};
-  rooms.forEach(n=>{const fl=getFloor(n);if(!byFloor[fl])byFloor[fl]=[];byFloor[fl].push(n);});
-  const flN={1:'1st Floor',2:'2nd Floor',3:'3rd Floor',4:'4th Floor'};
-  document.getElementById('room-grid-container').innerHTML=Object.keys(byFloor).sort().map(fl=>{
-    const cells=byFloor[fl].map(n=>{
-      const st=getRoomStatus(n),col=statusColor(st),nts=st==='OOS'&&roomCache[String(n)];
+  var filters=[{key:'all',label:'All'},{key:'1',label:'1st Floor'},{key:'2',label:'2nd Floor'},{key:'3',label:'3rd Floor'},{key:'4',label:'4th Floor'},{key:'ada',label:'ADA / AC',extra:'ada'}];
+  document.getElementById('filter-row').innerHTML=filters.map(function(f){return '<div class="chip '+(f.extra||'')+' '+(activeFilter===f.key?'active':'')+'" onclick="setFilter(\''+f.key+'\')">'+f.label+'</div>';}).join('');
+  var rooms=filteredRooms(),byFloor={};
+  rooms.forEach(function(n){var fl=getFloor(n);if(!byFloor[fl])byFloor[fl]=[];byFloor[fl].push(n);});
+  var flN={1:'1st Floor',2:'2nd Floor',3:'3rd Floor',4:'4th Floor'};
+  document.getElementById('room-grid-container').innerHTML=Object.keys(byFloor).sort().map(function(fl){
+    var cells=byFloor[fl].map(function(n){
+      var st=getRoomStatus(n),col=statusColor(st),nts=st==='OOS';
       return '<div class="room-cell cell-'+col+'" onclick="openDetail('+n+')">'+(nts?'<div class="r-nts"></div>':'')+'<div class="r-num">'+n+'</div><div class="r-type">'+ROOM_TYPES[n]+'</div></div>';
     }).join('');
     return '<div class="floor-section"><div class="floor-label">'+flN[fl]+'</div><div class="room-grid">'+cells+'</div></div>';
   }).join('');
 }
 function setFilter(k){activeFilter=k;renderDashboard();}
+
 async function openDetail(num){
-  detailRoom=String(num);gotoScreen('detail');renderDetailHeader();
-  document.getElementById('detail-body').innerHTML='<div style="color:var(--slate-2);text-align:center;padding:40px 0;font-size:13px;">Loading log...</div>';
-  try{await Promise.all([loadLogsForRoom(detailRoom),loadMediaForRoom(detailRoom)]);renderDetailBody();}
-  catch(err){document.getElementById('detail-body').innerHTML='<div style="color:#F87171;padding:20px;font-size:13px;">Failed: '+err.message+'</div>';}
+  detailRoom=String(num);
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('screen-detail').classList.add('active');
+  renderDetailHeader();
+  document.getElementById('detail-body').innerHTML='<div style="color:var(--slate-2);text-align:center;padding:40px 0;font-size:13px;">Loading log…</div>';
+  try{
+    await Promise.all([loadLogsForRoom(detailRoom),loadMediaForRoom(detailRoom)]);
+    renderDetailBody();
+  }catch(err){document.getElementById('detail-body').innerHTML='<div style="color:#F87171;padding:20px;font-size:13px;">Failed: '+err.message+'</div>';}
 }
+async function loadLogsForRoom(n){var rows=await sbGet('room_logs','room_number=eq.'+n+'&select=*&order=created_at.desc');logsCache[String(n)]=rows;return rows;}
+async function loadMediaForRoom(n){var rows=await sbGet('room_media','room_number=eq.'+n+'&select=*&order=created_at.desc');mediaCache[String(n)]=rows;return rows;}
+
 function renderDetailHeader(){
-  const n=detailRoom,type=ROOM_TYPES[parseInt(n)],st=getRoomStatus(n),col=statusColor(st);
-  const nts=st==='OOS'&&roomCache[n];
-  const lbl=st==='VR'?'Vacant Ready':st==='OOS'?'Service Required (OOS)':'Out of Order (OOO)';
-  document.getElementById('detail-header').innerHTML='<div class="detail-room-num">Room '+n+'</div><div class="detail-type">'+type+' \u00b7 '+(TYPE_LABELS[type]||'')+(isADA(parseInt(n))?' \u00b7 \u267F ADA':'')+'</div><div class="detail-status-row"><div class="status-chip '+col+'"><div class="status-dot dot-'+col+'"></div>'+lbl+'</div>'+(nts?'<div class="nts-tag">\u26a1 Next to Sell</div>':'')+'</div>';
+  var n=detailRoom,type=ROOM_TYPES[parseInt(n)],st=getRoomStatus(n),col=statusColor(st);
+  var lbl=st==='VR'?'Vacant Ready':st==='OOS'?'Service Required (OOS)':'Out of Order (OOO)';
+  document.getElementById('detail-header').innerHTML='<div class="detail-room-num">Room '+n+'</div><div class="detail-type">'+type+' · '+(TYPE_LABELS[type]||'')+(isADA(parseInt(n))?' · ♿ ADA':'')+'</div><div class="detail-status-row"><div class="status-chip '+col+'"><div class="status-dot dot-'+col+'"></div>'+lbl+'</div>'+(st==='OOS'?'<div class="nts-tag">⚡ Next to Sell</div>':'')+'</div>';
 }
+
 function renderDetailBody(){
-  const n=detailRoom,st=getRoomStatus(n),logs=logsCache[n]||[],media=mediaCache[n]||[];
-  const logsHtml=logs.length===0?'<div style="color:var(--slate-2);font-size:13px;text-align:center;padding:24px 0;">No incidents logged.</div>':logs.map(e=>{
-    const ts=new Date(e.created_at),pad=x=>String(x).padStart(2,'0');
-    const tsStr=pad(ts.getMonth()+1)+'/'+pad(ts.getDate())+'/'+ts.getFullYear()+' \u2013 '+pad(ts.getHours())+':'+pad(ts.getMinutes());
-    const oseHtml=e.ose_flags&&e.ose_flags.length?'<div style="margin-top:8px;padding:8px;background:rgba(217,119,6,0.1);border-radius:6px;border:1px solid rgba(217,119,6,0.2);"><div style="font-size:10px;font-weight:700;color:#FCD34D;margin-bottom:4px;letter-spacing:0.06em;">OS&E DEFICIENCIES:</div>'+e.ose_flags.map(f=>'<div style="font-size:11px;color:#FDE68A;padding:2px 0;">\u2022 '+f+'</div>').join('')+'</div>':'';
+  var n=detailRoom,st=getRoomStatus(n),logs=logsCache[n]||[],media=mediaCache[n]||[];
+  var pad=function(x){return String(x).padStart(2,'0');};
+  var logsHtml=logs.length===0?'<div style="color:var(--slate-2);font-size:13px;text-align:center;padding:24px 0;">No incidents logged.</div>':logs.map(function(e){
+    var ts=new Date(e.created_at);
+    var tsStr=pad(ts.getMonth()+1)+'/'+pad(ts.getDate())+'/'+ts.getFullYear()+' – '+pad(ts.getHours())+':'+pad(ts.getMinutes());
+    var oseHtml=e.ose_flags&&e.ose_flags.length?'<div style="margin-top:8px;padding:8px;background:rgba(217,119,6,0.1);border-radius:6px;border:1px solid rgba(217,119,6,0.2);"><div style="font-size:10px;font-weight:700;color:#FCD34D;margin-bottom:4px;">OS&E DEFICIENCIES:</div>'+e.ose_flags.map(function(f){return'<div style="font-size:11px;color:#FDE68A;padding:2px 0;">• '+f+'</div>';}).join('')+'</div>':'';
     return '<div class="log-entry status-bar-'+statusColor(e.status_at_log)+'"><div class="log-meta"><span>[ '+e.staff_name+' ]</span>&nbsp;|&nbsp; '+tsStr+'</div><div class="log-class">'+e.issue_class+'</div><div class="log-note">'+e.notes+'</div>'+oseHtml+'</div>';
   }).join('');
-  const mediaHtml=media.length>0?'<div class="media-grid">'+media.map(m=>'<div class="media-thumb"><img src="'+m.data_url+'" alt="Evidence"/></div>').join('')+'</div>':'';
-  document.getElementById('detail-body').innerHTML='<div class="section-head" style="margin-bottom:10px;">Quick Status Update</div><div class="status-toggle-row"><button class="stg-btn stg-green '+(st==='VR'?'selected':'')+'" onclick="detailSetStatus(\'VR\')">\u2713 Vacant Ready</button><button class="stg-btn stg-amber '+(st==='OOS'?'selected':'')+'" onclick="detailSetStatus(\'OOS\')">\u26a0 OOS</button><button class="stg-btn stg-red '+(st==='OOO'?'selected':'')+'" onclick="detailSetStatus(\'OOO\')">\u2715 Out of Order</button></div><div class="section-head">Photo Evidence &amp; Media</div>'+mediaHtml+'<button class="media-btn" onclick="activateCamera()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Photo Evidence &amp; Inspection Media</button><div class="section-head">Audit Log <span style="color:var(--teal-hi);font-size:10px;margin-left:6px;">'+logs.length+' entries</span></div>'+logsHtml+'<div class="divider"></div><div class="section-head">Add Quick Note</div><div class="form-group"><select class="form-select" id="detail-issue-class"><option value="">&#8212; Classification &#8212;</option><option value="Housekeeping Discrepancy">Housekeeping Discrepancy</option><option value="Engineering / Maintenance Required">Engineering / Maintenance Required</option><option value="Plumbing Emergency">Plumbing Emergency</option><option value="HVAC Malfunction">HVAC Malfunction</option><option value="OS&E Deficiency">OS&amp;E Deficiency</option><option value="PM Outage">PM Outage</option></select></div><div class="form-group"><textarea class="form-textarea" id="detail-note" placeholder="Add an operations note..."></textarea></div><button class="btn btn-primary" id="detail-post-btn" onclick="submitDetailNote()">Post Note</button><div style="height:20px;"></div>';
+  var mediaHtml=media.length>0?'<div class="media-grid">'+media.map(function(m){return'<div class="media-thumb"><img src="'+m.data_url+'" alt="Evidence"/></div>';}).join('')+'</div>':'';
+  document.getElementById('detail-body').innerHTML='<div style="padding:16px;"><div class="section-head" style="margin-bottom:10px;">Quick Status Update</div><div class="status-toggle-row"><button class="stg-btn stg-green '+(st==='VR'?'selected':'')+'" onclick="detailSetStatus(\'VR\')">✓ Vacant Ready</button><button class="stg-btn stg-amber '+(st==='OOS'?'selected':'')+'" onclick="detailSetStatus(\'OOS\')">⚠ OOS</button><button class="stg-btn stg-red '+(st==='OOO'?'selected':'')+'" onclick="detailSetStatus(\'OOO\')">✕ Out of Order</button></div><div class="section-head">Photo Evidence &amp; Media</div>'+mediaHtml+'<button class="media-btn" onclick="activateCamera()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Add Photo Evidence</button><div class="section-head">Audit Log <span style="color:var(--teal-hi);font-size:10px;margin-left:6px;">'+logs.length+' entries</span></div>'+logsHtml+'<div class="divider"></div><div class="section-head">Add Quick Note</div><div class="form-group"><select class="form-select" id="detail-issue-class"><option value="">&#8212; Classification &#8212;</option><option value="Housekeeping Discrepancy">Housekeeping Discrepancy</option><option value="Engineering / Maintenance Required">Engineering / Maintenance Required</option><option value="Plumbing Emergency">Plumbing Emergency</option><option value="HVAC Malfunction">HVAC Malfunction</option><option value="OS&amp;E Deficiency">OS&amp;E Deficiency</option><option value="PM Outage">PM Outage</option></select></div><div class="form-group"><textarea class="form-textarea" id="detail-note" placeholder="Add an operations note..."></textarea></div><button class="btn btn-primary" id="detail-post-btn" onclick="submitDetailNote()">Post Note</button><div style="height:20px;"></div></div>';
 }
+
 async function detailSetStatus(s){
-  const type=ROOM_TYPES[parseInt(detailRoom)];setSyncDots('pulse');
+  var type=ROOM_TYPES[parseInt(detailRoom)];setSyncDots('pulse');
   try{
     await sbUpsert('room_state',{room_number:detailRoom,room_type:type,status:s,ose_flags:(roomCache[detailRoom]&&roomCache[detailRoom].ose_flags)||[],updated_at:new Date().toISOString()});
-    roomCache[detailRoom]=Object.assign({},roomCache[detailRoom],{status:s});
-    renderDetailHeader();renderDetailBody();setSyncDots('ok');showToast('Room '+detailRoom+' \u2192 '+s+' \u00b7 Saved','success');
+    roomCache[detailRoom]=Object.assign({},roomCache[detailRoom]||{},{status:s});
+    renderDetailHeader();renderDetailBody();setSyncDots('ok');showToast('Room '+detailRoom+' → '+s+' · Saved','success');
   }catch(err){setSyncDots('err');showToast('Save failed: '+err.message,'error');}
 }
 async function submitDetailNote(){
-  const ic=document.getElementById('detail-issue-class').value;
-  const nt=document.getElementById('detail-note').value.trim();
+  var ic=document.getElementById('detail-issue-class').value;
+  var nt=document.getElementById('detail-note').value.trim();
   if(!ic){showToast('Select a classification.','error');return;}
   if(!nt){showToast('Add a note.','error');return;}
-  const btn=document.getElementById('detail-post-btn');
+  var btn=document.getElementById('detail-post-btn');
   btn.disabled=true;btn.textContent='Saving...';setSyncDots('pulse');
   try{
     await sbInsert('room_logs',{room_number:detailRoom,staff_name:currentUser,issue_class:ic,status_at_log:getRoomStatus(detailRoom),notes:nt,ose_flags:[]});
     delete logsCache[detailRoom];await loadLogsForRoom(detailRoom);
-    setSyncDots('ok');showToast('Note posted & saved.','success');renderDetailBody();
+    setSyncDots('ok');showToast('Note posted.','success');renderDetailBody();
   }catch(err){setSyncDots('err');showToast('Save failed: '+err.message,'error');}
   finally{btn.disabled=false;btn.textContent='Post Note';}
 }
+
+function renderReport(){
+  var all=allRooms(),vr=[],oos=[],ooo=[];
+  all.forEach(function(n){var s=getRoomStatus(n);if(s==='OOO')ooo.push(n);else if(s==='OOS')oos.push(n);else vr.push(n);});
+  var now=new Date(),pad=function(x){return String(x).padStart(2,'0');};
+  var dateStr=pad(now.getMonth()+1)+'/'+pad(now.getDate())+'/'+now.getFullYear()+' '+pad(now.getHours())+':'+pad(now.getMinutes());
+  document.getElementById('report-meta').textContent='Generated: '+dateStr+' · '+all.length+' rooms';
+  setSyncDots('ok');
+  function makeTable(rooms,badgeClass,badgeLabel){
+    if(!rooms.length)return'<div style="padding:12px;color:var(--slate-2);font-size:12px;">None</div>';
+    return'<table class="report-table"><thead><tr><th>Room</th><th>Type</th><th>Status</th></tr></thead><tbody>'+rooms.map(function(n){return'<tr><td style="font-family:\'JetBrains Mono\',monospace;font-weight:600;">'+n+'</td><td style="color:var(--slate);">'+ROOM_TYPES[n]+' · '+TYPE_LABELS[ROOM_TYPES[n]]+'</td><td><span class="badge '+badgeClass+'">'+badgeLabel+'</span></td></tr>';}).join('')+'</tbody></table>';
+  }
+  document.getElementById('report-body').innerHTML='<div style="padding:16px;"><div class="summary-strip"><div class="sum-card"><div class="sum-num green">'+vr.length+'</div><div class="sum-lbl">Ready</div></div><div class="sum-card"><div class="sum-num amber">'+oos.length+'</div><div class="sum-lbl">OOS</div></div><div class="sum-card"><div class="sum-num red">'+ooo.length+'</div><div class="sum-lbl">OOO</div></div><div class="sum-card"><div class="sum-num" style="color:var(--teal-hi)">'+all.length+'</div><div class="sum-lbl">Total</div></div></div>'+(ooo.length?'<div class="section-head">Out of Order ('+ooo.length+')</div><div class="report-section">'+makeTable(ooo,'badge-ooo','OOO')+'</div>':'')+(oos.length?'<div class="section-head">Service Required · OOS ('+oos.length+')</div><div class="report-section">'+makeTable(oos,'badge-oos','OOS')+'</div>':'')+'<div class="section-head">Vacant Ready ('+vr.length+')</div><div class="report-section">'+makeTable(vr,'badge-vr','VR')+'</div><div style="height:20px;"></div></div>';
+}
+
+function renderConfig(){
+  if(!isAdmin){document.getElementById('config-users').innerHTML='<p style="color:#F87171;padding:20px;text-align:center;">Access denied.</p>';return;}
+  document.getElementById('config-users').innerHTML=staffList.map(function(s){
+    return'<div class="user-card" id="ucard-'+s.id+'"><div class="user-card-header"><div class="user-avatar'+(s.is_admin?' admin':'')+'">'+s.name.charAt(0)+'</div><div><div class="user-card-title" id="uname-display-'+s.id+'">'+s.name+'</div><div class="user-card-role">'+s.role+'</div></div></div><div class="form-group"><label class="form-label">Display Name</label><input class="form-input" id="uname-'+s.id+'" value="'+s.name+'" placeholder="Staff name"'+(s.is_admin?' style="border-color:rgba(168,85,247,0.4)"':'')+'/></div><div class="form-group" style="margin-bottom:0;"><label class="form-label">PIN (4 digits)</label><div class="pin-row"><input class="form-input" id="upin-'+s.id+'" type="password" inputmode="numeric" maxlength="4" value="'+s.pin+'" placeholder="0000"'+(s.is_admin?' style="border-color:rgba(168,85,247,0.4)"':'')+'/><button style="padding:0 14px;border-radius:var(--radius-sm);background:var(--navy-3);border:1.5px solid rgba(255,255,255,0.1);color:var(--slate);cursor:pointer;font-size:12px;" onclick="togglePin(\''+s.id+'\')">Show</button></div></div><button class="save-user-btn" id="usave-'+s.id+'" onclick="saveUser(\''+s.id+'\')">Save Changes</button></div>';
+  }).join('');
+}
+function togglePin(id){var inp=document.getElementById('upin-'+id);inp.type=inp.type==='password'?'text':'password';}
+async function saveUser(id){
+  var nameEl=document.getElementById('uname-'+id);
+  var pinEl=document.getElementById('upin-'+id);
+  var btn=document.getElementById('usave-'+id);
+  var name=nameEl.value.trim(),pin=pinEl.value.trim();
+  if(!name){showToast('Name cannot be empty.','error');return;}
+  if(pin.length!==4||!/^\d{4}$/.test(pin)){showToast('PIN must be 4 digits.','error');return;}
+  btn.disabled=true;btn.textContent='Saving...';
+  try{
+    await sbPatch('staff_config',id,{name:name,pin:pin,updated_at:new Date().toISOString()});
+    var s=staffList.find(function(x){return x.id===id;});
+    if(s){s.name=name;s.pin=pin;}
+    var avatarEl=document.querySelector('#ucard-'+id+' .user-avatar');
+    if(avatarEl)avatarEl.textContent=name.charAt(0);
+    document.getElementById('uname-display-'+id).textContent=name;
+    btn.classList.add('saved');btn.textContent='✓ Saved';
+    setTimeout(function(){btn.classList.remove('saved');btn.textContent='Save Changes';btn.disabled=false;},2000);
+    showToast(name+' updated.','success');
+    await loadStaff();
+  }catch(err){showToast('Save failed: '+err.message,'error');btn.disabled=false;btn.textContent='Save Changes';}
+}
+
 function activateCamera(){document.getElementById('media-input').click();}
 async function handleMediaCapture(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
+  var file=e.target.files[0];if(!file)return;
+  var reader=new FileReader();
   reader.onload=async function(ev){
     setSyncDots('pulse');
     try{
       await sbInsert('room_media',{room_number:detailRoom,data_url:ev.target.result,uploaded_by:currentUser});
       delete mediaCache[detailRoom];await loadMediaForRoom(detailRoom);
-      setSyncDots('ok');showToast('Photo saved to cloud.','success');renderDetailBody();
+      setSyncDots('ok');showToast('Photo saved.','success');renderDetailBody();
     }catch(err){setSyncDots('err');showToast('Photo save failed: '+err.message,'error');}
   };
   reader.readAsDataURL(file);e.target.value='';
 }
-let toastTimer;
-function showToast(msg,type='success'){
-  const t=document.getElementById('toast');
-  t.textContent=(type==='success'?'\u2713 ':'\u2715 ')+msg;
-  t.className='toast show '+type;
+
+var toastTimer;
+function showToast(msg,type){
+  var t=document.getElementById('toast');
+  t.textContent=(type==='success'?'✓ ':'✕ ')+msg;
+  t.className='toast show '+(type||'success');
   clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+  toastTimer=setTimeout(function(){t.classList.remove('show');},3000);
 }
+
+loadStaff();
 </script>
 </body>
 </html>
