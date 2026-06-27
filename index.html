@@ -357,6 +357,7 @@ input,select,textarea,button{font-family:inherit}
 <input type="file" id="media-input" accept="image/*" capture="environment" class="hidden" onchange="handleMediaCapture(event)"/>
 </div>
 <script>
+
 const SUPA_URL='https://wpriwhjwkwdsoiiffcrq.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indwcml3aGp3a3dkc29paWZmY3JxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2NzQyOTgsImV4cCI6MjA5NTI1MDI5OH0.PgKCMIODcEFBhAvuAmcxHcomzOtmva87oGJCRqNFIQA';
 const H={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
@@ -641,110 +642,10 @@ async function saveUser(id){
     var avatarEl=document.querySelector('#ucard-'+id+' .user-avatar');
     if(avatarEl)avatarEl.textContent=name.charAt(0);
     document.getElementById('uname-display-'+id).textContent=name;
-    btn.classList.add('saved');btn.textContent='✓ Saved';
+    btn.classList.add('saved');btn.textContent='\u2713 Saved';
     setTimeout(function(){btn.classList.remove('saved');btn.textContent='Save Changes';btn.disabled=false;},2000);
     showToast(name+' updated.','success');
-    await 
-var inventoryCache=[];
-
-async function loadInventory(){
-  var el=document.getElementById('inv-body');
-  el.innerHTML='<div style="color:var(--slate-2);text-align:center;padding:40px;font-size:13px;">Loading&#8230;</div>';
-  var sdot=document.getElementById('sync-dot-inv');if(sdot)sdot.className='sync-dot pulse';
-  try{
-    inventoryCache=await sbGet('inventory','order=category.asc,item_name.asc');
-    renderInventory();
-    if(sdot)sdot.className='sync-dot ok';
-  }catch(err){
-    el.innerHTML='<div style="color:#EF4444;padding:20px;font-size:13px;">Load failed: '+err.message+'</div>';
-    if(sdot)sdot.className='sync-dot err';
-  }
-}
-
-function renderInventory(){
-  var el=document.getElementById('inv-body');
-  if(!inventoryCache.length){el.innerHTML='<div style="padding:20px;color:var(--slate-2);font-size:13px;">No items found.</div>';return;}
-  var byCategory={};
-  inventoryCache.forEach(function(item){
-    if(!byCategory[item.category])byCategory[item.category]=[];
-    byCategory[item.category].push(item);
-  });
-  var html='';
-  Object.keys(byCategory).sort().forEach(function(cat){
-    html+='<div class="report-section" style="margin-bottom:10px;margin:0 0 10px 0;"><div class="inv-cat-head">'+cat+'</div>';
-    byCategory[cat].forEach(function(item){
-      var pct=item.par_level>0?Math.round(item.quantity/item.par_level*100):100;
-      var dotCls=item.quantity===0?'inv-zero':pct<50?'inv-low':'inv-ok';
-      html+='<div class="inv-row">';
-      html+='<div class="inv-status '+dotCls+'"></div>';
-      html+='<div class="inv-name">'+item.item_name+'</div>';
-      html+='<div class="inv-qty-wrap">';
-      html+='<button class="inv-qty-btn" onclick="adjustQty(''+item.id+'',-1)">−</button>';
-      html+='<input class="inv-qty-input" type="number" inputmode="numeric" min="0" id="qty-'+item.id+'" value="'+item.quantity+'" onchange="markDirty(''+item.id+'')" />';
-      html+='<button class="inv-qty-btn" onclick="adjustQty(''+item.id+'',1)">+</button>';
-      html+='</div>';
-      html+='<div class="inv-par">par '+item.par_level+'<br/><span style="font-size:9px;color:'+(dotCls==='inv-ok'?'#16A34A':dotCls==='inv-low'?'#D97706':'#DC2626')+'">'+pct+'%</span></div>';
-      html+='</div>';
-    });
-    html+='</div>';
-  });
-  el.innerHTML='<div style="padding:10px 14px 0;font-size:11px;color:var(--slate-2);">Update quantities then tap Save All. Red = out, amber = below 50% par.</div>'+html+'<div style="height:8px;"></div>';
-}
-
-var dirtyItems={};
-function markDirty(id){dirtyItems[id]=true;}
-function adjustQty(id,delta){
-  var input=document.getElementById('qty-'+id);
-  if(!input)return;
-  var newVal=Math.max(0,(parseInt(input.value)||0)+delta);
-  input.value=newVal;
-  dirtyItems[id]=true;
-  // Update status dot live
-  var item=inventoryCache.find(function(x){return x.id===id;});
-  if(item){
-    item.quantity=newVal;
-    var row=input.closest('.inv-row');
-    if(row){
-      var dot=row.querySelector('.inv-status');
-      var pct=item.par_level>0?Math.round(newVal/item.par_level*100):100;
-      var cls=newVal===0?'inv-zero':pct<50?'inv-low':'inv-ok';
-      dot.className='inv-status '+cls;
-      var parDiv=row.querySelector('.inv-par');
-      var col=cls==='inv-ok'?'#16A34A':cls==='inv-low'?'#D97706':'#DC2626';
-      parDiv.innerHTML='par '+item.par_level+'<br/><span style="font-size:9px;color:'+col+'">'+pct+'%</span>';
-    }
-  }
-}
-
-async function saveAllInventory(){
-  var btn=document.querySelector('.inv-save-btn');
-  var ids=Object.keys(dirtyItems);
-  if(!ids.length){showToast('No changes to save.','success');return;}
-  btn.disabled=true;btn.textContent='Saving...';
-  var sdot=document.getElementById('sync-dot-inv');if(sdot)sdot.className='sync-dot pulse';
-  var errors=0;
-  for(var i=0;i<ids.length;i++){
-    var id=ids[i];
-    var input=document.getElementById('qty-'+id);
-    if(!input)continue;
-    var qty=parseInt(input.value)||0;
-    try{
-      await sbPatch('inventory',id,{quantity:qty,updated_by:currentUser,updated_at:new Date().toISOString()});
-      var item=inventoryCache.find(function(x){return x.id===id;});
-      if(item)item.quantity=qty;
-    }catch(e){errors++;}
-  }
-  dirtyItems={};
-  if(sdot)sdot.className=errors?'sync-dot err':'sync-dot ok';
-  btn.disabled=false;btn.textContent='Save All Changes';
-  showToast(errors?'Saved with '+errors+' error(s)':'All changes saved ✓','success');
-}
-
-function printInventory(){
-  window.print();
-}
-
-loadStaff();
+    await loadStaff();
   }catch(err){showToast('Save failed: '+err.message,'error');btn.disabled=false;btn.textContent='Save Changes';}
 }
 
@@ -766,12 +667,11 @@ async function handleMediaCapture(e){
 var toastTimer;
 function showToast(msg,type){
   var t=document.getElementById('toast');
-  t.textContent=(type==='success'?'✓ ':'✕ ')+msg;
+  t.textContent=(type==='success'?'\u2713 ':'\u2715 ')+msg;
   t.className='toast show '+(type||'success');
   clearTimeout(toastTimer);
   toastTimer=setTimeout(function(){t.classList.remove('show');},3000);
 }
-
 
 var inventoryCache=[];
 
@@ -799,24 +699,25 @@ function renderInventory(){
   });
   var html='';
   Object.keys(byCategory).sort().forEach(function(cat){
-    html+='<div class="report-section" style="margin-bottom:10px;margin:0 0 10px 0;"><div class="inv-cat-head">'+cat+'</div>';
+    html+='<div class="report-section" style="margin-bottom:10px;"><div class="inv-cat-head">'+cat+'</div>';
     byCategory[cat].forEach(function(item){
       var pct=item.par_level>0?Math.round(item.quantity/item.par_level*100):100;
       var dotCls=item.quantity===0?'inv-zero':pct<50?'inv-low':'inv-ok';
+      var col=dotCls==='inv-ok'?'#16A34A':dotCls==='inv-low'?'#D97706':'#DC2626';
       html+='<div class="inv-row">';
       html+='<div class="inv-status '+dotCls+'"></div>';
       html+='<div class="inv-name">'+item.item_name+'</div>';
       html+='<div class="inv-qty-wrap">';
-      html+='<button class="inv-qty-btn" onclick="adjustQty(''+item.id+'',-1)">−</button>';
+      html+='<button class="inv-qty-btn" onclick="adjustQty(''+item.id+'',-1)">\u2212</button>';
       html+='<input class="inv-qty-input" type="number" inputmode="numeric" min="0" id="qty-'+item.id+'" value="'+item.quantity+'" onchange="markDirty(''+item.id+'')" />';
       html+='<button class="inv-qty-btn" onclick="adjustQty(''+item.id+'',1)">+</button>';
       html+='</div>';
-      html+='<div class="inv-par">par '+item.par_level+'<br/><span style="font-size:9px;color:'+(dotCls==='inv-ok'?'#16A34A':dotCls==='inv-low'?'#D97706':'#DC2626')+'">'+pct+'%</span></div>';
+      html+='<div class="inv-par">par '+item.par_level+'<br/><span style="font-size:9px;color:'+col+'">'+pct+'%</span></div>';
       html+='</div>';
     });
     html+='</div>';
   });
-  el.innerHTML='<div style="padding:10px 14px 0;font-size:11px;color:var(--slate-2);">Update quantities then tap Save All. Red = out, amber = below 50% par.</div>'+html+'<div style="height:8px;"></div>';
+  el.innerHTML='<div style="padding:10px 14px;font-size:11px;color:var(--slate-2);">Ajusta las cantidades y toca Save All. Rojo=agotado, amarillo=bajo par.</div>'+html+'<div style="height:8px;"></div>';
 }
 
 var dirtyItems={};
@@ -827,7 +728,6 @@ function adjustQty(id,delta){
   var newVal=Math.max(0,(parseInt(input.value)||0)+delta);
   input.value=newVal;
   dirtyItems[id]=true;
-  // Update status dot live
   var item=inventoryCache.find(function(x){return x.id===id;});
   if(item){
     item.quantity=newVal;
@@ -837,9 +737,8 @@ function adjustQty(id,delta){
       var pct=item.par_level>0?Math.round(newVal/item.par_level*100):100;
       var cls=newVal===0?'inv-zero':pct<50?'inv-low':'inv-ok';
       dot.className='inv-status '+cls;
-      var parDiv=row.querySelector('.inv-par');
       var col=cls==='inv-ok'?'#16A34A':cls==='inv-low'?'#D97706':'#DC2626';
-      parDiv.innerHTML='par '+item.par_level+'<br/><span style="font-size:9px;color:'+col+'">'+pct+'%</span>';
+      row.querySelector('.inv-par').innerHTML='par '+item.par_level+'<br/><span style="font-size:9px;color:'+col+'">'+pct+'%</span>';
     }
   }
 }
@@ -865,14 +764,13 @@ async function saveAllInventory(){
   dirtyItems={};
   if(sdot)sdot.className=errors?'sync-dot err':'sync-dot ok';
   btn.disabled=false;btn.textContent='Save All Changes';
-  showToast(errors?'Saved with '+errors+' error(s)':'All changes saved ✓','success');
+  showToast(errors?'Saved with '+errors+' error(s)':'All changes saved','success');
 }
 
-function printInventory(){
-  window.print();
-}
+function printInventory(){window.print();}
 
 loadStaff();
-</script>
+
+</script></script>
 </body>
 </html>
