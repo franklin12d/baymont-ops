@@ -704,13 +704,14 @@ function renderInventory(){
       var pct=item.par_level>0?Math.round(item.quantity/item.par_level*100):100;
       var dotCls=item.quantity===0?'inv-zero':pct<50?'inv-low':'inv-ok';
       var col=dotCls==='inv-ok'?'#16A34A':dotCls==='inv-low'?'#D97706':'#DC2626';
-      html+='<div class="inv-row">';
+      var eid=item.id;
+      html+='<div class="inv-row" data-id="'+eid+'">';
       html+='<div class="inv-status '+dotCls+'"></div>';
       html+='<div class="inv-name">'+item.item_name+'</div>';
       html+='<div class="inv-qty-wrap">';
-      html+='<button class="inv-qty-btn" onclick="adjustQty(''+item.id+'',-1)">\u2212</button>';
-      html+='<input class="inv-qty-input" type="number" inputmode="numeric" min="0" id="qty-'+item.id+'" value="'+item.quantity+'" onchange="markDirty(''+item.id+'')" />';
-      html+='<button class="inv-qty-btn" onclick="adjustQty(''+item.id+'',1)">+</button>';
+      html+='<button class="inv-qty-btn inv-minus" data-id="'+eid+'">&#8722;</button>';
+      html+='<input class="inv-qty-input" type="number" inputmode="numeric" min="0" id="qty-'+eid+'" value="'+item.quantity+'" data-id="'+eid+'"/>';
+      html+='<button class="inv-qty-btn inv-plus" data-id="'+eid+'">+</button>';
       html+='</div>';
       html+='<div class="inv-par">par '+item.par_level+'<br/><span style="font-size:9px;color:'+col+'">'+pct+'%</span></div>';
       html+='</div>';
@@ -718,6 +719,15 @@ function renderInventory(){
     html+='</div>';
   });
   el.innerHTML='<div style="padding:10px 14px;font-size:11px;color:var(--slate-2);">Ajusta las cantidades y toca Save All. Rojo=agotado, amarillo=bajo par.</div>'+html+'<div style="height:8px;"></div>';
+  // Event delegation for +/- buttons and qty inputs
+  el.addEventListener('click',function(ev){
+    var btn=ev.target.closest('.inv-minus,.inv-plus');
+    if(!btn)return;
+    adjustQty(btn.dataset.id, btn.classList.contains('inv-plus')?1:-1);
+  });
+  el.addEventListener('change',function(ev){
+    if(ev.target.classList.contains('inv-qty-input'))markDirty(ev.target.dataset.id);
+  });
 }
 
 var dirtyItems={};
