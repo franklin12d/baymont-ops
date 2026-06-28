@@ -183,6 +183,34 @@ input,select,textarea,button{font-family:inherit}
   #screen-inventory{display:flex!important}
   .screen:not(#screen-inventory){display:none!important}
 }
+
+/* ── Home Screen ── */
+.home-header{padding:20px 16px 6px;text-align:center}
+.home-hotel{font-size:19px;font-weight:800;color:var(--white);letter-spacing:0.01em}
+.home-date{font-size:12px;color:var(--slate-2);margin-top:3px}
+.home-kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 16px}
+.home-kpi-card{background:var(--navy-2);border-radius:var(--radius);padding:20px 14px 14px;text-align:center;cursor:pointer;border:1.5px solid transparent;transition:all 0.15s;position:relative;overflow:hidden}
+.home-kpi-card:active{transform:scale(0.96)}
+.home-kpi-card.kc-green{border-color:rgba(22,163,74,0.35)}
+.home-kpi-card.kc-amber{border-color:rgba(217,119,6,0.35)}
+.home-kpi-card.kc-red{border-color:rgba(220,38,38,0.35)}
+.home-kpi-card.kc-teal{border-color:rgba(13,148,136,0.35)}
+.home-kpi-num{font-size:44px;font-weight:800;line-height:1}
+.home-kpi-num.kc-green{color:#22C55E}
+.home-kpi-num.kc-amber{color:#F59E0B}
+.home-kpi-num.kc-red{color:#EF4444}
+.home-kpi-num.kc-teal{color:var(--teal-hi)}
+.home-kpi-lbl{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--slate-2);margin-top:8px}
+.home-kpi-arrow{position:absolute;bottom:9px;right:12px;font-size:18px;color:var(--slate-2);opacity:0.45;font-weight:300}
+.home-quick-btns{display:flex;gap:8px;padding:0 16px 16px}
+.home-quick-btn{flex:1;padding:11px 6px;border-radius:var(--radius-sm);border:1.5px solid #E2E8F0;background:var(--navy-2);color:var(--white);font-size:11px;font-weight:700;cursor:pointer;text-align:center;transition:all 0.12s}
+.home-quick-btn:active{transform:scale(0.97)}
+/* ── Report filter ── */
+.sum-card{cursor:pointer;transition:all 0.15s;user-select:none}
+.sum-card:active{transform:scale(0.94)}
+.sum-card.rep-active{outline:2px solid var(--teal);outline-offset:2px;border-radius:var(--radius-sm)}
+.rep-print-btn{padding:4px 13px;border-radius:20px;border:1.5px solid #E2E8F0;background:var(--navy-2);color:var(--white);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.12s}
+.rep-print-btn:active{opacity:0.7}
 </style>
 </head>
 <body>
@@ -215,6 +243,54 @@ input,select,textarea,button{font-family:inherit}
 </div>
 
 <!-- INCIDENT LOGGER -->
+<div id="screen-home" class="screen">
+  <div class="topbar">
+    <div class="topbar-brand">Baymont by Wyndham Orlando</div>
+    <div class="flex-between">
+      <div class="topbar-title">Overview</div>
+      <div class="flex-row" style="gap:6px">
+        <div class="sync-dot" id="sync-dot-home"></div>
+        <div class="badge-pill" id="user-pill-home" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;"></div>
+        <button class="logout-btn" onclick="doLogout()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-body">
+    <div class="home-header">
+      <div class="home-hotel">North Millenia</div>
+      <div class="home-date" id="home-date"></div>
+    </div>
+    <div class="home-kpi-grid">
+      <div class="home-kpi-card kc-green" onclick="setReportFilter('vr');gotoScreen('report')">
+        <div class="home-kpi-num kc-green" id="home-kpi-vr">—</div>
+        <div class="home-kpi-lbl">Vacant Ready</div>
+        <span class="home-kpi-arrow">›</span>
+      </div>
+      <div class="home-kpi-card kc-amber" onclick="setReportFilter('oos');gotoScreen('report')">
+        <div class="home-kpi-num kc-amber" id="home-kpi-oos">—</div>
+        <div class="home-kpi-lbl">Out of Service</div>
+        <span class="home-kpi-arrow">›</span>
+      </div>
+      <div class="home-kpi-card kc-red" onclick="setReportFilter('ooo');gotoScreen('report')">
+        <div class="home-kpi-num kc-red" id="home-kpi-ooo">—</div>
+        <div class="home-kpi-lbl">Out of Order</div>
+        <span class="home-kpi-arrow">›</span>
+      </div>
+      <div class="home-kpi-card kc-teal" onclick="setReportFilter(null);gotoScreen('report')">
+        <div class="home-kpi-num kc-teal" id="home-kpi-all">—</div>
+        <div class="home-kpi-lbl">Total Rooms</div>
+        <span class="home-kpi-arrow">›</span>
+      </div>
+    </div>
+    <div class="home-quick-btns">
+      <button class="home-quick-btn" onclick="gotoScreen('log')">+ Log Incident</button>
+      <button class="home-quick-btn" onclick="gotoScreen('dashboard')">Room Grid</button>
+      <button class="home-quick-btn" onclick="gotoScreen('inventory')">Inventory</button>
+    </div>
+  </div>
+  <div class="bottom-nav" id="nav-home"></div>
+</div>
+
 <div id="screen-log" class="screen">
   <div class="topbar">
     <div class="topbar-brand">Room Maintenance &amp; Asset Tracker</div>
@@ -310,7 +386,10 @@ input,select,textarea,button{font-family:inherit}
     <div class="topbar-brand">Room Maintenance &amp; Asset Tracker</div>
     <div class="flex-between">
       <div class="topbar-title">Room Status Report</div>
-      <div class="sync-dot" id="sync-dot-report"></div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="rep-print-btn" onclick="printReport()">&#9113; Print</button>
+        <div class="sync-dot" id="sync-dot-report"></div>
+      </div>
     </div>
     <div id="report-meta" style="font-size:11px;color:var(--slate);margin-top:4px;"></div>
   </div>
@@ -380,7 +459,7 @@ async function sbInsert(t,b){const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:
 async function sbPatch(t,id,b){const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());}
 async function sbDelete(t,id){const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?id=eq.'+id,{method:'DELETE',headers:{...H,'Prefer':'return=minimal'}});if(!r.ok)throw new Error(await r.text());}
 
-let currentUser=null,currentUserId=null,isAdmin=false;
+let currentUser=null,currentUserId=null,isAdmin=false,reportFilter=null;
 let selectedStatus=null,activeFilter='all',detailRoom=null;
 let roomCache={},logsCache={},mediaCache={};
 let staffList=[];
@@ -437,7 +516,8 @@ async function doLogin(){
     document.getElementById('user-pill').textContent=currentUser;
     document.getElementById('user-pill-dash').textContent=currentUser;
     buildNav();
-    gotoScreen('log');
+    document.getElementById('user-pill-home').textContent=currentUser;
+    gotoScreen('home');
   }catch(err){st.textContent='Connection error: '+err.message;btn.disabled=false;btn.textContent='Sign In to Room Tracker';}
 }
 
@@ -456,13 +536,14 @@ function doLogout(){
 
 function buildNav(){
   var tabs=[
+    {id:'home',label:'Home',icon:'<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'},
     {id:'log',label:'Log',icon:'<path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>'},
     {id:'dashboard',label:'Rooms',icon:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>'},
     {id:'report',label:'Report',icon:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'}
   ];
   tabs.push({id:'inventory',label:'Inventory',icon:'<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>'});
   if(isAdmin){tabs.push({id:'config',label:'Config',icon:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>'});}
-  var screens=['log','dashboard','report','inventory','config'];
+  var screens=['home','log','dashboard','report','inventory','config'];
   screens.forEach(function(sc){
     var el=document.getElementById('nav-'+sc);
     if(!el)return;
@@ -478,6 +559,7 @@ function gotoScreen(name){
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
   document.getElementById('screen-'+name).classList.add('active');
   buildNav();
+  if(name==='home')renderHome();
   if(name==='dashboard')renderDashboard();
   if(name==='report')renderReport();
   if(name==='config')renderConfig();
@@ -630,7 +712,18 @@ function renderReport(){
     if(!rooms.length)return'<div style="padding:12px;color:var(--slate-2);font-size:12px;">None</div>';
     return'<table class="report-table"><thead><tr><th>Room</th><th>Type</th><th>Status</th></tr></thead><tbody>'+rooms.map(function(n){return'<tr><td style="font-family:\'JetBrains Mono\',monospace;font-weight:600;">'+n+'</td><td style="color:var(--slate);">'+ROOM_TYPES[n]+' · '+TYPE_LABELS[ROOM_TYPES[n]]+'</td><td><span class="badge '+badgeClass+'">'+badgeLabel+'</span></td></tr>';}).join('')+'</tbody></table>';
   }
-  document.getElementById('report-body').innerHTML='<div style="padding:16px;"><div class="summary-strip"><div class="sum-card"><div class="sum-num green">'+vr.length+'</div><div class="sum-lbl">Ready</div></div><div class="sum-card"><div class="sum-num amber">'+oos.length+'</div><div class="sum-lbl">OOS</div></div><div class="sum-card"><div class="sum-num red">'+ooo.length+'</div><div class="sum-lbl">OOO</div></div><div class="sum-card"><div class="sum-num" style="color:var(--teal-hi)">'+all.length+'</div><div class="sum-lbl">Total</div></div></div>'+(ooo.length?'<div class="section-head">Out of Order ('+ooo.length+')</div><div class="report-section">'+makeTable(ooo,'badge-ooo','OOO')+'</div>':'')+(oos.length?'<div class="section-head">Service Required · OOS ('+oos.length+')</div><div class="report-section">'+makeTable(oos,'badge-oos','OOS')+'</div>':'')+'<div class="section-head">Vacant Ready ('+vr.length+')</div><div class="report-section">'+makeTable(vr,'badge-vr','VR')+'</div><div style="height:20px;"></div></div>';
+  var af=reportFilter;
+  var strip='<div class="summary-strip">'
+    +'<div class="sum-card'+(af==='vr'?' rep-active':'')+'" onclick="setReportFilter(\'vr\')"><div class="sum-num green">'+vr.length+'</div><div class="sum-lbl">Ready</div></div>'
+    +'<div class="sum-card'+(af==='oos'?' rep-active':'')+'" onclick="setReportFilter(\'oos\')"><div class="sum-num amber">'+oos.length+'</div><div class="sum-lbl">OOS</div></div>'
+    +'<div class="sum-card'+(af==='ooo'?' rep-active':'')+'" onclick="setReportFilter(\'ooo\')"><div class="sum-num red">'+ooo.length+'</div><div class="sum-lbl">OOO</div></div>'
+    +'<div class="sum-card'+(!af?' rep-active':'')+'" onclick="setReportFilter(null)"><div class="sum-num" style="color:var(--teal-hi)">'+all.length+'</div><div class="sum-lbl">All</div></div>'
+    +'</div>';
+  var sections='';
+  if(!af||af==='ooo'){if(ooo.length||af==='ooo')sections+='<div class="section-head">Out of Order ('+ooo.length+')</div><div class="report-section">'+makeTable(ooo,'badge-ooo','OOO')+'</div>';}
+  if(!af||af==='oos'){if(oos.length||af==='oos')sections+='<div class="section-head">Service Required · OOS ('+oos.length+')</div><div class="report-section">'+makeTable(oos,'badge-oos','OOS')+'</div>';}
+  if(!af||af==='vr'){sections+='<div class="section-head">Vacant Ready ('+vr.length+')</div><div class="report-section">'+makeTable(vr,'badge-vr','VR')+'</div>';}
+  document.getElementById('report-body').innerHTML='<div style="padding:16px;">'+strip+sections+'<div style="height:20px;"></div></div>';
 }
 
 function renderConfig(){
@@ -914,6 +1007,26 @@ async function deleteInvItem(id){
     showToast('Delete failed: '+err.message,'error');
   }
 }
+
+function renderHome(){
+  var all=allRooms(),vr=[],oos=[],ooo=[];
+  all.forEach(function(n){var s=getRoomStatus(n);if(s==='OOO')ooo.push(n);else if(s==='OOS')oos.push(n);else vr.push(n);});
+  var el=document.getElementById('home-kpi-vr');if(el)el.textContent=vr.length;
+  var el2=document.getElementById('home-kpi-oos');if(el2)el2.textContent=oos.length;
+  var el3=document.getElementById('home-kpi-ooo');if(el3)el3.textContent=ooo.length;
+  var el4=document.getElementById('home-kpi-all');if(el4)el4.textContent=all.length;
+  var sd=document.getElementById('sync-dot-home');if(sd)sd.className='sync-dot ok';
+  var now=new Date();
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var dateEl=document.getElementById('home-date');
+  if(dateEl)dateEl.textContent=days[now.getDay()]+', '+months[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
+}
+
+function setReportFilter(f){reportFilter=f;}
+
+function printReport(){window.print();}
+
 
 loadStaff();
 
