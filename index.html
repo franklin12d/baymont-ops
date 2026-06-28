@@ -138,6 +138,16 @@ input,select,textarea,button{font-family:inherit}
 .save-user-btn{width:100%;margin-top:12px;padding:12px;border-radius:var(--radius-sm);border:none;background:rgba(13,148,136,0.2);border:1.5px solid var(--teal);color:var(--teal-hi);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s}
 .save-user-btn:active{transform:scale(0.98)}
 .save-user-btn.saved{background:rgba(22,163,74,0.2);border-color:#22C55E;color:#4ADE80}
+.inv-item-row{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--navy-2);border-radius:var(--radius-sm);border:1px solid #E2E8F0;margin-bottom:6px}
+.inv-item-name{flex:1;font-size:13px;font-weight:600;color:var(--white)}
+.inv-item-meta{font-size:10px;color:var(--slate-2);white-space:nowrap}
+.inv-item-edit-btn{background:none;border:1.5px solid #E2E8F0;border-radius:6px;padding:5px 8px;color:var(--slate);font-size:11px;font-weight:600;cursor:pointer;flex-shrink:0}
+.inv-item-del-btn{background:none;border:1.5px solid rgba(220,38,38,0.3);border-radius:6px;padding:5px 8px;color:#EF4444;font-size:11px;font-weight:600;cursor:pointer;flex-shrink:0}
+.inv-edit-card{background:var(--navy-2);border:1.5px solid var(--teal);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px}
+.inv-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.inv-edit-row{display:flex;gap:6px;margin-top:6px}
+.inv-add-btn{width:100%;padding:12px;border-radius:var(--radius-sm);border:1.5px dashed var(--teal);background:rgba(13,148,136,0.08);color:var(--teal-hi);font-size:13px;font-weight:700;cursor:pointer;margin-top:10px;transition:all 0.15s}
+.inv-add-btn:active{transform:scale(0.98)}
 .report-section{background:var(--navy-2);border-radius:var(--radius-sm);border:1px solid #E8EEF4;margin-bottom:14px;overflow:hidden}
 .report-table{width:100%;border-collapse:collapse;font-size:12px}
 .report-table th{background:#F1F5F9;color:#475569;padding:8px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--slate)}
@@ -320,6 +330,8 @@ input,select,textarea,button{font-family:inherit}
   <div class="scroll-body">
     <div class="section-head" style="margin-bottom:14px;">Staff Accounts</div>
     <div id="config-users"></div>
+    <div class="section-head" style="margin-top:24px;margin-bottom:14px;">Inventory Items</div>
+    <div id="config-inv-items"></div>
     <div style="height:20px;"></div>
   </div>
   <div class="bottom-nav" id="nav-config"></div>
@@ -366,6 +378,7 @@ async function sbGet(t,p){const r=await fetch(SUPA_URL+'/rest/v1/'+t+(p?'?'+p:''
 async function sbUpsert(t,b){const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:{...H,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());}
 async function sbInsert(t,b){const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());}
 async function sbPatch(t,id,b){const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());}
+async function sbDelete(t,id){const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?id=eq.'+id,{method:'DELETE',headers:{...H,'Prefer':'return=minimal'}});if(!r.ok)throw new Error(await r.text());}
 
 let currentUser=null,currentUserId=null,isAdmin=false;
 let selectedStatus=null,activeFilter='all',detailRoom=null;
@@ -621,10 +634,11 @@ function renderReport(){
 }
 
 function renderConfig(){
-  if(!isAdmin){document.getElementById('config-users').innerHTML='<p style="color:#F87171;padding:20px;text-align:center;">Access denied.</p>';return;}
+  if(!isAdmin){document.getElementById('config-users').innerHTML='<p style="color:#F87171;padding:20px;text-align:center;">Access denied.</p>';document.getElementById('config-inv-items').innerHTML='';return;}
   document.getElementById('config-users').innerHTML=staffList.map(function(s){
     return'<div class="user-card" id="ucard-'+s.id+'"><div class="user-card-header"><div class="user-avatar'+(s.is_admin?' admin':'')+'">'+s.name.charAt(0)+'</div><div><div class="user-card-title" id="uname-display-'+s.id+'">'+s.name+'</div><div class="user-card-role">'+s.role+'</div></div></div><div class="form-group"><label class="form-label">Display Name</label><input class="form-input" id="uname-'+s.id+'" value="'+s.name+'" placeholder="Staff name"'+(s.is_admin?' style="border-color:rgba(168,85,247,0.4)"':'')+'/></div><div class="form-group" style="margin-bottom:0;"><label class="form-label">PIN (4 digits)</label><div class="pin-row"><input class="form-input" id="upin-'+s.id+'" type="password" inputmode="numeric" maxlength="4" value="'+s.pin+'" placeholder="0000"'+(s.is_admin?' style="border-color:rgba(168,85,247,0.4)"':'')+'/><button style="padding:0 14px;border-radius:var(--radius-sm);background:var(--navy-3);border:1.5px solid #E2E8F0;color:var(--slate);cursor:pointer;font-size:12px;" onclick="togglePin(\''+s.id+'\')">Show</button></div></div><button class="save-user-btn" id="usave-'+s.id+'" onclick="saveUser(\''+s.id+'\')">Save Changes</button></div>';
   }).join('');
+  renderConfigInventory();
 }
 function togglePin(id){var inp=document.getElementById('upin-'+id);inp.type=inp.type==='password'?'text':'password';}
 async function saveUser(id){
@@ -779,8 +793,129 @@ async function saveAllInventory(){
 
 function printInventory(){window.print();}
 
+// ── Inventory Item Editor (admin only) ───────────────────────────────────────
+var KNOWN_CATEGORIES=['Amenities','Bedding','Cleaning','F&B','Linens','Maintenance','OS&E'];
+
+function renderConfigInventory(){
+  var el=document.getElementById('config-inv-items');
+  if(!el)return;
+  if(!inventoryCache.length){
+    el.innerHTML='<div style="color:var(--slate-2);font-size:13px;padding:10px 0;">No inventory items found. Add your first item below.</div>'
+      +'<button class="inv-add-btn" onclick="openInvItemForm(null)">+ Add New Item</button>';
+    return;
+  }
+  var byCategory={};
+  inventoryCache.forEach(function(item){
+    if(!byCategory[item.category])byCategory[item.category]=[];
+    byCategory[item.category].push(item);
+  });
+  var html='';
+  Object.keys(byCategory).sort().forEach(function(cat){
+    html+='<div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal-hi);margin:12px 0 6px;">'+cat+'</div>';
+    byCategory[cat].forEach(function(item){
+      html+='<div class="inv-item-row" id="inv-cfg-row-'+item.id+'">'
+        +'<div style="flex:1;">'
+        +'<div class="inv-item-name">'+item.item_name+'</div>'
+        +'<div class="inv-item-meta">par '+item.par_level+(item.unit?' · '+item.unit:'')+'</div>'
+        +'</div>'
+        +'<button class="inv-item-edit-btn" onclick="openInvItemForm(\''+item.id+'\')">Edit</button>'
+        +'<button class="inv-item-del-btn" onclick="deleteInvItem(\''+item.id+'\')">✕</button>'
+        +'</div>';
+    });
+  });
+  html+='<button class="inv-add-btn" onclick="openInvItemForm(null)">+ Add New Item</button>';
+  el.innerHTML=html;
+}
+
+function openInvItemForm(id){
+  var item=id?inventoryCache.find(function(x){return x.id===id;}):null;
+  var existingForm=document.getElementById('inv-item-form');
+  if(existingForm)existingForm.remove();
+  var cats=KNOWN_CATEGORIES.slice();
+  inventoryCache.forEach(function(x){if(cats.indexOf(x.category)<0)cats.push(x.category);});
+  cats=cats.sort();
+  var catOpts=cats.map(function(c){
+    return'<option value="'+c+'"'+(item&&item.category===c?' selected':'')+'>'+c+'</option>';
+  }).join('');
+  var formHtml='<div class="inv-edit-card" id="inv-item-form">'
+    +'<div style="font-size:12px;font-weight:700;color:var(--white);margin-bottom:10px;">'+(id?'Edit Item':'New Item')+'</div>'
+    +'<div class="inv-edit-grid">'
+    +'<div class="form-group" style="margin:0;"><label class="form-label">Item Name</label>'
+    +'<input class="form-input" id="iif-name" value="'+(item?item.item_name:'')+'" placeholder="e.g. Shampoo" style="font-size:14px;padding:10px 12px;"/></div>'
+    +'<div class="form-group" style="margin:0;"><label class="form-label">Category</label>'
+    +'<select class="form-select" id="iif-cat" style="font-size:14px;padding:10px 12px;"><option value="">&#8212; Select &#8212;</option>'+catOpts+'</select></div>'
+    +'<div class="form-group" style="margin:0;"><label class="form-label">Par Level</label>'
+    +'<input class="form-input" id="iif-par" type="number" inputmode="numeric" min="0" value="'+(item?item.par_level:'')+'" placeholder="0" style="font-size:14px;padding:10px 12px;"/></div>'
+    +'<div class="form-group" style="margin:0;"><label class="form-label">Unit</label>'
+    +'<input class="form-input" id="iif-unit" value="'+(item&&item.unit?item.unit:'')+'" placeholder="e.g. bottles" style="font-size:14px;padding:10px 12px;"/></div>'
+    +'</div>'
+    +'<div class="inv-edit-row">'
+    +'<button class="save-user-btn" style="flex:1;margin-top:0;" id="iif-save-btn" onclick="saveInvItem(\''+id+'\')">'+(id?'Save Changes':'Add Item')+'</button>'
+    +'<button style="padding:12px 16px;border-radius:var(--radius-sm);border:1.5px solid #E2E8F0;background:var(--navy-3);color:var(--slate);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;" onclick="closeInvItemForm()">Cancel</button>'
+    +'</div>'
+    +'</div>';
+  var el=document.getElementById('config-inv-items');
+  if(id){
+    var row=document.getElementById('inv-cfg-row-'+id);
+    if(row){row.insertAdjacentHTML('afterend',formHtml);row.style.display='none';}
+    else{el.insertAdjacentHTML('beforeend',formHtml);}
+  }else{
+    var addBtn=el.querySelector('.inv-add-btn');
+    if(addBtn)addBtn.insertAdjacentHTML('beforebegin',formHtml);
+    else el.insertAdjacentHTML('beforeend',formHtml);
+  }
+  document.getElementById('iif-name').focus();
+}
+
+function closeInvItemForm(){
+  var form=document.getElementById('inv-item-form');
+  if(form)form.remove();
+  document.querySelectorAll('#config-inv-items .inv-item-row').forEach(function(r){r.style.display='';});
+}
+
+async function saveInvItem(id){
+  var name=document.getElementById('iif-name').value.trim();
+  var cat=document.getElementById('iif-cat').value;
+  var par=parseInt(document.getElementById('iif-par').value)||0;
+  var unit=document.getElementById('iif-unit').value.trim();
+  if(!name){showToast('Item name is required.','error');return;}
+  if(!cat){showToast('Category is required.','error');return;}
+  var btn=document.getElementById('iif-save-btn');
+  btn.disabled=true;btn.textContent='Saving...';
+  try{
+    if(id&&id!=='null'){
+      await sbPatch('inventory',id,{item_name:name,category:cat,par_level:par,unit:unit,updated_by:currentUser,updated_at:new Date().toISOString()});
+      var existing=inventoryCache.find(function(x){return x.id===id;});
+      if(existing){existing.item_name=name;existing.category=cat;existing.par_level=par;existing.unit=unit;}
+    }else{
+      var newId=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+      await sbInsert('inventory',{id:newId,item_name:name,category:cat,par_level:par,unit:unit,quantity:0,updated_by:currentUser,updated_at:new Date().toISOString()});
+      inventoryCache.push({id:newId,item_name:name,category:cat,par_level:par,unit:unit,quantity:0});
+    }
+    showToast(id&&id!=='null'?'Item updated.':'Item added.','success');
+    renderConfigInventory();
+  }catch(err){
+    btn.disabled=false;btn.textContent=id&&id!=='null'?'Save Changes':'Add Item';
+    showToast('Error: '+err.message,'error');
+  }
+}
+
+async function deleteInvItem(id){
+  var item=inventoryCache.find(function(x){return x.id===id;});
+  if(!item)return;
+  if(!confirm('Delete "'+item.item_name+'"? This cannot be undone.'))return;
+  try{
+    await sbDelete('inventory',id);
+    inventoryCache=inventoryCache.filter(function(x){return x.id!==id;});
+    showToast('Item deleted.','success');
+    renderConfigInventory();
+  }catch(err){
+    showToast('Delete failed: '+err.message,'error');
+  }
+}
+
 loadStaff();
 
-</script></script>
+</script>
 </body>
 </html>
