@@ -379,7 +379,7 @@ input,select,textarea,button{font-family:inherit}
     <div class="summary-strip" id="summary-strip"></div>
     <div class="room-search-wrap">
       <svg class="room-search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input class="room-search-input" id="room-search" type="text" inputmode="numeric" placeholder="Buscar habitaci&#243;n&#8230;" oninput="onRoomSearch(this.value)"/>
+      <input class="room-search-input" id="room-search" type="text" inputmode="numeric" placeholder="Search room number&#8230;" oninput="onRoomSearch(this.value)"/>
     </div>
     <div class="filter-row" id="filter-row"></div>
   </div>
@@ -451,6 +451,12 @@ input,select,textarea,button{font-family:inherit}
       </div>
     </div>
   </div>
+  <div style="padding:10px 14px 0;flex-shrink:0;background:var(--navy-1)">
+    <div class="room-search-wrap" style="padding:0;margin-bottom:0;">
+      <svg class="room-search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="room-search-input" id="inv-search" type="text" placeholder="Search items or categories&#8230;" oninput="onInvSearch(this.value)"/>
+    </div>
+  </div>
   <div class="scroll-body" style="padding:0" id="inv-body">
     <div style="color:var(--slate-2);text-align:center;padding:40px;font-size:13px;">Loading inventory&#8230;</div>
   </div>
@@ -480,7 +486,7 @@ async function sbPatch(t,id,b){const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?id=e
 async function sbDelete(t,id){const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?id=eq.'+id,{method:'DELETE',headers:{...H,'Prefer':'return=minimal'}});if(!r.ok)throw new Error(await r.text());}
 
 let currentUser=null,currentUserId=null,isAdmin=false,reportFilter=null;
-let selectedStatus=null,activeFilter='all',detailRoom=null,roomSearch='';
+let selectedStatus=null,activeFilter='all',detailRoom=null,roomSearch='',invSearch='';
 let roomCache={},logsCache={},mediaCache={};
 let staffList=[];
 let rtWs=null;
@@ -822,11 +828,13 @@ async function loadInventory(){
 var invCollapsed={};
 function toggleInvCat(cat){
   invCollapsed[cat]=!invCollapsed[cat];
-  var body=document.getElementById('inv-body-'+cat.replace(/[^a-z0-9]/gi,'_'));
-  var arrow=document.getElementById('inv-arrow-'+cat.replace(/[^a-z0-9]/gi,'_'));
+  var catId=cat.replace(/[^a-z0-9]/gi,'_');
+  var body=document.getElementById('inv-body-'+catId);
+  var arrow=document.getElementById('inv-arrow-'+catId);
   if(body)body.style.display=invCollapsed[cat]?'none':'';
   if(arrow)arrow.className='inv-acc-arrow'+(invCollapsed[cat]?'':' open');
 }
+function onInvSearch(val){invSearch=val.trim().toLowerCase();renderInventory();}
 function renderInventory(){
   var el=document.getElementById('inv-body');
   if(!inventoryCache.length){el.innerHTML='<div style="padding:20px;color:var(--slate-2);font-size:13px;">No items found.</div>';return;}
@@ -835,18 +843,24 @@ function renderInventory(){
     if(!byCategory[item.category])byCategory[item.category]=[];
     byCategory[item.category].push(item);
   });
-  var html='<div style="padding:8px 14px 4px;font-size:11px;color:var(--slate-2);">Toca una categoría para expandir/colapsar. Rojo=agotado, amarillo=bajo par.</div>';
+  var html='';
+  var q=invSearch;
   Object.keys(byCategory).sort().forEach(function(cat){
-    var items=byCategory[cat];
+    var allItems=byCategory[cat];
+    // Filter items if searching
+    var items=q?allItems.filter(function(i){
+      return i.item_name.toLowerCase().indexOf(q)>=0||cat.toLowerCase().indexOf(q)>=0;
+    }):allItems;
+    if(q&&items.length===0)return; // skip category if no matches
     var catId=cat.replace(/[^a-z0-9]/gi,'_');
-    var collapsed=invCollapsed[cat];
-    var lowCount=items.filter(function(i){return i.quantity===0||(i.par_level>0&&i.quantity/i.par_level<0.5);}).length;
+    var collapsed=q?false:invCollapsed[cat]; // always expand when searching
+    var lowCount=allItems.filter(function(i){return i.quantity===0||(i.par_level>0&&i.quantity/i.par_level<0.5);}).length;
     html+='<div class="inv-cat-wrap">';
     html+='<div class="inv-acc-head" onclick="toggleInvCat('+JSON.stringify(cat)+')">';
     html+='<span class="inv-acc-title">'+cat+'</span>';
     html+='<span class="inv-acc-meta">';
-    if(lowCount)html+='<span class="inv-acc-count" style="color:#EF4444;">'+lowCount+' bajo</span>';
-    html+='<span class="inv-acc-count">'+items.length+' items</span>';
+    if(lowCount)html+='<span class="inv-acc-count" style="color:#EF4444;">'+lowCount+' low</span>';
+    html+='<span class="inv-acc-count">'+items.length+(q&&items.length!==allItems.length?'/'+allItems.length:'')+' items</span>';
     html+='<span class="inv-acc-arrow'+(collapsed?'':' open')+'" id="inv-arrow-'+catId+'">›</span>';
     html+='</span></div>';
     html+='<div id="inv-body-'+catId+'" style="'+(collapsed?'display:none':'')+'">';
@@ -868,6 +882,7 @@ function renderInventory(){
     });
     html+='</div></div>';
   });
+  if(!html)html='<div style="padding:20px;color:var(--slate-2);font-size:13px;text-align:center;">No results for "'+invSearch+'".</div>';
   el.innerHTML=html+'<div style="height:8px;"></div>';
   el.addEventListener('click',function(ev){
     var btn=ev.target.closest('.inv-minus,.inv-plus');
