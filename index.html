@@ -247,6 +247,15 @@ input,select,textarea,button{font-family:inherit}
 .proj-filter-btn{font-size:12px;font-weight:600;border:1.5px solid var(--slate-2);border-radius:20px;padding:5px 14px;background:none;color:var(--slate);cursor:pointer;white-space:nowrap;}
 .proj-filter-btn.active{background:var(--teal-hi);border-color:var(--teal-hi);color:#0F172A;}
 .cfg-topbar-btn{background:none;border:1.5px solid rgba(255,255,255,0.15);border-radius:8px;color:var(--slate);padding:5px 8px;cursor:pointer;display:flex;align-items:center;}
+.cfg-cat-wrap{background:var(--card);border-radius:14px;margin-bottom:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);}
+.cfg-cat-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.cfg-cat-head:active{background:rgba(255,255,255,0.04);}
+.cfg-cat-icon{font-size:20px;flex-shrink:0;}
+.cfg-cat-title{font-size:14px;font-weight:700;color:var(--white);}
+.cfg-cat-sub{font-size:11px;color:var(--slate-2);margin-top:2px;}
+.cfg-cat-arrow{margin-left:auto;font-size:18px;color:var(--slate-2);transition:transform 0.2s;flex-shrink:0;}
+.cfg-cat-arrow.open{transform:rotate(90deg);}
+.cfg-cat-body{padding:0 16px 14px;}
 </style>
 </head>
 <body>
@@ -293,7 +302,7 @@ input,select,textarea,button{font-family:inherit}
   </div>
   <div class="scroll-body">
     <div class="home-header">
-      <div class="home-hotel">North Millenia</div>
+      <div class="home-hotel">Orlando North Millenia</div>
       <div class="home-date" id="home-date"></div>
     </div>
     <div class="home-kpi-grid">
@@ -448,17 +457,60 @@ input,select,textarea,button{font-family:inherit}
 <!-- CONFIG (admin only) -->
 <div id="screen-config" class="screen">
   <div class="topbar">
-    <div class="topbar-brand">Room Maintenance &amp; Asset Tracker</div>
+    <div class="topbar-brand">Baymont by Wyndham Orlando North Millenia</div>
     <div class="flex-between">
       <div class="topbar-title">Configuration</div>
       <div style="background:rgba(168,85,247,0.2);border:1px solid #A855F7;color:#D8B4FE;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">ADMIN</div>
     </div>
   </div>
   <div class="scroll-body">
-    <div class="section-head" style="margin-bottom:14px;">Staff Accounts</div>
-    <div id="config-users"></div>
-    <div id="inv-section-head" class="section-head" style="margin-top:24px;margin-bottom:14px;">Inventory Items</div>
-    <div id="config-inv-items"></div>
+
+    <!-- CATEGORY: STAFF -->
+    <div class="cfg-cat-wrap">
+      <div class="cfg-cat-head" onclick="toggleCfgCat('staff')">
+        <div class="cfg-cat-icon">👥</div>
+        <div>
+          <div class="cfg-cat-title">Staff &amp; Accounts</div>
+          <div class="cfg-cat-sub">User management · PIN access · Roles</div>
+        </div>
+        <span class="cfg-cat-arrow" id="cfg-arrow-staff">›</span>
+      </div>
+      <div class="cfg-cat-body" id="cfg-body-staff" style="display:none">
+        <div id="config-users"></div>
+      </div>
+    </div>
+
+    <!-- CATEGORY: INVENTORY -->
+    <div class="cfg-cat-wrap" id="inv-section-head">
+      <div class="cfg-cat-head" onclick="toggleCfgCat('inventory')">
+        <div class="cfg-cat-icon">📦</div>
+        <div>
+          <div class="cfg-cat-title">Inventory Items</div>
+          <div class="cfg-cat-sub">Categories · Par levels · Units</div>
+        </div>
+        <span class="cfg-cat-arrow" id="cfg-arrow-inventory">›</span>
+      </div>
+      <div class="cfg-cat-body" id="cfg-body-inventory" style="display:none">
+        <div id="config-inv-items"></div>
+      </div>
+    </div>
+
+    <!-- CATEGORY: ROOMS -->
+    <div class="cfg-cat-wrap">
+      <div class="cfg-cat-head" onclick="toggleCfgCat('rooms')">
+        <div class="cfg-cat-icon">🏨</div>
+        <div>
+          <div class="cfg-cat-title">Rooms &amp; Property</div>
+          <div class="cfg-cat-sub">Room count · Floor layout · Room types</div>
+        </div>
+        <span class="cfg-cat-arrow" id="cfg-arrow-rooms">›</span>
+      </div>
+      <div class="cfg-cat-body" id="cfg-body-rooms" style="display:none">
+        <div style="color:var(--slate);font-size:13px;padding:8px 0 4px;">Current room layout loaded from app configuration. Contact admin to update room inventory.</div>
+        <div id="cfg-room-summary" style="font-size:12px;color:var(--slate-2);margin-top:8px;"></div>
+      </div>
+    </div>
+
     <div style="height:20px;"></div>
   </div>
   <div class="bottom-nav" id="nav-config"></div>
@@ -827,6 +879,29 @@ function renderReport(){
   document.getElementById('report-body').innerHTML='<div style="padding:16px;">'+strip+sections+'<div style="height:20px;"></div></div>';
 }
 
+function toggleCfgCat(id){
+  var body=document.getElementById('cfg-body-'+id);
+  var arrow=document.getElementById('cfg-arrow-'+id);
+  if(!body)return;
+  var open=body.style.display!=='none';
+  body.style.display=open?'none':'';
+  if(arrow)arrow.className='cfg-cat-arrow'+(open?'':' open');
+  // lazy-load content
+  if(!open){
+    if(id==='inventory')renderConfigInventory();
+    if(id==='staff')renderConfigUsers();
+    if(id==='rooms')renderCfgRoomSummary();
+  }
+}
+function renderCfgRoomSummary(){
+  var el=document.getElementById('cfg-room-summary');
+  if(!el)return;
+  var all=allRooms();
+  var byFloor={};
+  all.forEach(function(n){var f=Math.floor(n/100);if(!byFloor[f])byFloor[f]=0;byFloor[f]++;});
+  el.innerHTML='<b style="color:var(--white);">Total: '+all.length+' rooms</b><br>'
+    +Object.keys(byFloor).sort().map(function(f){return'Floor '+f+': '+byFloor[f]+' rooms';}).join(' &nbsp;·&nbsp; ');
+}
 function renderConfig(){
   if(!isAdmin){document.getElementById('config-users').innerHTML='<p style="color:#F87171;padding:20px;text-align:center;">Access denied.</p>';document.getElementById('config-inv-items').innerHTML='';return;}
   document.getElementById('config-users').innerHTML=staffList.map(function(s){
