@@ -227,6 +227,26 @@ input,select,textarea,button{font-family:inherit}
 .inv-acc-arrow.open{transform:rotate(90deg)}
 .inv-acc-body{overflow:hidden}
 .inv-cat-wrap{margin-bottom:8px}
+/* Projects */
+.project-card{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.06);box-shadow:0 2px 8px rgba(0,0,0,0.18);}
+.project-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;}
+.project-title{font-size:15px;font-weight:700;color:var(--white);flex:1;line-height:1.3;}
+.project-status-pill{font-size:10px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap;flex-shrink:0;}
+.project-status-active{background:rgba(20,184,166,0.18);color:#2DD4BF;border:1px solid #2DD4BF44;}
+.project-status-done{background:rgba(100,116,139,0.18);color:#94A3B8;border:1px solid #64748B44;}
+.project-cat-badge{display:inline-block;font-size:10px;font-weight:600;background:rgba(99,102,241,0.15);color:#A5B4FC;border-radius:20px;padding:2px 8px;margin-bottom:7px;}
+.project-desc{font-size:13px;color:var(--slate);line-height:1.5;margin-bottom:8px;}
+.project-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--slate-2);margin-bottom:8px;}
+.project-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.project-action-btn{font-size:11px;font-weight:600;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;}
+.project-btn-edit{background:rgba(99,102,241,0.2);color:#A5B4FC;}
+.project-btn-done{background:rgba(20,184,166,0.18);color:#2DD4BF;}
+.project-btn-reopen{background:rgba(245,158,11,0.15);color:#FCD34D;}
+.project-btn-del{background:rgba(239,68,68,0.15);color:#FCA5A5;}
+.proj-filter-row{display:flex;gap:8px;margin-bottom:16px;}
+.proj-filter-btn{font-size:12px;font-weight:600;border:1.5px solid var(--slate-2);border-radius:20px;padding:5px 14px;background:none;color:var(--slate);cursor:pointer;white-space:nowrap;}
+.proj-filter-btn.active{background:var(--teal-hi);border-color:var(--teal-hi);color:#0F172A;}
+.cfg-topbar-btn{background:none;border:1.5px solid rgba(255,255,255,0.15);border-radius:8px;color:var(--slate);padding:5px 8px;cursor:pointer;display:flex;align-items:center;}
 </style>
 </head>
 <body>
@@ -267,7 +287,7 @@ input,select,textarea,button{font-family:inherit}
       <div class="flex-row" style="gap:6px">
         <div class="sync-dot" id="sync-dot-home"></div>
         <div class="badge-pill" id="user-pill-home" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;"></div>
-        <button class="logout-btn" onclick="doLogout()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
+        <button class="cfg-topbar-btn admin-cfg-btn" onclick="gotoScreen('config')" title="Config" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button><button class="logout-btn" onclick="doLogout()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
       </div>
     </div>
   </div>
@@ -303,6 +323,14 @@ input,select,textarea,button{font-family:inherit}
       <button class="home-quick-btn" onclick="gotoScreen('dashboard')">Room Grid</button>
       <button class="home-quick-btn" onclick="gotoScreen('inventory')">Inventory</button>
     </div>
+    <!-- Projects Summary -->
+    <div style="margin-top:18px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal-hi);">Active Projects <span id="home-proj-count" style="background:rgba(20,184,166,0.18);color:#2DD4BF;border-radius:20px;padding:1px 8px;font-size:10px;margin-left:4px;">0</span></div>
+        <button class="home-quick-btn" style="font-size:11px;padding:4px 12px;" onclick="gotoProjectsActive()">See All →</button>
+      </div>
+      <div id="home-projects-wrap"></div>
+    </div>
   </div>
   <div class="bottom-nav" id="nav-home"></div>
 </div>
@@ -315,7 +343,7 @@ input,select,textarea,button{font-family:inherit}
       <div class="flex-row" style="gap:6px">
         <div class="sync-dot" id="sync-dot-log"></div>
         <div class="badge-pill" id="user-pill" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;"></div>
-        <button class="logout-btn" onclick="doLogout()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
+        <button class="cfg-topbar-btn admin-cfg-btn" onclick="gotoScreen('config')" title="Config" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button><button class="logout-btn" onclick="doLogout()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
       </div>
     </div>
   </div>
@@ -371,7 +399,7 @@ input,select,textarea,button{font-family:inherit}
       <div class="flex-row" style="gap:6px">
         <div class="sync-dot" id="sync-dot-dash"></div>
         <div class="badge-pill" id="user-pill-dash" style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;"></div>
-        <button class="logout-btn" onclick="doLogout()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
+        <button class="cfg-topbar-btn admin-cfg-btn" onclick="gotoScreen('config')" title="Config" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button><button class="logout-btn" onclick="doLogout()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
       </div>
     </div>
   </div>
@@ -445,7 +473,7 @@ input,select,textarea,button{font-family:inherit}
       <div class="topbar-title">Inventory Control</div>
       <div class="flex-row" style="gap:6px">
         <div class="sync-dot" id="sync-dot-inv"></div>
-        <button class="logout-btn" onclick="doLogout()">
+        <button class="cfg-topbar-btn admin-cfg-btn" onclick="gotoScreen('config')" title="Config" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button><button class="logout-btn" onclick="doLogout()">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out
         </button>
       </div>
@@ -470,6 +498,33 @@ input,select,textarea,button{font-family:inherit}
   <div class="bottom-nav" id="nav-inventory"></div>
 </div>
 
+<div id="screen-projects" class="screen">
+  <div class="topbar">
+    <div class="topbar-brand">Baymont by Wyndham Orlando</div>
+    <div class="flex-between">
+      <div class="topbar-title">Projects</div>
+      <div class="flex-row" style="gap:6px">
+        <div class="sync-dot" id="sync-dot-projects"></div>
+        <div class="badge-pill" id="user-pill-projects" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;"></div>
+        <button class="cfg-topbar-btn admin-cfg-btn" onclick="gotoScreen('config')" title="Config" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button>
+        <button class="logout-btn" onclick="doLogout()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Out</button>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="proj-filter-row">
+      <button class="proj-filter-btn active" id="pf-active" onclick="setProjectFilter('active')">Active</button>
+      <button class="proj-filter-btn" id="pf-completed" onclick="setProjectFilter('completed')">Completed</button>
+      <button class="proj-filter-btn" id="pf-all" onclick="setProjectFilter('all')">All</button>
+    </div>
+    <div id="projects-body"></div>
+    <div id="project-form-wrap"></div>
+    <div id="proj-add-wrap" style="margin-top:4px;">
+      <button class="inv-add-btn" id="proj-add-btn" onclick="openProjectForm(null)" style="display:none">+ New Project</button>
+    </div>
+  </div>
+  <div id="nav-projects"></div>
+</div>
 <div class="toast" id="toast"></div>
 <input type="file" id="media-input" accept="image/*" capture="environment" class="hidden" onchange="handleMediaCapture(event)"/>
 </div>
@@ -543,6 +598,8 @@ async function doLogin(){
     document.getElementById('user-pill-dash').textContent=currentUser;
     buildNav();
     document.getElementById('user-pill-home').textContent=currentUser;
+    updateAdminUI();
+    loadProjects();
     gotoScreen('home');
   }catch(err){st.textContent='Connection error: '+err.message;btn.disabled=false;btn.textContent='Sign In to Room Tracker';}
 }
@@ -568,8 +625,8 @@ function buildNav(){
     {id:'report',label:'Report',icon:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'}
   ];
   tabs.push({id:'inventory',label:'Inventory',icon:'<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>'});
-  if(isAdmin){tabs.push({id:'config',label:'Config',icon:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>'});}
-  var screens=['home','log','dashboard','report','inventory','config'];
+  tabs.push({id:'projects',label:'Projects',icon:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>'});
+  var screens=['home','log','dashboard','report','inventory','projects'];
   screens.forEach(function(sc){
     var el=document.getElementById('nav-'+sc);
     if(!el)return;
@@ -583,13 +640,29 @@ function buildNav(){
 
 function gotoScreen(name){
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  document.getElementById('screen-'+name).classList.add('active');
+  var sc=document.getElementById('screen-'+name);
+  if(!sc)return;
+  sc.classList.add('active');
   buildNav();
+  updateAdminUI();
   if(name==='home')renderHome();
   if(name==='dashboard')renderDashboard();
   if(name==='report')renderReport();
   if(name==='config')renderConfig();
   if(name==='inventory')loadInventory();
+  if(name==='projects')loadProjects();
+}
+function updateAdminUI(){
+  // Show Config gear button in topbar for admin
+  document.querySelectorAll('.admin-cfg-btn').forEach(function(b){
+    b.style.display=isAdmin?'flex':'none';
+  });
+  // Show new project button for admin
+  var addBtn=document.getElementById('proj-add-btn');
+  if(addBtn)addBtn.style.display=isAdmin?'':'none';
+  // Update user pills
+  var pills=document.querySelectorAll('[id^="user-pill-"]');
+  pills.forEach(function(p){p.textContent=currentUser?currentUser.name:'';});
 }
 
 function onRoomInput(val){
@@ -1101,6 +1174,179 @@ async function deleteInvItem(id){
   }
 }
 
+
+/* ══════════════ PROJECTS ══════════════ */
+var projectsCache=[];
+var projectFilter='active';
+
+async function loadProjects(){
+  var dot=document.getElementById('sync-dot-projects');
+  if(dot)dot.style.background='#F59E0B';
+  try{
+    var data=await sbSelect('projects','order=created_at.desc');
+    projectsCache=data||[];
+    renderProjects();
+    if(dot)dot.style.background='#22C55E';
+  }catch(e){
+    showToast('Error loading projects: '+e.message,'error');
+    if(dot)dot.style.background='#EF4444';
+  }
+}
+
+function setProjectFilter(f){
+  projectFilter=f;
+  ['active','completed','all'].forEach(function(k){
+    var el=document.getElementById('pf-'+k);
+    if(el)el.classList.toggle('active',k===f);
+  });
+  renderProjects();
+}
+
+function renderProjects(){
+  var el=document.getElementById('projects-body');
+  if(!el)return;
+  var list=projectsCache.filter(function(p){
+    if(projectFilter==='active')return p.status==='active';
+    if(projectFilter==='completed')return p.status==='completed';
+    return true;
+  });
+  if(!list.length){
+    el.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--slate-2);font-size:14px;">No '+projectFilter+' projects</div>';
+    return;
+  }
+  el.innerHTML=list.map(function(p){
+    var active=p.status==='active';
+    var pri=p.priority||'normal';
+    var priLabel=pri==='high'?'🔴 High':pri==='low'?'🔵 Low':'🟡 Normal';
+    var created=p.created_at?new Date(p.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
+    var completedStr=p.completed_at?'<span>✓ Done '+new Date(p.completed_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})+'</span>':'';
+    return '<div class="project-card">'
+      +'<div class="project-card-header">'
+      +'<div class="project-title">'+p.title+'</div>'
+      +'<div class="project-status-pill '+(active?'project-status-active':'project-status-done')+'">'+(active?'● Active':'✓ Done')+'</div>'
+      +'</div>'
+      +(p.category?'<div class="project-cat-badge">'+p.category+'</div>':'')
+      +(p.description?'<div class="project-desc">'+p.description+'</div>':'')
+      +'<div class="project-meta">'
+      +(p.assigned_to?'<span>👤 '+p.assigned_to+'</span>':'')
+      +'<span>'+priLabel+'</span>'
+      +(created?'<span>📅 '+created+'</span>':'')
+      +completedStr
+      +'</div>'
+      +(p.notes?'<div style="font-size:12px;color:var(--slate-2);background:rgba(255,255,255,0.04);border-radius:8px;padding:8px 10px;margin-bottom:8px;">'+p.notes+'</div>':'')
+      +(isAdmin?'<div class="project-actions">'
+        +'<button class="project-action-btn project-btn-edit" data-id="'+p.id+'" onclick="openProjectForm(this.dataset.id)">Edit</button>'
+        +(active?'<button class="project-action-btn project-btn-done" data-id="'+p.id+'" onclick="completeProject(this.dataset.id)">Mark Done</button>':'')
+        +(!active?'<button class="project-action-btn project-btn-reopen" data-id="'+p.id+'" onclick="reopenProject(this.dataset.id)">Reopen</button>':'')
+        +'<button class="project-action-btn project-btn-del" data-id="'+p.id+'" onclick="deleteProject(this.dataset.id)">Delete</button>'
+        +'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+function openProjectForm(id){
+  var p=id?projectsCache.find(function(x){return x.id===id;}):null;
+  var wrap=document.getElementById('project-form-wrap');
+  if(!wrap)return;
+  var cats=['Cleaning','Repair','Maintenance','Landscaping','Safety','General'];
+  var catOpts=cats.map(function(c){return'<option value="'+c+'"'+(p&&p.category===c?' selected':'')+'>'+c+'</option>';}).join('');
+  wrap.innerHTML='<div class="project-form">'
+    +'<div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:12px;">'+(id?'Edit Project':'New Project')+'</div>'
+    +'<div class="form-group" style="margin:0 0 10px;"><label class="form-label">Title *</label>'
+    +'<input class="form-input" id="pf-title" value="'+(p?p.title:'')+'" placeholder="e.g. Deep clean pool area"/></div>'
+    +'<div class="form-group" style="margin:0 0 10px;"><label class="form-label">Category</label>'
+    +'<select class="form-select" id="pf-cat"><option value="">— Select —</option>'+catOpts+'</select></div>'
+    +'<div class="form-group" style="margin:0 0 10px;"><label class="form-label">Description</label>'
+    +'<textarea class="form-input" id="pf-desc" rows="2" placeholder="Details..." style="resize:vertical;">'+(p?p.description||'':'')+'</textarea></div>'
+    +'<div style="display:flex;gap:10px;">'
+    +'<div class="form-group" style="margin:0;flex:1;"><label class="form-label">Assigned To</label>'
+    +'<input class="form-input" id="pf-assigned" value="'+(p?p.assigned_to||'':'')+'" placeholder="Staff name"/></div>'
+    +'<div class="form-group" style="margin:0;flex:1;"><label class="form-label">Priority</label>'
+    +'<select class="form-select" id="pf-priority">'
+    +'<option value="normal"'+(p&&p.priority==='normal'?' selected':'')+'>Normal</option>'
+    +'<option value="high"'+(p&&p.priority==='high'?' selected':'')+'>High</option>'
+    +'<option value="low"'+(p&&p.priority==='low'?' selected':'')+'>Low</option>'
+    +'</select></div></div>'
+    +'<div class="form-group" style="margin:10px 0 14px;"><label class="form-label">Notes</label>'
+    +'<textarea class="form-input" id="pf-notes" rows="2" placeholder="Additional notes..." style="resize:vertical;">'+(p?p.notes||'':'')+'</textarea></div>'
+    +'<div style="display:flex;gap:10px;">'
+    +'<button class="inv-add-btn" style="flex:1;" id="pf-save-btn" data-id="'+(id||'')+'" onclick="saveProject(this.dataset.id||null)">'+(id?'Save Changes':'Create Project')+'</button>'
+    +'<button class="inv-add-btn" style="flex:1;background:rgba(100,116,139,0.2);color:var(--slate);" onclick="closeProjectForm()">Cancel</button>'
+    +'</div></div>';
+  wrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function closeProjectForm(){
+  var wrap=document.getElementById('project-form-wrap');
+  if(wrap)wrap.innerHTML='';
+}
+
+async function saveProject(id){
+  var title=document.getElementById('pf-title').value.trim();
+  var cat=document.getElementById('pf-cat').value;
+  var desc=document.getElementById('pf-desc').value.trim();
+  var assigned=document.getElementById('pf-assigned').value.trim();
+  var priority=document.getElementById('pf-priority').value;
+  var notes=document.getElementById('pf-notes').value.trim();
+  if(!title){showToast('Title is required.','error');return;}
+  var btn=document.getElementById('pf-save-btn');
+  btn.disabled=true;btn.textContent='Saving...';
+  try{
+    var now=new Date().toISOString();
+    if(id&&id!==''){
+      await sbPatch('projects',id,{title:title,category:cat,description:desc,assigned_to:assigned,priority:priority,notes:notes,updated_at:now});
+      var ex=projectsCache.find(function(x){return x.id===id;});
+      if(ex){ex.title=title;ex.category=cat;ex.description=desc;ex.assigned_to=assigned;ex.priority=priority;ex.notes=notes;ex.updated_at=now;}
+    }else{
+      var nid='proj-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+      var rec={id:nid,title:title,category:cat,description:desc,assigned_to:assigned,priority:priority,notes:notes,status:'active',created_by:currentUser?currentUser.name:'',created_at:now,updated_at:now,completed_at:null};
+      await sbInsert('projects',rec);
+      projectsCache.unshift(rec);
+    }
+    closeProjectForm();
+    renderProjects();
+    renderHome();
+    showToast(id&&id!==''?'Project updated.':'Project created.','success');
+  }catch(e){
+    btn.disabled=false;btn.textContent=id&&id!==''?'Save Changes':'Create Project';
+    showToast('Error: '+e.message,'error');
+  }
+}
+
+async function completeProject(id){
+  if(!confirm('Mark this project as completed?'))return;
+  var now=new Date().toISOString();
+  try{
+    await sbPatch('projects',id,{status:'completed',completed_at:now,updated_at:now});
+    var p=projectsCache.find(function(x){return x.id===id;});
+    if(p){p.status='completed';p.completed_at=now;}
+    renderProjects();renderHome();
+    showToast('Project completed!','success');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+
+async function reopenProject(id){
+  var now=new Date().toISOString();
+  try{
+    await sbPatch('projects',id,{status:'active',completed_at:null,updated_at:now});
+    var p=projectsCache.find(function(x){return x.id===id;});
+    if(p){p.status='active';p.completed_at=null;}
+    renderProjects();renderHome();
+    showToast('Project reopened.','success');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+
+async function deleteProject(id){
+  var p=projectsCache.find(function(x){return x.id===id;});
+  if(!p||!confirm('Delete "'+p.title+'"? This cannot be undone.'))return;
+  try{
+    await sbDelete('projects',id);
+    projectsCache=projectsCache.filter(function(x){return x.id!==id;});
+    renderProjects();renderHome();
+    showToast('Project deleted.','success');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+/* ══════════════ END PROJECTS ══════════════ */
 function renderHome(){
   var all=allRooms(),vr=[],oos=[],ooo=[];
   all.forEach(function(n){var s=getRoomStatus(n);if(s==='OOO')ooo.push(n);else if(s==='OOS')oos.push(n);else vr.push(n);});
@@ -1114,7 +1360,27 @@ function renderHome(){
   var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var dateEl=document.getElementById('home-date');
   if(dateEl)dateEl.textContent=days[now.getDay()]+', '+months[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
+  // Projects summary
+  var projWrap=document.getElementById('home-projects-wrap');
+  if(projWrap){
+    var active=projectsCache.filter(function(p){return p.status==='active';});
+    if(active.length===0){
+      projWrap.innerHTML='<div style="color:var(--slate-2);font-size:13px;padding:8px 0;">No active projects.</div>';
+    }else{
+      projWrap.innerHTML=active.slice(0,3).map(function(p){
+        var pri=p.priority==='high'?'🔴':p.priority==='low'?'🔵':'🟡';
+        return '<div class="home-proj-card" onclick="gotoProjectsActive()">'
+          +'<div class="home-proj-title">'+pri+' '+p.title+'</div>'
+          +'<div class="home-proj-meta">'+(p.category||'General')+(p.assigned_to?' · 👤 '+p.assigned_to:'')+'</div>'
+          +'</div>';
+      }).join('')
+      +(active.length>3?'<div style="font-size:12px;color:var(--slate-2);text-align:center;padding:4px;cursor:pointer;" onclick="gotoProjectsActive()">+' +(active.length-3)+' more →</div>':'');
+    }
+  }
+  var projCount=document.getElementById('home-proj-count');
+  if(projCount)projCount.textContent=projectsCache.filter(function(p){return p.status==='active';}).length;
 }
+function gotoProjectsActive(){projectFilter='active';gotoScreen('projects');}
 
 function setReportFilter(f){reportFilter=f;}
 
