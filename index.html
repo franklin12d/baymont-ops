@@ -826,13 +826,12 @@ async function loadInventory(){
 }
 
 var invCollapsed={};
-function toggleInvCat(cat){
-  invCollapsed[cat]=!invCollapsed[cat];
-  var catId=cat.replace(/[^a-z0-9]/gi,'_');
+function toggleInvCat(catId){
+  invCollapsed[catId]=!invCollapsed[catId];
   var body=document.getElementById('inv-body-'+catId);
   var arrow=document.getElementById('inv-arrow-'+catId);
-  if(body)body.style.display=invCollapsed[cat]?'none':'';
-  if(arrow)arrow.className='inv-acc-arrow'+(invCollapsed[cat]?'':' open');
+  if(body)body.style.display=invCollapsed[catId]?'none':'';
+  if(arrow)arrow.className='inv-acc-arrow'+(invCollapsed[catId]?'':' open');
 }
 function onInvSearch(val){invSearch=val.trim().toLowerCase();renderInventory();}
 function renderInventory(){
@@ -853,10 +852,11 @@ function renderInventory(){
     }):allItems;
     if(q&&items.length===0)return; // skip category if no matches
     var catId=cat.replace(/[^a-z0-9]/gi,'_');
-    var collapsed=q?false:invCollapsed[cat]; // always expand when searching
+    // Start collapsed unless searching; invCollapsed[catId] undefined = collapsed by default
+    var collapsed=q?false:(invCollapsed[catId]===false?false:true);
     var lowCount=allItems.filter(function(i){return i.quantity===0||(i.par_level>0&&i.quantity/i.par_level<0.5);}).length;
     html+='<div class="inv-cat-wrap">';
-    html+='<div class="inv-acc-head" onclick="toggleInvCat('+JSON.stringify(cat)+')">';
+    html+='<div class="inv-acc-head" onclick="toggleInvCat(\''+catId+'\')">';
     html+='<span class="inv-acc-title">'+cat+'</span>';
     html+='<span class="inv-acc-meta">';
     if(lowCount)html+='<span class="inv-acc-count" style="color:#EF4444;">'+lowCount+' low</span>';
