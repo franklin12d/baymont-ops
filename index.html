@@ -1183,7 +1183,7 @@ async function loadProjects(){
   var dot=document.getElementById('sync-dot-projects');
   if(dot)dot.style.background='#F59E0B';
   try{
-    var data=await sbSelect('projects','order=created_at.desc');
+    var data=await sbGet('projects','order=created_at.desc');
     projectsCache=data||[];
     renderProjects();
     if(dot)dot.style.background='#22C55E';
