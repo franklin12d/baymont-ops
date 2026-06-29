@@ -947,12 +947,39 @@ function printInventory(){window.print();}
 // ── Inventory Item Editor (admin only) ───────────────────────────────────────
 var KNOWN_CATEGORIES=['Amenities','Bedding','Cleaning','F&B','Linens','Maintenance','OS&E'];
 
+async function renameCat(oldCat){
+  var newCat=prompt('Rename category "'+oldCat+'" to:',oldCat);
+  if(!newCat||!newCat.trim()||newCat.trim()===oldCat)return;
+  newCat=newCat.trim();
+  var items=inventoryCache.filter(function(x){return x.category===oldCat;});
+  if(!items.length){showToast('No items in this category.','error');return;}
+  try{
+    for(var i=0;i<items.length;i++){
+      await sbPatch('inventory',items[i].id,{category:newCat,updated_by:currentUser,updated_at:new Date().toISOString()});
+      items[i].category=newCat;
+    }
+    showToast('Renamed to "'+newCat+'".','success');
+    renderConfigInventory();
+    renderInventory();
+  }catch(err){showToast('Rename failed: '+err.message,'error');}
+}
+function addNewCategory(){
+  var catName=prompt('New category name:');
+  if(!catName||!catName.trim())return;
+  catName=catName.trim();
+  var exists=inventoryCache.some(function(x){return x.category.toLowerCase()===catName.toLowerCase();});
+  if(exists){showToast('Category already exists.','info');return;}
+  openInvItemForm(null,catName);
+}
 function renderConfigInventory(){
   var el=document.getElementById('config-inv-items');
   if(!el)return;
   if(!inventoryCache.length){
     el.innerHTML='<div style="color:var(--slate-2);font-size:13px;padding:10px 0;">No inventory items found. Add your first item below.</div>'
-      +'<button class="inv-add-btn" onclick="openInvItemForm(null)">+ Add New Item</button>';
+      +'<div style="display:flex;gap:10px;margin-top:10px;">'
+      +'<button class="inv-add-btn" style="flex:1;" onclick="openInvItemForm(null,null)">+ Add New Item</button>'
+      +'<button class="inv-add-btn" style="flex:1;background:var(--teal-hi);" onclick="addNewCategory()">+ Add Category</button>'
+      +'</div>';
     return;
   }
   var byCategory={};
@@ -962,31 +989,40 @@ function renderConfigInventory(){
   });
   var html='';
   Object.keys(byCategory).sort().forEach(function(cat){
-    html+='<div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal-hi);margin:12px 0 6px;">'+cat+'</div>';
+    var escapedCat=cat.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    html+='<div style="display:flex;align-items:center;justify-content:space-between;margin:14px 0 5px;">'
+      +'<div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal-hi);">'+cat+'</div>'
+      +'<button class="inv-item-edit-btn" style="font-size:10px;padding:2px 10px;" data-cat="'+escapedCat+'" onclick="renameCat(this.dataset.cat)">✏ Rename</button>'
+      +'</div>';
     byCategory[cat].forEach(function(item){
       html+='<div class="inv-item-row" id="inv-cfg-row-'+item.id+'">'
         +'<div style="flex:1;">'
         +'<div class="inv-item-name">'+item.item_name+'</div>'
         +'<div class="inv-item-meta">par '+item.par_level+(item.unit?' · '+item.unit:'')+'</div>'
         +'</div>'
-        +'<button class="inv-item-edit-btn" onclick="openInvItemForm(\''+item.id+'\')">Edit</button>'
-        +'<button class="inv-item-del-btn" onclick="deleteInvItem(\''+item.id+'\')">✕</button>'
+        +'<button class="inv-item-edit-btn" data-id="'+item.id+'" onclick="openInvItemForm(this.dataset.id,null)">Edit</button>'
+        +'<button class="inv-item-del-btn" data-id="'+item.id+'" onclick="deleteInvItem(this.dataset.id)">✕</button>'
         +'</div>';
     });
   });
-  html+='<button class="inv-add-btn" onclick="openInvItemForm(null)">+ Add New Item</button>';
+  html+='<div style="display:flex;gap:10px;margin-top:10px;">'
+    +'<button class="inv-add-btn" style="flex:1;" onclick="openInvItemForm(null,null)">+ Add New Item</button>'
+    +'<button class="inv-add-btn" style="flex:1;background:var(--teal-hi);" onclick="addNewCategory()">+ Add Category</button>'
+    +'</div>';
   el.innerHTML=html;
 }
-
-function openInvItemForm(id){
+function openInvItemForm(id,prefillCat){
   var item=id?inventoryCache.find(function(x){return x.id===id;}):null;
   var existingForm=document.getElementById('inv-item-form');
   if(existingForm)existingForm.remove();
   var cats=KNOWN_CATEGORIES.slice();
   inventoryCache.forEach(function(x){if(cats.indexOf(x.category)<0)cats.push(x.category);});
   cats=cats.sort();
+  if(prefillCat&&cats.indexOf(prefillCat)<0)cats.push(prefillCat);
+  cats=cats.sort();
   var catOpts=cats.map(function(c){
-    return'<option value="'+c+'"'+(item&&item.category===c?' selected':'')+'>'+c+'</option>';
+    var sel=(item&&item.category===c)||(!item&&prefillCat&&prefillCat===c);
+    return'<option value="'+c+'"'+(sel?' selected':'')+'>'+c+'</option>';
   }).join('');
   var formHtml='<div class="inv-edit-card" id="inv-item-form">'
     +'<div style="font-size:12px;font-weight:700;color:var(--white);margin-bottom:10px;">'+(id?'Edit Item':'New Item')+'</div>'
