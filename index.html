@@ -177,11 +177,34 @@ input,select,textarea,button{font-family:inherit}
 .inv-save-btn:active{opacity:0.85}
 .inv-print-btn{width:100%;padding:12px;border-radius:var(--radius-sm);border:1.5px solid #E2E8F0;background:#fff;color:var(--slate);font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px}
 @media print{
-  .bottom-nav,.topbar button,.inv-qty-btn,.inv-save-btn,.inv-print-btn,.logout-btn{display:none!important}
-  body{color:#000;background:#fff}
-  .inv-cat-head{background:#f0f0f0;color:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  #screen-inventory{display:flex!important}
-  .screen:not(#screen-inventory){display:none!important}
+  /* Show only the report screen */
+  .screen{display:none!important}
+  #screen-report{display:flex!important;flex-direction:column;width:100%;}
+  /* Hide nav/buttons not needed in print */
+  .bottom-nav,.logout-btn,.rep-print-btn,.cfg-topbar-btn,.admin-cfg-btn,.summary-strip button{display:none!important}
+  /* Force light background for readability */
+  body,#screen-report{background:#fff!important;color:#000!important;}
+  .topbar{background:#fff!important;border-bottom:2px solid #000!important;padding:8px 16px!important;}
+  .topbar-brand{color:#555!important;font-size:10px!important;}
+  .topbar-title{color:#000!important;font-size:16px!important;font-weight:800!important;}
+  #report-meta{color:#555!important;}
+  /* Print header with property info */
+  #report-print-header{display:block!important;}
+  /* Summary strip */
+  .summary-strip{background:#f5f5f5!important;border-radius:8px!important;margin-bottom:12px!important;}
+  .sum-card{border:1px solid #ddd!important;}
+  .sum-num{color:#000!important;}
+  .sum-lbl{color:#555!important;}
+  /* Tables */
+  .report-table{width:100%!important;border-collapse:collapse!important;font-size:12px!important;}
+  .report-table th{background:#eee!important;color:#000!important;border:1px solid #ccc!important;padding:6px 8px!important;}
+  .report-table td{border:1px solid #ddd!important;padding:5px 8px!important;color:#000!important;}
+  .report-section-head{color:#000!important;background:#f0f0f0!important;padding:6px 10px!important;border-radius:4px!important;margin:10px 0 6px!important;}
+  .badge{border:1px solid #ccc!important;color:#000!important;background:#eee!important;}
+  .badge-vr{background:#d1fae5!important;color:#065f46!important;border-color:#6ee7b7!important;}
+  .badge-oos{background:#fee2e2!important;color:#991b1b!important;border-color:#fca5a5!important;}
+  .badge-ooo{background:#fef3c7!important;color:#92400e!important;border-color:#fcd34d!important;}
+  .scroll-body{overflow:visible!important;height:auto!important;max-height:none!important;}
 }
 
 /* ── Home Screen ── */
@@ -450,6 +473,10 @@ input,select,textarea,button{font-family:inherit}
       </div>
     </div>
     <div id="report-meta" style="font-size:11px;color:var(--slate);margin-top:4px;"></div>
+    <!-- Print-only header -->
+    <div id="report-print-header" style="display:none;font-size:11px;color:#555;padding:4px 0 8px;border-bottom:1px solid #ddd;margin-bottom:8px;">
+      Baymont by Wyndham Orlando North Millenia &nbsp;·&nbsp; Property ID: 91876 &nbsp;·&nbsp; 2500 33rd St, Orlando FL 32839
+    </div>
   </div>
   <div class="scroll-body" id="report-body"></div>
   <div class="bottom-nav" id="nav-report"></div>
@@ -460,7 +487,10 @@ input,select,textarea,button{font-family:inherit}
   <div class="topbar">
     <div class="topbar-brand">Baymont by Wyndham Orlando North Millenia</div>
     <div class="flex-between">
-      <div class="topbar-title">Configuration</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button onclick="history.go(-1)||gotoScreen('home')" style="background:none;border:none;color:var(--slate);font-size:20px;cursor:pointer;padding:0 4px;line-height:1;" title="Back">‹</button>
+        <div class="topbar-title">Configuration</div>
+      </div>
       <div style="background:rgba(168,85,247,0.2);border:1px solid #A855F7;color:#D8B4FE;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">ADMIN</div>
     </div>
   </div>
@@ -1460,7 +1490,13 @@ function gotoProjectsActive(){projectFilter='active';gotoScreen('projects');}
 
 function setReportFilter(f){reportFilter=f;}
 
-function printReport(){window.print();}
+function printReport(){
+  // Ensure report screen is active before printing
+  if(!document.getElementById('screen-report').classList.contains('active')){
+    gotoScreen('report');
+  }
+  setTimeout(function(){window.print();},300);
+}
 
 
 loadStaff();
