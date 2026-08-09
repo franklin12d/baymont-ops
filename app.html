@@ -413,54 +413,112 @@ var VCATS = [
   {id:'hk',name:'Housekeeping & Amenities'},{id:'eng',name:'Maintenance & Engineering'},
   {id:'grounds',name:'Grounds & Landscaping'},{id:'laundry',name:'Laundry & Linens'},
   {id:'tech',name:'Technology & Software'},{id:'ota',name:'OTA & Commissions'},
-  {id:'labor',name:'Contract Labor'},{id:'review',name:'Needs Review'}
+  {id:'labor',name:'Contract Labor'},{id:'brand',name:'Brand & Franchise'},
+  {id:'corp',name:'Corporate & Ownership'},{id:'review',name:'Needs Review'}
 ];
 var VSTEPS = [
   {k:'received',s:'R',l:'Received'},{k:'sent',s:'A1',l:'Sent to AD1'},
   {k:'transmitted',s:'M3',l:'Transmitted to M3'},{k:'closed',s:'C',l:'Closed'}
 ];
 var VENDORS = [
- {n:'ALTERNATE ELEVATOR',c:'eng',gl:'80178100',f:'Monthly',d:'Elevator maintenance contract.'},
- {n:'BEGEL KING',c:'fnb',gl:'40170060',f:'As needed',w:1,d:'No recent invoices on record. Confirm whether this account is still active.'},
- {n:'BOOKING.COM COMMISSIONS',c:'ota',gl:'40171050',f:'Monthly',d:'OTA commission. Last date recorded on the source sheet: Jul 6, 2026.'},
- {n:'CBC HOSPITALITY',c:'labor',gl:'VARIOUS',f:'Monthly',x:1,d:'Contract labor. One invoice received, but submitted to AD1 in MULTIPLE batches — split by department before transmitting.'},
- {n:'CINTAS FIRE',c:'eng',gl:'80178500',f:'Monthly',x:1,d:'Fire extinguishers — received and confirmed. Submitted to AD1 in MULTIPLE parts.'},
- {n:'CINTAS UNIFORMS',c:'hk',gl:'—',f:'As needed',w:1,d:'No recent activity on record.'},
- {n:'COMMUNITY COFFEE',c:'fnb',gl:'40170060',f:'Monthly',x:1,d:'Only 1 of 2 invoices received this month — the second is required before closing.'},
- {n:'COURTESY PRODUCTS',c:'hk',gl:'40171200',f:'Monthly',d:'One invoice received.'},
- {n:'DEX IMAGIN FD COPIER',c:'tech',gl:'80170100',f:'Monthly',d:'Front desk copier. No outstanding items.'},
- {n:'DIRECT TV',c:'tech',gl:'40171000',f:'Monthly',d:'Cable television service. No outstanding items.'},
- {n:'ECOLAB PEST CONTROL',c:'eng',gl:'80170100',f:'Monthly',d:'Pest control. Verify monthly receipt.'},
- {n:'ECOLAB KITCHEN LEASE FEE',c:'eng',gl:'80170100',f:'Monthly',d:'Kitchen equipment lease fee.'},
- {n:'EMES',c:'eng',gl:'40170100',f:'Monthly',w:1,d:'No additional detail on the source sheet.'},
- {n:'EXPEDIA COMMISSIONS',c:'ota',gl:'40171050',f:'Monthly',d:'OTA commission. Last date recorded on the source sheet: Aug 16, 2026.'},
- {n:'FAMILY GREEN LAWN CARE',c:'grounds',gl:'80178300',f:'Monthly',d:'Landscaping and grounds maintenance.'},
- {n:'HD SUPPLIES',c:'hk',gl:'VARIOUS',f:'Monthly',x:1,d:'Submitted to AD1 in MULTIPLE parts — GL code varies by order.'},
- {n:'HOTEL EFFECTIVENESS',c:'tech',gl:'65572000',f:'Monthly',w:1,d:'Labor management software. Charge is prorated across departments.'},
- {n:'IMPERIAL DADE',c:'hk',gl:'VARIOUS',f:'Monthly',x:1,d:'One invoice received, MULTIPLE submissions to AD1. Marked "double check" at close — verify before closing the month.'},
- {n:'KINGS 111',c:'eng',gl:'80178500',f:'Quarterly',x:1,d:'Billed quarterly and prorated. Feb/Mar/Apr still outstanding — next invoice expected in August.'},
- {n:'LAPIM PLUMBING',c:'eng',gl:'80178650',f:'As needed',w:1,d:'No recent activity on record.'},
- {n:'LIGHT HOUSE',c:'fnb',gl:'70177700',f:'Monthly',d:'Breakfast service related. No outstanding items.'},
- {n:'M3 ACCOUNTING',c:'tech',gl:'6557200',f:'Monthly',d:'Accounting platform — the system processed invoices are transmitted to.'},
- {n:'ODP OFFICE SUPPLIES',c:'hk',gl:'40170550',f:'As needed',w:1,d:'No recent activity on record.'},
- {n:'OTA COMMISSION',c:'ota',gl:'40171050',f:'Monthly',w:1,d:'Generic OTA commission — confirm which platform it corresponds to each month.'},
- {n:'OUC UTILITY',c:'util',gl:'82179000',f:'Monthly',w:1,d:'Water/sewer and electricity — these were combined on the source sheet; confirm the account number on receipt.'},
- {n:'PROFIT SWORD',c:'tech',gl:'CORP ACCT',f:'Monthly',d:'Corporate revenue reporting system.'},
- {n:'QUORE LLC',c:'tech',gl:'65572000',f:'Monthly',d:'Operations ticketing and maintenance platform.'},
- {n:'SABRE',c:'tech',gl:'65170250',f:'Monthly',d:'Distribution and reservations system.'},
- {n:'SECURITY POR OF FLORIDA',c:'eng',gl:'80178500',f:'Monthly',d:'Security services. No outstanding items.'},
- {n:'SHERWIN WILLIAMS',c:'hk',gl:'80170100',f:'As needed',w:1,d:'Paint and supplies. No recent activity.'},
- {n:'SORJEN',c:'review',gl:'—',f:'To confirm',x:1,d:'No additional data on the source sheet — confirm the service with Accounting.'},
- {n:'SOUTHEASTERN LAUNDRY',c:'laundry',gl:'84182200',f:'Monthly',d:'Linens and laundry.'},
- {n:'SUMMIT',c:'review',gl:'65541300',f:'To confirm',x:1,d:'No additional data on the source sheet — confirm category and service.'},
- {n:'SYSCO FOODS',c:'fnb',gl:'40170060',f:'Monthly',x:1,d:'Submitted to AD1 in MULTIPLE parts.'},
- {n:'TA EQUIPMENT — BRITANIA POOLS',c:'eng',gl:'80178700',f:'Monthly',d:'Pool equipment.'},
- {n:'TECHONE',c:'tech',gl:'65572000',f:'As needed',w:1,d:'No recent activity on record.'},
- {n:'TECO',c:'util',gl:'82179050',f:'Monthly',d:'Electricity (Tampa Electric Company).'},
- {n:'TRAVEL ESCAPE (Expedia TravelAds)',c:'ota',gl:'70177600',f:'Monthly',d:'Expedia TravelAds advertising.'},
- {n:'VSR NETWORK TECH',c:'util',gl:'80170100',f:'Monthly',d:'Voice and telephony service.'},
- {n:'WASTE CONNECTION',c:'eng',gl:'80178750',f:'Monthly',d:'Waste collection.'}
+ {n:'ALTERNATE ELEVATOR',c:'eng',gl:'80178100',f:'Monthly',jul:480.00,inv:1,d:'Elevator maintenance contract.'},
+ {n:'AD1 HOSPITALITY LLC',c:'corp',gl:'VARIOUS',f:'Monthly',x:1,jul:13762.95,inv:21,d:'Corporate charges: office reimbursables, centralized accounting, recruitment, payroll processing, postage, media and asset management. Posts to 10 GL accounts (65170150, 65176150, 65176420, 65176700, 65176750, 65572000, 70170150, 70177600, 72080300). Split by account before transmitting.'},
+ {n:'AMERICAN MGMT & CONSULTING',c:'corp',gl:'84181100',f:'Monthly',jul:8943.06,inv:2,d:'Building rent, base. Two invoices posted in July.'},
+ {n:'BAGEL KING',c:'fnb',gl:'40170060',f:'As needed',w:1,jul:0,d:'No July activity in the ledger. Previously listed as BEGEL KING. Confirm whether the account is still active.'},
+ {n:'BIRCH STREET SYSTEMS LLC',c:'tech',gl:'65572000',f:'Monthly',jul:523.76,inv:1,d:'Procurement platform. Systems expense, A&G.'},
+ {n:'BOOKING.COM',c:'ota',gl:'40171050',f:'Monthly',jul:11846.02,inv:2,d:'OTA commission. Second largest revenue-share cost after Wyndham.'},
+ {n:'CBC HOSPITALITY',c:'labor',gl:'VARIOUS',f:'Monthly',x:1,jul:29624.90,inv:34,d:'Largest vendor at the property. July: 34 invoice lines across 19 GL accounts covering contract guest service, night audit, housekeeping, house attendants, inspectors, breakfast and engineering. Must be split by department before transmitting to AD1.'},
+ {n:'CINTAS FIRE',c:'eng',gl:'80178500',f:'Monthly',x:1,jul:4124.57,inv:1,d:'Fire and life safety. Submitted to AD1 in multiple parts.'},
+ {n:'CINTAS UNIFORMS',c:'hk',gl:'—',f:'As needed',w:1,jul:0,d:'No recent activity on record.'},
+ {n:'COMMUNITY COFFEE',c:'fnb',gl:'40170060',f:'Monthly',x:1,jul:1651.97,inv:2,d:'Two invoices post per month. July: 1,473.28 and 178.69 dollars. Both are required before closing.'},
+ {n:'COSTAR REALTY INFORMATION',c:'tech',gl:'70170100',f:'Monthly',jul:401.18,inv:1,d:'Market data subscription. Contract services, sales and marketing.'},
+ {n:'COURTESY PRODUCTS',c:'hk',gl:'40171200',f:'Monthly',jul:558.93,inv:1,d:'Guest supplies.'},
+ {n:'DEVELOPER HOSPITALITY',c:'corp',gl:'72080300',f:'Monthly',jul:3012.77,inv:1,d:'Asset management fee to ownership.'},
+ {n:'DEX IMAGIN FD COPIER',c:'tech',gl:'80170100',f:'Monthly',w:1,jul:0,d:'Front desk copier. No July activity in the ledger.'},
+ {n:'DIRECT TV',c:'tech',gl:'40171000',f:'Monthly',w:1,jul:0,d:'Complimentary in-room media entertainment. No July activity in the ledger.'},
+ {n:'ECOLAB',c:'eng',gl:'80170100',f:'Monthly',jul:489.53,inv:2,d:'Pest elimination and kitchen equipment lease. Two invoices in July.'},
+ {n:'EMES',c:'review',gl:'—',f:'Monthly',x:1,jul:0,d:'Previously coded to GL 40170100, which does not exist in the M3 chart of accounts. Vendor does not appear in the July ledger. Confirm the correct account and service with Accounting.'},
+ {n:'EXPEDIA',c:'ota',gl:'40171050',f:'Monthly',jul:3769.98,inv:2,d:'OTA commission.'},
+ {n:'FAMILY GREEN LAWN CARE',c:'grounds',gl:'80178300',f:'Monthly',w:1,jul:0,d:'Grounds maintenance and landscaping. No July activity in the ledger.'},
+ {n:'GOLDEN WAFFLES',c:'fnb',gl:'40170060',f:'Monthly',jul:400.50,inv:1,d:'Breakfast supply. Complimentary F&B.'},
+ {n:'HD SUPPLY',c:'hk',gl:'VARIOUS',f:'Monthly',x:1,jul:1220.95,inv:6,d:'Facilities maintenance. July: 6 invoices across guest supplies (40171200), plumbing (80178650) and complimentary F&B (40170060). GL code varies by order.'},
+ {n:'HOTEL EFFECTIVENESS',c:'tech',gl:'65572000',f:'Monthly',w:1,jul:0,d:'Labor management software. Charge is prorated across departments. No separate AP invoice in July.'},
+ {n:'IMPERIAL DADE',c:'hk',gl:'VARIOUS',f:'Monthly',x:1,jul:1001.86,inv:4,d:'July: 4 invoices across cleaning supplies (40170000), operating supplies (40170550), complimentary F&B (40170060) and guest supplies (40171200). Verify all four before closing.'},
+ {n:'KINGS 111',c:'eng',gl:'80178500',f:'Quarterly',x:1,jul:0,d:'Billed quarterly and prorated. No July invoice, consistent with the quarterly cycle. Feb/Mar/Apr still outstanding.'},
+ {n:'LAPIM PLUMBING',c:'eng',gl:'80178650',f:'As needed',w:1,jul:0,d:'No recent activity on record.'},
+ {n:'LIGHT HOUSE',c:'review',gl:'70177700',f:'Monthly',x:1,jul:0,d:'Coded to Outside Services Market Research, the account that holds Travel Media Group. If this vendor relates to breakfast service the coding is wrong. Confirm with Accounting.'},
+ {n:'M3 ACCOUNTING + ANALYTICS',c:'tech',gl:'65572000',f:'Monthly',jul:1090.14,inv:3,d:'Accounting platform invoices are transmitted to. GL was previously recorded as 6557200, a seven-digit typo; corrected to 65572000 from the July ledger.'},
+ {n:'MOOD MEDIA',c:'eng',gl:'80170100',f:'Monthly',jul:53.15,inv:1,d:'In-property music and media service. Contract services.'},
+ {n:'ODP OFFICE SUPPLIES',c:'hk',gl:'40170550',f:'As needed',w:1,jul:0,d:'Operating supplies. No July activity in the ledger.'},
+ {n:'ORANGE COUNTY FIRE RESCUE',c:'eng',gl:'80178500',f:'As needed',jul:49.00,inv:1,d:'Annual fire inspection permit. Life and safety.'},
+ {n:'ORLANDO UTILITIES (OUC)',c:'util',gl:'VARIOUS',f:'Monthly',x:1,jul:15818.89,inv:2,d:'Confirmed split across two accounts: electricity (82179000) and water and sewer (82179250). Account 9485980803. Largest utility cost at the property.'},
+ {n:'PROFIT SWORD',c:'tech',gl:'CORP ACCT',f:'Monthly',w:1,jul:0,d:'Corporate revenue reporting system. Billed at corporate, no property-level AP invoice.'},
+ {n:'QUORE LLC',c:'tech',gl:'65572000',f:'Monthly',w:1,jul:0,d:'Operations ticketing and maintenance platform. No separate AP invoice in July.'},
+ {n:'SABRE',c:'tech',gl:'65170250',f:'Monthly',w:1,jul:0,d:'Distribution and reservations. Dues and subscriptions. No July AP invoice.'},
+ {n:'SECURITY PRO',c:'eng',gl:'80178500',f:'Monthly',jul:94.79,inv:1,d:'Security services. Previously listed as SECURITY POR OF FLORIDA; corrected from the ledger.'},
+ {n:'SHERWIN WILLIAMS',c:'hk',gl:'80178600',f:'As needed',w:1,jul:0,d:'Paint and wallcovering. No July activity in the ledger.'},
+ {n:'SOJERN INC.',c:'ota',gl:'70177600',f:'Monthly',jul:107.21,inv:1,d:'Hotel digital advertising platform, posts to Media. Previously listed as SORJEN with an unknown service; identified from the July ledger.'},
+ {n:'SOUTHEASTERN LAUNDRY',c:'laundry',gl:'84182200',f:'Monthly',jul:1027.73,inv:1,d:'Laundry equipment. Other property and equipment.'},
+ {n:'SUMMIT BROADBAND INC',c:'tech',gl:'65541300',f:'Monthly',jul:619.00,inv:1,d:'Internet service provider. Previously listed as SUMMIT with an unknown service; identified from the July ledger.'},
+ {n:'SYSCO',c:'fnb',gl:'VARIOUS',f:'Monthly',x:1,jul:10869.11,inv:12,d:'Highest invoice volume of any vendor: 12 invoices in July across complimentary F&B (40170060), operating supplies (40170550) and retail kiosk beverage (50141200). Submitted to AD1 in multiple parts.'},
+ {n:'TA EQUIPMENT SERVICES CORP',c:'eng',gl:'80178700',f:'Monthly',jul:565.00,inv:1,d:'Swimming pool equipment and service. Previously listed as TA EQUIPMENT — BRITANIA POOLS.'},
+ {n:'TECHONE',c:'tech',gl:'65572000',f:'As needed',w:1,jul:0,d:'No recent activity on record.'},
+ {n:'TECO PEOPLES GAS',c:'util',gl:'82179050',f:'Monthly',jul:2468.63,inv:1,d:'Natural gas.'},
+ {n:'TRAVEL MEDIA GROUP',c:'ota',gl:'70177700',f:'Monthly',jul:350.00,inv:1,d:'Reputation and media services. Outside services market research.'},
+ {n:'TRAVEL ESCAPE (Expedia TravelAds)',c:'ota',gl:'70177600',f:'Monthly',w:1,jul:0,d:'Expedia TravelAds advertising. No separate July AP invoice.'},
+ {n:'VSR NETWORK TECHNOLOGIES',c:'tech',gl:'65572075',f:'Monthly',jul:890.52,inv:2,d:'Voice and telephony. GL was previously recorded as 80170100 (Contract Services); corrected to 65572075, Systems Expense — Telecommunications, from the July ledger.'},
+ {n:'WASTE CONNECTIONS OF FLORIDA',c:'eng',gl:'80178750',f:'Monthly',jul:1922.35,inv:1,d:'Waste removal.'},
+ {n:'WYNDHAM FRANCHISOR LLC',c:'brand',gl:'VARIOUS',f:'Monthly',x:1,jul:20940.30,inv:19,d:'Second largest vendor. July: 19 invoice lines across 8 GL accounts — royalties (70177450, 5.03% of revenue), marketing (70177400, 2.01%), loyalty programs (70177550), reservations (40171300), systems (65572065, 65572075) and A&G. Scales with revenue.'}
 ];
+
+
+var GL_NAMES = {
+ '40170000':'Cleaning Supplies','40170050':'Complimentary Services and Gift','40170060':'Complimentary F&B',
+ '40170330':'Laundry and Dry Cleaning','40170400':'Licenses and Permits','40170450':'Linen',
+ '40170500':'Miscellaneous','40170550':'Operating Supplies','40170600':'Printing and Stationery',
+ '40171000':'Complimentary In-Room/Media Entertainment','40171050':'Commissions','40171200':'Guest Supplies',
+ '40171300':'Reservations','50141200':'Retail Kiosk Bev','65170150':'Corporate Office Reimbursables',
+ '65170250':'Dues and Subscriptions','65176150':'Centralized Accounting Charges','65176420':'HR — Recruitment',
+ '65176700':'Payroll Processing','65176750':'Postage and Overnight Delivery','65541300':'Cost of Internet Services',
+ '65572000':'Systems Expense — A&G','65572065':'Systems Expense — Rooms','65572075':'Systems Expense — Telecom',
+ '70170100':'Contract Services','70170150':'Corporate Office Reimbursables','70177400':'Franchise & Affiliation Marketing',
+ '70177450':'Franchise & Affiliation Fees — Royalties','70177550':'Loyalty Programs','70177600':'Media',
+ '70177700':'Outside Services Market Research','72080300':'Asset Management Fee','80170100':'Contract Services',
+ '80178100':'Elevators and Escalators','80178300':'Grounds Maintenance and Landscaping','80178500':'Life/Safety',
+ '80178600':'Painting and Wallcovering','80178650':'Plumbing','80178700':'Swimming Pool','80178750':'Waste Removal',
+ '82179000':'Electricity','82179050':'Gas','82179250':'Water & Sewer','84181100':'Building Rent — Base',
+ '84182200':'Other Property and Equipment'
+};
+function glName(code){ return GL_NAMES[code] || ''; }
+
+var PERF = {
+  period:'July 2026', roomsAvail:6200, rooms:200,
+  note:'Preliminary statements. The month was won on volume, not rate: occupancy beat budget by 18.4 points while ADR came in 0.98 dollars light. Confirm with Accounting before acting on any variance.',
+  stats:[
+    {k:'Occupancy',      a:68.24, b:49.83, f:'pct'},
+    {k:'ADR',            a:56.92, b:57.90, f:'usd'},
+    {k:'RevPAR',         a:44.46, b:33.41, f:'usd'},
+    {k:'Occupied rooms', a:4542,  b:3130,  f:'cnt'}
+  ],
+  pl:[
+    {k:'Rooms revenue',          a:199847, b:171514},
+    {k:'Rooms expense',          a:86767,  b:83415, inv:true},
+    {k:'Gross Operating Profit', a:59870,  b:35269},
+    {k:'EBITDA',                 a:26530,  b:5753}
+  ],
+  depts:[
+    {k:'Rooms',                  a:86767, b:83415},
+    {k:'Admin & General',        a:24727, b:23049},
+    {k:'Sales & Marketing',      a:23570, b:19005},
+    {k:'Utilities',              a:19442, b:15181},
+    {k:'Property Operations',    a:12794, b:14758},
+    {k:'Info Systems & Telecom', a:8467,  b:8035}
+  ]
+};
+function money(n){ return '$'+Math.round(n).toLocaleString('en-US'); }
+function pctf(n){ return n.toFixed(2)+'%'; }
+function usd2(n){ return '$'+n.toFixed(2); }
+function cnt(n){ return Math.round(n).toLocaleString('en-US'); }
 
 var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 var NOW=new Date();
@@ -502,6 +560,7 @@ var NAV = [
   {id:'rooms',   ic:'▦', label:'Rooms',   title:'Room Map',            sub:'Housekeeping'},
   {id:'log',     ic:'✎', label:'Log',     title:'Log Incident',        sub:'Engineering'},
   {id:'vendors', ic:'❑', label:'Vendors', title:'Vendor Ledger',       sub:'Accounting',    master:true},
+  {id:'perf',    ic:'▲', label:'P&L',     title:'Performance',         sub:'July 2026 · Prelim', master:true},
   {id:'config',  ic:'⚙', label:'Config',  title:'Staff Configuration', sub:'Master access', master:true}
 ];
 function visibleNav(){ return NAV.filter(function(n){ return !n.master || isMaster(); }); }
@@ -688,6 +747,7 @@ function render(){
   else if(S.route==='rooms')   p.innerHTML=viewRooms();
   else if(S.route==='log')     p.innerHTML=viewLog();
   else if(S.route==='vendors') p.innerHTML=viewVendors();
+  else if(S.route==='perf')    p.innerHTML=viewPerf();
   else if(S.route==='config')  p.innerHTML=viewConfig();
   else if(S.route==='detail')  { p.innerHTML=viewDetail(); hydrateDetail(); }
 }
@@ -709,6 +769,7 @@ function viewHome(){
   ];
   if(isMaster()){
     tiles.push({go:'vendors', ic:'❑', t:'Vendor Ledger', d:MONTHS[NOW.getMonth()]+' invoice pipeline', n:v.closed+'/'+VENDORS.length+' closed', cls:'t'});
+    tiles.push({go:'perf',    ic:'▲', t:'Performance', d:PERF.period+' vs budget', n:'EBITDA '+money(PERF.pl[3].a), cls:'t'});
     tiles.push({go:'config',  ic:'⚙', t:'Staff Config', d:'Accounts, PINs and roles', n:S.staff.filter(function(s){return s.active;}).length+' active', cls:''});
   }
   return ''+
@@ -898,7 +959,8 @@ function vendorRow(v){
       '<div class="cv">›</div>'+
     '</div>'+
     (open? '<div class="vdet"><p>'+esc(v.d)+'</p><div class="tags">'+
-      '<span class="tag">GL '+esc(v.gl)+'</span><span class="tag t">'+esc(v.f)+'</span>'+
+      '<span class="tag">GL '+esc(v.gl)+(glName(v.gl)?' · '+esc(glName(v.gl)):'')+'</span><span class="tag t">'+esc(v.f)+'</span>'+
+      (v.jul?'<span class="tag">Jul '+money(v.jul)+(v.inv?' · '+v.inv+(v.inv===1?' invoice':' invoices'):'')+'</span>':'')+
       (v.x?'<span class="tag r">Follow-up</span>':'')+(v.w?'<span class="tag a">Verify</span>':'')+
       '</div><div class="steps">'+VSTEPS.map(function(st,i){
         return '<button class="step'+(s[st.k]?' on':'')+'" data-vstep="'+esc(v.n)+'|'+i+'">'+(i+1)+' · '+esc(st.l)+'</button>'; }).join('')+
@@ -912,6 +974,76 @@ function toggleStep(name, idx){
   });
   saveVendors(); render();
   if(!was&&idx===VSTEPS.length-1) toast(name+' closed','ok');
+}
+
+
+/* ---------------------------- PERFORMANCE ------------------------------- */
+function pvar(label, a, b, opts){
+  opts = opts || {};
+  var f = opts.fmt || money;
+  var v = a - b, pct = b ? (v/Math.abs(b))*100 : 0;
+  var good = opts.inv ? (v <= 0) : (v >= 0);
+  var col = good ? 'var(--green-hi)' : 'var(--red-hi)';
+  var sign = v >= 0 ? '+' : '−';
+  return '<div style="display:flex;align-items:baseline;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);">'+
+    '<div style="flex:1;min-width:0;">'+
+      '<div style="font-size:13.5px;font-weight:600;">'+esc(label)+'</div>'+
+      '<div style="font-family:var(--mono);font-size:10.5px;color:var(--slate-2);margin-top:3px;">Budget '+f(b)+'</div>'+
+    '</div>'+
+    '<div style="text-align:right;flex-shrink:0;">'+
+      '<div style="font-family:var(--mono);font-size:16px;font-weight:600;">'+f(a)+'</div>'+
+      '<div style="font-family:var(--mono);font-size:11px;margin-top:3px;color:'+col+';">'+sign+(f===pctf?Math.abs(v).toFixed(2)+' pts':f(Math.abs(v)))+' · '+sign+Math.abs(pct).toFixed(1)+'%</div>'+
+    '</div></div>';
+}
+function fmtFor(t){ return t==='pct'?pctf : t==='usd'?usd2 : t==='cnt'?cnt : money; }
+function topVendors(){
+  return VENDORS.filter(function(v){ return v.jul>0; })
+    .sort(function(a,b){ return b.jul-a.jul; }).slice(0,10);
+}
+function viewPerf(){
+  var P=PERF, tv=topVendors();
+  var apTotal=VENDORS.reduce(function(s,v){ return s+(v.jul||0); },0);
+  return ''+
+  '<div class="card"><div class="card-b" style="padding:15px;">'+
+    '<div style="font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--slate-2);">Reporting period</div>'+
+    '<div style="font-size:17px;font-weight:700;margin:4px 0 0;">'+esc(P.period)+' · Preliminary</div>'+
+    '<div style="font-size:12.5px;color:var(--slate);margin-top:8px;line-height:1.55;">'+esc(P.note)+'</div>'+
+  '</div></div>'+
+  '<div class="grid kpis" style="margin-bottom:6px;">'+
+    kpi(pctf(P.stats[0].a),'Occupancy','g')+kpi(usd2(P.stats[1].a),'ADR','')+
+    kpi(usd2(P.stats[2].a),'RevPAR','t')+kpi(money(P.pl[3].a),'EBITDA','g')+
+  '</div>'+
+  '<div class="two">'+
+    '<div>'+
+      '<div class="sect">Profit &amp; loss vs budget</div>'+
+      '<div class="card"><div class="card-b" style="padding:2px 15px 6px;">'+
+        P.pl.map(function(r){ return pvar(r.k,r.a,r.b,{inv:r.inv}); }).join('')+
+      '</div></div>'+
+      '<div class="sect">Departmental expense vs budget</div>'+
+      '<div class="card"><div class="card-b" style="padding:2px 15px 6px;">'+
+        P.depts.map(function(r){ return pvar(r.k,r.a,r.b,{inv:true}); }).join('')+
+      '</div></div>'+
+    '</div>'+
+    '<div>'+
+      '<div class="sect">Statistics vs budget</div>'+
+      '<div class="card"><div class="card-b" style="padding:2px 15px 6px;">'+
+        P.stats.map(function(r){ return pvar(r.k,r.a,r.b,{fmt:fmtFor(r.f)}); }).join('')+
+      '</div></div>'+
+      '<div class="sect">Top vendors · '+esc(P.period)+'</div>'+
+      '<div class="card"><div class="card-b" style="padding:2px 15px 10px;">'+
+        tv.map(function(v){
+          return '<div style="display:flex;gap:10px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line);">'+
+            '<div style="flex:1;min-width:0;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(v.n)+'</div>'+
+            '<div style="font-family:var(--mono);font-size:10px;color:var(--slate-2);flex-shrink:0;">'+(v.inv||0)+'×</div>'+
+            '<div style="font-family:var(--mono);font-size:13px;color:var(--teal-hi);flex-shrink:0;">'+money(v.jul)+'</div>'+
+          '</div>'; }).join('')+
+        '<div style="display:flex;gap:10px;padding:11px 0 2px;font-size:12px;color:var(--slate);">'+
+          '<div style="flex:1;">Tracked AP total</div>'+
+          '<div style="font-family:var(--mono);color:var(--white);">'+money(apTotal)+'</div>'+
+        '</div>'+
+      '</div></div>'+
+    '</div>'+
+  '</div>';
 }
 
 /* ------------------------------ CONFIG ---------------------------------- */
