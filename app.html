@@ -146,7 +146,7 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml;charset=utf-
 .rm.OOS .num{color:var(--amber-hi);}
 .rm.OOO{border-color:rgba(220,38,38,.5);background:rgba(220,38,38,.13);}
 .rm.OOO .num{color:var(--red-hi);}
-.rm .ada{position:absolute;top:2px;right:3px;font-size:8px;color:var(--teal-hi);}
+.rm .ada{position:absolute;top:2px;right:3px;font-size:9px;font-weight:800;line-height:1;color:var(--teal-hi);}
 
 .chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px;margin-bottom:14px;scrollbar-width:none;}
 .chips::-webkit-scrollbar{display:none;}
@@ -704,7 +704,7 @@ function vendorCounts(){
 function viewHome(){
   var c=roomCounts(), v=vendorCounts();
   var tiles=[
-    {go:'rooms', ic:'▦', t:'Room Map', d:'All 200 rooms by floor', n:c.VR+' ready', cls:'g'},
+    {go:'rooms', ic:'▦', t:'Room Map', d:'All '+allRooms().length+' rooms by floor', n:c.VR+' ready', cls:'g'},
     {go:'log',   ic:'✎', t:'Log Incident', d:'Report and set status', n:'', cls:''}
   ];
   if(isMaster()){
@@ -765,7 +765,7 @@ function viewRooms(){
       '<span class="cnt">'+ready+'/'+rs.length+' ready</span></div><div class="rooms">'+
       rs.map(function(n){
         return '<button class="rm '+statusOf(n)+'" data-room="'+n+'">'+
-          (isADA(n)?'<span class="ada">♿</span>':'')+
+          (isADA(n)?'<span class="ada">A</span>':'')+
           '<div class="num">'+n+'</div><div class="ty">'+ROOM_TYPES[n]+'</div></button>'; }).join('')+
       '</div></div>';
   }).join('');
@@ -783,7 +783,7 @@ function viewDetail(){
   return ''+
   '<div class="card"><div class="card-b">'+
     '<div style="font-family:var(--mono);font-size:26px;font-weight:600;">'+esc(n)+'</div>'+
-    '<div style="font-size:12.5px;color:var(--slate);margin:4px 0 14px;">'+esc(t)+' · '+esc(TYPE_LABELS[t]||'')+(isADA(parseInt(n,10))?' · ♿ ADA':'')+'</div>'+
+    '<div style="font-size:12.5px;color:var(--slate);margin:4px 0 14px;">'+esc(t)+' · '+esc(TYPE_LABELS[t]||'')+(isADA(parseInt(n,10))?' · ADA':'')+'</div>'+
     '<div class="lbl">Set status</div>'+
     '<div class="stat3">'+['VR','OOS','OOO'].map(function(k){
       return '<button class="st '+k+(st===k?' on':'')+'" data-setstatus="'+k+'">'+esc(STATUS_LABEL[k])+'</button>'; }).join('')+'</div>'+
