@@ -1,1506 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
-<meta name="theme-color" content="#0D9488"/>
-<title>Room Tracker · Baymont by Wyndham Orlando North Millenia</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#17211f">
+<title>Operations Hub · Baymont Orlando North Millenia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#F8FAFC;--navy-2:#FFFFFF;--navy-3:#F1F5F9;--teal:#0D9488;--teal-2:#0F766E;--teal-hi:#0D9488;--amber:#D97706;--red:#DC2626;--green:#16A34A;--slate:#64748B;--slate-2:#94A3B8;--white:#0F172A;--radius:12px;--radius-sm:8px;--shadow:0 2px 12px rgba(0,0,0,0.08)}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:var(--navy);color:var(--white)}
-body{font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.5}
-input,select,textarea,button{font-family:inherit}
-#app{display:flex;flex-direction:column;height:100dvh;max-width:480px;margin:0 auto;position:relative}
-.screen{display:none;flex-direction:column;flex:1;overflow:hidden}
-.screen.active{display:flex}
-.topbar{background:var(--navy-2);border-bottom:1px solid #E2E8F0;padding:14px 16px 12px;flex-shrink:0}
-.topbar-brand{font-size:11px;color:var(--slate);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px}
-.topbar-title{font-size:17px;font-weight:700;color:var(--white);flex:1}
-.topbar-back{background:none;border:none;color:var(--teal-hi);font-size:13px;font-weight:600;padding:4px 0;cursor:pointer;display:flex;align-items:center;gap:4px}
-.badge-pill{background:var(--teal);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:0.04em}
-.sync-dot{width:8px;height:8px;border-radius:50%;background:#64748B;transition:background 0.3s;flex-shrink:0}
-.sync-dot.ok{background:#22C55E;box-shadow:0 0 6px #22C55E88}
-.sync-dot.err{background:#EF4444}
-.sync-dot.pulse{animation:syncpulse 1s infinite}
-@keyframes syncpulse{0%,100%{opacity:1}50%{opacity:0.3}}
-.bottom-nav{background:var(--navy-2);border-top:1px solid #E2E8F0;display:flex;padding-bottom:env(safe-area-inset-bottom,0px);flex-shrink:0}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 8px;background:none;border:none;cursor:pointer;color:var(--slate-2);font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;transition:color 0.15s}
-.nav-btn svg{width:22px;height:22px;stroke-width:1.8}
-.nav-btn.active{color:var(--teal-hi)}
-.nav-btn.active svg{stroke:var(--teal-hi)}
-.scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:16px}
-.form-group{margin-bottom:16px}
-.form-label{display:block;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--slate);margin-bottom:6px}
-.form-input,.form-select,.form-textarea{width:100%;background:var(--navy-3);border:1.5px solid #E2E8F0;border-radius:var(--radius-sm);color:var(--white);padding:13px 14px;font-size:16px;outline:none;-webkit-appearance:none;appearance:none;transition:border-color 0.15s}
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--teal-hi)}
-.form-input::placeholder{color:#94A3B8}
-.form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
-.form-select option{background:#FFFFFF}
-.form-textarea{font-size:14px;resize:none;height:90px}
-.room-type-badge{display:inline-block;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:var(--teal-hi);background:rgba(13,148,136,0.15);border:1px solid rgba(45,212,191,0.3);padding:3px 10px;border-radius:20px}
-.room-type-badge.error{color:#F87171;background:rgba(220,38,38,0.15);border-color:rgba(248,113,113,0.3)}
-.btn{width:100%;padding:16px;border-radius:var(--radius);border:none;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:0.03em;transition:opacity 0.15s,transform 0.1s;-webkit-tap-highlight-color:transparent}
-.btn:active{transform:scale(0.98);opacity:0.88}
-.btn:disabled{opacity:0.5;cursor:not-allowed}
-.btn-primary{background:var(--teal);color:#fff}
-.btn-secondary{background:var(--navy-3);color:var(--white);border:1.5px solid #E2E8F0;margin-top:10px}
-.card{background:var(--navy-2);border-radius:var(--radius);border:1px solid #E8EEF4;margin-bottom:10px;overflow:hidden}
-.card-inner{padding:14px}
-.status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.dot-green{background:#22C55E;box-shadow:0 0 6px #22C55E88}
-.dot-amber{background:#F59E0B;box-shadow:0 0 6px #F59E0B88}
-.dot-red{background:#EF4444;box-shadow:0 0 6px #EF444488}
-.status-bar-green{border-left:4px solid #22C55E}
-.status-bar-amber{border-left:4px solid #F59E0B}
-.status-bar-red{border-left:4px solid #EF4444}
-.floor-section{margin-bottom:20px}
-.floor-label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--slate-2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.floor-label::after{content:'';flex:1;height:1px;background:#E2E8F0}
-.room-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.room-cell{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;border:1.5px solid transparent;transition:transform 0.1s,opacity 0.1s;-webkit-tap-highlight-color:transparent}
-.room-cell:active{transform:scale(0.93)}
-.room-cell .r-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;line-height:1}
-.room-cell .r-type{font-size:8px;font-weight:600;opacity:0.7;letter-spacing:0.04em;margin-top:1px}
-.room-cell .r-nts{position:absolute;top:2px;right:2px;width:6px;height:6px;border-radius:50%;background:#F59E0B;border:1px solid var(--navy)}
-.cell-green{background:#DCFCE7;border-color:#86EFAC;color:#15803D}
-.cell-amber{background:#FEF9C3;border-color:#FDE047;color:#A16207}
-.cell-red{background:#FEE2E2;border-color:#FCA5A5;color:#B91C1C}
-.filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.filter-row::-webkit-scrollbar{display:none}
-.chip{flex-shrink:0;padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1.5px solid #E2E8F0;background:var(--navy-3);color:var(--slate);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all 0.15s}
-.chip.active{background:rgba(13,148,136,0.2);border-color:var(--teal);color:var(--teal-hi)}
-.chip.ada.active{background:rgba(168,85,247,0.2);border-color:#A855F7;color:#D8B4FE}
-.summary-strip{display:flex;gap:8px;margin-bottom:14px}
-.sum-card{flex:1;background:var(--navy-2);border-radius:var(--radius-sm);border:1px solid #E8EEF4;padding:10px 8px;text-align:center}
-.sum-num{font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1}
-.sum-lbl{font-size:9px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--slate-2);margin-top:3px}
-.sum-num.green{color:#4ADE80}.sum-num.amber{color:#FCD34D}.sum-num.red{color:#F87171}
-.log-entry{background:var(--navy-3);border-radius:var(--radius-sm);border:1px solid #E8EEF4;padding:12px;margin-bottom:8px}
-.log-meta{font-size:10px;color:var(--slate-2);font-family:'JetBrains Mono',monospace;margin-bottom:6px;display:flex;flex-wrap:wrap;gap:4px}
-.log-meta span{color:var(--teal-hi)}
-.log-class{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-bottom:6px;background:rgba(13,148,136,0.15);color:var(--teal-hi);border:1px solid rgba(13,148,136,0.3)}
-.log-note{font-size:13px;color:var(--white);line-height:1.5}
-.detail-header{background:var(--navy-2);padding:16px;border-bottom:1px solid #E2E8F0;flex-shrink:0}
-.detail-room-num{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;color:var(--white);line-height:1}
-.detail-type{font-size:12px;color:var(--slate);margin-top:2px}
-.detail-status-row{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
-.status-chip{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:700}
-.status-chip.green{background:rgba(22,163,74,0.2);color:#4ADE80;border:1px solid #16A34A44}
-.status-chip.amber{background:rgba(217,119,6,0.2);color:#FCD34D;border:1px solid #D9770644}
-.status-chip.red{background:rgba(220,38,38,0.2);color:#F87171;border:1px solid #DC262644}
-.nts-tag{display:inline-flex;align-items:center;gap:4px;background:rgba(220,38,38,0.2);border:1px solid rgba(220,38,38,0.4);color:#F87171;font-size:10px;font-weight:700;letter-spacing:0.06em;padding:3px 8px;border-radius:20px}
-.media-btn{width:100%;padding:14px;border-radius:var(--radius-sm);background:var(--navy-3);border:1.5px dashed rgba(13,148,136,0.5);color:var(--teal-hi);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-tap-highlight-color:transparent;transition:background 0.15s;margin-bottom:14px}
-.media-btn:active{background:rgba(13,148,136,0.1)}
-.section-head{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--slate-2);display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.section-head::after{content:'';flex:1;height:1px;background:#E2E8F0}
-.divider{height:1px;background:#E2E8F0;margin:14px 0}
-.status-toggle-row{display:flex;gap:6px;margin-bottom:16px}
-.stg-btn{flex:1;padding:10px 4px;border-radius:8px;border:1.5px solid transparent;font-size:11px;font-weight:700;letter-spacing:0.04em;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all 0.15s}
-.stg-green{background:#F0FDF4;border-color:#86EFAC;color:#15803D}
-.stg-amber{background:#FEFCE8;border-color:#FDE047;color:#A16207}
-.stg-red{background:#FFF1F2;border-color:#FCA5A5;color:#B91C1C}
-.stg-green.selected{background:#DCFCE7;border-color:#22C55E;font-weight:800}
-.stg-amber.selected{background:#FEF9C3;border-color:#F59E0B;font-weight:800}
-.stg-red.selected{background:#FEE2E2;border-color:#EF4444;font-weight:800}
-.media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
-.media-thumb{aspect-ratio:1;border-radius:8px;background:var(--navy-3);border:1px solid #E8EEF4;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--slate-2);font-size:10px;text-align:center}
-.media-thumb img{width:100%;height:100%;object-fit:cover}
-#screen-login{background:#F0F7F6;align-items:center;justify-content:center;padding:32px 24px}
-.login-logo{text-align:center;margin-bottom:32px}
-.login-logo .brand{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--slate);margin-bottom:6px}
-.login-logo .prop{font-size:20px;font-weight:700}
-.login-logo .addr{font-size:11px;color:var(--slate-2);margin-top:4px}
-.login-logo .accent-bar{width:40px;height:3px;background:var(--teal);border-radius:2px;margin:12px auto 0}
-.login-card{background:var(--navy-2);border-radius:var(--radius);border:1px solid #E2E8F0;padding:20px;width:100%;max-width:380px}
-.login-card h2{font-size:16px;font-weight:700;margin-bottom:4px}
-.login-card p{font-size:12px;color:var(--slate);margin-bottom:20px}
-.flex-row{display:flex;align-items:center;gap:8px}
-.flex-between{display:flex;align-items:center;justify-content:space-between}
-.hidden{display:none!important}
-.ose-label{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #F1F5F9;cursor:pointer}
-.ose-label input[type=checkbox]{width:18px;height:18px;accent-color:var(--teal);flex-shrink:0}
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#0F172A;border:1px solid rgba(0,0,0,0.1);color:#F8FAFC;font-size:13px;font-weight:600;padding:12px 20px;border-radius:12px;z-index:200;opacity:0;transition:all 0.25s ease;white-space:nowrap;box-shadow:var(--shadow);pointer-events:none;max-width:320px;text-align:center}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast.success{border-color:#22C55E44}.toast.error{border-color:#EF444444}
-.user-card{background:var(--navy-2);border-radius:var(--radius);border:1px solid #E2E8F0;padding:16px;margin-bottom:12px}
-.user-card-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.user-avatar{width:36px;height:36px;border-radius:50%;background:rgba(13,148,136,0.2);border:1.5px solid var(--teal);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--teal-hi);flex-shrink:0}
-.user-avatar.admin{background:rgba(168,85,247,0.2);border-color:#A855F7;color:#D8B4FE}
-.user-card-title{font-size:13px;font-weight:700;color:var(--white)}
-.user-card-role{font-size:10px;color:var(--slate);margin-top:1px}
-.pin-row{display:flex;gap:8px}
-.pin-row .form-input{flex:1;font-family:'JetBrains Mono',monospace;letter-spacing:0.2em;text-align:center;font-size:20px;padding:10px}
-.save-user-btn{width:100%;margin-top:12px;padding:12px;border-radius:var(--radius-sm);border:none;background:rgba(13,148,136,0.2);border:1.5px solid var(--teal);color:var(--teal-hi);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s}
-.save-user-btn:active{transform:scale(0.98)}
-.save-user-btn.saved{background:rgba(22,163,74,0.2);border-color:#22C55E;color:#4ADE80}
-.inv-item-row{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--navy-2);border-radius:var(--radius-sm);border:1px solid #E2E8F0;margin-bottom:6px}
-.inv-item-name{flex:1;font-size:13px;font-weight:600;color:var(--white)}
-.inv-item-meta{font-size:10px;color:var(--slate-2);white-space:nowrap}
-.inv-item-edit-btn{background:none;border:1.5px solid #E2E8F0;border-radius:6px;padding:5px 8px;color:var(--slate);font-size:11px;font-weight:600;cursor:pointer;flex-shrink:0}
-.inv-item-del-btn{background:none;border:1.5px solid rgba(220,38,38,0.3);border-radius:6px;padding:5px 8px;color:#EF4444;font-size:11px;font-weight:600;cursor:pointer;flex-shrink:0}
-.inv-edit-card{background:var(--navy-2);border:1.5px solid var(--teal);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px}
-.inv-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.inv-edit-row{display:flex;gap:6px;margin-top:6px}
-.inv-add-btn{width:100%;padding:12px;border-radius:var(--radius-sm);border:1.5px dashed var(--teal);background:rgba(13,148,136,0.08);color:var(--teal-hi);font-size:13px;font-weight:700;cursor:pointer;margin-top:10px;transition:all 0.15s}
-.inv-add-btn:active{transform:scale(0.98)}
-.report-section{background:var(--navy-2);border-radius:var(--radius-sm);border:1px solid #E8EEF4;margin-bottom:14px;overflow:hidden}
-.report-table{width:100%;border-collapse:collapse;font-size:12px}
-.report-table th{background:#F1F5F9;color:#475569;padding:8px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--slate)}
-.report-table td{padding:8px 10px;border-bottom:1px solid #F1F5F9}
-.report-table tr:last-child td{border-bottom:none}
-.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
-.badge-vr{background:rgba(22,163,74,0.2);color:#4ADE80;border:1px solid #16A34A44}
-.badge-oos{background:rgba(220,38,38,0.2);color:#F87171;border:1px solid #DC262644}
-.badge-ooo{background:rgba(217,119,6,0.2);color:#FCD34D;border:1px solid #D9770644}
+  :root{
+    --ink:#17211f; --ink-2:#4a5654; --ink-3:#8b9491;
+    --paper:#faf9f7; --panel:#ffffff; --line:#e6e3dd;
+    --accent:#2d5f5c; --accent-2:#e8f0ee;
+    --amber:#9a6f14; --red:#a34428;
+    --mono:'DM Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:'DM Sans',system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;}
+  ::selection{background:var(--accent);color:#fff;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px;}
+  .wrap{max-width:900px;margin:0 auto;padding:0 18px;}
 
-.logout-btn{background:none;border:1.5px solid #E2E8F0;border-radius:20px;color:var(--slate);font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;display:flex;align-items:center;gap:4px;-webkit-tap-highlight-color:transparent;transition:all 0.15s;white-space:nowrap}
-.logout-btn:active{background:#FEE2E2;border-color:#FCA5A5;color:#B91C1C}
-.inv-cat-head{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal-hi);padding:10px 14px 6px;background:#F0FDFA;border-bottom:1px solid #CCFBF1}
-.inv-row{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid #F8FAFC}
-.inv-row:last-child{border-bottom:none}
-.inv-name{flex:1;font-size:13px;font-weight:500;color:var(--white)}
-.inv-qty-wrap{display:flex;align-items:center;gap:4px}
-.inv-qty-btn{width:28px;height:28px;border-radius:6px;border:1.5px solid #E2E8F0;background:#F8FAFC;color:var(--white);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:all 0.1s;flex-shrink:0}
-.inv-qty-btn:active{transform:scale(0.92)}
-.inv-qty-input{width:52px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:6px;color:var(--white);padding:4px 0;outline:none}
-.inv-qty-input:focus{border-color:var(--teal-hi)}
-.inv-par{font-size:10px;color:var(--slate-2);width:44px;text-align:right;flex-shrink:0}
-.inv-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.inv-ok{background:#22C55E}.inv-low{background:#F59E0B}.inv-zero{background:#EF4444}
-.inv-save-row{padding:14px 14px 6px}
-.inv-save-btn{width:100%;padding:12px;border-radius:var(--radius-sm);border:none;background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:opacity 0.15s}
-.inv-save-btn:active{opacity:0.85}
-.inv-print-btn{width:100%;padding:12px;border-radius:var(--radius-sm);border:1.5px solid #E2E8F0;background:#fff;color:var(--slate);font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px}
-@media print{
-  /* Show only the report screen */
-  .screen{display:none!important}
-  #screen-report{display:flex!important;flex-direction:column;width:100%;}
-  /* Hide nav/buttons not needed in print */
-  .bottom-nav,.logout-btn,.rep-print-btn,.cfg-topbar-btn,.admin-cfg-btn,.summary-strip button{display:none!important}
-  /* Force light background for readability */
-  body,#screen-report{background:#fff!important;color:#000!important;}
-  .topbar{background:#fff!important;border-bottom:2px solid #000!important;padding:8px 16px!important;}
-  .topbar-brand{color:#555!important;font-size:10px!important;}
-  .topbar-title{color:#000!important;font-size:16px!important;font-weight:800!important;}
-  #report-meta{color:#555!important;}
-  /* Print header with property info */
-  #report-print-header{display:block!important;}
-  /* Summary strip */
-  .summary-strip{background:#f5f5f5!important;border-radius:8px!important;margin-bottom:12px!important;}
-  .sum-card{border:1px solid #ddd!important;}
-  .sum-num{color:#000!important;}
-  .sum-lbl{color:#555!important;}
-  /* Tables */
-  .report-table{width:100%!important;border-collapse:collapse!important;font-size:12px!important;}
-  .report-table th{background:#eee!important;color:#000!important;border:1px solid #ccc!important;padding:6px 8px!important;}
-  .report-table td{border:1px solid #ddd!important;padding:5px 8px!important;color:#000!important;}
-  .report-section-head{color:#000!important;background:#f0f0f0!important;padding:6px 10px!important;border-radius:4px!important;margin:10px 0 6px!important;}
-  .badge{border:1px solid #ccc!important;color:#000!important;background:#eee!important;}
-  .badge-vr{background:#d1fae5!important;color:#065f46!important;border-color:#6ee7b7!important;}
-  .badge-oos{background:#fee2e2!important;color:#991b1b!important;border-color:#fca5a5!important;}
-  .badge-ooo{background:#fef3c7!important;color:#92400e!important;border-color:#fcd34d!important;}
-  .scroll-body{overflow:visible!important;height:auto!important;max-height:none!important;}
-}
+  header{background:var(--ink);color:#f4f2ee;}
+  .nav{display:flex;align-items:center;gap:2px;padding-top:9px;}
+  .nav a{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#93a5a1;text-decoration:none;padding:5px 10px;border-radius:6px;}
+  .nav a:hover{color:#f4f2ee;background:rgba(255,255,255,.07);}
+  .nav a.here{color:#f4f2ee;background:rgba(255,255,255,.11);}
+  .nav .sync{margin-left:auto;display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#93a5a1;}
+  .dot{width:6px;height:6px;border-radius:50%;background:#8b9491;transition:background .2s;}
+  .dot.ok{background:#6db99f;} .dot.busy{background:#d9ac4a;} .dot.err{background:#d97f66;}
 
-/* ── Home Screen ── */
-.home-header{padding:20px 16px 6px;text-align:center}
-.home-hotel{font-size:19px;font-weight:800;color:var(--white);letter-spacing:0.01em}
-.home-date{font-size:12px;color:var(--slate-2);margin-top:3px}
-.home-kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 16px}
-.home-kpi-card{background:var(--navy-2);border-radius:var(--radius);padding:20px 14px 14px;text-align:center;cursor:pointer;border:1.5px solid transparent;transition:all 0.15s;position:relative;overflow:hidden}
-.home-kpi-card:active{transform:scale(0.96)}
-.home-kpi-card.kc-green{border-color:rgba(22,163,74,0.35)}
-.home-kpi-card.kc-amber{border-color:rgba(217,119,6,0.35)}
-.home-kpi-card.kc-red{border-color:rgba(220,38,38,0.35)}
-.home-kpi-card.kc-teal{border-color:rgba(13,148,136,0.35)}
-.home-kpi-num{font-size:44px;font-weight:800;line-height:1}
-.home-kpi-num.kc-green{color:#22C55E}
-.home-kpi-num.kc-amber{color:#F59E0B}
-.home-kpi-num.kc-red{color:#EF4444}
-.home-kpi-num.kc-teal{color:var(--teal-hi)}
-.home-kpi-lbl{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--slate-2);margin-top:8px}
-.home-kpi-arrow{position:absolute;bottom:9px;right:12px;font-size:18px;color:var(--slate-2);opacity:0.45;font-weight:300}
-.home-quick-btns{display:flex;gap:8px;padding:0 16px 16px}
-.home-quick-btn{flex:1;padding:11px 6px;border-radius:var(--radius-sm);border:1.5px solid #E2E8F0;background:var(--navy-2);color:var(--white);font-size:11px;font-weight:700;cursor:pointer;text-align:center;transition:all 0.12s}
-.home-quick-btn:active{transform:scale(0.97)}
-/* ── Report filter ── */
-.sum-card{cursor:pointer;transition:all 0.15s;user-select:none}
-.sum-card:active{transform:scale(0.94)}
-.sum-card.rep-active{outline:2px solid var(--teal);outline-offset:2px;border-radius:var(--radius-sm)}
-.rep-print-btn{padding:4px 13px;border-radius:20px;border:1.5px solid #E2E8F0;background:var(--navy-2);color:var(--white);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.12s}
-.rep-print-btn:active{opacity:0.7}
+  .hero{padding:26px 0 34px;}
+  .heyebrow{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#8b9c98;}
+  h1{font-size:26px;margin:6px 0 0;font-weight:700;letter-spacing:-.02em;}
+  .hsub{color:#a9b5b2;font-size:13.5px;margin-top:7px;max-width:52ch;}
 
-/* Room search */
-.room-search-wrap{position:relative;padding:8px 0 0}
-.room-search-input{width:100%;padding:9px 14px 9px 38px;border-radius:20px;border:1.5px solid #E2E8F0;background:var(--navy-2);color:var(--white);font-size:13px;outline:none;box-sizing:border-box}
-.room-search-input::placeholder{color:var(--slate-2)}
-.room-search-ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--slate-2)}
-/* Inventory accordion */
-.inv-acc-head{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--navy-3);border-radius:var(--radius-sm);cursor:pointer;user-select:none;border:1px solid rgba(255,255,255,0.06)}
-.inv-acc-head:active{opacity:0.8}
-.inv-acc-title{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--teal-hi)}
-.inv-acc-meta{display:flex;align-items:center;gap:8px}
-.inv-acc-count{font-size:10px;color:var(--slate-2)}
-.inv-acc-arrow{font-size:16px;color:var(--slate-2);transition:transform 0.2s;display:inline-block}
-.inv-acc-arrow.open{transform:rotate(90deg)}
-.inv-acc-body{overflow:hidden}
-.inv-cat-wrap{margin-bottom:8px}
-/* Projects */
-.project-card{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.06);box-shadow:0 2px 8px rgba(0,0,0,0.18);}
-.project-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;}
-.project-title{font-size:15px;font-weight:700;color:var(--white);flex:1;line-height:1.3;}
-.project-status-pill{font-size:10px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap;flex-shrink:0;}
-.project-status-active{background:rgba(20,184,166,0.18);color:#2DD4BF;border:1px solid #2DD4BF44;}
-.project-status-done{background:rgba(100,116,139,0.18);color:#94A3B8;border:1px solid #64748B44;}
-.project-cat-badge{display:inline-block;font-size:10px;font-weight:600;background:rgba(99,102,241,0.15);color:#A5B4FC;border-radius:20px;padding:2px 8px;margin-bottom:7px;}
-.project-desc{font-size:13px;color:var(--slate);line-height:1.5;margin-bottom:8px;}
-.project-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--slate-2);margin-bottom:8px;}
-.project-actions{display:flex;gap:8px;flex-wrap:wrap;}
-.project-action-btn{font-size:11px;font-weight:600;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;}
-.project-btn-edit{background:rgba(99,102,241,0.2);color:#A5B4FC;}
-.project-btn-done{background:rgba(20,184,166,0.18);color:#2DD4BF;}
-.project-btn-reopen{background:rgba(245,158,11,0.15);color:#FCD34D;}
-.project-btn-del{background:rgba(239,68,68,0.15);color:#FCA5A5;}
-.proj-filter-row{display:flex;gap:8px;margin-bottom:16px;}
-.proj-filter-btn{font-size:12px;font-weight:600;border:1.5px solid var(--slate-2);border-radius:20px;padding:5px 14px;background:none;color:var(--slate);cursor:pointer;white-space:nowrap;}
-.proj-filter-btn.active{background:var(--teal-hi);border-color:var(--teal-hi);color:#0F172A;}
-.cfg-topbar-btn{background:none;border:1.5px solid rgba(255,255,255,0.15);border-radius:8px;color:var(--slate);padding:5px 8px;cursor:pointer;display:flex;align-items:center;}
-.cfg-cat-wrap{background:var(--card);border-radius:14px;margin-bottom:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);}
-.cfg-cat-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
-.cfg-cat-head:active{background:rgba(255,255,255,0.04);}
-.cfg-cat-icon{font-size:20px;flex-shrink:0;}
-.cfg-cat-title{font-size:14px;font-weight:700;color:var(--white);}
-.cfg-cat-sub{font-size:11px;color:var(--slate-2);margin-top:2px;}
-.cfg-cat-arrow{margin-left:auto;font-size:18px;color:var(--slate-2);transition:transform 0.2s;flex-shrink:0;}
-.cfg-cat-arrow.open{transform:rotate(90deg);}
-.cfg-cat-body{padding:0 16px 14px;}
+  main{padding:26px 0 60px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .card{
+    display:block;text-decoration:none;color:inherit;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;padding:20px;transition:border-color .15s,transform .15s;
+  }
+  .card:hover{border-color:var(--accent);transform:translateY(-2px);}
+  .ctop{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .ckind{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);}
+  .carrow{color:var(--ink-3);font-size:16px;line-height:1;}
+  .card:hover .carrow{color:var(--accent);}
+  .card h2{font-size:17px;margin:9px 0 5px;font-weight:700;letter-spacing:-.01em;}
+  .card p{margin:0;color:var(--ink-2);font-size:13px;line-height:1.5;}
+
+  .metrics{display:flex;gap:20px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);}
+  .m .n{font-family:var(--mono);font-size:19px;font-weight:500;line-height:1;display:block;}
+  .m .l{font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin-top:5px;display:block;}
+  .m.warn .n{color:var(--amber);} .m.urgent .n{color:var(--red);} .m.good .n{color:var(--accent);}
+
+  .note{margin-top:26px;border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:16px 18px;}
+  .note h3{font-size:11px;letter-spacing:.09em;text-transform:uppercase;margin:0 0 9px;color:var(--ink-2);}
+  .note ul{margin:0;padding-left:17px;color:var(--ink-2);font-size:12.5px;line-height:1.7;}
+  .note code{font-family:var(--mono);font-size:11.5px;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:1px 5px;}
+
+  footer{border-top:1px solid var(--line);padding:18px 0 30px;color:var(--ink-3);font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;}
+
+  @media (max-width:640px){
+    .grid{grid-template-columns:1fr;}
+    h1{font-size:22px;}
+    .wrap{padding:0 14px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
 </style>
 </head>
 <body>
-<div id="app">
 
-<!-- LOGIN -->
-<div id="screen-login" class="screen active">
-  <div class="login-logo">
-    <div class="brand">Frank's Hospitality &middot; Internal</div>
-    <div class="prop">Baymont by Wyndham Orlando North Millenia</div>
-    <div class="addr">Orlando North Millenia &middot; 2500 33rd St, FL 32839</div>
-    <div class="accent-bar"></div>
-  </div>
-  <div class="login-card">
-    <h2>Staff Sign-In</h2>
-    <p>Select your name and enter your PIN.</p>
-    <div class="form-group">
-      <label class="form-label">Staff Member</label>
-      <select class="form-select" id="login-staff">
-        <option value="">&#8212; Loading staff... &#8212;</option>
-      </select>
+<header>
+  <div class="wrap">
+    <nav class="nav">
+      <a href="index.html" class="here">Overview</a>
+      <a href="room-tracker.html">Room Tracker</a>
+      <a href="vendors.html">Vendors</a>
+      <span class="sync"><span class="dot" id="syncDot"></span><span id="syncTxt">Connecting</span></span>
+    </nav>
+    <div class="hero">
+      <div class="heyebrow">Frank's Hospitality · Baymont by Wyndham Orlando North Millenia</div>
+      <h1>Operations Hub</h1>
+      <p class="hsub">Two tools, one cloud. Room status and vendor invoice flow, synced live across every device on property.</p>
     </div>
-    <div class="form-group">
-      <label class="form-label">PIN (4 Digits)</label>
-      <input class="form-input" id="login-pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="&#9679; &#9679; &#9679; &#9679;"/>
-    </div>
-    <button class="btn btn-primary" id="login-btn" onclick="doLogin()">Sign In to Room Tracker</button>
-    <div id="login-status" style="margin-top:10px;font-size:12px;color:var(--slate);text-align:center;min-height:18px;"></div>
   </div>
-</div>
+</header>
 
-<!-- INCIDENT LOGGER -->
-<div id="screen-home" class="screen">
-  <div class="topbar">
-    <div class="topbar-brand">Baymont by Wyndham Orlando North Millenia</div>
-    <div class="flex-between">
-      <div class="topbar-title">Overview</div>
-      <div class="flex-row" style="gap:6px">
-        <div class="sync-dot" id="sync-dot-home"></div>
-        <div class="badge-pill" id="user-pill-home" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;"></div>
-        <button class="cfg-topbar-btn admin-cfg-btn" onclick="gotoScreen('config')" title="Config" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button><button class="logout-btn" onclick="doLogout()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
-      </div>
-    </div>
-  </div>
-  <div class="scroll-body">
-    <div class="home-header">
-      <div class="home-hotel">Orlando North Millenia</div>
-      <div style="font-size:10px;color:var(--slate-2);margin-top:2px;letter-spacing:0.05em;">Property ID: 91876</div>
-      <div class="home-date" id="home-date"></div>
-    </div>
-    <div class="home-kpi-grid">
-      <div class="home-kpi-card kc-green" onclick="setReportFilter('vr');gotoScreen('report')">
-        <div class="home-kpi-num kc-green" id="home-kpi-vr">—</div>
-        <div class="home-kpi-lbl">Vacant Ready</div>
-        <span class="home-kpi-arrow">›</span>
-      </div>
-      <div class="home-kpi-card kc-red" onclick="setReportFilter('oos');gotoScreen('report')">
-        <div class="home-kpi-num kc-red" id="home-kpi-oos">—</div>
-        <div class="home-kpi-lbl">Out of Inventory</div>
-        <span class="home-kpi-arrow">›</span>
-      </div>
-      <div class="home-kpi-card kc-amber" onclick="setReportFilter('ooo');gotoScreen('report')">
-        <div class="home-kpi-num kc-amber" id="home-kpi-ooo">—</div>
-        <div class="home-kpi-lbl">Out of Order</div>
-        <span class="home-kpi-arrow">›</span>
-      </div>
-      <div class="home-kpi-card kc-teal" onclick="setReportFilter(null);gotoScreen('report')">
-        <div class="home-kpi-num kc-teal" id="home-kpi-all">—</div>
-        <div class="home-kpi-lbl">Total Rooms</div>
-        <span class="home-kpi-arrow">›</span>
-      </div>
-    </div>
-    <div class="home-quick-btns">
-      <button class="home-quick-btn" onclick="gotoScreen('log')">+ Log Incident</button>
-      <button class="home-quick-btn" onclick="gotoScreen('dashboard')">Room Grid</button>
-      <button class="home-quick-btn" onclick="gotoScreen('inventory')">Inventory</button>
-    </div>
-    <!-- Projects Summary -->
-    <div style="margin-top:18px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal-hi);">Active Projects <span id="home-proj-count" style="background:rgba(20,184,166,0.18);color:#2DD4BF;border-radius:20px;padding:1px 8px;font-size:10px;margin-left:4px;">0</span></div>
-        <button class="home-quick-btn" style="font-size:11px;padding:4px 12px;" onclick="gotoProjectsActive()">See All →</button>
-      </div>
-      <div id="home-projects-wrap"></div>
-    </div>
-  </div>
-  <div class="bottom-nav" id="nav-home"></div>
-</div>
-
-<div id="screen-log" class="screen">
-  <div class="topbar">
-    <div class="topbar-brand">Room Maintenance &amp; Asset Tracker</div>
-    <div class="flex-between">
-      <div class="topbar-title">Incident Logger</div>
-      <div class="flex-row" style="gap:6px">
-        <div class="sync-dot" id="sync-dot-log"></div>
-        <div class="badge-pill" id="user-pill" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;"></div>
-        <button class="cfg-topbar-btn admin-cfg-btn" onclick="gotoScreen('config')" title="Config" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button><button class="logout-btn" onclick="doLogout()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
-      </div>
-    </div>
-  </div>
-  <div class="scroll-body">
-    <div class="form-group">
-      <label class="form-label">Room Number</label>
-      <input class="form-input" id="room-num-input" type="number" inputmode="numeric" pattern="[0-9]*" placeholder="e.g. 214" min="100" max="499" oninput="onRoomInput(this.value)"/>
-      <div id="room-type-display" class="hidden room-type-badge"></div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Issue Classification</label>
-      <select class="form-select" id="issue-class" onchange="onIssueChange(this.value)">
-        <option value="">&#8212; Select Classification &#8212;</option>
-        <option value="Housekeeping Discrepancy">Housekeeping Discrepancy</option>
-        <option value="Engineering / Maintenance Required">Engineering / Maintenance Required</option>
-        <option value="Plumbing Emergency">Plumbing Emergency</option>
-        <option value="HVAC Malfunction">HVAC Malfunction</option>
-        <option value="OS&amp;E Deficiency">OS&amp;E Deficiency</option>
-        <option value="PM Outage">PM Outage</option>
-      </select>
-    </div>
-    <div id="ose-panel" class="hidden">
-      <div class="section-head">OS&amp;E Brand Standards Checklist</div>
-      <div class="card"><div class="card-inner">
-        <p style="font-size:11px;color:var(--slate);margin-bottom:12px;">Flag deficient items for Wyndham Baymont compliance:</p>
-        <div id="ose-checks"></div>
-      </div></div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Room Status</label>
-      <div class="status-toggle-row">
-        <button class="stg-btn stg-green" onclick="selectStatus('VR')" id="stg-VR">&#10003; Vacant Ready</button>
-        <button class="stg-btn stg-red" onclick="selectStatus('OOS')" id="stg-OOS">&#10005; OOI</button>
-        <button class="stg-btn stg-amber" onclick="selectStatus('OOO')" id="stg-OOO">&#9888; Out of Order</button>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Notes / Remarks</label>
-      <textarea class="form-textarea" id="log-notes" placeholder="Describe the condition, asset deficiency, or action required..."></textarea>
-    </div>
-    <button class="btn btn-primary" id="submit-btn" onclick="submitLog()">Submit Log &middot; Update Status</button>
-    <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
-  </div>
-  <div class="bottom-nav" id="nav-log"></div>
-</div>
-
-<!-- DASHBOARD -->
-<div id="screen-dashboard" class="screen">
-  <div class="topbar">
-    <div class="topbar-brand">Room Maintenance &amp; Asset Tracker</div>
-    <div class="flex-between">
-      <div class="topbar-title">Room Dashboard</div>
-      <div class="flex-row" style="gap:6px">
-        <div class="sync-dot" id="sync-dot-dash"></div>
-        <div class="badge-pill" id="user-pill-dash" style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;"></div>
-        <button class="cfg-topbar-btn admin-cfg-btn" onclick="gotoScreen('config')" title="Config" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button><button class="logout-btn" onclick="doLogout()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
-      </div>
-    </div>
-  </div>
-  <div style="padding:12px 16px 0;flex-shrink:0;">
-    <div class="summary-strip" id="summary-strip"></div>
-    <div class="room-search-wrap">
-      <svg class="room-search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input class="room-search-input" id="room-search" type="text" inputmode="numeric" placeholder="Search room number&#8230;" oninput="onRoomSearch(this.value)"/>
-    </div>
-    <div class="filter-row" id="filter-row"></div>
-  </div>
-  <div class="scroll-body" style="padding-top:4px;" id="room-grid-container">
-    <div style="color:var(--slate-2);text-align:center;padding:40px 0;font-size:13px;">Loading rooms from cloud&#8230;</div>
-  </div>
-  <div class="bottom-nav" id="nav-dashboard"></div>
-</div>
-
-<!-- DETAIL -->
-<div id="screen-detail" class="screen">
-  <div class="topbar">
-    <button class="topbar-back" onclick="gotoScreen('dashboard')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5m0 0l7-7m-7 7l7 7"/></svg>Dashboard
-    </button>
-  </div>
-  <div class="detail-header" id="detail-header"></div>
-  <div class="scroll-body" id="detail-body"></div>
-</div>
-
-<!-- REPORT -->
-<div id="screen-report" class="screen">
-  <div class="topbar">
-    <div class="topbar-brand">Room Maintenance &amp; Asset Tracker</div>
-    <div class="flex-between">
-      <div class="topbar-title">Room Status Report</div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button class="rep-print-btn" onclick="printReport()">&#9113; Print</button>
-        <div class="sync-dot" id="sync-dot-report"></div>
-      </div>
-    </div>
-    <div id="report-meta" style="font-size:11px;color:var(--slate);margin-top:4px;"></div>
-    <!-- Print-only header -->
-    <div id="report-print-header" style="display:none;font-size:11px;color:#555;padding:4px 0 8px;border-bottom:1px solid #ddd;margin-bottom:8px;">
-      Baymont by Wyndham Orlando North Millenia &nbsp;·&nbsp; Property ID: 91876 &nbsp;·&nbsp; 2500 33rd St, Orlando FL 32839
-    </div>
-  </div>
-  <div class="scroll-body" id="report-body"></div>
-  <div class="bottom-nav" id="nav-report"></div>
-</div>
-
-<!-- CONFIG (admin only) -->
-<div id="screen-config" class="screen">
-  <div class="topbar">
-    <div class="topbar-brand">Baymont by Wyndham Orlando North Millenia</div>
-    <div class="flex-between">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <button onclick="gotoScreen('home')" style="background:none;border:none;color:var(--slate);font-size:20px;cursor:pointer;padding:0 4px;line-height:1;" title="Back">‹</button>
-        <div class="topbar-title">Configuration</div>
-      </div>
-      <div style="background:rgba(168,85,247,0.2);border:1px solid #A855F7;color:#D8B4FE;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">ADMIN</div>
-    </div>
-  </div>
-  <div class="scroll-body">
-
-    <!-- CATEGORY: STAFF -->
-    <div class="cfg-cat-wrap">
-      <div class="cfg-cat-head" onclick="toggleCfgCat('staff')">
-        <div class="cfg-cat-icon">👥</div>
-        <div>
-          <div class="cfg-cat-title">Staff &amp; Accounts</div>
-          <div class="cfg-cat-sub">User management · PIN access · Roles</div>
+<main>
+  <div class="wrap">
+    <div class="grid">
+      <a class="card" href="room-tracker.html">
+        <div class="ctop"><span class="ckind">Housekeeping · Engineering</span><span class="carrow">→</span></div>
+        <h2>Room Tracker</h2>
+        <p>Log incidents, set room status, capture photo evidence, and run the OS&amp;E brand standards checklist across all 200 rooms.</p>
+        <div class="metrics">
+          <div class="m good"><span class="n" id="mReady">—</span><span class="l">Ready</span></div>
+          <div class="m warn"><span class="n" id="mOos">—</span><span class="l">OOS</span></div>
+          <div class="m urgent"><span class="n" id="mOoo">—</span><span class="l">OOO</span></div>
+          <div class="m"><span class="n" id="mLogs">—</span><span class="l">Logs</span></div>
         </div>
-        <span class="cfg-cat-arrow" id="cfg-arrow-staff">›</span>
-      </div>
-      <div class="cfg-cat-body" id="cfg-body-staff" style="display:none">
-        <div id="config-users"></div>
-      </div>
-    </div>
+      </a>
 
-    <!-- CATEGORY: INVENTORY -->
-    <div class="cfg-cat-wrap" id="inv-section-head">
-      <div class="cfg-cat-head" onclick="toggleCfgCat('inventory')">
-        <div class="cfg-cat-icon">📦</div>
-        <div>
-          <div class="cfg-cat-title">Inventory Items</div>
-          <div class="cfg-cat-sub">Categories · Par levels · Units</div>
+      <a class="card" href="vendors.html">
+        <div class="ctop"><span class="ckind">Accounting · Procurement</span><span class="carrow">→</span></div>
+        <h2>Vendor Command Center</h2>
+        <p>Track all 40 vendors through the monthly pipeline — Received, AD1, M3, Closed — with GL codes and follow-up flags.</p>
+        <div class="metrics">
+          <div class="m good"><span class="n" id="mClosed">—</span><span class="l">Closed</span></div>
+          <div class="m warn"><span class="n" id="mOpen">—</span><span class="l">Open</span></div>
+          <div class="m urgent"><span class="n" id="mFlag">—</span><span class="l">Follow-up</span></div>
+          <div class="m"><span class="n" id="mMonth">—</span><span class="l">Period</span></div>
         </div>
-        <span class="cfg-cat-arrow" id="cfg-arrow-inventory">›</span>
-      </div>
-      <div class="cfg-cat-body" id="cfg-body-inventory" style="display:none">
-        <div id="config-inv-items"></div>
-      </div>
+      </a>
     </div>
 
-    <!-- CATEGORY: ROOMS -->
-    <div class="cfg-cat-wrap">
-      <div class="cfg-cat-head" onclick="toggleCfgCat('rooms')">
-        <div class="cfg-cat-icon">🏨</div>
-        <div>
-          <div class="cfg-cat-title">Rooms &amp; Property</div>
-          <div class="cfg-cat-sub">Room count · Floor layout · Room types</div>
-        </div>
-        <span class="cfg-cat-arrow" id="cfg-arrow-rooms">›</span>
-      </div>
-      <div class="cfg-cat-body" id="cfg-body-rooms" style="display:none">
-        <div style="color:var(--slate);font-size:13px;padding:8px 0 4px;">Current room layout loaded from app configuration. Contact admin to update room inventory.</div>
-        <div id="cfg-room-summary" style="font-size:12px;color:var(--slate-2);margin-top:8px;"></div>
-      </div>
+    <div class="note">
+      <h3>How the data works</h3>
+      <ul>
+        <li>Both tools read and write to the same Supabase project — changes appear on every device within seconds.</li>
+        <li>Vendor checklist state is stored one row per month under <code>vendor:YYYY-MM</code>, so closing a month archives it automatically.</li>
+        <li>If the sync indicator shows <strong>Offline</strong>, the database has auto-paused after inactivity and needs to be restored before changes will save.</li>
+      </ul>
     </div>
+  </div>
+</main>
 
-    <div style="height:20px;"></div>
-  </div>
-  <div class="bottom-nav" id="nav-config"></div>
-</div>
+<footer>
+  <div class="wrap">Frank's Hospitality · Internal use only</div>
+</footer>
 
-
-<!-- INVENTORY -->
-<div id="screen-inventory" class="screen">
-  <div class="topbar">
-    <div class="topbar-brand">Room Maintenance &amp; Asset Tracker</div>
-    <div class="flex-between">
-      <div class="topbar-title">Inventory Control</div>
-      <div class="flex-row" style="gap:6px">
-        <div class="sync-dot" id="sync-dot-inv"></div>
-        <button class="cfg-topbar-btn admin-cfg-btn" onclick="gotoScreen('config')" title="Config" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button><button class="logout-btn" onclick="doLogout()">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out
-        </button>
-      </div>
-    </div>
-  </div>
-  <div style="padding:10px 14px 0;flex-shrink:0;background:var(--navy-1)">
-    <div class="room-search-wrap" style="padding:0;margin-bottom:0;">
-      <svg class="room-search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input class="room-search-input" id="inv-search" type="text" placeholder="Search items or categories&#8230;" oninput="onInvSearch(this.value)"/>
-    </div>
-  </div>
-  <div class="scroll-body" style="padding:0" id="inv-body">
-    <div style="color:var(--slate-2);text-align:center;padding:40px;font-size:13px;">Loading inventory&#8230;</div>
-  </div>
-  <div style="padding:14px;background:#fff;border-top:1px solid #E2E8F0;flex-shrink:0">
-    <button class="inv-save-btn" onclick="saveAllInventory()">Save All Changes</button>
-    <button class="inv-print-btn" onclick="printInventory()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-      Print / Export Report
-    </button>
-  </div>
-  <div class="bottom-nav" id="nav-inventory"></div>
-</div>
-
-<div id="screen-projects" class="screen">
-  <div class="topbar">
-    <div class="topbar-brand">Baymont by Wyndham Orlando North Millenia</div>
-    <div class="flex-between">
-      <div class="topbar-title">Projects</div>
-      <div class="flex-row" style="gap:6px">
-        <div class="sync-dot" id="sync-dot-projects"></div>
-        <div class="badge-pill" id="user-pill-projects" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;"></div>
-        <button class="cfg-topbar-btn admin-cfg-btn" onclick="gotoScreen('config')" title="Config" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button>
-        <button class="logout-btn" onclick="doLogout()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Out</button>
-      </div>
-    </div>
-  </div>
-  <div class="content">
-    <div class="proj-filter-row">
-      <button class="proj-filter-btn active" id="pf-active" onclick="setProjectFilter('active')">Active</button>
-      <button class="proj-filter-btn" id="pf-completed" onclick="setProjectFilter('completed')">Completed</button>
-      <button class="proj-filter-btn" id="pf-all" onclick="setProjectFilter('all')">All</button>
-    </div>
-    <div id="projects-body"></div>
-    <div id="project-form-wrap"></div>
-    <div id="proj-add-wrap" style="margin-top:4px;">
-      <button class="inv-add-btn" id="proj-add-btn" onclick="openProjectForm(null)" style="display:none">+ New Project</button>
-    </div>
-  </div>
-  <div class="bottom-nav" id="nav-projects"></div>
-</div>
-<div class="toast" id="toast"></div>
-<input type="file" id="media-input" accept="image/*" capture="environment" class="hidden" onchange="handleMediaCapture(event)"/>
-</div>
 <script>
+const SUPA_URL = 'https://wpriwhjwkwdsoiiffcrq.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indwcml3aGp3a3dkc29paWZmY3JxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2NzQyOTgsImV4cCI6MjA5NTI1MDI5OH0.PgKCMIODcEFBhAvuAmcxHcomzOtmva87oGJCRqNFIQA';
+const H = {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
 
-const SUPA_URL='https://wpriwhjwkwdsoiiffcrq.supabase.co';
-const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indwcml3aGp3a3dkc29paWZmY3JxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2NzQyOTgsImV4cCI6MjA5NTI1MDI5OH0.PgKCMIODcEFBhAvuAmcxHcomzOtmva87oGJCRqNFIQA';
-const H={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
+const TOTAL_ROOMS = 200, TOTAL_VENDORS = 40;
+const FLAGGED = ['CBC HOSPITALITY','CINTAS FIRE','COMMUNITY COFFEE','HD SUPPLIES','IMPERIAL DADE','KINGS 111','SORJEN','SUMMIT','SYSCO FOODS'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-async function sbGet(t,p){const r=await fetch(SUPA_URL+'/rest/v1/'+t+(p?'?'+p:''),{headers:H});if(!r.ok)throw new Error(await r.text());return r.json();}
-async function sbUpsert(t,b){const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:{...H,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());}
-async function sbInsert(t,b){const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());}
-async function sbPatch(t,id,b){const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());}
-async function sbDelete(t,id){const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?id=eq.'+id,{method:'DELETE',headers:{...H,'Prefer':'return=minimal'}});if(!r.ok)throw new Error(await r.text());}
+const now = new Date();
+const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+const set = (id,val) => { const el=document.getElementById(id); if(el) el.textContent = val; };
 
-let currentUser=null,currentUserId=null,isAdmin=false,reportFilter=null;
-let selectedStatus=null,activeFilter='all',detailRoom=null,roomSearch='',invSearch='';
-let roomCache={},logsCache={},mediaCache={};
-let staffList=[];
-let rtWs=null;
+function setSync(s,label){
+  document.getElementById('syncDot').className = 'dot '+s;
+  document.getElementById('syncTxt').textContent = label;
+}
 
-const ROOM_TYPES={100:'AC2',101:'AC2',102:'RM1',103:'RM3',104:'RM3',105:'RM3',106:'RM1',107:'RM1',108:'RM3',109:'RM3',110:'RM1',111:'RM1',112:'RM3',113:'RM3',114:'RM3',115:'RM3',116:'RM3',117:'RM3',118:'RM3',119:'RM3',120:'AC1',121:'AC1',122:'RM3',123:'RM3',124:'RM3',125:'RM3',126:'RM3',127:'RM3',128:'RM3',129:'RM3',130:'RM3',131:'RM3',132:'RM3',133:'RM3',135:'RM3',140:'RM3',141:'RM3',142:'RM3',143:'RM3',144:'RM3',145:'RM3',146:'RM3',147:'RM3',148:'RM3',149:'RM3',150:'RM3',151:'RM3',200:'RM3',201:'RM3',202:'RM3',203:'RM3',204:'RM3',205:'RM3',206:'RM1',207:'RM1',208:'RM3',209:'RM3',210:'RM1',211:'RM1',212:'RM3',213:'RM3',214:'RM3',215:'RM3',216:'RM3',217:'RM3',218:'RM3',219:'RM3',220:'AC1',221:'AC1',222:'RM3',223:'RM3',224:'RM3',225:'RM3',226:'RM3',227:'RM3',228:'RM3',229:'RM3',230:'RM3',231:'RM3',232:'RM3',233:'RM3',234:'RM3',235:'RM3',236:'RM3',237:'RM3',238:'RM3',240:'RM3',241:'RM3',242:'RM3',243:'RM3',244:'RM3',245:'RM3',246:'RM3',247:'RM3',248:'RM3',249:'RM3',250:'RM3',251:'RM3',300:'RM3',301:'RM3',302:'RM3',303:'RM3',304:'RM3',305:'RM3',306:'RM3',307:'RM3',308:'RM3',309:'RM3',310:'RM3',311:'RM3',312:'RM3',313:'RM3',314:'RM3',315:'RM3',316:'RM3',317:'RM3',318:'RM3',319:'RM3',320:'RM2',321:'RM2',322:'RM3',323:'RM3',324:'RM3',325:'RM3',326:'RM3',327:'RM3',328:'RM3',329:'RM3',330:'RM3',331:'RM3',332:'RM3',333:'RM3',334:'RM3',335:'RM3',336:'RM3',337:'RM3',338:'RM3',340:'RM3',341:'RM3',342:'RM3',343:'RM3',344:'RM3',345:'RM3',346:'RM3',347:'RM3',348:'RM3',349:'RM3',350:'RM3',351:'RM3',400:'RM3',401:'RM3',402:'RM3',403:'RM3',404:'RM3',405:'RM3',406:'RM3',407:'RM3',408:'RM3',409:'RM3',410:'RM3',411:'RM3',412:'RM3',413:'RM3',414:'RM3',415:'RM3',416:'RM3',417:'RM3',418:'RM3',419:'RM3',420:'RM2',421:'RM2',422:'RM3',423:'RM3',424:'RM3',425:'RM3',426:'RM3',427:'RM3',428:'RM3',429:'RM3',430:'RM3',431:'RM3',432:'RM3',433:'RM3',434:'RM3',435:'RM3',436:'RM3',437:'RM3',438:'RM3',440:'RM3',441:'RM3',442:'RM3',443:'RM3',444:'RM3',445:'RM3',446:'RM3',447:'RM3',448:'RM3',449:'RM3',450:'RM3',451:'RM3'};
-const TYPE_LABELS={RM1:'King',RM2:'Single Queen',RM3:'Double Queen',AC1:'Queen ADA',AC2:'ADA Suite'};
-const OSE_ITEMS=['Room Telephone - Functional','Telephone Faceplate - Present & Clean','Single-Cup Coffeemaker - Present & Working','Microwave - Present, Clean & Functional','Refrigerator - Present, Clean & Functional','Wyndham-Approved Coffee Cups - Stocked (2 per guest)','TV Remote - Present & Functional','Hair Dryer - Present & Working','Iron & Ironing Board - Present','Do Not Disturb Sign - Present'];
+async function get(path){
+  const r = await fetch(`${SUPA_URL}/rest/v1/${path}`, {headers:H});
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
+}
 
-async function loadStaff(){
+(async function(){
+  setSync('busy','Connecting');
+  set('mMonth', MONTHS[now.getMonth()].slice(0,3) + ' ' + String(now.getFullYear()).slice(2));
   try{
-    staffList=await sbGet('staff_config','order=is_admin.desc,id.asc');
-    const sel=document.getElementById('login-staff');
-    sel.innerHTML='<option value="">&#8212; Select Your Name &#8212;</option>';
-    staffList.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name+' · '+s.role;sel.appendChild(o);});
-  }catch(e){document.getElementById('login-status').textContent='Cannot load staff: '+e.message;}
-}
+    const [rooms, logs, vendorRows] = await Promise.all([
+      get('room_state?select=status'),
+      get('room_logs?select=id'),
+      get(`app_state?id=eq.${encodeURIComponent('vendor:'+monthKey)}&select=data`)
+    ]);
 
-function connectRealtime(){
-  const url=SUPA_URL.replace('https','wss')+'/realtime/v1/websocket?apikey='+SUPA_KEY+'&vsn=1.0.0';
-  rtWs=new WebSocket(url);
-  rtWs.onopen=function(){rtWs.send(JSON.stringify({topic:'realtime:public:room_state',event:'phx_join',payload:{},ref:'1'}));setSyncDots('ok');};
-  rtWs.onmessage=function(e){
-    try{const m=JSON.parse(e.data);
-      if(m.event==='INSERT'||m.event==='UPDATE'){const row=m.payload&&m.payload.record;
-        if(row){roomCache[row.room_number]={status:row.status,ose_flags:row.ose_flags||[]};
-          if(document.getElementById('screen-dashboard').classList.contains('active'))renderDashboard();
-          if(detailRoom&&detailRoom===row.room_number&&document.getElementById('screen-detail').classList.contains('active'))renderDetailHeader();
-        }}}catch(_){}};
-  rtWs.onerror=function(){setSyncDots('err');};
-  rtWs.onclose=function(){setSyncDots('err');setTimeout(connectRealtime,5000);};
-}
-function setSyncDots(s){['sync-dot-log','sync-dot-dash','sync-dot-report'].forEach(function(id){var el=document.getElementById(id);if(el)el.className='sync-dot '+(s==='ok'?'ok':s==='pulse'?'pulse':'err');});}
+    const oos = rooms.filter(r=>r.status==='OOS').length;
+    const ooo = rooms.filter(r=>r.status==='OOO').length;
+    set('mReady', TOTAL_ROOMS - oos - ooo);
+    set('mOos', oos);
+    set('mOoo', ooo);
+    set('mLogs', logs.length);
 
-async function loadAllRoomStates(){
-  const rows=await sbGet('room_state','select=room_number,status,ose_flags');
-  rows.forEach(function(r){roomCache[r.room_number]={status:r.status,ose_flags:r.ose_flags||[]};});
-}
-function getRoomStatus(n){return(roomCache[String(n)]&&roomCache[String(n)].status)||'VR';}
+    const vstate = (vendorRows[0] && vendorRows[0].data) || {};
+    const closedNames = Object.keys(vstate).filter(k => vstate[k] && vstate[k].closed);
+    set('mClosed', closedNames.length);
+    set('mOpen', TOTAL_VENDORS - closedNames.length);
+    set('mFlag', FLAGGED.filter(n => !closedNames.includes(n)).length);
 
-async function doLogin(){
-  const sEl=document.getElementById('login-staff'),pEl=document.getElementById('login-pin');
-  const btn=document.getElementById('login-btn'),st=document.getElementById('login-status');
-  if(!sEl.value){showToast('Select your name.','error');return;}
-  if(pEl.value.length!==4){showToast('Enter a 4-digit PIN.','error');return;}
-  const staff=staffList.find(function(s){return s.id===sEl.value;});
-  if(!staff){showToast('User not found.','error');return;}
-  if(pEl.value!==staff.pin){showToast('Incorrect PIN.','error');return;}
-  currentUser=staff.name;currentUserId=staff.id;isAdmin=staff.is_admin;
-  btn.disabled=true;btn.textContent='Connecting...';st.textContent='Connecting to cloud...';
-  try{
-    await loadAllRoomStates();
-    connectRealtime();
-    document.getElementById('user-pill').textContent=currentUser;
-    document.getElementById('user-pill-dash').textContent=currentUser;
-    buildNav();
-    document.getElementById('user-pill-home').textContent=currentUser;
-    updateAdminUI();
-    loadProjects();
-    gotoScreen('home');
-  }catch(err){st.textContent='Connection error: '+err.message;btn.disabled=false;btn.textContent='Sign In to Room Tracker';}
-}
-
-function doLogout(){
-  currentUser=null;currentUserId=null;isAdmin=false;selectedStatus=null;detailRoom=null;
-  if(rtWs){rtWs.close();rtWs=null;}
-  clearForm();
-  document.getElementById('login-staff').value='';
-  document.getElementById('login-pin').value='';
-  document.getElementById('login-btn').disabled=false;
-  document.getElementById('login-btn').textContent='Sign In to Room Tracker';
-  document.getElementById('login-status').textContent='';
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  document.getElementById('screen-login').classList.add('active');
-}
-
-function buildNav(){
-  var tabs=[
-    {id:'home',label:'Home',icon:'<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'},
-    {id:'log',label:'Log',icon:'<path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>'},
-    {id:'dashboard',label:'Rooms',icon:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>'},
-    {id:'report',label:'Report',icon:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'}
-  ];
-  tabs.push({id:'inventory',label:'Inventory',icon:'<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>'});
-  tabs.push({id:'projects',label:'Projects',icon:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>'});
-  var screens=['home','log','dashboard','report','inventory','projects'];
-  screens.forEach(function(sc){
-    var el=document.getElementById('nav-'+sc);
-    if(!el)return;
-    el.innerHTML=tabs.map(function(t){
-      var act=t.id===sc?' active':'';
-      var click=t.id==='logout'?'doLogout()':'gotoScreen(\''+t.id+'\')';
-      return '<button class="nav-btn'+act+'" onclick="'+click+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">'+t.icon+'</svg>'+t.label+'</button>';
-    }).join('');
-  });
-}
-
-function gotoScreen(name){
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  var sc=document.getElementById('screen-'+name);
-  if(!sc)return;
-  sc.classList.add('active');
-  buildNav();
-  updateAdminUI();
-  if(name==='home')renderHome();
-  if(name==='dashboard')renderDashboard();
-  if(name==='report')renderReport();
-  if(name==='config')renderConfig();
-  if(name==='inventory')loadInventory();
-  if(name==='projects')loadProjects();
-}
-function updateAdminUI(){
-  // Show Config gear button in topbar for admin
-  document.querySelectorAll('.admin-cfg-btn').forEach(function(b){
-    b.style.display=isAdmin?'flex':'none';
-  });
-  // Show new project button for admin
-  var addBtn=document.getElementById('proj-add-btn');
-  if(addBtn)addBtn.style.display=isAdmin?'':'none';
-  // Update user pills
-  var pills=document.querySelectorAll('[id^="user-pill-"]');
-  pills.forEach(function(p){p.textContent=currentUser?currentUser.name:'';});
-}
-
-function onRoomInput(val){
-  var b=document.getElementById('room-type-display');
-  if(!val||val.length<3){b.classList.add('hidden');return;}
-  var t=ROOM_TYPES[parseInt(val)];
-  b.classList.remove('hidden','error');
-  if(t){b.textContent=t+' · '+TYPE_LABELS[t];b.classList.remove('error');}
-  else{b.textContent='Room not found in inventory';b.classList.add('error');}
-}
-function onIssueChange(val){
-  var p=document.getElementById('ose-panel');
-  if(val==='OS&E Deficiency'){p.classList.remove('hidden');buildOseChecks();}else p.classList.add('hidden');
-}
-function buildOseChecks(){
-  document.getElementById('ose-checks').innerHTML=OSE_ITEMS.map(function(item,i){
-    return '<label class="ose-label"><input type="checkbox" id="ose-'+i+'"/><span style="font-size:13px">'+item+'</span></label>';
-  }).join('');
-}
-function selectStatus(s){selectedStatus=s;['VR','OOS','OOO'].forEach(function(k){document.getElementById('stg-'+k).classList.toggle('selected',k===s);});}
-function getOseFlags(){return OSE_ITEMS.filter(function(_,i){var el=document.getElementById('ose-'+i);return el&&el.checked;});}
-
-async function submitLog(){
-  var rn=document.getElementById('room-num-input').value;
-  var ic=document.getElementById('issue-class').value;
-  var nt=document.getElementById('log-notes').value.trim();
-  if(!rn){showToast('Enter a room number.','error');return;}
-  if(!ROOM_TYPES[parseInt(rn)]){showToast('Room not in inventory.','error');return;}
-  if(!ic){showToast('Select a classification.','error');return;}
-  if(!selectedStatus){showToast('Select a room status.','error');return;}
-  if(!nt){showToast('Add a remark.','error');return;}
-  var flags=ic==='OS&E Deficiency'?getOseFlags():[];
-  var btn=document.getElementById('submit-btn');
-  btn.disabled=true;btn.textContent='Saving...';setSyncDots('pulse');
-  try{
-    await sbUpsert('room_state',{room_number:rn,room_type:ROOM_TYPES[parseInt(rn)],status:selectedStatus,ose_flags:flags,updated_at:new Date().toISOString()});
-    await sbInsert('room_logs',{room_number:rn,staff_name:currentUser,issue_class:ic,status_at_log:selectedStatus,notes:nt,ose_flags:flags});
-    roomCache[rn]={status:selectedStatus,ose_flags:flags};
-    delete logsCache[rn];
-    setSyncDots('ok');showToast('Room '+rn+' → '+selectedStatus+' · Saved','success');clearForm();
-  }catch(err){setSyncDots('err');showToast('Save failed: '+err.message,'error');}
-  finally{btn.disabled=false;btn.textContent='Submit Log · Update Status';}
-}
-function clearForm(){
-  document.getElementById('room-num-input').value='';
-  document.getElementById('room-type-display').classList.add('hidden');
-  document.getElementById('issue-class').value='';
-  document.getElementById('ose-panel').classList.add('hidden');
-  document.getElementById('log-notes').value='';
-  selectedStatus=null;
-  ['VR','OOS','OOO'].forEach(function(k){document.getElementById('stg-'+k).classList.remove('selected');});
-}
-
-function allRooms(){return Object.keys(ROOM_TYPES).map(Number).sort(function(a,b){return a-b;});}
-function getFloor(n){return Math.floor(n/100);}
-function isADA(n){return['AC1','AC2'].indexOf(ROOM_TYPES[n])>=0;}
-function filteredRooms(){return allRooms().filter(function(n){
-  if(roomSearch&&String(n).indexOf(roomSearch.trim())<0)return false;
-  if(activeFilter==='ada')return isADA(n);
-  if(['1','2','3','4'].indexOf(activeFilter)>=0)return getFloor(n)===parseInt(activeFilter);
-  return true;});}
-function onRoomSearch(val){roomSearch=val;renderDashboard();}
-function statusColor(s){return s==='OOO'?'amber':s==='OOS'?'red':'green';}
-
-function renderDashboard(){
-  var all=allRooms(),vr=0,oos=0,ooo=0;
-  all.forEach(function(n){var s=getRoomStatus(n);if(s==='OOO')ooo++;else if(s==='OOS')oos++;else vr++;});
-  document.getElementById('summary-strip').innerHTML='<div class="sum-card"><div class="sum-num green">'+vr+'</div><div class="sum-lbl">Ready</div></div><div class="sum-card"><div class="sum-num red">'+oos+'</div><div class="sum-lbl">OOI</div></div><div class="sum-card"><div class="sum-num amber">'+ooo+'</div><div class="sum-lbl">OOO</div></div><div class="sum-card"><div class="sum-num" style="color:var(--teal-hi)">'+all.length+'</div><div class="sum-lbl">Total</div></div>';
-  var filters=[{key:'all',label:'All'},{key:'1',label:'1st Floor'},{key:'2',label:'2nd Floor'},{key:'3',label:'3rd Floor'},{key:'4',label:'4th Floor'},{key:'ada',label:'ADA / AC',extra:'ada'}];
-  document.getElementById('filter-row').innerHTML=filters.map(function(f){return '<div class="chip '+(f.extra||'')+' '+(activeFilter===f.key?'active':'')+'" onclick="setFilter(\''+f.key+'\')">'+f.label+'</div>';}).join('');
-  var rooms=filteredRooms(),byFloor={};
-  rooms.forEach(function(n){var fl=getFloor(n);if(!byFloor[fl])byFloor[fl]=[];byFloor[fl].push(n);});
-  var flN={1:'1st Floor',2:'2nd Floor',3:'3rd Floor',4:'4th Floor'};
-  document.getElementById('room-grid-container').innerHTML=Object.keys(byFloor).sort().map(function(fl){
-    var cells=byFloor[fl].map(function(n){
-      var st=getRoomStatus(n),col=statusColor(st),nts=st==='OOS';
-      return '<div class="room-cell cell-'+col+'" onclick="openDetail('+n+')">'+(nts?'<div class="r-nts"></div>':'')+'<div class="r-num">'+n+'</div><div class="r-type">'+ROOM_TYPES[n]+'</div></div>';
-    }).join('');
-    return '<div class="floor-section"><div class="floor-label">'+flN[fl]+'</div><div class="room-grid">'+cells+'</div></div>';
-  }).join('');
-}
-function setFilter(k){activeFilter=k;renderDashboard();}
-
-async function openDetail(num){
-  detailRoom=String(num);
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  document.getElementById('screen-detail').classList.add('active');
-  renderDetailHeader();
-  document.getElementById('detail-body').innerHTML='<div style="color:var(--slate-2);text-align:center;padding:40px 0;font-size:13px;">Loading log…</div>';
-  try{
-    await Promise.all([loadLogsForRoom(detailRoom),loadMediaForRoom(detailRoom)]);
-    renderDetailBody();
-  }catch(err){document.getElementById('detail-body').innerHTML='<div style="color:#F87171;padding:20px;font-size:13px;">Failed: '+err.message+'</div>';}
-}
-async function loadLogsForRoom(n){var rows=await sbGet('room_logs','room_number=eq.'+n+'&select=*&order=created_at.desc');logsCache[String(n)]=rows;return rows;}
-async function loadMediaForRoom(n){var rows=await sbGet('room_media','room_number=eq.'+n+'&select=*&order=created_at.desc');mediaCache[String(n)]=rows;return rows;}
-
-function renderDetailHeader(){
-  var n=detailRoom,type=ROOM_TYPES[parseInt(n)],st=getRoomStatus(n),col=statusColor(st);
-  var lbl=st==='VR'?'Vacant Ready':st==='OOS'?'Out of Inventory (OOI)':'Out of Order (OOO)';
-  document.getElementById('detail-header').innerHTML='<div class="detail-room-num">Room '+n+'</div><div class="detail-type">'+type+' · '+(TYPE_LABELS[type]||'')+(isADA(parseInt(n))?' · ♿ ADA':'')+'</div><div class="detail-status-row"><div class="status-chip '+col+'"><div class="status-dot dot-'+col+'"></div>'+lbl+'</div>'+(st==='OOS'?'<div class="nts-tag">⚡ Out of Inventory</div>':'')+'</div>';
-}
-
-function renderDetailBody(){
-  var n=detailRoom,st=getRoomStatus(n),logs=logsCache[n]||[],media=mediaCache[n]||[];
-  var pad=function(x){return String(x).padStart(2,'0');};
-  var logsHtml=logs.length===0?'<div style="color:var(--slate-2);font-size:13px;text-align:center;padding:24px 0;">No incidents logged.</div>':logs.map(function(e){
-    var ts=new Date(e.created_at);
-    var tsStr=pad(ts.getMonth()+1)+'/'+pad(ts.getDate())+'/'+ts.getFullYear()+' – '+pad(ts.getHours())+':'+pad(ts.getMinutes());
-    var oseHtml=e.ose_flags&&e.ose_flags.length?'<div style="margin-top:8px;padding:8px;background:#FFFBEB;border-radius:6px;border:1px solid #FDE68A;"><div style="font-size:10px;font-weight:700;color:#FCD34D;margin-bottom:4px;">OS&E DEFICIENCIES:</div>'+e.ose_flags.map(function(f){return'<div style="font-size:11px;color:#FDE68A;padding:2px 0;">• '+f+'</div>';}).join('')+'</div>':'';
-    return '<div class="log-entry status-bar-'+statusColor(e.status_at_log)+'"><div class="log-meta"><span>[ '+e.staff_name+' ]</span>&nbsp;|&nbsp; '+tsStr+'</div><div class="log-class">'+e.issue_class+'</div><div class="log-note">'+e.notes+'</div>'+oseHtml+'</div>';
-  }).join('');
-  var mediaHtml=media.length>0?'<div class="media-grid">'+media.map(function(m){return'<div class="media-thumb"><img src="'+m.data_url+'" alt="Evidence"/></div>';}).join('')+'</div>':'';
-  document.getElementById('detail-body').innerHTML='<div style="padding:16px;"><div class="section-head" style="margin-bottom:10px;">Quick Status Update</div><div class="status-toggle-row"><button class="stg-btn stg-green '+(st==='VR'?'selected':'')+'" onclick="detailSetStatus(\'VR\')">✓ Vacant Ready</button><button class="stg-btn stg-red '+(st==='OOS'?'selected':'')+'" onclick="detailSetStatus(\'OOS\')">✕ OOI</button><button class="stg-btn stg-amber '+(st==='OOO'?'selected':'')+'" onclick="detailSetStatus(\'OOO\')">⚠ Out of Order</button></div><div class="section-head">Photo Evidence &amp; Media</div>'+mediaHtml+'<button class="media-btn" onclick="activateCamera()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Add Photo Evidence</button><div class="section-head">Audit Log <span style="color:var(--teal-hi);font-size:10px;margin-left:6px;">'+logs.length+' entries</span></div>'+logsHtml+'<div class="divider"></div><div class="section-head">Add Quick Note</div><div class="form-group"><select class="form-select" id="detail-issue-class"><option value="">&#8212; Classification &#8212;</option><option value="Housekeeping Discrepancy">Housekeeping Discrepancy</option><option value="Engineering / Maintenance Required">Engineering / Maintenance Required</option><option value="Plumbing Emergency">Plumbing Emergency</option><option value="HVAC Malfunction">HVAC Malfunction</option><option value="OS&amp;E Deficiency">OS&amp;E Deficiency</option><option value="PM Outage">PM Outage</option></select></div><div class="form-group"><textarea class="form-textarea" id="detail-note" placeholder="Add an operations note..."></textarea></div><button class="btn btn-primary" id="detail-post-btn" onclick="submitDetailNote()">Post Note</button><div style="height:20px;"></div></div>';
-}
-
-async function detailSetStatus(s){
-  var type=ROOM_TYPES[parseInt(detailRoom)];setSyncDots('pulse');
-  try{
-    await sbUpsert('room_state',{room_number:detailRoom,room_type:type,status:s,ose_flags:(roomCache[detailRoom]&&roomCache[detailRoom].ose_flags)||[],updated_at:new Date().toISOString()});
-    roomCache[detailRoom]=Object.assign({},roomCache[detailRoom]||{},{status:s});
-    renderDetailHeader();renderDetailBody();setSyncDots('ok');showToast('Room '+detailRoom+' → '+s+' · Saved','success');
-  }catch(err){setSyncDots('err');showToast('Save failed: '+err.message,'error');}
-}
-async function submitDetailNote(){
-  var ic=document.getElementById('detail-issue-class').value;
-  var nt=document.getElementById('detail-note').value.trim();
-  if(!ic){showToast('Select a classification.','error');return;}
-  if(!nt){showToast('Add a note.','error');return;}
-  var btn=document.getElementById('detail-post-btn');
-  btn.disabled=true;btn.textContent='Saving...';setSyncDots('pulse');
-  try{
-    await sbInsert('room_logs',{room_number:detailRoom,staff_name:currentUser,issue_class:ic,status_at_log:getRoomStatus(detailRoom),notes:nt,ose_flags:[]});
-    delete logsCache[detailRoom];await loadLogsForRoom(detailRoom);
-    setSyncDots('ok');showToast('Note posted.','success');renderDetailBody();
-  }catch(err){setSyncDots('err');showToast('Save failed: '+err.message,'error');}
-  finally{btn.disabled=false;btn.textContent='Post Note';}
-}
-
-function renderReport(){
-  var all=allRooms(),vr=[],oos=[],ooo=[];
-  all.forEach(function(n){var s=getRoomStatus(n);if(s==='OOO')ooo.push(n);else if(s==='OOS')oos.push(n);else vr.push(n);});
-  var now=new Date(),pad=function(x){return String(x).padStart(2,'0');};
-  var dateStr=pad(now.getMonth()+1)+'/'+pad(now.getDate())+'/'+now.getFullYear()+' '+pad(now.getHours())+':'+pad(now.getMinutes());
-  document.getElementById('report-meta').textContent='Generated: '+dateStr+' · '+all.length+' rooms';
-  setSyncDots('ok');
-  function makeTable(rooms,badgeClass,badgeLabel){
-    if(!rooms.length)return'<div style="padding:12px;color:var(--slate-2);font-size:12px;">None</div>';
-    return'<table class="report-table"><thead><tr><th>Room</th><th>Type</th><th>Status</th></tr></thead><tbody>'+rooms.map(function(n){return'<tr><td style="font-family:\'JetBrains Mono\',monospace;font-weight:600;">'+n+'</td><td style="color:var(--slate);">'+ROOM_TYPES[n]+' · '+TYPE_LABELS[ROOM_TYPES[n]]+'</td><td><span class="badge '+badgeClass+'">'+badgeLabel+'</span></td></tr>';}).join('')+'</tbody></table>';
-  }
-  var af=reportFilter;
-  var strip='<div class="summary-strip">'
-    +'<div class="sum-card'+(af==='vr'?' rep-active':'')+'" onclick="setReportFilter(\'vr\')"><div class="sum-num green">'+vr.length+'</div><div class="sum-lbl">Ready</div></div>'
-    +'<div class="sum-card'+(af==='oos'?' rep-active':'')+'" onclick="setReportFilter(\'oos\')"><div class="sum-num red">'+oos.length+'</div><div class="sum-lbl">OOI</div></div>'
-    +'<div class="sum-card'+(af==='ooo'?' rep-active':'')+'" onclick="setReportFilter(\'ooo\')"><div class="sum-num amber">'+ooo.length+'</div><div class="sum-lbl">OOO</div></div>'
-    +'<div class="sum-card'+(!af?' rep-active':'')+'" onclick="setReportFilter(null)"><div class="sum-num" style="color:var(--teal-hi)">'+all.length+'</div><div class="sum-lbl">All</div></div>'
-    +'</div>';
-  var sections='';
-  if(!af||af==='ooo'){if(ooo.length||af==='ooo')sections+='<div class="section-head">Out of Order ('+ooo.length+')</div><div class="report-section">'+makeTable(ooo,'badge-ooo','OOO')+'</div>';}
-  if(!af||af==='oos'){if(oos.length||af==='oos')sections+='<div class="section-head">Out of Inventory · OOI ('+oos.length+')</div><div class="report-section">'+makeTable(oos,'badge-oos','OOI')+'</div>';}
-  if(!af||af==='vr'){sections+='<div class="section-head">Vacant Ready ('+vr.length+')</div><div class="report-section">'+makeTable(vr,'badge-vr','VR')+'</div>';}
-  document.getElementById('report-body').innerHTML='<div style="padding:16px;">'+strip+sections+'<div style="height:20px;"></div></div>';
-}
-
-function toggleCfgCat(id){
-  var body=document.getElementById('cfg-body-'+id);
-  var arrow=document.getElementById('cfg-arrow-'+id);
-  if(!body)return;
-  var open=body.style.display!=='none';
-  body.style.display=open?'none':'';
-  if(arrow)arrow.className='cfg-cat-arrow'+(open?'':' open');
-  // lazy-load content
-  if(!open){
-    if(id==='inventory')renderConfigInventory();
-    if(id==='staff')renderConfigUsers();
-    if(id==='rooms')renderCfgRoomSummary();
-  }
-}
-function renderCfgRoomSummary(){
-  var el=document.getElementById('cfg-room-summary');
-  if(!el)return;
-  var all=allRooms();
-  var byFloor={};
-  all.forEach(function(n){var f=Math.floor(n/100);if(!byFloor[f])byFloor[f]=0;byFloor[f]++;});
-  el.innerHTML='<b style="color:var(--white);">Total: '+all.length+' rooms</b><br>'
-    +Object.keys(byFloor).sort().map(function(f){return'Floor '+f+': '+byFloor[f]+' rooms';}).join(' &nbsp;·&nbsp; ');
-}
-function renderConfig(){
-  if(!isAdmin){document.getElementById('config-users').innerHTML='<p style="color:#F87171;padding:20px;text-align:center;">Access denied.</p>';document.getElementById('config-inv-items').innerHTML='';return;}
-  document.getElementById('config-users').innerHTML=staffList.map(function(s){
-    return'<div class="user-card" id="ucard-'+s.id+'"><div class="user-card-header"><div class="user-avatar'+(s.is_admin?' admin':'')+'">'+s.name.charAt(0)+'</div><div><div class="user-card-title" id="uname-display-'+s.id+'">'+s.name+'</div><div class="user-card-role">'+s.role+'</div></div></div><div class="form-group"><label class="form-label">Display Name</label><input class="form-input" id="uname-'+s.id+'" value="'+s.name+'" placeholder="Staff name"'+(s.is_admin?' style="border-color:rgba(168,85,247,0.4)"':'')+'/></div><div class="form-group" style="margin-bottom:0;"><label class="form-label">PIN (4 digits)</label><div class="pin-row"><input class="form-input" id="upin-'+s.id+'" type="password" inputmode="numeric" maxlength="4" value="'+s.pin+'" placeholder="0000"'+(s.is_admin?' style="border-color:rgba(168,85,247,0.4)"':'')+'/><button style="padding:0 14px;border-radius:var(--radius-sm);background:var(--navy-3);border:1.5px solid #E2E8F0;color:var(--slate);cursor:pointer;font-size:12px;" onclick="togglePin(\''+s.id+'\')">Show</button></div></div><button class="save-user-btn" id="usave-'+s.id+'" onclick="saveUser(\''+s.id+'\')">Save Changes</button></div>';
-  }).join('');
-  var invHead=document.getElementById('inv-section-head');
-  if(currentUserId==='admin'){if(invHead)invHead.style.display='';renderConfigInventory();}else{if(invHead)invHead.style.display='none';document.getElementById('config-inv-items').innerHTML='';}
-}
-function togglePin(id){var inp=document.getElementById('upin-'+id);inp.type=inp.type==='password'?'text':'password';}
-async function saveUser(id){
-  var nameEl=document.getElementById('uname-'+id);
-  var pinEl=document.getElementById('upin-'+id);
-  var btn=document.getElementById('usave-'+id);
-  var name=nameEl.value.trim(),pin=pinEl.value.trim();
-  if(!name){showToast('Name cannot be empty.','error');return;}
-  if(pin.length!==4||!/^\d{4}$/.test(pin)){showToast('PIN must be 4 digits.','error');return;}
-  btn.disabled=true;btn.textContent='Saving...';
-  try{
-    await sbPatch('staff_config',id,{name:name,pin:pin,updated_at:new Date().toISOString()});
-    var s=staffList.find(function(x){return x.id===id;});
-    if(s){s.name=name;s.pin=pin;}
-    var avatarEl=document.querySelector('#ucard-'+id+' .user-avatar');
-    if(avatarEl)avatarEl.textContent=name.charAt(0);
-    document.getElementById('uname-display-'+id).textContent=name;
-    btn.classList.add('saved');btn.textContent='\u2713 Saved';
-    setTimeout(function(){btn.classList.remove('saved');btn.textContent='Save Changes';btn.disabled=false;},2000);
-    showToast(name+' updated.','success');
-    await loadStaff();
-  }catch(err){showToast('Save failed: '+err.message,'error');btn.disabled=false;btn.textContent='Save Changes';}
-}
-
-function activateCamera(){document.getElementById('media-input').click();}
-async function handleMediaCapture(e){
-  var file=e.target.files[0];if(!file)return;
-  var reader=new FileReader();
-  reader.onload=async function(ev){
-    setSyncDots('pulse');
-    try{
-      await sbInsert('room_media',{room_number:detailRoom,data_url:ev.target.result,uploaded_by:currentUser});
-      delete mediaCache[detailRoom];await loadMediaForRoom(detailRoom);
-      setSyncDots('ok');showToast('Photo saved.','success');renderDetailBody();
-    }catch(err){setSyncDots('err');showToast('Photo save failed: '+err.message,'error');}
-  };
-  reader.readAsDataURL(file);e.target.value='';
-}
-
-var toastTimer;
-function showToast(msg,type){
-  var t=document.getElementById('toast');
-  t.textContent=(type==='success'?'\u2713 ':'\u2715 ')+msg;
-  t.className='toast show '+(type||'success');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(function(){t.classList.remove('show');},3000);
-}
-
-var inventoryCache=[];
-
-async function loadInventory(){
-  var el=document.getElementById('inv-body');
-  el.innerHTML='<div style="color:var(--slate-2);text-align:center;padding:40px;font-size:13px;">Loading&#8230;</div>';
-  var sdot=document.getElementById('sync-dot-inv');if(sdot)sdot.className='sync-dot pulse';
-  try{
-    inventoryCache=await sbGet('inventory','order=category.asc,item_name.asc');
-    renderInventory();
-    if(sdot)sdot.className='sync-dot ok';
+    setSync('ok','Synced');
   }catch(err){
-    el.innerHTML='<div style="color:#EF4444;padding:20px;font-size:13px;">Load failed: '+err.message+'</div>';
-    if(sdot)sdot.className='sync-dot err';
+    setSync('err','Offline');
   }
-}
-
-var invCollapsed={};
-function toggleInvCat(catId){
-  // invCollapsed = expanded state: true=open, false/undefined=collapsed
-  invCollapsed[catId]=!invCollapsed[catId];
-  var body=document.getElementById('inv-body-'+catId);
-  var arrow=document.getElementById('inv-arrow-'+catId);
-  if(body)body.style.display=invCollapsed[catId]?'':'none';
-  if(arrow)arrow.className='inv-acc-arrow'+(invCollapsed[catId]?' open':'');
-}
-function onInvSearch(val){invSearch=val.trim().toLowerCase();renderInventory();}
-function renderInventory(){
-  var el=document.getElementById('inv-body');
-  if(!inventoryCache.length){el.innerHTML='<div style="padding:20px;color:var(--slate-2);font-size:13px;">No items found.</div>';return;}
-  var byCategory={};
-  inventoryCache.forEach(function(item){
-    if(!byCategory[item.category])byCategory[item.category]=[];
-    byCategory[item.category].push(item);
-  });
-  var html='';
-  var q=invSearch;
-  Object.keys(byCategory).sort().forEach(function(cat){
-    var allItems=byCategory[cat];
-    // Filter items if searching
-    var items=q?allItems.filter(function(i){
-      return i.item_name.toLowerCase().indexOf(q)>=0||cat.toLowerCase().indexOf(q)>=0;
-    }):allItems;
-    if(q&&items.length===0)return; // skip category if no matches
-    var catId=cat.replace(/[^a-z0-9]/gi,'_');
-    // invCollapsed[catId] = expanded state: true=open/show, false/undefined=collapsed/hide
-    var collapsed=q?false:!invCollapsed[catId];
-    var lowCount=allItems.filter(function(i){return i.quantity===0||(i.par_level>0&&i.quantity/i.par_level<0.5);}).length;
-    html+='<div class="inv-cat-wrap">';
-    html+='<div class="inv-acc-head" onclick="toggleInvCat(\''+catId+'\')">';
-    html+='<span class="inv-acc-title">'+cat+'</span>';
-    html+='<span class="inv-acc-meta">';
-    if(lowCount)html+='<span class="inv-acc-count" style="color:#EF4444;">'+lowCount+' low</span>';
-    html+='<span class="inv-acc-count">'+items.length+(q&&items.length!==allItems.length?'/'+allItems.length:'')+' items</span>';
-    html+='<span class="inv-acc-arrow'+(collapsed?'':' open')+'" id="inv-arrow-'+catId+'">›</span>';
-    html+='</span></div>';
-    html+='<div id="inv-body-'+catId+'" style="'+(collapsed?'display:none':'')+'">';
-    items.forEach(function(item){
-      var pct=item.par_level>0?Math.round(item.quantity/item.par_level*100):100;
-      var dotCls=item.quantity===0?'inv-zero':pct<50?'inv-low':'inv-ok';
-      var col=dotCls==='inv-ok'?'#16A34A':dotCls==='inv-low'?'#D97706':'#DC2626';
-      var eid=item.id;
-      html+='<div class="inv-row" data-id="'+eid+'">';
-      html+='<div class="inv-status '+dotCls+'"></div>';
-      html+='<div class="inv-name">'+item.item_name+'</div>';
-      html+='<div class="inv-qty-wrap">';
-      html+='<button class="inv-qty-btn inv-minus" data-id="'+eid+'">&#8722;</button>';
-      html+='<input class="inv-qty-input" type="number" inputmode="numeric" min="0" id="qty-'+eid+'" value="'+item.quantity+'" data-id="'+eid+'"/>';
-      html+='<button class="inv-qty-btn inv-plus" data-id="'+eid+'">+</button>';
-      html+='</div>';
-      html+='<div class="inv-par">par '+item.par_level+'<br/><span style="font-size:9px;color:'+col+'">'+pct+'%</span></div>';
-      html+='</div>';
-    });
-    html+='</div></div>';
-  });
-  if(!html)html='<div style="padding:20px;color:var(--slate-2);font-size:13px;text-align:center;">No results for "'+invSearch+'".</div>';
-  el.innerHTML=html+'<div style="height:8px;"></div>';
-  el.addEventListener('click',function(ev){
-    var btn=ev.target.closest('.inv-minus,.inv-plus');
-    if(!btn)return;
-    adjustQty(btn.dataset.id, btn.classList.contains('inv-plus')?1:-1);
-  });
-  el.addEventListener('change',function(ev){
-    if(ev.target.classList.contains('inv-qty-input'))markDirty(ev.target.dataset.id);
-  });
-}
-
-var dirtyItems={};
-function markDirty(id){dirtyItems[id]=true;}
-function adjustQty(id,delta){
-  var input=document.getElementById('qty-'+id);
-  if(!input)return;
-  var newVal=Math.max(0,(parseInt(input.value)||0)+delta);
-  input.value=newVal;
-  dirtyItems[id]=true;
-  var item=inventoryCache.find(function(x){return x.id===id;});
-  if(item){
-    item.quantity=newVal;
-    var row=input.closest('.inv-row');
-    if(row){
-      var dot=row.querySelector('.inv-status');
-      var pct=item.par_level>0?Math.round(newVal/item.par_level*100):100;
-      var cls=newVal===0?'inv-zero':pct<50?'inv-low':'inv-ok';
-      dot.className='inv-status '+cls;
-      var col=cls==='inv-ok'?'#16A34A':cls==='inv-low'?'#D97706':'#DC2626';
-      row.querySelector('.inv-par').innerHTML='par '+item.par_level+'<br/><span style="font-size:9px;color:'+col+'">'+pct+'%</span>';
-    }
-  }
-}
-
-async function saveAllInventory(){
-  var btn=document.querySelector('.inv-save-btn');
-  var ids=Object.keys(dirtyItems);
-  if(!ids.length){showToast('No changes to save.','success');return;}
-  btn.disabled=true;btn.textContent='Saving...';
-  var sdot=document.getElementById('sync-dot-inv');if(sdot)sdot.className='sync-dot pulse';
-  var errors=0;
-  for(var i=0;i<ids.length;i++){
-    var id=ids[i];
-    var input=document.getElementById('qty-'+id);
-    if(!input)continue;
-    var qty=parseInt(input.value)||0;
-    try{
-      await sbPatch('inventory',id,{quantity:qty,updated_by:currentUser,updated_at:new Date().toISOString()});
-      var item=inventoryCache.find(function(x){return x.id===id;});
-      if(item)item.quantity=qty;
-    }catch(e){errors++;}
-  }
-  dirtyItems={};
-  if(sdot)sdot.className=errors?'sync-dot err':'sync-dot ok';
-  btn.disabled=false;btn.textContent='Save All Changes';
-  showToast(errors?'Saved with '+errors+' error(s)':'All changes saved','success');
-}
-
-function printInventory(){window.print();}
-
-// ── Inventory Item Editor (admin only) ───────────────────────────────────────
-var KNOWN_CATEGORIES=['Amenities','Bedding','Cleaning','F&B','Linens','Maintenance','OS&E'];
-
-async function renameCat(oldCat){
-  var newCat=prompt('Rename category "'+oldCat+'" to:',oldCat);
-  if(!newCat||!newCat.trim()||newCat.trim()===oldCat)return;
-  newCat=newCat.trim();
-  var items=inventoryCache.filter(function(x){return x.category===oldCat;});
-  if(!items.length){showToast('No items in this category.','error');return;}
-  try{
-    for(var i=0;i<items.length;i++){
-      await sbPatch('inventory',items[i].id,{category:newCat,updated_by:currentUser,updated_at:new Date().toISOString()});
-      items[i].category=newCat;
-    }
-    showToast('Renamed to "'+newCat+'".','success');
-    renderConfigInventory();
-    renderInventory();
-  }catch(err){showToast('Rename failed: '+err.message,'error');}
-}
-function addNewCategory(){
-  var catName=prompt('New category name:');
-  if(!catName||!catName.trim())return;
-  catName=catName.trim();
-  var exists=inventoryCache.some(function(x){return x.category.toLowerCase()===catName.toLowerCase();});
-  if(exists){showToast('Category already exists.','info');return;}
-  openInvItemForm(null,catName);
-}
-function renderConfigInventory(){
-  var el=document.getElementById('config-inv-items');
-  if(!el)return;
-  if(!inventoryCache.length){
-    el.innerHTML='<div style="color:var(--slate-2);font-size:13px;padding:10px 0;">No inventory items found. Add your first item below.</div>'
-      +'<div style="display:flex;gap:10px;margin-top:10px;">'
-      +'<button class="inv-add-btn" style="flex:1;" onclick="openInvItemForm(null,null)">+ Add New Item</button>'
-      +'<button class="inv-add-btn" style="flex:1;background:var(--teal-hi);" onclick="addNewCategory()">+ Add Category</button>'
-      +'</div>';
-    return;
-  }
-  var byCategory={};
-  inventoryCache.forEach(function(item){
-    if(!byCategory[item.category])byCategory[item.category]=[];
-    byCategory[item.category].push(item);
-  });
-  var html='';
-  Object.keys(byCategory).sort().forEach(function(cat){
-    var escapedCat=cat.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-    html+='<div style="display:flex;align-items:center;justify-content:space-between;margin:14px 0 5px;">'
-      +'<div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal-hi);">'+cat+'</div>'
-      +'<button class="inv-item-edit-btn" style="font-size:10px;padding:2px 10px;" data-cat="'+escapedCat+'" onclick="renameCat(this.dataset.cat)">✏ Rename</button>'
-      +'</div>';
-    byCategory[cat].forEach(function(item){
-      html+='<div class="inv-item-row" id="inv-cfg-row-'+item.id+'">'
-        +'<div style="flex:1;">'
-        +'<div class="inv-item-name">'+item.item_name+'</div>'
-        +'<div class="inv-item-meta">par '+item.par_level+(item.unit?' · '+item.unit:'')+'</div>'
-        +'</div>'
-        +'<button class="inv-item-edit-btn" data-id="'+item.id+'" onclick="openInvItemForm(this.dataset.id,null)">Edit</button>'
-        +'<button class="inv-item-del-btn" data-id="'+item.id+'" onclick="deleteInvItem(this.dataset.id)">✕</button>'
-        +'</div>';
-    });
-  });
-  html+='<div style="display:flex;gap:10px;margin-top:10px;">'
-    +'<button class="inv-add-btn" style="flex:1;" onclick="openInvItemForm(null,null)">+ Add New Item</button>'
-    +'<button class="inv-add-btn" style="flex:1;background:var(--teal-hi);" onclick="addNewCategory()">+ Add Category</button>'
-    +'</div>';
-  el.innerHTML=html;
-}
-function openInvItemForm(id,prefillCat){
-  var item=id?inventoryCache.find(function(x){return x.id===id;}):null;
-  var existingForm=document.getElementById('inv-item-form');
-  if(existingForm)existingForm.remove();
-  var cats=KNOWN_CATEGORIES.slice();
-  inventoryCache.forEach(function(x){if(cats.indexOf(x.category)<0)cats.push(x.category);});
-  cats=cats.sort();
-  if(prefillCat&&cats.indexOf(prefillCat)<0)cats.push(prefillCat);
-  cats=cats.sort();
-  var catOpts=cats.map(function(c){
-    var sel=(item&&item.category===c)||(!item&&prefillCat&&prefillCat===c);
-    return'<option value="'+c+'"'+(sel?' selected':'')+'>'+c+'</option>';
-  }).join('');
-  var formHtml='<div class="inv-edit-card" id="inv-item-form">'
-    +'<div style="font-size:12px;font-weight:700;color:var(--white);margin-bottom:10px;">'+(id?'Edit Item':'New Item')+'</div>'
-    +'<div class="inv-edit-grid">'
-    +'<div class="form-group" style="margin:0;"><label class="form-label">Item Name</label>'
-    +'<input class="form-input" id="iif-name" value="'+(item?item.item_name:'')+'" placeholder="e.g. Shampoo" style="font-size:14px;padding:10px 12px;"/></div>'
-    +'<div class="form-group" style="margin:0;"><label class="form-label">Category</label>'
-    +'<select class="form-select" id="iif-cat" style="font-size:14px;padding:10px 12px;"><option value="">&#8212; Select &#8212;</option>'+catOpts+'</select></div>'
-    +'<div class="form-group" style="margin:0;"><label class="form-label">Par Level</label>'
-    +'<input class="form-input" id="iif-par" type="number" inputmode="numeric" min="0" value="'+(item?item.par_level:'')+'" placeholder="0" style="font-size:14px;padding:10px 12px;"/></div>'
-    +'<div class="form-group" style="margin:0;"><label class="form-label">Unit</label>'
-    +'<input class="form-input" id="iif-unit" value="'+(item&&item.unit?item.unit:'')+'" placeholder="e.g. bottles" style="font-size:14px;padding:10px 12px;"/></div>'
-    +'</div>'
-    +'<div class="inv-edit-row">'
-    +'<button class="save-user-btn" style="flex:1;margin-top:0;" id="iif-save-btn" onclick="saveInvItem(\''+id+'\')">'+(id?'Save Changes':'Add Item')+'</button>'
-    +'<button style="padding:12px 16px;border-radius:var(--radius-sm);border:1.5px solid #E2E8F0;background:var(--navy-3);color:var(--slate);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;" onclick="closeInvItemForm()">Cancel</button>'
-    +'</div>'
-    +'</div>';
-  var el=document.getElementById('config-inv-items');
-  if(id){
-    var row=document.getElementById('inv-cfg-row-'+id);
-    if(row){row.insertAdjacentHTML('afterend',formHtml);row.style.display='none';}
-    else{el.insertAdjacentHTML('beforeend',formHtml);}
-  }else{
-    var addBtn=el.querySelector('.inv-add-btn');
-    if(addBtn)addBtn.insertAdjacentHTML('beforebegin',formHtml);
-    else el.insertAdjacentHTML('beforeend',formHtml);
-  }
-  document.getElementById('iif-name').focus();
-}
-
-function closeInvItemForm(){
-  var form=document.getElementById('inv-item-form');
-  if(form)form.remove();
-  document.querySelectorAll('#config-inv-items .inv-item-row').forEach(function(r){r.style.display='';});
-}
-
-async function saveInvItem(id){
-  var name=document.getElementById('iif-name').value.trim();
-  var cat=document.getElementById('iif-cat').value;
-  var par=parseInt(document.getElementById('iif-par').value)||0;
-  var unit=document.getElementById('iif-unit').value.trim();
-  if(!name){showToast('Item name is required.','error');return;}
-  if(!cat){showToast('Category is required.','error');return;}
-  var btn=document.getElementById('iif-save-btn');
-  btn.disabled=true;btn.textContent='Saving...';
-  try{
-    if(id&&id!=='null'){
-      await sbPatch('inventory',id,{item_name:name,category:cat,par_level:par,unit:unit,updated_by:currentUser,updated_at:new Date().toISOString()});
-      var existing=inventoryCache.find(function(x){return x.id===id;});
-      if(existing){existing.item_name=name;existing.category=cat;existing.par_level=par;existing.unit=unit;}
-    }else{
-      var newId=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-      await sbInsert('inventory',{id:newId,item_name:name,category:cat,par_level:par,unit:unit,quantity:0,updated_by:currentUser,updated_at:new Date().toISOString()});
-      inventoryCache.push({id:newId,item_name:name,category:cat,par_level:par,unit:unit,quantity:0});
-    }
-    showToast(id&&id!=='null'?'Item updated.':'Item added.','success');
-    renderConfigInventory();
-  }catch(err){
-    btn.disabled=false;btn.textContent=id&&id!=='null'?'Save Changes':'Add Item';
-    showToast('Error: '+err.message,'error');
-  }
-}
-
-async function deleteInvItem(id){
-  var item=inventoryCache.find(function(x){return x.id===id;});
-  if(!item)return;
-  if(!confirm('Delete "'+item.item_name+'"? This cannot be undone.'))return;
-  try{
-    await sbDelete('inventory',id);
-    inventoryCache=inventoryCache.filter(function(x){return x.id!==id;});
-    showToast('Item deleted.','success');
-    renderConfigInventory();
-  }catch(err){
-    showToast('Delete failed: '+err.message,'error');
-  }
-}
-
-
-/* ══════════════ PROJECTS ══════════════ */
-var projectsCache=[];
-var projectFilter='active';
-
-async function loadProjects(){
-  var dot=document.getElementById('sync-dot-projects');
-  if(dot)dot.style.background='#F59E0B';
-  try{
-    var data=await sbGet('projects','order=created_at.desc');
-    projectsCache=data||[];
-    renderProjects();
-    if(dot)dot.style.background='#22C55E';
-  }catch(e){
-    showToast('Error loading projects: '+e.message,'error');
-    if(dot)dot.style.background='#EF4444';
-  }
-}
-
-function setProjectFilter(f){
-  projectFilter=f;
-  ['active','completed','all'].forEach(function(k){
-    var el=document.getElementById('pf-'+k);
-    if(el)el.classList.toggle('active',k===f);
-  });
-  renderProjects();
-}
-
-function renderProjects(){
-  var el=document.getElementById('projects-body');
-  if(!el)return;
-  var list=projectsCache.filter(function(p){
-    if(projectFilter==='active')return p.status==='active';
-    if(projectFilter==='completed')return p.status==='completed';
-    return true;
-  });
-  if(!list.length){
-    el.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--slate-2);font-size:14px;">No '+projectFilter+' projects</div>';
-    return;
-  }
-  el.innerHTML=list.map(function(p){
-    var active=p.status==='active';
-    var pri=p.priority||'normal';
-    var priLabel=pri==='high'?'🔴 High':pri==='low'?'🔵 Low':'🟡 Normal';
-    var created=p.created_at?new Date(p.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
-    var completedStr=p.completed_at?'<span>✓ Done '+new Date(p.completed_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})+'</span>':'';
-    return '<div class="project-card">'
-      +'<div class="project-card-header">'
-      +'<div class="project-title">'+p.title+'</div>'
-      +'<div class="project-status-pill '+(active?'project-status-active':'project-status-done')+'">'+(active?'● Active':'✓ Done')+'</div>'
-      +'</div>'
-      +(p.category?'<div class="project-cat-badge">'+p.category+'</div>':'')
-      +(p.description?'<div class="project-desc">'+p.description+'</div>':'')
-      +'<div class="project-meta">'
-      +(p.assigned_to?'<span>👤 '+p.assigned_to+'</span>':'')
-      +'<span>'+priLabel+'</span>'
-      +(created?'<span>📅 '+created+'</span>':'')
-      +completedStr
-      +'</div>'
-      +(p.notes?'<div style="font-size:12px;color:var(--slate-2);background:rgba(255,255,255,0.04);border-radius:8px;padding:8px 10px;margin-bottom:8px;">'+p.notes+'</div>':'')
-      +(isAdmin?'<div class="project-actions">'
-        +'<button class="project-action-btn project-btn-edit" data-id="'+p.id+'" onclick="openProjectForm(this.dataset.id)">Edit</button>'
-        +(active?'<button class="project-action-btn project-btn-done" data-id="'+p.id+'" onclick="completeProject(this.dataset.id)">Mark Done</button>':'')
-        +(!active?'<button class="project-action-btn project-btn-reopen" data-id="'+p.id+'" onclick="reopenProject(this.dataset.id)">Reopen</button>':'')
-        +'<button class="project-action-btn project-btn-del" data-id="'+p.id+'" onclick="deleteProject(this.dataset.id)">Delete</button>'
-        +'</div>':'')
-      +'</div>';
-  }).join('');
-}
-
-function openProjectForm(id){
-  var p=id?projectsCache.find(function(x){return x.id===id;}):null;
-  var wrap=document.getElementById('project-form-wrap');
-  if(!wrap)return;
-  var cats=['Cleaning','Repair','Maintenance','Landscaping','Safety','General'];
-  var catOpts=cats.map(function(c){return'<option value="'+c+'"'+(p&&p.category===c?' selected':'')+'>'+c+'</option>';}).join('');
-  wrap.innerHTML='<div class="project-form">'
-    +'<div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:12px;">'+(id?'Edit Project':'New Project')+'</div>'
-    +'<div class="form-group" style="margin:0 0 10px;"><label class="form-label">Title *</label>'
-    +'<input class="form-input" id="pf-title" value="'+(p?p.title:'')+'" placeholder="e.g. Deep clean pool area"/></div>'
-    +'<div class="form-group" style="margin:0 0 10px;"><label class="form-label">Category</label>'
-    +'<select class="form-select" id="pf-cat"><option value="">— Select —</option>'+catOpts+'</select></div>'
-    +'<div class="form-group" style="margin:0 0 10px;"><label class="form-label">Description</label>'
-    +'<textarea class="form-input" id="pf-desc" rows="2" placeholder="Details..." style="resize:vertical;">'+(p?p.description||'':'')+'</textarea></div>'
-    +'<div style="display:flex;gap:10px;">'
-    +'<div class="form-group" style="margin:0;flex:1;"><label class="form-label">Assigned To</label>'
-    +'<input class="form-input" id="pf-assigned" value="'+(p?p.assigned_to||'':'')+'" placeholder="Staff name"/></div>'
-    +'<div class="form-group" style="margin:0;flex:1;"><label class="form-label">Priority</label>'
-    +'<select class="form-select" id="pf-priority">'
-    +'<option value="normal"'+(p&&p.priority==='normal'?' selected':'')+'>Normal</option>'
-    +'<option value="high"'+(p&&p.priority==='high'?' selected':'')+'>High</option>'
-    +'<option value="low"'+(p&&p.priority==='low'?' selected':'')+'>Low</option>'
-    +'</select></div></div>'
-    +'<div class="form-group" style="margin:10px 0 14px;"><label class="form-label">Notes</label>'
-    +'<textarea class="form-input" id="pf-notes" rows="2" placeholder="Additional notes..." style="resize:vertical;">'+(p?p.notes||'':'')+'</textarea></div>'
-    +'<div style="display:flex;gap:10px;">'
-    +'<button class="inv-add-btn" style="flex:1;" id="pf-save-btn" data-id="'+(id||'')+'" onclick="saveProject(this.dataset.id||null)">'+(id?'Save Changes':'Create Project')+'</button>'
-    +'<button class="inv-add-btn" style="flex:1;background:rgba(100,116,139,0.2);color:var(--slate);" onclick="closeProjectForm()">Cancel</button>'
-    +'</div></div>';
-  wrap.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-
-function closeProjectForm(){
-  var wrap=document.getElementById('project-form-wrap');
-  if(wrap)wrap.innerHTML='';
-}
-
-async function saveProject(id){
-  var title=document.getElementById('pf-title').value.trim();
-  var cat=document.getElementById('pf-cat').value;
-  var desc=document.getElementById('pf-desc').value.trim();
-  var assigned=document.getElementById('pf-assigned').value.trim();
-  var priority=document.getElementById('pf-priority').value;
-  var notes=document.getElementById('pf-notes').value.trim();
-  if(!title){showToast('Title is required.','error');return;}
-  var btn=document.getElementById('pf-save-btn');
-  btn.disabled=true;btn.textContent='Saving...';
-  try{
-    var now=new Date().toISOString();
-    if(id&&id!==''){
-      await sbPatch('projects',id,{title:title,category:cat,description:desc,assigned_to:assigned,priority:priority,notes:notes,updated_at:now});
-      var ex=projectsCache.find(function(x){return x.id===id;});
-      if(ex){ex.title=title;ex.category=cat;ex.description=desc;ex.assigned_to=assigned;ex.priority=priority;ex.notes=notes;ex.updated_at=now;}
-    }else{
-      var nid='proj-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
-      var rec={id:nid,title:title,category:cat,description:desc,assigned_to:assigned,priority:priority,notes:notes,status:'active',created_by:currentUser?currentUser.name:'',created_at:now,updated_at:now,completed_at:null};
-      await sbInsert('projects',rec);
-      projectsCache.unshift(rec);
-    }
-    closeProjectForm();
-    renderProjects();
-    renderHome();
-    showToast(id&&id!==''?'Project updated.':'Project created.','success');
-  }catch(e){
-    btn.disabled=false;btn.textContent=id&&id!==''?'Save Changes':'Create Project';
-    showToast('Error: '+e.message,'error');
-  }
-}
-
-async function completeProject(id){
-  if(!confirm('Mark this project as completed?'))return;
-  var now=new Date().toISOString();
-  try{
-    await sbPatch('projects',id,{status:'completed',completed_at:now,updated_at:now});
-    var p=projectsCache.find(function(x){return x.id===id;});
-    if(p){p.status='completed';p.completed_at=now;}
-    renderProjects();renderHome();
-    showToast('Project completed!','success');
-  }catch(e){showToast('Error: '+e.message,'error');}
-}
-
-async function reopenProject(id){
-  var now=new Date().toISOString();
-  try{
-    await sbPatch('projects',id,{status:'active',completed_at:null,updated_at:now});
-    var p=projectsCache.find(function(x){return x.id===id;});
-    if(p){p.status='active';p.completed_at=null;}
-    renderProjects();renderHome();
-    showToast('Project reopened.','success');
-  }catch(e){showToast('Error: '+e.message,'error');}
-}
-
-async function deleteProject(id){
-  var p=projectsCache.find(function(x){return x.id===id;});
-  if(!p||!confirm('Delete "'+p.title+'"? This cannot be undone.'))return;
-  try{
-    await sbDelete('projects',id);
-    projectsCache=projectsCache.filter(function(x){return x.id!==id;});
-    renderProjects();renderHome();
-    showToast('Project deleted.','success');
-  }catch(e){showToast('Error: '+e.message,'error');}
-}
-/* ══════════════ END PROJECTS ══════════════ */
-function renderHome(){
-  var all=allRooms(),vr=[],oos=[],ooo=[];
-  all.forEach(function(n){var s=getRoomStatus(n);if(s==='OOO')ooo.push(n);else if(s==='OOS')oos.push(n);else vr.push(n);});
-  var el=document.getElementById('home-kpi-vr');if(el)el.textContent=vr.length;
-  var el2=document.getElementById('home-kpi-oos');if(el2)el2.textContent=oos.length;
-  var el3=document.getElementById('home-kpi-ooo');if(el3)el3.textContent=ooo.length;
-  var el4=document.getElementById('home-kpi-all');if(el4)el4.textContent=all.length;
-  var sd=document.getElementById('sync-dot-home');if(sd)sd.className='sync-dot ok';
-  var now=new Date();
-  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var dateEl=document.getElementById('home-date');
-  if(dateEl)dateEl.textContent=days[now.getDay()]+', '+months[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
-  // Projects summary
-  var projWrap=document.getElementById('home-projects-wrap');
-  if(projWrap){
-    var active=projectsCache.filter(function(p){return p.status==='active';});
-    if(active.length===0){
-      projWrap.innerHTML='<div style="color:var(--slate-2);font-size:13px;padding:8px 0;">No active projects.</div>';
-    }else{
-      projWrap.innerHTML=active.slice(0,3).map(function(p){
-        var pri=p.priority==='high'?'🔴':p.priority==='low'?'🔵':'🟡';
-        return '<div class="home-proj-card" onclick="gotoProjectsActive()">'
-          +'<div class="home-proj-title">'+pri+' '+p.title+'</div>'
-          +'<div class="home-proj-meta">'+(p.category||'General')+(p.assigned_to?' · 👤 '+p.assigned_to:'')+'</div>'
-          +'</div>';
-      }).join('')
-      +(active.length>3?'<div style="font-size:12px;color:var(--slate-2);text-align:center;padding:4px;cursor:pointer;" onclick="gotoProjectsActive()">+' +(active.length-3)+' more →</div>':'');
-    }
-  }
-  var projCount=document.getElementById('home-proj-count');
-  if(projCount)projCount.textContent=projectsCache.filter(function(p){return p.status==='active';}).length;
-}
-function gotoProjectsActive(){projectFilter='active';gotoScreen('projects');}
-
-function setReportFilter(f){reportFilter=f;}
-
-function printReport(){
-  // Ensure report screen is active before printing
-  if(!document.getElementById('screen-report').classList.contains('active')){
-    gotoScreen('report');
-  }
-  setTimeout(function(){window.print();},300);
-}
-
-
-loadStaff();
-
+})();
 </script>
 </body>
 </html>
