@@ -509,6 +509,8 @@ function showToast(msg,type='success'){
 /* ============ STAFF AUTH + ADMIN (staff_config driven) ============ */
 var STAFF = [];
 var CURRENT_STAFF = null;
+var INP = 'width:100%;padding:12px;font-size:15px;color:var(--white);background:var(--navy-3);border:1.5px solid rgba(255,255,255,.12);border-radius:var(--radius-sm);outline:none;';
+var LBL = 'display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:6px;';
 
 function esc2(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
 
@@ -522,31 +524,41 @@ async function loadStaff(){
 
 function injectPanels(){
   if(document.getElementById('screen-pinchange')) return;
-  var wrap = document.createElement('div');
-  wrap.innerHTML =
-   '<div class="screen" id="screen-pinchange" style="padding:22px 16px;max-width:460px;margin:0 auto;">' +
-     '<div style="font:600 11px system-ui;letter-spacing:.12em;text-transform:uppercase;color:#7a8a99;">Security</div>' +
-     '<h2 style="font:700 20px system-ui;margin:6px 0 8px;color:#0A1628;">Set your PIN</h2>' +
-     '<p style="font:400 14px/1.5 system-ui;color:#4a5866;margin:0 0 18px;">You are signing in with the temporary PIN. Choose a new 4-digit PIN before continuing. Only you will know it.</p>' +
-     '<label style="font:600 12px system-ui;color:#4a5866;display:block;margin-bottom:5px;">New 4-digit PIN</label>' +
-     '<input id="pin-new" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" style="width:100%;padding:12px;font:400 16px system-ui;border:1px solid #d5dde5;border-radius:9px;margin-bottom:14px;">' +
-     '<label style="font:600 12px system-ui;color:#4a5866;display:block;margin-bottom:5px;">Confirm new PIN</label>' +
-     '<input id="pin-new2" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" style="width:100%;padding:12px;font:400 16px system-ui;border:1px solid #d5dde5;border-radius:9px;margin-bottom:18px;">' +
-     '<button id="pin-save" style="width:100%;padding:13px;font:600 15px system-ui;background:#0A1628;color:#fff;border:0;border-radius:9px;cursor:pointer;">Save PIN and continue</button>' +
-     '<div id="pin-msg" style="font:400 13px system-ui;color:#a34428;margin-top:12px;min-height:18px;"></div>' +
-   '</div>' +
-   '<div class="screen" id="screen-admin" style="padding:18px 14px 90px;max-width:760px;margin:0 auto;">' +
-     '<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">' +
-       '<div><div style="font:600 11px system-ui;letter-spacing:.12em;text-transform:uppercase;color:#7a8a99;">Master access</div>' +
-       '<h2 style="font:700 20px system-ui;margin:4px 0 0;color:#0A1628;">Staff configuration</h2></div>' +
-       '<button id="admin-back" style="margin-left:auto;padding:9px 14px;font:600 13px system-ui;background:#fff;border:1px solid #d5dde5;border-radius:8px;cursor:pointer;">Done</button>' +
-     '</div>' +
-     '<p style="font:400 13px/1.5 system-ui;color:#4a5866;margin:8px 0 16px;">Rename an open slot and switch it on to add a team member. Switch a row off to remove access without deleting their history.</p>' +
-     '<div id="admin-list"></div>' +
-   '</div>';
-  while(wrap.firstChild) document.body.appendChild(wrap.firstChild);
+  var app = document.getElementById('app');
+  if(!app) return;
+
+  var p = document.createElement('div');
+  p.className = 'screen'; p.id = 'screen-pinchange';
+  p.innerHTML =
+    '<div class="topbar"><div class="topbar-brand">Security</div>' +
+      '<div class="topbar-title">Set your PIN</div></div>' +
+    '<div class="scroll-body">' +
+      '<p style="font-size:14px;line-height:1.55;color:var(--slate);margin:0 0 20px;">You signed in with the temporary PIN. Choose a new 4-digit PIN before continuing. Only you will know it.</p>' +
+      '<label style="' + LBL + '">New 4-digit PIN</label>' +
+      '<input id="pin-new" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" style="' + INP + 'margin-bottom:16px;">' +
+      '<label style="' + LBL + '">Confirm new PIN</label>' +
+      '<input id="pin-new2" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" style="' + INP + 'margin-bottom:22px;">' +
+      '<button id="pin-save" class="btn btn-primary">Save PIN and Continue</button>' +
+      '<button id="pin-cancel" class="btn btn-secondary">Cancel</button>' +
+      '<div id="pin-msg" style="font-size:13px;color:#FCA5A5;margin-top:14px;min-height:18px;"></div>' +
+    '</div>';
+  app.appendChild(p);
+
+  var a = document.createElement('div');
+  a.className = 'screen'; a.id = 'screen-admin';
+  a.innerHTML =
+    '<div class="topbar" style="display:flex;align-items:center;gap:10px;">' +
+      '<div style="flex:1;"><div class="topbar-brand">Master access</div>' +
+      '<div class="topbar-title">Staff Configuration</div></div>' +
+      '<button id="admin-back" class="topbar-back">Done</button></div>' +
+    '<div class="scroll-body">' +
+      '<p style="font-size:13px;line-height:1.55;color:var(--slate);margin:0 0 16px;">Rename an open slot and switch it On to add a team member. Switch a row Off to remove access without deleting their history.</p>' +
+      '<div id="admin-list"></div>' +
+    '</div>';
+  app.appendChild(a);
 
   document.getElementById('pin-save').addEventListener('click', savePin);
+  document.getElementById('pin-cancel').addEventListener('click', function(){ CURRENT_STAFF=null; gotoScreen('login'); });
   document.getElementById('admin-back').addEventListener('click', function(){ gotoScreen('log'); });
 }
 
@@ -554,18 +566,19 @@ function renderAdmin(){
   var box = document.getElementById('admin-list');
   box.innerHTML = STAFF.map(function(s){
     var isMe = s.id === (CURRENT_STAFF && CURRENT_STAFF.id);
-    return '<div style="border:1px solid ' + (s.active?'#d5dde5':'#e8ecf0') + ';border-radius:11px;padding:13px;margin-bottom:10px;background:' + (s.active?'#fff':'#f7f9fb') + ';">' +
-      '<div style="display:flex;gap:8px;align-items:center;margin-bottom:9px;">' +
-        '<input data-f="name" data-id="' + esc2(s.id) + '" value="' + esc2(s.name) + '" style="flex:1;min-width:0;padding:9px;font:600 14px system-ui;border:1px solid #d5dde5;border-radius:7px;">' +
-        '<label style="font:600 12px system-ui;color:#4a5866;display:flex;align-items:center;gap:5px;white-space:nowrap;"><input type="checkbox" data-f="active" data-id="' + esc2(s.id) + '"' + (s.active?' checked':'') + (isMe?' disabled':'') + '>On</label>' +
+    var dim = s.active ? '' : 'opacity:.55;';
+    return '<div class="card" style="' + dim + '"><div style="padding:13px;">' +
+      '<div style="display:flex;gap:9px;align-items:center;margin-bottom:10px;">' +
+        '<input data-f="name" data-id="' + esc2(s.id) + '" value="' + esc2(s.name) + '" style="' + INP + 'flex:1;min-width:0;font-weight:700;padding:9px;font-size:14px;">' +
+        '<label style="font-size:12px;font-weight:600;color:var(--slate);display:flex;align-items:center;gap:5px;white-space:nowrap;"><input type="checkbox" data-f="active" data-id="' + esc2(s.id) + '"' + (s.active?' checked':'') + (isMe?' disabled':'') + ' style="accent-color:var(--teal);width:17px;height:17px;">On</label>' +
       '</div>' +
-      '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
-        '<input data-f="role" data-id="' + esc2(s.id) + '" value="' + esc2(s.role) + '" placeholder="Role" style="flex:2;min-width:130px;padding:8px;font:400 13px system-ui;border:1px solid #d5dde5;border-radius:7px;">' +
-        '<input data-f="pin" data-id="' + esc2(s.id) + '" value="' + esc2(s.pin) + '" maxlength="4" inputmode="numeric" placeholder="PIN" style="width:78px;padding:8px;font:400 13px system-ui;border:1px solid #d5dde5;border-radius:7px;">' +
-        '<label style="font:600 12px system-ui;color:#4a5866;display:flex;align-items:center;gap:5px;white-space:nowrap;"><input type="checkbox" data-f="is_admin" data-id="' + esc2(s.id) + '"' + (s.is_admin?' checked':'') + (isMe?' disabled':'') + '>Master</label>' +
-        '<button data-save="' + esc2(s.id) + '" style="margin-left:auto;padding:8px 14px;font:600 13px system-ui;background:#0A1628;color:#fff;border:0;border-radius:7px;cursor:pointer;">Save</button>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">' +
+        '<input data-f="role" data-id="' + esc2(s.id) + '" value="' + esc2(s.role) + '" placeholder="Role" style="' + INP + 'flex:2;min-width:120px;padding:8px;font-size:13px;">' +
+        '<input data-f="pin" data-id="' + esc2(s.id) + '" value="' + esc2(s.pin) + '" maxlength="4" inputmode="numeric" placeholder="PIN" style="' + INP + 'width:70px;flex:0 0 auto;padding:8px;font-size:13px;text-align:center;">' +
+        '<label style="font-size:12px;font-weight:600;color:var(--slate);display:flex;align-items:center;gap:5px;white-space:nowrap;"><input type="checkbox" data-f="is_admin" data-id="' + esc2(s.id) + '"' + (s.is_admin?' checked':'') + (isMe?' disabled':'') + ' style="accent-color:var(--teal);width:17px;height:17px;">Master</label>' +
+        '<button data-save="' + esc2(s.id) + '" style="margin-left:auto;padding:9px 16px;font-size:13px;font-weight:700;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);cursor:pointer;">Save</button>' +
       '</div>' +
-    '</div>';
+    '</div></div>';
   }).join('');
 
   box.querySelectorAll('[data-save]').forEach(function(btn){
@@ -633,6 +646,8 @@ async function enterApp(){
     document.getElementById('user-pill-dash').textContent = currentUser;
     addAdminButton();
     gotoScreen('log');
+    if(btn){ btn.disabled=false; btn.textContent='Sign In to Room Tracker'; }
+    if(stt) stt.textContent='';
   }catch(err){
     if(stt) stt.textContent='Connection error: ' + err.message;
     if(btn){ btn.disabled=false; btn.textContent='Sign In to Room Tracker'; }
@@ -645,7 +660,7 @@ function addAdminButton(){
   var pill=document.getElementById('user-pill'); if(!pill||!pill.parentNode) return;
   var b=document.createElement('button');
   b.id='admin-open'; b.textContent='Config';
-  b.style.cssText='margin-left:8px;padding:5px 11px;font:600 12px system-ui;background:#0A1628;color:#fff;border:0;border-radius:20px;cursor:pointer;';
+  b.style.cssText='margin-left:8px;padding:5px 12px;font-size:12px;font-weight:700;background:var(--teal);color:#fff;border:none;border-radius:20px;cursor:pointer;';
   b.addEventListener('click', function(){ renderAdmin(); gotoScreen('admin'); });
   pill.parentNode.insertBefore(b, pill.nextSibling);
 }
@@ -656,22 +671,18 @@ doLogin = async function(){
   if(!sEl.value){ showToast('Please select your name.','error'); return; }
   if(pEl.value.length!==4){ showToast('Enter a 4-digit PIN.','error'); return; }
   var chosenId = sEl.value;
+  var reset=function(){ btn.disabled=false; btn.textContent='Sign In to Room Tracker'; stt.textContent=''; };
   btn.disabled=true; btn.textContent='Connecting...'; stt.textContent='Verifying...';
-  try{ await loadStaff(); sEl.value = chosenId; }catch(e){}
+  try{ await loadStaff(); sEl.value = chosenId; }catch(e){ showToast('Cannot reach the cloud.','error'); reset(); return; }
   var row = STAFF.filter(function(s){ return s.id===chosenId && s.active; })[0];
-  if(!row){ showToast('That account is no longer active.','error'); btn.disabled=false; btn.textContent='Sign In to Room Tracker'; stt.textContent=''; return; }
-  if(String(row.pin) !== pEl.value){ showToast('Incorrect PIN.','error'); btn.disabled=false; btn.textContent='Sign In to Room Tracker'; stt.textContent=''; pEl.value=''; return; }
+  if(!row){ showToast('That account is no longer active.','error'); reset(); return; }
+  if(String(row.pin) !== pEl.value){ showToast('Incorrect PIN.','error'); pEl.value=''; reset(); return; }
   CURRENT_STAFF = row;
   currentUser = row.name;
   pEl.value='';
   injectPanels();
-  if(row.must_change_pin){
-    stt.textContent=''; btn.disabled=false; btn.textContent='Sign In to Room Tracker';
-    gotoScreen('pinchange');
-    return;
-  }
+  if(row.must_change_pin){ reset(); gotoScreen('pinchange'); return; }
   await enterApp();
-  btn.disabled=false; btn.textContent='Sign In to Room Tracker';
 };
 
 var __origLogout = doLogout;
@@ -681,9 +692,9 @@ doLogout = function(){
   __origLogout();
 };
 
-(async function(){
-  injectPanels();
-  try{ await loadStaff(); }catch(e){ }
+(function(){
+  var boot=function(){ injectPanels(); loadStaff().catch(function(){}); };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
 </script>
 
