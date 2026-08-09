@@ -514,6 +514,12 @@ var LBL = 'display:block;font-size:11px;font-weight:700;letter-spacing:.08em;tex
 
 function esc2(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
 
+async function sbPatchStaff(id, body){
+  var hdrs = Object.assign({}, H, {'Prefer':'return=minimal'});
+  var r = await fetch(SUPA_URL + '/rest/v1/staff_config?id=eq.' + encodeURIComponent(id), {method:'PATCH', headers:hdrs, body:JSON.stringify(body)});
+  if(!r.ok) throw new Error(await r.text());
+}
+
 async function loadStaff(){
   STAFF = await sbGet('staff_config','select=id,name,pin,role,is_admin,must_change_pin,active,sort_order&order=sort_order.asc');
   var sel = document.getElementById('login-staff');
@@ -607,7 +613,8 @@ async function saveStaffRow(id){
   var admins = STAFF.filter(function(s){ return s.id!==id && s.is_admin && s.active; }).length;
   if(!payload.is_admin && admins===0){ showToast('At least one master account is required.','error'); return; }
   try{
-    await sbUpsert('staff_config', payload);
+    delete payload.id;
+    await sbPatchStaff(id, payload);
     await loadStaff();
     renderAdmin();
     showToast(name + ' saved');
@@ -623,10 +630,8 @@ async function savePin(){
   if(a!==b){ m.textContent='The two PINs do not match.'; return; }
   if(a==='1234' || a==='0000'){ m.textContent='Choose something other than the default PIN.'; return; }
   try{
-    await sbUpsert('staff_config', {
-      id: CURRENT_STAFF.id, name: CURRENT_STAFF.name, role: CURRENT_STAFF.role,
-      pin: a, is_admin: CURRENT_STAFF.is_admin, active: true,
-      must_change_pin: false, sort_order: CURRENT_STAFF.sort_order,
+    await sbPatchStaff(CURRENT_STAFF.id, {
+      pin: a, must_change_pin: false,
       updated_at: new Date().toISOString()
     });
     CURRENT_STAFF.pin = a; CURRENT_STAFF.must_change_pin = false;
