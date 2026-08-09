@@ -376,22 +376,22 @@ var ROOM_TYPES = {
 111:'RM1',112:'RM3',113:'RM3',114:'RM3',115:'RM3',116:'RM3',117:'RM3',118:'RM3',119:'RM3',120:'AC1',
 121:'AC1',122:'RM3',123:'RM3',124:'RM3',125:'RM3',126:'RM3',127:'RM3',128:'RM3',129:'RM3',130:'RM3',
 131:'RM3',132:'RM3',133:'RM3',134:'RM3',135:'RM3',140:'RM3',141:'RM3',142:'RM3',143:'RM3',144:'RM3',
-145:'RM3',146:'RM3',147:'RM3',148:'RM3',149:'RM3',150:'RM3',151:'RM3',
+145:'RM3',146:'RM3',147:'RM3',148:'RM3',149:'RM3',150:'RM3',151:'RM3',109:'RM3',
 200:'RM3',201:'RM3',202:'RM3',203:'RM3',204:'RM3',205:'RM3',206:'RM1',207:'RM1',208:'RM3',209:'RM3',
 210:'RM1',211:'RM1',212:'RM3',213:'RM3',214:'RM3',215:'RM3',216:'RM3',217:'RM3',218:'RM3',219:'RM3',
 220:'AC1',221:'AC1',222:'RM3',223:'RM3',224:'RM3',225:'RM3',226:'RM3',227:'RM3',228:'RM3',229:'RM3',
 230:'RM3',231:'RM3',232:'RM3',233:'RM3',234:'RM3',235:'RM3',240:'RM3',241:'RM3',242:'RM3',243:'RM3',
-244:'RM3',245:'RM3',246:'RM3',247:'RM3',248:'RM3',249:'RM3',250:'RM3',251:'RM3',
+244:'RM3',245:'RM3',246:'RM3',247:'RM3',248:'RM3',249:'RM3',250:'RM3',251:'RM3',236:'RM3',237:'RM3',238:'RM3',
 300:'RM3',301:'RM3',302:'RM3',303:'RM3',304:'RM3',305:'RM3',306:'RM3',307:'RM3',308:'RM3',309:'RM3',
 310:'RM3',311:'RM3',312:'RM3',313:'RM3',314:'RM3',315:'RM3',316:'RM3',317:'RM3',318:'RM3',319:'RM3',
 320:'RM2',321:'RM2',322:'RM3',323:'RM3',324:'RM3',325:'RM3',326:'RM3',327:'RM3',328:'RM3',329:'RM3',
 330:'RM3',331:'RM3',332:'RM3',333:'RM3',334:'RM3',335:'RM3',340:'RM3',341:'RM3',342:'RM3',343:'RM3',
-344:'RM3',345:'RM3',346:'RM3',347:'RM3',348:'RM3',349:'RM3',350:'RM3',351:'RM3',
+344:'RM3',345:'RM3',346:'RM3',347:'RM3',348:'RM3',349:'RM3',350:'RM3',351:'RM3',336:'RM3',337:'RM3',338:'RM3',
 400:'RM3',401:'RM3',402:'RM3',403:'RM3',404:'RM3',405:'RM3',406:'RM3',407:'RM3',408:'RM3',409:'RM3',
 410:'RM3',411:'RM3',412:'RM3',413:'RM3',414:'RM3',415:'RM3',416:'RM3',417:'RM3',418:'RM3',419:'RM3',
 420:'RM2',421:'RM2',422:'RM3',423:'RM3',424:'RM3',425:'RM3',426:'RM3',427:'RM3',428:'RM3',429:'RM3',
 430:'RM3',431:'RM3',432:'RM3',433:'RM3',434:'RM3',435:'RM3',440:'RM3',441:'RM3',442:'RM3',443:'RM3',
-444:'RM3',445:'RM3',446:'RM3',447:'RM3',448:'RM3',449:'RM3',450:'RM3',451:'RM3'
+444:'RM3',445:'RM3',446:'RM3',447:'RM3',448:'RM3',449:'RM3',450:'RM3',451:'RM3',436:'RM3',437:'RM3',438:'RM3'
 };
 var TYPE_LABELS = { RM1:'King', RM2:'Single Queen', RM3:'Double Queen', AC1:'Queen ADA', AC2:'ADA Suite' };
 var ADA_TYPES = ['AC1','AC2'];
@@ -520,6 +520,14 @@ function pctf(n){ return n.toFixed(2)+'%'; }
 function usd2(n){ return '$'+n.toFixed(2); }
 function cnt(n){ return Math.round(n).toLocaleString('en-US'); }
 
+
+/* --------- Guestroom personal property inventory (Jul 28 – Aug 2, 2026) --- */
+var INV_ITEMS = ["Nightstand","Hangers","All in one furniture unit","Desk lamp","Safe box","ADA shower chair / transfer bench","Desk chair","Wastebasket - bedroom","Curtain roller / shade","Ice bucket with tray","Mattress","Floor lamp","Electronic door lock","Ironing board","Shower curtain rod","Bed base / frame","Box spring","Telephone","Vanity stool","PTAC / HVAC unit","TV","TV remote","Coffee maker","Alarm clock","Iron","Wastebasket - bathroom","Headboard","Luggage rack / bench","Microwave","Refrigerator","Hair dryer"];
+var INV_SUM = [[0,203,200],[1,1201,-1],[2,198,200],[3,197,200],[4,197,200],[5,3,6],[6,196,200],[7,196,200],[8,196,200],[9,196,200],[10,376,381],[11,195,200],[12,195,200],[13,195,200],[14,195,200],[15,375,381],[16,375,381],[17,194,200],[18,193,200],[19,192,200],[20,190,200],[21,190,200],[22,190,200],[23,189,200],[24,189,200],[25,189,200],[26,369,381],[27,179,200],[28,164,200],[29,156,200],[30,149,200]];
+var INV_SHORT = {"206":[[26,1],[15,1],[10,1],[16,1],[0,1],[11,1],[3,1],[2,1],[6,1],[27,1],[20,1],[21,1],[17,1],[23,1],[12,1],[28,1],[29,1],[22,1],[19,1],[4,1],[24,1],[13,1],[30,1],[7,1],[8,1],[14,1],[25,1],[18,1],[9,1]],"408":[[26,2],[15,2],[10,2],[16,2],[0,1],[11,1],[3,1],[2,1],[6,1],[27,1],[20,1],[21,1],[17,1],[23,1],[12,1],[28,1],[29,1],[22,1],[19,1],[4,1],[24,1],[13,1],[30,1],[7,1],[8,1],[14,1],[25,1],[18,1],[9,1]],"415":[[26,2],[15,2],[10,2],[16,2],[0,1],[11,1],[3,1],[27,1],[20,1],[21,1],[17,1],[23,1],[28,1],[29,1],[22,1],[4,1],[24,1],[13,1],[30,1],[7,1],[14,1],[25,1],[9,1]],"204":[[26,1],[15,1],[10,1],[16,1],[30,1]],"226":[[26,2],[29,1],[30,1]],"101":[[26,1],[20,1],[21,1],[23,1],[28,1],[29,1],[22,1],[19,1],[30,1],[5,1]],"111":[[26,1],[20,1],[21,1],[23,1],[28,1],[29,1],[22,1],[19,1],[30,1]],"113":[[26,2],[20,1],[21,1],[23,1],[28,1],[29,1],[22,1],[19,1],[30,1]],"222":[[11,1]],"430":[[11,1],[30,1]],"322":[[6,1],[28,1],[29,1],[30,1]],"200":[[6,1]],"235":[[27,1],[28,1],[29,1],[24,1],[30,1],[25,1]],"419":[[27,1],[28,1],[13,1]],"423":[[27,1],[28,1],[29,1],[24,1],[30,1]],"435":[[27,1],[28,1],[24,1]],"104":[[27,1]],"110":[[27,1],[29,1],[30,1]],"126":[[27,1],[30,1]],"142":[[27,1]],"145":[[27,1],[29,1],[24,1],[30,1]],"202":[[27,1]],"205":[[27,1]],"225":[[27,1]],"237":[[27,1],[30,1]],"241":[[27,1]],"301":[[27,1],[30,1]],"328":[[27,1],[30,1]],"417":[[27,1],[29,1],[30,1]],"421":[[27,1]],"436":[[20,1],[21,1],[23,1],[28,1],[29,1],[22,1],[30,1],[9,1]],"334":[[20,1],[21,1],[23,1],[12,1],[28,1],[29,1],[22,1],[19,1]],"336":[[20,1],[21,1],[23,1],[12,1],[28,1],[29,1],[22,1],[19,1]],"434":[[20,1],[21,1],[23,1],[12,1],[28,1],[29,1],[22,1],[19,1]],"321":[[17,1],[23,1],[28,1],[30,1],[25,1]],"420":[[17,1],[28,1],[29,1],[24,1],[30,1]],"448":[[17,1],[29,1]],"100":[[28,1],[29,1],[18,1]],"106":[[28,1],[29,1]],"129":[[28,1],[24,1],[30,1]],"147":[[28,1],[29,1],[13,1]],"149":[[28,1],[29,1],[30,1],[25,1]],"221":[[28,1],[29,1],[30,1],[18,1],[5,1]],"227":[[28,1],[29,1],[30,1],[25,1]],"229":[[28,1],[29,1],[30,1],[25,1]],"233":[[28,1],[29,1],[30,1]],"240":[[28,1],[29,1]],"243":[[28,1]],"245":[[28,1],[29,1],[30,1]],"246":[[28,1],[30,1]],"309":[[28,1],[29,1]],"323":[[28,1],[29,1],[30,1]],"325":[[28,1],[29,1],[30,1]],"440":[[28,1],[30,1]],"446":[[28,1],[24,1]],"450":[[28,1],[30,1]],"120":[[29,1],[5,1]],"242":[[29,1],[25,1]],"317":[[29,1],[7,1]],"319":[[29,1]],"332":[[29,1]],"350":[[29,1]],"405":[[29,1]],"409":[[29,1],[18,1]],"411":[[29,1],[30,1],[25,1]],"414":[[29,1]],"438":[[29,1]],"445":[[29,1]],"231":[[24,1]],"102":[[30,1]],"217":[[30,1]],"228":[[30,1]],"230":[[30,1]],"238":[[30,1]],"247":[[30,1]],"249":[[30,1]],"307":[[30,1]],"315":[[30,1]],"343":[[30,1]],"344":[[30,1]],"345":[[30,1]],"406":[[30,1]],"412":[[30,1]],"413":[[30,1]],"442":[[30,1]],"210":[[8,1],[18,1]],"216":[[8,1]],"209":[[14,1],[18,1]],"313":[[14,1],[25,1]],"121":[[5,1]],"220":[[5,1]]};
+var INV_META = {counted:200, sellable:200, uncounted:['134'], missingUnits:318, roomsShort:91, by:'Yovani Ayala and Erika', dates:'Jul 28 – Aug 2, 2026'};
+function invShort(room){ return INV_SHORT[String(room)] || []; }
+
 var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 var NOW=new Date();
 var MONTH_KEY=NOW.getFullYear()+'-'+String(NOW.getMonth()+1).padStart(2,'0');
@@ -561,6 +569,7 @@ var NAV = [
   {id:'log',     ic:'✎', label:'Log',     title:'Log Incident',        sub:'Engineering'},
   {id:'vendors', ic:'❑', label:'Vendors', title:'Vendor Ledger',       sub:'Accounting',    master:true},
   {id:'perf',    ic:'▲', label:'P&L',     title:'Performance',         sub:'July 2026 · Prelim', master:true},
+  {id:'inv',     ic:'▣', label:'Assets',  title:'Guestroom Inventory', sub:'Personal property count', master:true},
   {id:'config',  ic:'⚙', label:'Config',  title:'Staff Configuration', sub:'Master access', master:true}
 ];
 function visibleNav(){ return NAV.filter(function(n){ return !n.master || isMaster(); }); }
@@ -748,6 +757,7 @@ function render(){
   else if(S.route==='log')     p.innerHTML=viewLog();
   else if(S.route==='vendors') p.innerHTML=viewVendors();
   else if(S.route==='perf')    p.innerHTML=viewPerf();
+  else if(S.route==='inv')     p.innerHTML=viewInv();
   else if(S.route==='config')  p.innerHTML=viewConfig();
   else if(S.route==='detail')  { p.innerHTML=viewDetail(); hydrateDetail(); }
 }
@@ -770,6 +780,7 @@ function viewHome(){
   if(isMaster()){
     tiles.push({go:'vendors', ic:'❑', t:'Vendor Ledger', d:MONTHS[NOW.getMonth()]+' invoice pipeline', n:v.closed+'/'+VENDORS.length+' closed', cls:'t'});
     tiles.push({go:'perf',    ic:'▲', t:'Performance', d:PERF.period+' vs budget', n:'EBITDA '+money(PERF.pl[3].a), cls:'t'});
+    tiles.push({go:'inv',     ic:'▣', t:'Guestroom Assets', d:'Personal property count', n:INV_META.missingUnits+' units short', cls:''});
     tiles.push({go:'config',  ic:'⚙', t:'Staff Config', d:'Accounts, PINs and roles', n:S.staff.filter(function(s){return s.active;}).length+' active', cls:''});
   }
   return ''+
@@ -850,6 +861,7 @@ function viewDetail(){
       return '<button class="st '+k+(st===k?' on':'')+'" data-setstatus="'+k+'">'+esc(STATUS_LABEL[k])+'</button>'; }).join('')+'</div>'+
     (flags.length?'<div style="margin-top:14px;"><div class="lbl">Open OS&amp;E flags</div><div style="font-size:12.5px;color:var(--amber-hi);line-height:1.6;">'+flags.map(esc).join('<br>')+'</div></div>':'')+
   '</div></div>'+
+  (invShort(n).length? '<div class="card"><div class="card-h"><h3>Inventory shortages</h3></div><div class="card-b">'+'<div style="font-size:12px;color:var(--slate-2);margin-bottom:9px;">From the guestroom count, '+esc(INV_META.dates)+'</div>'+invShort(n).map(function(p){ return '<div style="display:flex;gap:10px;padding:6px 0;font-size:13px;border-bottom:1px solid var(--line);"><div style="flex:1;">'+esc(INV_ITEMS[p[0]])+'</div><div style="font-family:var(--mono);color:var(--red-hi);">\u2212'+p[1]+'</div></div>'; }).join('')+'</div></div>' : '')+
   '<div class="card"><div class="card-h"><h3>Photo evidence</h3><button class="back" data-camera="1" style="margin-left:auto;">+ Add photo</button></div>'+
     '<div class="card-b" id="d-media"><div style="color:var(--slate-2);font-size:13px;">Loading…</div></div></div>'+
   '<div class="card"><div class="card-h"><h3>Audit log</h3></div>'+
@@ -1041,6 +1053,61 @@ function viewPerf(){
           '<div style="flex:1;">Tracked AP total</div>'+
           '<div style="font-family:var(--mono);color:var(--white);">'+money(apTotal)+'</div>'+
         '</div>'+
+      '</div></div>'+
+    '</div>'+
+  '</div>';
+}
+
+
+/* ---------------------------- INVENTORY --------------------------------- */
+function viewInv(){
+  var M=INV_META;
+  var rows=INV_SUM.map(function(s){ return {n:INV_ITEMS[s[0]], c:s[1], e:s[2], d:(s[2]<0?0:s[2]-s[1])}; })
+                  .sort(function(a,b){ return b.d-a.d; });
+  var worst=rows.filter(function(r){ return r.d>0; });
+  var shortRooms=Object.keys(INV_SHORT).map(Number).sort(function(a,b){return a-b;});
+  return ''+
+  '<div class="card"><div class="card-b" style="padding:15px;">'+
+    '<div style="font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--slate-2);">Guestroom personal property</div>'+
+    '<div style="font-size:17px;font-weight:700;margin:4px 0 0;">Counted '+esc(M.dates)+'</div>'+
+    '<div style="font-size:12.5px;color:var(--slate);margin-top:8px;line-height:1.55;">Walked by '+esc(M.by)+'. '+
+      M.counted+' rooms counted. Room 134 is in the map but was not counted, so the map holds 201 rooms against '+M.sellable+' sellable keys on the P&amp;L \u2014 that one-room gap needs resolving before the count goes to the buyer.</div>'+
+  '</div></div>'+
+  '<div class="grid kpis" style="margin-bottom:6px;">'+
+    kpi(M.counted,'Counted','t')+kpi(M.roomsShort,'Rooms short','a')+
+    kpi(M.missingUnits,'Units short','r')+kpi(1,'Uncounted','a')+
+  '</div>'+
+  '<div class="two">'+
+    '<div>'+
+      '<div class="sect">Largest shortages</div>'+
+      '<div class="card"><div class="card-b" style="padding:2px 15px 8px;">'+
+        worst.map(function(r){
+          var pct=r.e?Math.round((r.c/r.e)*100):0;
+          return '<div style="padding:11px 0;border-bottom:1px solid var(--line);">'+
+            '<div style="display:flex;gap:10px;align-items:baseline;">'+
+              '<div style="flex:1;min-width:0;font-size:13.5px;font-weight:600;">'+esc(r.n)+'</div>'+
+              '<div style="font-family:var(--mono);font-size:13px;">'+r.c+' / '+r.e+'</div>'+
+              '<div style="font-family:var(--mono);font-size:12px;color:var(--red-hi);width:42px;text-align:right;">\u2212'+r.d+'</div>'+
+            '</div>'+
+            '<div style="height:4px;background:var(--navy-3);border-radius:2px;margin-top:7px;overflow:hidden;">'+
+              '<div style="height:4px;width:'+pct+'%;background:'+(pct<85?'var(--red)':pct<95?'var(--amber)':'var(--teal)')+';"></div>'+
+            '</div></div>'; }).join('')+
+      '</div></div>'+
+    '</div>'+
+    '<div>'+
+      '<div class="sect">Rooms with shortages \u00b7 '+shortRooms.length+'</div>'+
+      '<div class="card"><div class="card-b" style="padding:13px 15px;">'+
+        '<div style="display:flex;flex-wrap:wrap;gap:6px;">'+
+          shortRooms.map(function(n){
+            var q=invShort(n).reduce(function(s,x){ return s+x[1]; },0);
+            var col = q>=10?'var(--red)' : q>=4?'var(--amber)' : 'var(--navy-3)';
+            return '<button data-room="'+n+'" style="font-family:var(--mono);font-size:11.5px;padding:5px 9px;border-radius:6px;border:1px solid var(--line-2);background:'+col+';color:var(--white);">'+n+' <span style="opacity:.75;">'+q+'</span></button>'; }).join('')+
+        '</div>'+
+        '<div style="font-size:11.5px;color:var(--slate-2);margin-top:12px;line-height:1.5;">Number after each room is how many units it is short. Tap a room to open it.</div>'+
+      '</div></div>'+
+      '<div class="sect">Note on the workbook</div>'+
+      '<div class="card"><div class="card-b" style="font-size:12.5px;color:var(--slate);line-height:1.6;">'+
+        'The Summary tab expects 1 headboard, bed base, mattress and box spring per room. With 181 double-queen rooms the correct expectation is 381, not 200. Those four lines read as surpluses of +169 to +176 in the workbook when they are in fact shortages of 5 to 12.'+
       '</div></div>'+
     '</div>'+
   '</div>';
