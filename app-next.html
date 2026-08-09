@@ -992,7 +992,7 @@ function pvar(label, a, b, opts){
     '</div>'+
     '<div style="text-align:right;flex-shrink:0;">'+
       '<div style="font-family:var(--mono);font-size:16px;font-weight:600;">'+f(a)+'</div>'+
-      '<div style="font-family:var(--mono);font-size:11px;margin-top:3px;color:'+col+';">'+sign+f(Math.abs(v))+' · '+sign+Math.abs(pct).toFixed(1)+'%</div>'+
+      '<div style="font-family:var(--mono);font-size:11px;margin-top:3px;color:'+col+';">'+sign+(f===pctf?Math.abs(v).toFixed(2)+' pts':f(Math.abs(v)))+' · '+sign+Math.abs(pct).toFixed(1)+'%</div>'+
     '</div></div>';
 }
 function fmtFor(t){ return t==='pct'?pctf : t==='usd'?usd2 : t==='cnt'?cnt : money; }
