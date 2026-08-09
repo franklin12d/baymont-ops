@@ -533,6 +533,16 @@ function invShort(room){ return INV_SHORT[String(room)] || []; }
 var PMS_OUT = {"101":["OOO","Renovations"],"103":["OOO","Renovations"],"105":["OOO","Renovations"],"107":["OOO","Renovations"],"109":["OOO","Renovations"],"111":["OOO","Renovations"],"113":["OOO","Renovations"],"115":["OOO","Renovations"],"117":["OOO","Renovations"],"119":["OOO","Renovations"],"121":["OOO","Ceiling leak"],"122":["OOS","Deep clean"],"133":["OOO","Ceiling leak"],"140":["OOO","Renovations"],"143":["OOO","Ceiling leak"],"215":["OOO","Maintenance"],"216":["OOS","Deep clean"],"227":["OOO","HVAC"],"234":["OOO","Electrical"],"236":["OOO","Electrical"],"246":["OOS","Deep clean"],"301":["OOO","Renovations"],"314":["OOS","Deep clean"],"326":["OOO","HVAC"],"329":["OOO","Other"],"334":["OOO","Electrical"],"336":["OOO","Electrical"],"341":["OOO","Maintenance"],"349":["OOO","Other"],"401":["OOO","Renovations"],"408":["OOO","Renovations"],"415":["OOO","Renovations"],"416":["OOO","Other"],"418":["OOO","Other"],"428":["OOO","HVAC"],"432":["OOO","HVAC"],"434":["OOO","Electrical"],"436":["OOO","Electrical"],"440":["OOO","Room damage"],"443":["OOO","Renovations"]};
 var PMS_META = {asOf:'Aug 9, 2026 6:29 PM', total:200, out:40, ooi:26, ooo:14, sellable:160};
 function pmsReason(room){ var p=PMS_OUT[String(room)]; return p?p[1]:''; }
+var ASSET_ROW='assets:guestroom';
+var ADJ={adj:{},log:[]};
+function adjOf(i){ return ADJ.adj[String(i)]||0; }
+function invRow(i){ return INV_SUM.filter(function(x){return x[0]===i;})[0]; }
+function invCounted(i){ var s=invRow(i); return s?s[1]:0; }
+function invExpected(i){ var s=invRow(i); return s?s[2]:-1; }
+function invTotal(i){ return invCounted(i)+adjOf(i); }
+function stampFmt(iso){ var d=new Date(iso), p=function(x){return String(x).padStart(2,'0');};
+  return p(d.getMonth()+1)+'/'+p(d.getDate())+'/'+d.getFullYear()+' '+p(d.getHours())+':'+p(d.getMinutes()); }
+function lastEdit(i){ for(var k=ADJ.log.length-1;k>=0;k--){ if(ADJ.log[k].i===i) return ADJ.log[k]; } return null; }
 function pmsBreakdown(){
   var m={}; Object.keys(PMS_OUT).forEach(function(k){ var r=PMS_OUT[k][1]; (m[r]=m[r]||[]).push(k); });
   return Object.keys(m).sort(function(a,b){ return m[b].length-m[a].length; }).map(function(r){ return {r:r, rooms:m[r]}; });
@@ -644,7 +654,7 @@ async function enterApp(){
   buildNav();
   setSync('busy');
   try{
-    await Promise.all([ loadRooms(), loadVendors() ]);
+    await Promise.all([ loadRooms(), loadVendors(), loadAdj() ]);
     setSync('ok'); connectRealtime();
   }catch(e){ setSync('err'); toast('Cloud unreachable — data may be stale','err'); }
   go(location.hash.replace('#/','')||'home');
@@ -655,6 +665,27 @@ async function loadRooms(){
   var rows=await db.select('room_state','select=room_number,status,ose_flags');
   var m={}; rows.forEach(function(r){ m[r.room_number]={status:r.status, ose:r.ose_flags||[]}; });
   S.rooms=m;
+}
+async function loadAdj(){
+  try{ var rows=await db.select('app_state','id=eq.'+encodeURIComponent(ASSET_ROW)+'&select=data');
+    var d=(rows[0]&&rows[0].data)||{}; ADJ={adj:d.adj||{}, log:d.log||[]};
+  }catch(e){ ADJ={adj:{},log:[]}; }
+}
+async function saveAdj(){
+  await db.upsert('app_state',{ id:ASSET_ROW, data:ADJ, updated_at:new Date().toISOString() });
+}
+async function applyAdj(itemIdx, delta){
+  if(!isMaster()){ toast('Master access only','err'); return; }
+  var before=invTotal(itemIdx), after=before+delta;
+  if(after<0){ toast('Total cannot go below zero','err'); return; }
+  var snap=JSON.parse(JSON.stringify(ADJ));
+  ADJ.adj[String(itemIdx)]=adjOf(itemIdx)+delta;
+  ADJ.log.push({ t:new Date().toISOString(), u:S.user.name, r:S.user.role, i:itemIdx, d:delta, a:before, b:after });
+  if(ADJ.log.length>400) ADJ.log=ADJ.log.slice(-400);
+  setSync('busy'); render();
+  try{ await saveAdj(); setSync('ok');
+    toast(INV_ITEMS[itemIdx]+' '+(delta>0?'+':'')+delta+' \u2192 '+after,'ok');
+  }catch(e){ ADJ=snap; setSync('err'); toast('Save failed: '+e.message,'err'); render(); }
 }
 async function loadVendors(){
   var rows=await db.select('app_state','id=eq.'+encodeURIComponent(VENDOR_ROW)+'&select=data');
@@ -1090,19 +1121,31 @@ function viewInv(){
   '</div>'+
   '<div class="two">'+
     '<div>'+
-      '<div class="sect">Largest shortages</div>'+
+      '<div class="sect">Item totals'+(isMaster()?' \u00b7 tap \u2212 or + to adjust':'')+'</div>'+
       '<div class="card"><div class="card-b" style="padding:2px 15px 8px;">'+
-        worst.map(function(r){
-          var pct=r.e?Math.round((r.c/r.e)*100):0;
+        INV_SUM.map(function(s){ return s[0]; })
+          .sort(function(a,b){ var da=(invExpected(a)<0?0:invExpected(a)-invTotal(a)), db2=(invExpected(b)<0?0:invExpected(b)-invTotal(b)); return db2-da; })
+          .map(function(i){
+          var tot=invTotal(i), exp=invExpected(i), adj=adjOf(i);
+          var d = exp<0 ? 0 : exp-tot;
+          var pct = exp>0 ? Math.min(100, Math.round((tot/exp)*100)) : 100;
+          var le = lastEdit(i);
           return '<div style="padding:11px 0;border-bottom:1px solid var(--line);">'+
-            '<div style="display:flex;gap:10px;align-items:baseline;">'+
-              '<div style="flex:1;min-width:0;font-size:13.5px;font-weight:600;">'+esc(r.n)+'</div>'+
-              '<div style="font-family:var(--mono);font-size:13px;">'+r.c+' / '+r.e+'</div>'+
-              '<div style="font-family:var(--mono);font-size:12px;color:var(--red-hi);width:42px;text-align:right;">\u2212'+r.d+'</div>'+
+            '<div style="display:flex;gap:9px;align-items:center;">'+
+              '<div style="flex:1;min-width:0;">'+
+                '<div style="font-size:13.5px;font-weight:600;">'+esc(INV_ITEMS[i])+'</div>'+
+                (adj?'<div style="font-family:var(--mono);font-size:10px;color:var(--teal-hi);margin-top:3px;">counted '+invCounted(i)+' \u00b7 '+(adj>0?'+':'')+adj+' adjusted</div>':'')+
+              '</div>'+
+              (isMaster()? '<button data-adj="'+i+'|-1" aria-label="Subtract one" style="width:30px;height:30px;border-radius:7px;border:1px solid var(--line-2);background:var(--navy-3);color:var(--white);font-size:16px;line-height:1;flex-shrink:0;">\u2212</button>' : '')+
+              '<div style="font-family:var(--mono);font-size:14px;min-width:74px;text-align:center;flex-shrink:0;">'+tot+(exp<0?'':' / '+exp)+'</div>'+
+              (isMaster()? '<button data-adj="'+i+'|1" aria-label="Add one" style="width:30px;height:30px;border-radius:7px;border:1px solid var(--line-2);background:var(--navy-3);color:var(--white);font-size:16px;line-height:1;flex-shrink:0;">+</button>' : '')+
+              '<div style="font-family:var(--mono);font-size:12px;width:38px;text-align:right;flex-shrink:0;color:'+(d>0?'var(--red-hi)':'var(--green-hi)')+';">'+(d>0?'\u2212'+d:'ok')+'</div>'+
             '</div>'+
-            '<div style="height:4px;background:var(--navy-3);border-radius:2px;margin-top:7px;overflow:hidden;">'+
+            '<div style="height:4px;background:var(--navy-3);border-radius:2px;margin-top:8px;overflow:hidden;">'+
               '<div style="height:4px;width:'+pct+'%;background:'+(pct<85?'var(--red)':pct<95?'var(--amber)':'var(--teal)')+';"></div>'+
-            '</div></div>'; }).join('')+
+            '</div>'+
+            (le? '<div style="font-family:var(--mono);font-size:9.5px;color:var(--slate-2);margin-top:6px;">last edit '+esc(stampFmt(le.t))+' \u00b7 '+esc(le.u)+' \u00b7 '+(le.d>0?'+':'')+le.d+' ('+le.a+'\u2192'+le.b+')</div>' : '')+
+          '</div>'; }).join('')+
       '</div></div>'+
     '</div>'+
     '<div>'+
@@ -1116,6 +1159,7 @@ function viewInv(){
         '</div>'+
         '<div style="font-size:11.5px;color:var(--slate-2);margin-top:12px;line-height:1.5;">Number after each room is how many units it is short. Tap a room to open it.</div>'+
       '</div></div>'+
+      '<div class="sect">Adjustment history</div>'+'<div class="card"><div class="card-b" style="padding:2px 15px 10px;">'+(ADJ.log.length? ADJ.log.slice().reverse().slice(0,25).map(function(e){return '<div style="padding:9px 0;border-bottom:1px solid var(--line);">'+'<div style="display:flex;gap:9px;align-items:baseline;">'+'<div style="flex:1;min-width:0;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(INV_ITEMS[e.i])+'</div>'+'<div style="font-family:var(--mono);font-size:12.5px;color:'+(e.d>0?'var(--green-hi)':'var(--red-hi)')+';">'+(e.d>0?'+':'')+e.d+'</div>'+'<div style="font-family:var(--mono);font-size:11.5px;color:var(--slate-2);">'+e.a+'\u2192'+e.b+'</div></div>'+'<div style="font-family:var(--mono);font-size:9.5px;color:var(--slate-2);margin-top:4px;">'+esc(stampFmt(e.t))+' \u00b7 '+esc(e.u)+' \u00b7 '+esc(e.r||'')+'</div>'+'</div>'; }).join('') : '<div style="font-size:12.5px;color:var(--slate-2);padding:10px 0;">No adjustments yet. Totals shown are the original walked count.</div>')+'</div></div>'+
       '<div class="sect">Out of service per SynXis · '+PMS_META.out+'</div>'+'<div class="card"><div class="card-b" style="padding:2px 15px 10px;">'+pmsBreakdown().map(function(g){ return '<div style="padding:10px 0;border-bottom:1px solid var(--line);">'+'<div style="display:flex;gap:10px;align-items:baseline;"><div style="flex:1;font-size:13.5px;font-weight:600;">'+esc(g.r)+'</div>'+'<div style="font-family:var(--mono);font-size:13px;color:var(--amber-hi);">'+g.rooms.length+'</div></div>'+'<div style="font-family:var(--mono);font-size:10.5px;color:var(--slate-2);margin-top:4px;line-height:1.5;">'+g.rooms.join(', ')+'</div></div>'; }).join('')+'<div style="font-size:11.5px;color:var(--slate-2);padding-top:10px;line-height:1.5;">'+PMS_META.sellable+' of '+PMS_META.total+' rooms sellable. '+PMS_META.ooi+' out of inventory, '+PMS_META.ooo+' out of order.</div>'+'</div></div>'+
       '<div class="sect">Note on the workbook</div>'+
       '<div class="card"><div class="card-b" style="font-size:12.5px;color:var(--slate);line-height:1.6;">'+
@@ -1185,6 +1229,7 @@ document.addEventListener('click', function(ev){
     setRoomStatus(S.detail, k).then(function(){ render(); toast('Room '+S.detail+' → '+k,'ok'); })
       .catch(function(e){ toast('Failed: '+e.message,'err'); }); return; }
   var fs=t.closest('[data-formstatus]'); if(fs){ S.form.status=fs.getAttribute('data-formstatus'); render(); return; }
+  var aj=t.closest('[data-adj]');       if(aj){ var q=aj.getAttribute('data-adj').split('|'); applyAdj(parseInt(q[0],10), parseInt(q[1],10)); return; }
   var sv=t.closest('[data-save]');      if(sv){ saveStaff(sv.getAttribute('data-save')); return; }
   if(t.closest('[data-camera]')){ $('cam').click(); return; }
   if(t.id==='b-back'){ go('rooms'); return; }
