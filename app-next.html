@@ -330,6 +330,7 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml;charset=utf-
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
 <input type="file" id="cam" accept="image/*" capture="environment" style="display:none;">
+<input type="file" id="docpick" accept=".pdf,.png,.jpg,.jpeg,.xlsx" style="display:none;">
 <script>
 "use strict";
 /* =========================================================================
@@ -533,13 +534,32 @@ function invShort(room){ return INV_SHORT[String(room)] || []; }
 var PMS_OUT = {"101":["OOO","Renovations"],"103":["OOO","Renovations"],"105":["OOO","Renovations"],"107":["OOO","Renovations"],"109":["OOO","Renovations"],"111":["OOO","Renovations"],"113":["OOO","Renovations"],"115":["OOO","Renovations"],"117":["OOO","Renovations"],"119":["OOO","Renovations"],"121":["OOO","Ceiling leak"],"122":["OOS","Deep clean"],"133":["OOO","Ceiling leak"],"140":["OOO","Renovations"],"143":["OOO","Ceiling leak"],"215":["OOO","Maintenance"],"216":["OOS","Deep clean"],"227":["OOO","HVAC"],"234":["OOO","Electrical"],"236":["OOO","Electrical"],"246":["OOS","Deep clean"],"301":["OOO","Renovations"],"314":["OOS","Deep clean"],"326":["OOO","HVAC"],"329":["OOO","Other"],"334":["OOO","Electrical"],"336":["OOO","Electrical"],"341":["OOO","Maintenance"],"349":["OOO","Other"],"401":["OOO","Renovations"],"408":["OOO","Renovations"],"415":["OOO","Renovations"],"416":["OOO","Other"],"418":["OOO","Other"],"428":["OOO","HVAC"],"432":["OOO","HVAC"],"434":["OOO","Electrical"],"436":["OOO","Electrical"],"440":["OOO","Room damage"],"443":["OOO","Renovations"]};
 var PMS_META = {asOf:'Aug 9, 2026 6:29 PM', total:200, out:40, ooi:26, ooo:14, sellable:160};
 function pmsReason(room){ var p=PMS_OUT[String(room)]; return p?p[1]:''; }
+
+/* ---- per-room asset baseline (dedup patterns) + source page refs ------- */
+var RA_PAT=["0000000000000000000000000000000","0010001010001000001100000000000","1011101111201112211111111121111","1011101111211112211111111120100","1111101111211112211111110121010","1211101111211112211111111121110","1311101110211112211100001121000","1311101111211112211111111121111","1411101111211112211111110121011","1411101111211112211111111120111","1411101111211112211111111121101","1411101111211112211111111121110","1411101111211112211111111121111","1411101111311112211111111120110","1511101111211112201111111121101","1511101111211112211111110020000","1511101111211112211111111021000","1511101111211112211111111120111","1511101111211112211111111121000","1611100111211112211111111121000","1611100111211112211111111121111","1611101111111111110111111111000","1611101111111111111000001101000","1611101111111111111111111111110","1611101111111111111111111111111","1611101111210112211000001121001","1611101111211012211111111120011","1611101111211012211111111121001","1611101111211112211000001101000","1611101111211112211111111021000","1611101111211112211111111101100","1611101111211112211111111120110","1611101111211112211111111121000","1611101111211112211111111121010","1611101111211112211111111121011","1611101111211112211111111121101","1611101111211112211111111121110","1611101111211112211111111121111","1611111111111111101111110111000","1711101011211112211111111121101","1711101101111111110111111111111","1711101111111111111111111110100","1711101111201112211111111121110","1711101111211102210111111121111","1711101111211112211111110120011","1711101111211112211111111021000","1711101111211112211111111021101","1711101111211112211111111120110","1711101111211112211111111120111","1711101111211112211111111121000","1711101111211112211111111121001","1711101111211112211111111121110","1711101111211112211111111121111","1811101111111111101111101011010","1811101111111111111111111110111","1811101111111111111111111111001","1811101111111111111111111111101","1811101111111111111111111111110","1811101111211102211111111021111","1811101111211112210111111121101","1811101111211112211111110120000","1811101111211112211111110120100","1811101111211112211111111121001","1811101111211112211111111121010","1811101111211112211111111121101","1811101111211112211111111121110","1811101111211112211111111121111","1811111111111111110111111111001","1911101101211112211111111121111","1911101111211112211111111021100","1911101111211112211111111121101","2611101111211112211111110121111","2611101111211112211111111121111","2711101111211112211111111121110","2811101111211112211111111121110","2811111111211112211111111121111"];
+var RA_ROOMS=["100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","135","140","141","142","143","144","145","146","147","148","149","150","151","200","201","202","203","204","205","206","207","208","209","210","211","212","213","214","215","216","217","218","219","220","221","222","223","224","225","226","227","228","229","230","231","232","233","234","235","236","237","238","240","241","242","243","244","245","246","247","248","249","250","251","300","301","302","303","304","305","306","307","308","309","310","311","312","313","314","315","316","317","318","319","320","321","322","323","324","325","326","327","328","329","330","331","332","333","334","335","336","337","338","340","341","342","343","344","345","346","347","348","349","350","351","400","401","402","403","404","405","406","407","408","409","410","411","412","413","414","415","416","417","418","419","420","421","422","423","424","425","426","427","428","429","430","431","432","433","434","435","436","437","438","440","441","442","443","444","445","446","447","448","449","450","451"];
+var RA_IDX='431639253025371825252916251c4225252525253818254b25250d0c2504250c25252525251125253d251b071d250c14253025173000180c2b2818070c3425440b25251815022525111e10492d33472512250f252f4a32092e222531214125492525251f252525252541253e2525253a25242527252318351320252025251f342525462519251942252525252424332525252523252525252525230525003b2545414140012503251a2636253c2525482525252a252525192c06252321254125250a08250e253f25';
+var ROOM_ASSETS_BIG={"332:1":10,"411:1":10};
+function roomAssetBase(room,i){
+ var k=RA_ROOMS.indexOf(String(room)); if(k<0) return 0;
+ var b=ROOM_ASSETS_BIG[room+':'+i]; if(b!==undefined) return b;
+ var p=RA_PAT[parseInt(RA_IDX.substr(k*2,2),16)]; if(!p) return 0;
+ return parseInt(p.charAt(i),10)||0; }
+var PL_PAGES={"Gross Operating Profit":2,"EBITDA":2,"Occupancy":2,"ADR":2,"RevPAR":2,"Rooms available":2,"Rooms revenue":4,"Rooms expense":5,"Admin & General":9,"Info Systems & Telecom":10,"Sales & Marketing":11,"Franchise royalties":11,"Franchise marketing":11,"Property Operations":12,"Utilities":13,"Occupied rooms":17};
+var GL_PAGES={"40170000":17,"40170060":18,"40170550":21,"40171000":21,"40171050":21,"40171200":22,"40171300":22,"50141200":24,"65170150":30,"65170250":31,"65176150":32,"65176420":32,"65176700":33,"65176750":33,"65541300":34,"65572000":34,"65572065":35,"65572075":35,"70170100":35,"70177400":36,"70177450":36,"70177550":36,"70177600":36,"70177700":37,"72080300":37,"80178100":39,"80178300":39,"80178500":40,"80178650":41,"80178700":41,"80178750":41,"82179000":41,"82179050":41,"82179250":42,"84181100":42,"84182200":42};
+var DOC_META={pl:{n:'DOWN.DE_P&L_07.2026_PRELIM.pdf',p:29},gl:{n:'DOWN.DE_GL_07.2026_PRELIM.pdf',p:68}};
+function pageTag(p){ return p? '<span style="font-family:var(--mono);font-size:9.5px;color:var(--slate-2);border:1px solid var(--line-2);border-radius:4px;padding:1px 5px;margin-left:7px;">p.'+p+'</span>' : ''; }
+
 var ASSET_ROW='assets:guestroom';
-var ADJ={adj:{},log:[]};
+var ADJ={adj:{},room:{},log:[]};
 function adjOf(i){ return ADJ.adj[String(i)]||0; }
 function invRow(i){ return INV_SUM.filter(function(x){return x[0]===i;})[0]; }
 function invCounted(i){ var s=invRow(i); return s?s[1]:0; }
 function invExpected(i){ var s=invRow(i); return s?s[2]:-1; }
-function invTotal(i){ return invCounted(i)+adjOf(i); }
+function roomAdj(room,i){ var r=ADJ.room&&ADJ.room[String(room)]; return (r&&r[String(i)])||0; }
+function roomAssetCount(room,i){ return Math.max(0, roomAssetBase(room,i)+roomAdj(room,i)); }
+function roomAdjTotal(i){ var t=0,R=ADJ.room||{}; for(var k in R){ if(R[k] && R[k][String(i)]) t+=R[k][String(i)]; } return t; }
+function invTotal(i){ return invCounted(i)+adjOf(i)+roomAdjTotal(i); }
 function stampFmt(iso){ var d=new Date(iso), p=function(x){return String(x).padStart(2,'0');};
   return p(d.getMonth()+1)+'/'+p(d.getDate())+'/'+d.getFullYear()+' '+p(d.getHours())+':'+p(d.getMinutes()); }
 function lastEdit(i){ for(var k=ADJ.log.length-1;k>=0;k--){ if(ADJ.log[k].i===i) return ADJ.log[k]; } return null; }
@@ -590,6 +610,7 @@ var NAV = [
   {id:'vendors', ic:'❑', label:'Vendors', title:'Vendor Ledger',       sub:'Accounting',    master:true},
   {id:'perf',    ic:'▲', label:'P&L',     title:'Performance',         sub:'July 2026 · Prelim', master:true},
   {id:'inv',     ic:'▣', label:'Assets',  title:'Guestroom Inventory', sub:'Personal property count', master:true},
+  {id:'docs',    ic:'▤', label:'Reports', title:'Report Library',      sub:'Source documents',        master:true},
   {id:'config',  ic:'⚙', label:'Config',  title:'Staff Configuration', sub:'Master access', master:true}
 ];
 function visibleNav(){ return NAV.filter(function(n){ return !n.master || isMaster(); }); }
@@ -654,7 +675,7 @@ async function enterApp(){
   buildNav();
   setSync('busy');
   try{
-    await Promise.all([ loadRooms(), loadVendors(), loadAdj() ]);
+    await Promise.all([ loadRooms(), loadVendors(), loadAdj(), loadReports() ]);
     setSync('ok'); connectRealtime();
   }catch(e){ setSync('err'); toast('Cloud unreachable — data may be stale','err'); }
   go(location.hash.replace('#/','')||'home');
@@ -668,11 +689,24 @@ async function loadRooms(){
 }
 async function loadAdj(){
   try{ var rows=await db.select('app_state','id=eq.'+encodeURIComponent(ASSET_ROW)+'&select=data');
-    var d=(rows[0]&&rows[0].data)||{}; ADJ={adj:d.adj||{}, log:d.log||[]};
-  }catch(e){ ADJ={adj:{},log:[]}; }
+    var d=(rows[0]&&rows[0].data)||{}; ADJ={adj:d.adj||{}, room:d.room||{}, log:d.log||[]};
+  }catch(e){ ADJ={adj:{},room:{},log:[]}; }
 }
 async function saveAdj(){
   await db.upsert('app_state',{ id:ASSET_ROW, data:ADJ, updated_at:new Date().toISOString() });
+}
+async function applyRoomAdj(room, itemIdx, delta){
+  if(!isMaster()){ toast('Master access only','err'); return; }
+  var before=roomAssetCount(room,itemIdx), after=before+delta;
+  if(after<0){ toast('Cannot go below zero','err'); return; }
+  var snap=JSON.parse(JSON.stringify(ADJ));
+  ADJ.room=ADJ.room||{}; ADJ.room[String(room)]=ADJ.room[String(room)]||{};
+  ADJ.room[String(room)][String(itemIdx)]=roomAdj(room,itemIdx)+delta;
+  ADJ.log.push({ t:new Date().toISOString(), u:S.user.name, r:S.user.role, i:itemIdx, d:delta, a:before, b:after, rm:String(room) });
+  if(ADJ.log.length>400) ADJ.log=ADJ.log.slice(-400);
+  setSync('busy'); render();
+  try{ await saveAdj(); setSync('ok'); toast('Room '+room+' \u00b7 '+INV_ITEMS[itemIdx]+' '+(delta>0?'+':'')+delta+' \u2192 '+after,'ok');
+  }catch(e){ ADJ=snap; setSync('err'); toast('Save failed: '+e.message,'err'); render(); }
 }
 async function applyAdj(itemIdx, delta){
   if(!isMaster()){ toast('Master access only','err'); return; }
@@ -799,6 +833,7 @@ function render(){
   else if(S.route==='vendors') p.innerHTML=viewVendors();
   else if(S.route==='perf')    p.innerHTML=viewPerf();
   else if(S.route==='inv')     p.innerHTML=viewInv();
+  else if(S.route==='docs')    p.innerHTML=viewReports();
   else if(S.route==='config')  p.innerHTML=viewConfig();
   else if(S.route==='detail')  { p.innerHTML=viewDetail(); hydrateDetail(); }
 }
@@ -903,7 +938,18 @@ function viewDetail(){
       return '<button class="st '+k+(st===k?' on':'')+'" data-setstatus="'+k+'">'+esc(STATUS_LABEL[k])+'</button>'; }).join('')+'</div>'+
     (flags.length?'<div style="margin-top:14px;"><div class="lbl">Open OS&amp;E flags</div><div style="font-size:12.5px;color:var(--amber-hi);line-height:1.6;">'+flags.map(esc).join('<br>')+'</div></div>':'')+
   '</div></div>'+
-  (invShort(n).length? '<div class="card"><div class="card-h"><h3>Inventory shortages</h3></div><div class="card-b">'+'<div style="font-size:12px;color:var(--slate-2);margin-bottom:9px;">From the guestroom count, '+esc(INV_META.dates)+'</div>'+invShort(n).map(function(p){ return '<div style="display:flex;gap:10px;padding:6px 0;font-size:13px;border-bottom:1px solid var(--line);"><div style="flex:1;">'+esc(INV_ITEMS[p[0]])+'</div><div style="font-family:var(--mono);color:var(--red-hi);">\u2212'+p[1]+'</div></div>'; }).join('')+'</div></div>' : '')+
+  '<div class="card"><div class="card-h"><h3>Room assets</h3>'+'<span style="margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--slate-2);">'+esc(INV_META.dates)+'</span></div>'+'<div class="card-b" style="padding:4px 15px 10px;">'+INV_ITEMS.map(function(nm,i){
+  var cnt=roomAssetCount(n,i), radj=roomAdj(n,i);
+  var std=(i===26||i===15||i===10||i===16)? (ROOM_TYPES[parseInt(n,10)]==='RM3'?2:1) : (i===1? null : (i===5? (isADA(parseInt(n,10))?1:0) : 1));
+  var short = (std!==null && cnt<std);
+  return '<div style="display:flex;gap:9px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);">'+
+    '<div style="flex:1;min-width:0;font-size:13px;'+(short?'color:var(--red-hi);':'')+'">'+esc(nm)+'</div>'+
+    (radj?'<div style="font-family:var(--mono);font-size:9.5px;color:var(--teal-hi);flex-shrink:0;">'+(radj>0?'+':'')+radj+'</div>':'')+
+    (isMaster()? '<button data-radj="'+n+'|'+i+'|-1" aria-label="Subtract one" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--line-2);background:var(--navy-3);color:var(--white);font-size:15px;line-height:1;flex-shrink:0;">\u2212</button>' : '')+
+    '<div style="font-family:var(--mono);font-size:13.5px;min-width:26px;text-align:center;flex-shrink:0;'+(short?'color:var(--red-hi);':'')+'">'+cnt+'</div>'+
+    (isMaster()? '<button data-radj="'+n+'|'+i+'|1" aria-label="Add one" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--line-2);background:var(--navy-3);color:var(--white);font-size:15px;line-height:1;flex-shrink:0;">+</button>' : '')+
+  '</div>'; }).join('')+
+'<div style="font-size:11px;color:var(--slate-2);padding-top:9px;line-height:1.5;">Edits here roll straight into the Assets totals. Red means below the standard for this room type.</div>'+'</div></div>'+
   '<div class="card"><div class="card-h"><h3>Photo evidence</h3><button class="back" data-camera="1" style="margin-left:auto;">+ Add photo</button></div>'+
     '<div class="card-b" id="d-media"><div style="color:var(--slate-2);font-size:13px;">Loading…</div></div></div>'+
   '<div class="card"><div class="card-h"><h3>Audit log</h3></div>'+
@@ -1013,7 +1059,7 @@ function vendorRow(v){
       '<div class="cv">›</div>'+
     '</div>'+
     (open? '<div class="vdet"><p>'+esc(v.d)+'</p><div class="tags">'+
-      '<span class="tag">GL '+esc(v.gl)+(glName(v.gl)?' · '+esc(glName(v.gl)):'')+'</span><span class="tag t">'+esc(v.f)+'</span>'+
+      '<span class="tag">GL '+esc(v.gl)+(glName(v.gl)?' · '+esc(glName(v.gl)):'')+'</span>'+(GL_PAGES[v.gl]?'<span class="tag">GL p.'+GL_PAGES[v.gl]+'</span>':'')+'<span class="tag t">'+esc(v.f)+'</span>'+
       (v.jul?'<span class="tag">Jul '+money(v.jul)+(v.inv?' · '+v.inv+(v.inv===1?' invoice':' invoices'):'')+'</span>':'')+
       (v.x?'<span class="tag r">Follow-up</span>':'')+(v.w?'<span class="tag a">Verify</span>':'')+
       '</div><div class="steps">'+VSTEPS.map(function(st,i){
@@ -1041,7 +1087,7 @@ function pvar(label, a, b, opts){
   var sign = v >= 0 ? '+' : '−';
   return '<div style="display:flex;align-items:baseline;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);">'+
     '<div style="flex:1;min-width:0;">'+
-      '<div style="font-size:13.5px;font-weight:600;">'+esc(label)+'</div>'+
+      '<div style="font-size:13.5px;font-weight:600;">'+label+'</div>'+
       '<div style="font-family:var(--mono);font-size:10.5px;color:var(--slate-2);margin-top:3px;">Budget '+f(b)+'</div>'+
     '</div>'+
     '<div style="text-align:right;flex-shrink:0;">'+
@@ -1071,17 +1117,17 @@ function viewPerf(){
     '<div>'+
       '<div class="sect">Profit &amp; loss vs budget</div>'+
       '<div class="card"><div class="card-b" style="padding:2px 15px 6px;">'+
-        P.pl.map(function(r){ return pvar(r.k,r.a,r.b,{inv:r.inv}); }).join('')+
+        P.pl.map(function(r){ return pvar(r.k+pageTag(PL_PAGES[r.k]),r.a,r.b,{inv:r.inv}); }).join('')+
       '</div></div>'+
       '<div class="sect">Departmental expense vs budget</div>'+
       '<div class="card"><div class="card-b" style="padding:2px 15px 6px;">'+
-        P.depts.map(function(r){ return pvar(r.k,r.a,r.b,{inv:true}); }).join('')+
+        P.depts.map(function(r){ return pvar(r.k+pageTag(PL_PAGES[r.k]),r.a,r.b,{inv:true}); }).join('')+
       '</div></div>'+
     '</div>'+
     '<div>'+
       '<div class="sect">Statistics vs budget</div>'+
       '<div class="card"><div class="card-b" style="padding:2px 15px 6px;">'+
-        P.stats.map(function(r){ return pvar(r.k,r.a,r.b,{fmt:fmtFor(r.f)}); }).join('')+
+        P.stats.map(function(r){ return pvar(r.k+pageTag(PL_PAGES[r.k]),r.a,r.b,{fmt:fmtFor(r.f)}); }).join('')+
       '</div></div>'+
       '<div class="sect">Top vendors · '+esc(P.period)+'</div>'+
       '<div class="card"><div class="card-b" style="padding:2px 15px 10px;">'+
@@ -1100,6 +1146,80 @@ function viewPerf(){
   '</div>';
 }
 
+
+
+/* ------------------------------ REPORTS --------------------------------- */
+var REPORTS=[];
+var KINDS=[['pl','P&L statement'],['gl','General ledger'],['inv','Inventory count'],['pms','PMS room status'],['other','Other']];
+async function loadReports(){
+  try{ REPORTS=await db.select('reports','select=*&order=created_at.desc'); }catch(e){ REPORTS=[]; }
+}
+function fmtBytes(n){ return n>=1048576 ? (n/1048576).toFixed(1)+' MB' : Math.round(n/1024)+' KB'; }
+async function uploadReport(file){
+  if(!isMaster()){ toast('Master access only','err'); return; }
+  if(file.size>25*1024*1024){ toast('File is larger than 25 MB','err'); return; }
+  var kind=(document.getElementById('rep-kind')||{}).value||'other';
+  var period=((document.getElementById('rep-period')||{}).value||'').trim();
+  var safe=file.name.replace(/[^A-Za-z0-9._-]/g,'_');
+  var path=kind+'/'+Date.now()+'_'+safe;
+  setSync('busy');
+  try{
+    var up=await fetch(SUPA_URL+'/storage/v1/object/reports/'+encodeURI(path), {
+      method:'POST',
+      headers:{ apikey:SUPA_KEY, Authorization:'Bearer '+SUPA_KEY, 'Content-Type':file.type||'application/octet-stream', 'x-upsert':'true' },
+      body:file
+    });
+    if(!up.ok) throw new Error((await up.text()).slice(0,160));
+    await db.insert('reports',{ id:path, path:path, file_name:file.name, kind:kind,
+      period:period||null, size_bytes:file.size, uploaded_by:S.user.name, uploaded_role:S.user.role });
+    await loadReports(); render(); setSync('ok'); toast(file.name+' uploaded','ok');
+  }catch(e){ setSync('err'); toast('Upload failed: '+e.message,'err'); }
+}
+async function openReport(path){
+  try{
+    var r=await fetch(SUPA_URL+'/storage/v1/object/reports/'+encodeURI(path), { headers:{ apikey:SUPA_KEY, Authorization:'Bearer '+SUPA_KEY } });
+    if(!r.ok) throw new Error('not found');
+    var b=await r.blob(); var u=URL.createObjectURL(b);
+    window.open(u,'_blank'); setTimeout(function(){ URL.revokeObjectURL(u); }, 60000);
+  }catch(e){ toast('Could not open: '+e.message,'err'); }
+}
+function viewReports(){
+  var kindName=function(k){ var f=KINDS.filter(function(x){return x[0]===k;})[0]; return f?f[1]:k; };
+  return ''+
+  '<div class="card"><div class="card-b" style="padding:15px;">'+
+    '<div style="font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--slate-2);">Source documents</div>'+
+    '<div style="font-size:17px;font-weight:700;margin:4px 0 0;">Report Library</div>'+
+    '<div style="font-size:12.5px;color:var(--slate);margin-top:8px;line-height:1.55;">Figures in Performance and Vendors carry page references back to these documents. Upload the monthly statements here so any number can be verified against its source.</div>'+
+  '</div></div>'+
+  (isMaster()?
+  '<div class="card"><div class="card-h"><h3>Upload a report</h3></div><div class="card-b">'+
+    '<label class="lbl" for="rep-kind">Document type</label>'+
+    '<div class="mb"><select class="inp" id="rep-kind">'+KINDS.map(function(k){ return '<option value="'+k[0]+'">'+esc(k[1])+'</option>'; }).join('')+'</select></div>'+
+    '<label class="lbl" for="rep-period">Period</label>'+
+    '<div class="mb"><input class="inp" id="rep-period" placeholder="July 2026"></div>'+
+    '<button class="btn btn-p" id="rep-pick">Choose file and upload</button>'+
+    '<div style="font-size:11.5px;color:var(--slate-2);margin-top:10px;line-height:1.5;">PDF, image or spreadsheet, up to 25 MB. Stored in a private bucket and stamped with your account and time.</div>'+
+  '</div></div>' : '')+
+  '<div class="sect">Page references in the current figures</div>'+
+  '<div class="card"><div class="card-b" style="padding:13px 15px;font-size:12.5px;color:var(--slate);line-height:1.7;">'+
+    '<strong style="color:var(--white);">'+esc(DOC_META.pl.n)+'</strong> '+ED+' '+DOC_META.pl.p+' pages<br>'+
+    'Occupancy, ADR, RevPAR, GOP and EBITDA on p.2 '+ED+' rooms revenue p.4 '+ED+' rooms expense p.5 '+ED+' departmental expense p.9 to p.13 '+ED+' occupied rooms p.17.<br><br>'+
+    '<strong style="color:var(--white);">'+esc(DOC_META.gl.n)+'</strong> '+ED+' '+DOC_META.gl.p+' pages<br>'+
+    'Each vendor carries the GL page for its account, from p.17 to p.42.'+
+  '</div></div>'+
+  '<div class="sect">Uploaded '+ED+' '+REPORTS.length+'</div>'+
+  '<div class="card"><div class="card-b" style="padding:2px 15px 10px;">'+
+    (REPORTS.length? REPORTS.map(function(r){
+      return '<div style="padding:11px 0;border-bottom:1px solid var(--line);">'+
+        '<div style="display:flex;gap:10px;align-items:baseline;">'+
+          '<button data-report="'+esc(r.path)+'" style="flex:1;min-width:0;text-align:left;background:none;border:none;color:var(--teal-hi);font-size:13.5px;font-weight:600;padding:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(r.file_name)+'</button>'+
+          '<div style="font-family:var(--mono);font-size:10.5px;color:var(--slate-2);flex-shrink:0;">'+fmtBytes(r.size_bytes||0)+'</div>'+
+        '</div>'+
+        '<div style="font-family:var(--mono);font-size:9.5px;color:var(--slate-2);margin-top:4px;">'+esc(kindName(r.kind))+(r.period?' '+ED+' '+esc(r.period):'')+' '+ED+' '+esc(stampFmt(r.created_at))+' '+ED+' '+esc(r.uploaded_by||'')+'</div>'+
+      '</div>'; }).join('')
+     : '<div style="font-size:12.5px;color:var(--slate-2);padding:12px 0;">Nothing uploaded yet.</div>')+
+  '</div></div>';
+}
 
 /* ---------------------------- INVENTORY --------------------------------- */
 function viewInv(){
@@ -1229,8 +1349,11 @@ document.addEventListener('click', function(ev){
     setRoomStatus(S.detail, k).then(function(){ render(); toast('Room '+S.detail+' → '+k,'ok'); })
       .catch(function(e){ toast('Failed: '+e.message,'err'); }); return; }
   var fs=t.closest('[data-formstatus]'); if(fs){ S.form.status=fs.getAttribute('data-formstatus'); render(); return; }
+  var ra=t.closest('[data-radj]');      if(ra){ var z=ra.getAttribute('data-radj').split('|'); applyRoomAdj(z[0], parseInt(z[1],10), parseInt(z[2],10)); return; }
   var aj=t.closest('[data-adj]');       if(aj){ var q=aj.getAttribute('data-adj').split('|'); applyAdj(parseInt(q[0],10), parseInt(q[1],10)); return; }
   var sv=t.closest('[data-save]');      if(sv){ saveStaff(sv.getAttribute('data-save')); return; }
+  var rp=t.closest('[data-report]');    if(rp){ openReport(rp.getAttribute('data-report')); return; }
+  if(t.id==='rep-pick'){ $('docpick').click(); return; }
   if(t.closest('[data-camera]')){ $('cam').click(); return; }
   if(t.id==='b-back'){ go('rooms'); return; }
   if(t.id==='b-submit'){ submitLog(); return; }
@@ -1257,6 +1380,7 @@ document.addEventListener('keydown', function(ev){
   if(ev.target.id==='f-pin') doLogin();
   if(ev.target.id==='f-p2') savePin();
 });
+$('docpick').addEventListener('change', function(ev){ var f=ev.target.files&&ev.target.files[0]; if(f) uploadReport(f); ev.target.value=''; });
 $('cam').addEventListener('change', function(ev){
   var file=ev.target.files&&ev.target.files[0]; if(!file||!S.detail) return;
   var room=S.detail, rd=new FileReader();
