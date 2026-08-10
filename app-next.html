@@ -1150,6 +1150,7 @@ function viewPerf(){
 
 /* ------------------------------ REPORTS --------------------------------- */
 var REPORTS=[];
+var ED=String.fromCharCode(183);
 var KINDS=[['pl','P&L statement'],['gl','General ledger'],['inv','Inventory count'],['pms','PMS room status'],['other','Other']];
 async function loadReports(){
   try{ REPORTS=await db.select('reports','select=*&order=created_at.desc'); }catch(e){ REPORTS=[]; }
