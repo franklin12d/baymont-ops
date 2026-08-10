@@ -427,7 +427,7 @@ var VENDORS = [
  {n:'AMERICAN MGMT & CONSULTING',c:'corp',gl:'84181100',f:'Monthly',jul:8943.06,inv:2,d:'Building rent, base. Two invoices posted in July.'},
  {n:'BAGEL KING',c:'fnb',gl:'40170060',f:'As needed',w:1,jul:0,d:'No July activity in the ledger. Previously listed as BEGEL KING. Confirm whether the account is still active.'},
  {n:'BIRCH STREET SYSTEMS LLC',c:'tech',gl:'65572000',f:'Monthly',jul:523.76,inv:1,d:'Procurement platform. Systems expense, A&G.'},
- {n:'BOOKING.COM',c:'ota',gl:'40171050',f:'Monthly',jul:11846.02,inv:2,d:'OTA commission. Second largest revenue-share cost after Wyndham.'},
+ {n:'BOOKING.COM',c:'ota',gl:'40171050',f:'Monthly',jul:11846.02,inv:2,d:'OTA commission on invoices. A further $11,054.82 was accrued at month end in V2 (JE 2026-07-0198), taking the July commission charge to about $22,901. Second largest revenue-share cost after Wyndham.'},
  {n:'CBC HOSPITALITY',c:'labor',gl:'VARIOUS',f:'Monthly',x:1,jul:29624.90,inv:34,d:'Largest vendor at the property. July: 34 invoice lines across 19 GL accounts covering contract guest service, night audit, housekeeping, house attendants, inspectors, breakfast and engineering. Must be split by department before transmitting to AD1.'},
  {n:'CINTAS FIRE',c:'eng',gl:'80178500',f:'Monthly',x:1,jul:4124.57,inv:1,d:'Fire and life safety. Submitted to AD1 in multiple parts.'},
  {n:'CINTAS UNIFORMS',c:'hk',gl:'—',f:'As needed',w:1,jul:0,d:'No recent activity on record.'},
@@ -439,7 +439,7 @@ var VENDORS = [
  {n:'DIRECT TV',c:'tech',gl:'40171000',f:'Monthly',w:1,jul:0,d:'Complimentary in-room media entertainment. No July activity in the ledger.'},
  {n:'ECOLAB',c:'eng',gl:'80170100',f:'Monthly',jul:489.53,inv:2,d:'Pest elimination and kitchen equipment lease. Two invoices in July.'},
  {n:'EMES',c:'review',gl:'—',f:'Monthly',x:1,jul:0,d:'Previously coded to GL 40170100, which does not exist in the M3 chart of accounts. Vendor does not appear in the July ledger. Confirm the correct account and service with Accounting.'},
- {n:'EXPEDIA',c:'ota',gl:'40171050',f:'Monthly',jul:3769.98,inv:2,d:'OTA commission.'},
+ {n:'EXPEDIA',c:'ota',gl:'40171050',f:'Monthly',jul:3769.98,inv:2,d:'OTA commission on invoices. A further $7,253.44 was accrued at month end in V2 (JE 2026-07-0198), taking the July commission charge to about $11,023.'},
  {n:'FAMILY GREEN LAWN CARE',c:'grounds',gl:'80178300',f:'Monthly',w:1,jul:0,d:'Grounds maintenance and landscaping. No July activity in the ledger.'},
  {n:'GOLDEN WAFFLES',c:'fnb',gl:'40170060',f:'Monthly',jul:400.50,inv:1,d:'Breakfast supply. Complimentary F&B.'},
  {n:'HD SUPPLY',c:'hk',gl:'VARIOUS',f:'Monthly',x:1,jul:1220.95,inv:6,d:'Facilities maintenance. July: 6 invoices across guest supplies (40171200), plumbing (80178650) and complimentary F&B (40170060). GL code varies by order.'},
@@ -493,8 +493,8 @@ var GL_NAMES = {
 function glName(code){ return GL_NAMES[code] || ''; }
 
 var PERF = {
-  period:'July 2026', roomsAvail:6200, rooms:200,
-  note:'Preliminary statements. The month was won on volume, not rate: occupancy beat budget by 18.4 points while ADR came in 0.98 dollars light. Confirm with Accounting before acting on any variance.',
+  period:'July 2026', rev:'V2 preliminary, run Aug 10 2026', roomsAvail:6200, rooms:200,
+  note:'Version 2 of the July preliminary. Occupancy and revenue are unchanged from V1; the month-end accruals that were missing on Aug 7 have now been posted. Confirm with Accounting before acting on any variance.',
   stats:[
     {k:'Occupancy',      a:68.24, b:49.83, f:'pct'},
     {k:'ADR',            a:56.92, b:57.90, f:'usd'},
@@ -502,19 +502,28 @@ var PERF = {
     {k:'Occupied rooms', a:4542,  b:3130,  f:'cnt'}
   ],
   pl:[
-    {k:'Rooms revenue',          a:199847, b:171514},
-    {k:'Rooms expense',          a:86767,  b:83415, inv:true},
-    {k:'Gross Operating Profit', a:59870,  b:35269},
-    {k:'EBITDA',                 a:26530,  b:5753}
+    {k:'Rooms revenue',            a:199847,  b:171514},
+    {k:'Rooms expense',            a:105075,  b:83415, inv:true},
+    {k:'Gross Operating Profit',   a:41462,   b:35269},
+    {k:'Personal property taxes',  a:71648,   b:0, inv:true},
+    {k:'EBITDA',                   a:-63526,  b:5753},
+    {k:'Net income',               a:-102447, b:753}
   ],
   depts:[
-    {k:'Rooms',                  a:86767, b:83415},
-    {k:'Admin & General',        a:24727, b:23049},
-    {k:'Sales & Marketing',      a:23570, b:19005},
-    {k:'Utilities',              a:19442, b:15181},
-    {k:'Property Operations',    a:12794, b:14758},
-    {k:'Info Systems & Telecom', a:8467,  b:8035}
-  ]
+    {k:'Rooms',                  a:105075, b:83415},
+    {k:'Admin & General',        a:24727,  b:23049},
+    {k:'Sales & Marketing',      a:23570,  b:19005},
+    {k:'Utilities',              a:19442,  b:15181},
+    {k:'Property Operations',    a:12794,  b:14758},
+    {k:'Info Systems & Telecom', a:8567,   b:8035}
+  ],
+  rev2:[
+    {j:'2026-07-0197', d:'Property taxes to new account 84183050', a:71648.26, gl:'84183050', p:42},
+    {j:'2026-07-0198', d:'Month-end accrual, Booking.com commission', a:11054.82, gl:'40171050', p:21},
+    {j:'2026-07-0198', d:'Month-end accrual, Expedia commission', a:7253.44, gl:'40171050', p:21},
+    {j:'2026-07-0198', d:'Month-end accrual, GM and AGM cell phones', a:100.00, gl:'65541000', p:33}
+  ],
+  wasEbitda:26530, wasGop:59870, wasRoomsExp:86767
 };
 function money(n){ return '$'+Math.round(n).toLocaleString('en-US'); }
 function pctf(n){ return n.toFixed(2)+'%'; }
@@ -545,9 +554,9 @@ function roomAssetBase(room,i){
  var b=ROOM_ASSETS_BIG[room+':'+i]; if(b!==undefined) return b;
  var p=RA_PAT[parseInt(RA_IDX.substr(k*2,2),16)]; if(!p) return 0;
  return parseInt(p.charAt(i),10)||0; }
-var PL_PAGES={"Gross Operating Profit":2,"EBITDA":2,"Occupancy":2,"ADR":2,"RevPAR":2,"Rooms available":2,"Rooms revenue":4,"Rooms expense":5,"Admin & General":9,"Info Systems & Telecom":10,"Sales & Marketing":11,"Franchise royalties":11,"Franchise marketing":11,"Property Operations":12,"Utilities":13,"Occupied rooms":17};
-var GL_PAGES={"40170000":17,"40170060":18,"40170550":21,"40171000":21,"40171050":21,"40171200":22,"40171300":22,"50141200":24,"65170150":30,"65170250":31,"65176150":32,"65176420":32,"65176700":33,"65176750":33,"65541300":34,"65572000":34,"65572065":35,"65572075":35,"70170100":35,"70177400":36,"70177450":36,"70177550":36,"70177600":36,"70177700":37,"72080300":37,"80178100":39,"80178300":39,"80178500":40,"80178650":41,"80178700":41,"80178750":41,"82179000":41,"82179050":41,"82179250":42,"84181100":42,"84182200":42};
-var DOC_META={pl:{n:'DOWN.DE_P&L_07.2026_PRELIM.pdf',p:29},gl:{n:'DOWN.DE_GL_07.2026_PRELIM.pdf',p:68}};
+var PL_PAGES={"Gross Operating Profit":2,"EBITDA":2,"Occupancy":2,"ADR":2,"RevPAR":2,"Rooms available":2,"Net income":3,"Rooms revenue":4,"Rooms expense":5,"Admin & General":9,"Info Systems & Telecom":10,"Sales & Marketing":11,"Franchise royalties":11,"Franchise marketing":11,"Property Operations":12,"Utilities":13,"Personal property taxes":14,"Occupied rooms":17};
+var GL_PAGES={"40170000":17,"40170060":18,"40170550":21,"40171000":21,"40171050":21,"40171200":22,"40171300":22,"50141200":24,"65170150":30,"65170250":31,"65176150":32,"65176420":32,"65176700":33,"65176750":33,"65541300":34,"65572000":34,"65572065":35,"65572075":35,"70170100":35,"70177400":36,"70177450":36,"70177550":36,"70177600":36,"70177700":37,"72080300":37,"80178100":39,"80178300":39,"80178500":40,"80178650":41,"80178700":41,"80178750":41,"82179000":41,"82179050":41,"82179250":42,"84181100":42,"84182200":42,"84183050":42,"65541000":33};
+var DOC_META={pl:{n:'DOWN.DE_P&L_07.2026_PRELIM (V2).pdf',p:29},gl:{n:'DOWN.DE_GL_07.2026_PRELIM (V2).pdf',p:68}};
 function pageTag(p){ return p? '<span style="font-family:var(--mono);font-size:9.5px;color:var(--slate-2);border:1px solid var(--line-2);border-radius:4px;padding:1px 5px;margin-left:7px;">p.'+p+'</span>' : ''; }
 
 var ASSET_ROW='assets:guestroom';
@@ -1106,13 +1115,14 @@ function viewPerf(){
   return ''+
   '<div class="card"><div class="card-b" style="padding:15px;">'+
     '<div style="font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--slate-2);">Reporting period</div>'+
-    '<div style="font-size:17px;font-weight:700;margin:4px 0 0;">'+esc(P.period)+' · Preliminary</div>'+
+    '<div style="font-size:17px;font-weight:700;margin:4px 0 0;">'+esc(P.period)+' \u00b7 '+esc(P.rev)+'</div>'+
     '<div style="font-size:12.5px;color:var(--slate);margin-top:8px;line-height:1.55;">'+esc(P.note)+'</div>'+
   '</div></div>'+
   '<div class="grid kpis" style="margin-bottom:6px;">'+
     kpi(pctf(P.stats[0].a),'Occupancy','g')+kpi(usd2(P.stats[1].a),'ADR','')+
-    kpi(usd2(P.stats[2].a),'RevPAR','t')+kpi(money(P.pl[3].a),'EBITDA','g')+
+    kpi(usd2(P.stats[2].a),'RevPAR','t')+kpi(money(P.pl[4].a),'EBITDA',P.pl[4].a>=0?'g':'r')+
   '</div>'+
+  '<div class="sect">What changed from V1</div>'+'<div class="card"><div class="card-b" style="padding:2px 15px 12px;">'+P.rev2.map(function(e){ return '<div style="display:flex;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line);">'+'<div style="flex:1;min-width:0;"><div style="font-size:13px;">'+esc(e.d)+'</div>'+'<div style="font-family:var(--mono);font-size:9.5px;color:var(--slate-2);margin-top:3px;">JE '+esc(e.j)+' \u00b7 GL '+esc(e.gl)+' \u00b7 p.'+e.p+'</div></div>'+'<div style="font-family:var(--mono);font-size:13px;color:var(--red-hi);flex-shrink:0;">+'+money(e.a)+'</div></div>'; }).join('')+'<div style="display:flex;gap:10px;padding:11px 0 2px;font-size:12.5px;">'+'<div style="flex:1;color:var(--slate);">Total new expense in V2</div>'+'<div style="font-family:var(--mono);color:var(--red-hi);">+'+money(P.rev2.reduce(function(s,e){return s+e.a;},0))+'</div></div>'+'<div style="font-size:11.5px;color:var(--slate-2);padding-top:9px;line-height:1.55;">EBITDA moved from '+money(P.wasEbitda)+' to '+money(P.pl[4].a)+', a swing of '+money(P.wasEbitda-P.pl[4].a)+' that these entries account for in full. Rooms revenue, occupancy, ADR and RevPAR are unchanged.</div>'+'</div></div>'+
   '<div class="two">'+
     '<div>'+
       '<div class="sect">Profit &amp; loss vs budget</div>'+
