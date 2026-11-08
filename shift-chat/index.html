@@ -4,46 +4,41 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#1F5F8B">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121822" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Shift Chat">
+<meta name="apple-mobile-web-app-title" content="FA-Hotel">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png">
-<title>Shift Chat</title>
+<title>FA-Hotel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
 
 /* Layout: chat column + "now serving" order queue on the right (tabs on phones). Rooms shown as key-fob tags. */
 :root{
-  --bg:#EEF1F4; --surface:#FFFFFF; --surface-2:#F6F8FA; --line:#D9DFE6;
-  --ink:#15202B; --ink-2:#4A5866; --ink-3:#7A8794;
-  --accent:#1F5F8B; --accent-ink:#FFFFFF; --accent-soft:#E2EEF6;
-  --urgent:#C2362B; --urgent-soft:#FBE7E4; --high:#C77A12; --high-soft:#FCF0DC; --ok:#2D7D4F; --ok-soft:#E3F3E9;
-  --note:#FFF6D6; --note-line:#E9D58A; --handoff:#E9E6FB; --handoff-line:#B9B1EE;
-  --r-fd:#1F5F8B; --r-hk:#2B8A7A; --r-hm:#5B7F2A; --r-eng:#B5641A; --r-mgr:#6B4FB8;
-  --f-display:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --bg:#F4F5F7; --surface:#FFFFFF; --surface-2:#F6F7F9; --line:#E5E8ED;
+  --ink:#0E1726; --ink-2:#475263; --ink-3:#8590A2;
+  --accent:#2457F5; --accent-ink:#FFFFFF; --accent-soft:#EBF0FF;
+  --urgent:#E0383E; --urgent-soft:#FDECEC; --high:#D97706; --high-soft:#FEF3E2; --ok:#16955A; --ok-soft:#E5F6EC;
+  --note:#FFF8E1; --note-line:#F1DE9A; --handoff:#F1EEFF; --handoff-line:#D3CBFB;
+  --r-fd:#2457F5; --r-hk:#0E9F8E; --r-hm:#5C9A12; --r-eng:#E5730F; --r-mgr:#7457F0;
+  --f-display:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-  --shadow:0 1px 2px rgba(21,32,43,.06),0 4px 14px rgba(21,32,43,.06);
+  --shadow:0 1px 2px rgba(14,23,38,.05),0 6px 20px rgba(14,23,38,.06);
+  --shadow-lift:0 2px 4px rgba(14,23,38,.05),0 14px 36px rgba(14,23,38,.12);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0F151B; --surface:#17202A; --surface-2:#1C2733; --line:#2A3846;
-  --ink:#E8EEF3; --ink-2:#AAB7C3; --ink-3:#7D8B98;
-  --accent:#5FA8DA; --accent-ink:#0B1824; --accent-soft:#1B3346;
-  --urgent:#F0796D; --urgent-soft:#3A1F1C; --high:#E9A750; --high-soft:#36290F; --ok:#6CC791; --ok-soft:#17321F;
-  --note:#2F2A14; --note-line:#6B5C21; --handoff:#24213D; --handoff-line:#4E4690;
-  --r-fd:#6EB2E0; --r-hk:#5CC4B1; --r-hm:#9BC765; --r-eng:#EAA25E; --r-mgr:#A992EC;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0F151B; --surface:#17202A; --surface-2:#1C2733; --line:#2A3846;
-  --ink:#E8EEF3; --ink-2:#AAB7C3; --ink-3:#7D8B98;
-  --accent:#5FA8DA; --accent-ink:#0B1824; --accent-soft:#1B3346;
-  --urgent:#F0796D; --urgent-soft:#3A1F1C; --high:#E9A750; --high-soft:#36290F; --ok:#6CC791; --ok-soft:#17321F;
-  --note:#2F2A14; --note-line:#6B5C21; --handoff:#24213D; --handoff-line:#4E4690;
-  --r-fd:#6EB2E0; --r-hk:#5CC4B1; --r-hm:#9BC765; --r-eng:#EAA25E; --r-mgr:#A992EC;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}
+  --bg:#0B0F15; --surface:#121822; --surface-2:#18202C; --line:#232D3B;
+  --ink:#EEF2F7; --ink-2:#AAB4C3; --ink-3:#768296;
+  --accent:#7C9CFF; --accent-ink:#0B0F15; --accent-soft:#1A2445;
+  --urgent:#FF6B6F; --urgent-soft:#3A1719; --high:#F5A524; --high-soft:#35260C; --ok:#4CD38A; --ok-soft:#12301F;
+  --note:#2C2614; --note-line:#5E5021; --handoff:#221E3D; --handoff-line:#463D86;
+  --r-fd:#7C9CFF; --r-hk:#3FD0BC; --r-hm:#9BD35A; --r-eng:#FFA04D; --r-mgr:#A993FF;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 6px 20px rgba(0,0,0,.28);
+  --shadow-lift:0 2px 4px rgba(0,0,0,.35),0 14px 36px rgba(0,0,0,.45); color-scheme:dark}}
 
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.4;overflow:hidden}
@@ -251,12 +246,116 @@ table.rep th:first-child,table.rep td:first-child{text-align:left}
 .loginwrap .dialog{box-shadow:var(--shadow)}
 .loginlogo{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .loginlogo img{width:44px;height:44px;border-radius:10px}
+
+/* ===== FA-Hotel theme (v2) ===== */
+body{font-feature-settings:"cv11","ss01";-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
+.mark{width:30px;height:30px;flex:none;display:block}
+header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.02em}
+.brand .bt{display:flex;flex-direction:column;line-height:1.1}
+.brand small{font-size:11.5px;font-weight:500;color:var(--ink-3)}
+.who{background:var(--surface-2);border:1px solid var(--line);padding:4px 12px 4px 4px;font-weight:600}
+.who .av{width:28px;height:28px;font-size:11px}
+.iconbtn{border-radius:12px;width:40px;height:40px;background:var(--surface-2)}
+.tabs{gap:2px;box-shadow:0 1px 0 var(--line);border-bottom:0}
+.tabs button{font-family:var(--f-body);font-weight:600;font-size:14px;color:var(--ink-3);padding:11px 12px;border-bottom:0;position:relative}
+.tabs button[aria-selected="true"]{color:var(--ink)}
+.tabs button[aria-selected="true"]::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--accent)}
+.tabs .cnt{font-weight:700;font-size:11.5px;line-height:18px;min-width:18px;padding:0 5px}
+
+.feed{padding:18px 16px 12px;gap:14px}
+.shiftdiv{font-family:var(--f-body);font-weight:600;font-size:11px;letter-spacing:.08em;border:0;background:var(--surface);box-shadow:var(--shadow);padding:5px 12px}
+.msg .av{width:34px;height:34px;font-size:12px}
+.msg .name{font-weight:600;font-size:13.5px}
+.rolechip{font-weight:600;border-radius:6px;padding:1px 7px;color:#fff}
+.msg .time{font-family:var(--f-body);font-variant-numeric:tabular-nums}
+.msg .body{border:0;box-shadow:var(--shadow);border-radius:6px 18px 18px 18px;padding:10px 14px;font-size:15px;line-height:1.45}
+.msg.mine .body{border-radius:18px 6px 18px 18px}
+.msg.mine:not(.note):not(.handoff) .body{background:var(--accent);color:var(--accent-ink);box-shadow:none}
+.msg.mine:not(.note):not(.handoff) .roomlink{color:inherit}
+.msg.note .body{background:var(--note);box-shadow:inset 0 0 0 1px var(--note-line)}
+.msg.handoff .body{background:var(--handoff);box-shadow:inset 0 0 0 1px var(--handoff-line)}
+.xchip{border:0;background:var(--surface);box-shadow:var(--shadow);font-weight:500}
+.xchip b{background:var(--ink)}
+.pins{border-bottom:0;box-shadow:0 1px 0 var(--line)}
+.pin{border-radius:14px}
+
+/* composer: raised, easy to spot */
+.composer{margin:4px 12px 16px;border:1.5px solid var(--line);border-radius:22px;background:var(--surface);box-shadow:var(--shadow-lift);padding:10px 10px 8px;gap:8px;transition:border-color .15s,box-shadow .15s}
+.composer:focus-within{border-color:var(--accent);box-shadow:var(--shadow-lift),0 0 0 4px var(--accent-soft)}
+.kinds{gap:6px;padding-left:2px}
+.kinds button{border:0;background:var(--surface-2);font-weight:600;font-size:12.5px;padding:5px 12px;color:var(--ink-2)}
+.kinds button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.row{gap:8px;align-items:flex-end}
+.row textarea{border:0;background:var(--surface-2);border-radius:16px;min-height:50px;padding:13px 14px;font-size:16px;line-height:1.4}
+.row textarea:focus{outline:none}
+.row textarea::placeholder{color:var(--ink-3)}
+.send{height:50px;border-radius:16px;padding:0 18px 0 16px;font-family:var(--f-body);font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:7px;box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 35%,transparent)}
+.send svg{width:18px;height:18px}
+.send:disabled{opacity:.6}
+.preview{padding-left:4px;font-size:12.5px;min-height:0}
+.preview:empty{display:none}
+
+/* orders */
+.panel{background:var(--bg)}
+.qhead{border-bottom:0;box-shadow:0 1px 0 var(--line);padding:16px 16px 12px}
+.qhead h2{font-family:var(--f-body);font-weight:700;font-size:12px;letter-spacing:.08em}
+.qhead .big{font-family:var(--f-body);font-weight:800;font-size:36px;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.filters button{border:0;background:var(--surface);box-shadow:var(--shadow);padding:5px 12px;font-weight:600}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.orders{gap:12px;padding:12px 16px 16px}
+.order{border:0;border-radius:18px;box-shadow:inset 4px 0 0 var(--line),var(--shadow);padding:12px 14px 12px 14px;grid-template-columns:60px minmax(0,1fr)}
+.order.p-urgent{box-shadow:inset 4px 0 0 var(--urgent),var(--shadow)}
+.order.p-high{box-shadow:inset 4px 0 0 var(--high),var(--shadow)}
+.fob{border-radius:12px 12px 20px 20px;font-size:17px}
+.fob.none{background:var(--surface-2);color:var(--ink-3);box-shadow:inset 0 0 0 1px var(--line)}
+.fob.none::before{background:var(--line)}
+.prio{border-radius:6px;font-size:10.5px}
+.prio.normal{background:var(--surface-2);color:var(--ink-3)}
+.osum{font-family:var(--f-body);font-weight:700;font-size:16px;letter-spacing:-.01em}
+.osum em{color:var(--accent)}
+.age{font-family:var(--f-body);font-variant-numeric:tabular-nums}
+.oact button{border:0;background:var(--surface-2);border-radius:12px;padding:10px 14px;font-weight:600}
+.oact .done{background:var(--ok);color:#fff}
+.oact .start{background:var(--accent-soft);color:var(--accent)}
+.killfeed{border-top:0;box-shadow:0 -1px 0 var(--line)}
+.killfeed h3{font-family:var(--f-body);font-weight:700;font-size:11.5px;letter-spacing:.08em}
+.kill{border-bottom:1px solid var(--line)}
+.kill .t{font-family:var(--f-body);font-variant-numeric:tabular-nums}
+
+/* alerts banner */
+.banner{margin:10px 12px 0;border-radius:16px;background:var(--surface);box-shadow:var(--shadow);padding:10px 12px;gap:10px}
+.banner .bell{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}
+.banner .bell svg{width:18px;height:18px}
+.banner .grow{font-size:13px;font-weight:500}
+.linkbtn{border:0;background:none;color:var(--ink-3);font-weight:600;font-size:13px;padding:6px 4px}
+
+/* cards, views, dialogs */
+.card{border:0;border-radius:18px;box-shadow:var(--shadow);padding:16px}
+.card h2{font-family:var(--f-body);font-weight:700;font-size:16px;letter-spacing:-.01em}
+.li{border:0;background:var(--surface-2);border-radius:14px}
+.btn{border:0;background:var(--surface-2);border-radius:12px;font-weight:600}
+.btn.pri{background:var(--accent);color:var(--accent-ink)}
+.field input,.field select,.field textarea{border:1px solid var(--line);background:var(--surface-2);border-radius:12px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.dialog{border-radius:24px;padding:24px 22px}
+.dialog h2{font-family:var(--f-body);font-weight:800;letter-spacing:-.02em}
+.primary{font-family:var(--f-body);font-weight:700;border-radius:14px;padding:14px;box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 30%,transparent)}
+.toast{border-radius:14px;padding:9px 13px;background:rgba(14,23,38,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-weight:500}
+.toast.urgent{background:rgba(160,22,28,.95)}
+.loginwrap{background:radial-gradient(1200px 600px at 50% -10%,var(--accent-soft),transparent 60%),var(--bg)}
+.loginwrap .dialog{box-shadow:var(--shadow-lift)}
+.loginlogo{gap:12px;margin-bottom:14px}
+.loginlogo .mark{width:48px;height:48px}
+.loginlogo h2{font-size:24px}
+.sound-test{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
+@media (max-width:899px){ .composer{margin:4px 10px 14px} .brand small{display:block} }
 </style>
 </head>
 <body>
 <div class="app" id="app" hidden>
   <header class="top">
-    <div class="brand">Shift Chat<small id="hotelName">—</small></div>
+    <div class="brand"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="faG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3D6BFF"/><stop offset="1" stop-color="#0E1726"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#faG)"/><text x="15.5" y="21.2" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="13.5" letter-spacing="-.4" fill="#fff">FA</text><circle cx="25.6" cy="6.6" r="2.2" fill="#9DB4FF"/></svg><div class="bt">FA-Hotel<small id="hotelName">—</small></div></div>
     <div class="spacer"></div>
     <button class="who" id="whoBtn" aria-label="Your account"><span class="av" id="whoAv"></span><span id="whoName"></span></button>
     <button class="iconbtn" id="soundBtn" aria-label="Sound on" title="Sound for new orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path id="soundWave" d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg></button>
@@ -268,6 +367,7 @@ table.rep th:first-child,table.rep td:first-child{text-align:left}
     <button role="tab" data-tab="rooms" aria-selected="false">Rooms</button>
     <button role="tab" data-tab="team" aria-selected="false" id="teamTab" hidden>Manager</button>
   </nav>
+  <div class="banner" id="pushBanner" hidden><span class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span><span class="grow" id="pushText"></span><button class="btn sm pri" id="pushBtn">Turn on</button><button class="linkbtn" id="pushLater">Not now</button></div>
 
   <div class="main" id="main" data-tab="chat">
     <section class="col chatcol" aria-label="Chat">
@@ -283,8 +383,8 @@ table.rep th:first-child,table.rep td:first-child{text-align:left}
           <button type="button" data-kind="handoff" aria-pressed="false">Shift handoff</button>
         </div>
         <div class="row">
-          <textarea id="input" rows="1" placeholder="Ej: necesito un duvet para la 230, por favor" aria-label="Message" maxlength="1000"></textarea>
-          <button class="send" type="submit" id="sendBtn">Send</button>
+          <textarea id="input" rows="1" placeholder="Escribe un pedido: toallas para la 230" aria-label="Message" maxlength="1000"></textarea>
+          <button class="send" type="submit" id="sendBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Send</button>
         </div>
         <div class="preview" id="preview"></div>
       </form>
@@ -295,7 +395,6 @@ table.rep th:first-child,table.rep td:first-child{text-align:left}
         <div class="big" id="qCount">0</div>
         <button class="btn pri sm newbtn" id="newOrderBtn">+ New</button>
       </div>
-      <div class="banner" id="pushBanner" hidden><span class="grow" id="pushText"></span><button class="btn sm pri" id="pushBtn">Turn on alerts</button></div>
       <div class="filters" id="filters" role="group" aria-label="Filter orders">
         <button data-f="all" aria-pressed="true">All</button>
         <button data-f="mine" aria-pressed="false">Mine</button>
@@ -357,7 +456,7 @@ table.rep th:first-child,table.rep td:first-child{text-align:left}
 
 <div class="loginwrap" id="login" hidden>
   <form class="dialog" id="loginForm" autocomplete="off">
-    <div class="loginlogo"><img src="apple-touch-icon.png" alt=""><div><h2 style="margin:0">Shift Chat</h2><div class="small">Front desk · Housekeeping · Engineering</div></div></div>
+    <div class="loginlogo"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="faG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3D6BFF"/><stop offset="1" stop-color="#0E1726"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#faG)"/><text x="15.5" y="21.2" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="13.5" letter-spacing="-.4" fill="#fff">FA</text><circle cx="25.6" cy="6.6" r="2.2" fill="#9DB4FF"/></svg><div><h2 style="margin:0">FA-Hotel</h2><div class="small">Front desk · Housekeeping · Engineering</div></div></div>
     <p class="lead">Sign in with your first and last name and your 4-digit PIN. First time? The PIN you type now becomes yours.</p>
     <div class="field"><label for="fHotel">Hotel</label><select id="fHotel"></select></div>
     <div class="two">
@@ -455,7 +554,7 @@ const ITEMS = [
   {k:'trash', cat:'housekeeping', one:'trash pickup', mass:true, w:['trash','garbage','basura']},
   {k:'clean', cat:'housekeeping', one:'room cleaning', mass:true, w:['clean(ing|ed)?','limpia(r|rla|rlo)?','limpieza','service (the|their|his|her) room','servicio (de|a la) (cuarto|habitacion)','refresh']},
   // maintenance (issue = how the card reads)
-  {k:'leak', cat:'maintenance', issue:'a leak', urgent:true, w:['leak\\w*','fuga','gote\\w*','water on the floor','agua (en|por) el piso','inunda\\w*','flood\\w*']},
+  {k:'leak', cat:'maintenance', issue:'a leak', urgent:true, w:['leak\\w*','fuga','gote\\w*','water on the floor','agua (en|por) el piso','inunda\\w*','flood\\w*','(se )?(esta )?(sale|saliendo|salir) (el |la )?agua','bote de agua','botando agua','salidero','water (is )?(coming|leaking|dripping)']},
   {k:'pests', cat:'maintenance', issue:'pests', urgent:true, w:['bed ?bugs?','chinches?','roach\\w*','cucaracha\\w*','\\bbugs?\\b','insect\\w*','plagas?','hormigas?','\\bants\\b']},
   {k:'smoke', cat:'maintenance', issue:'a smoke detector problem', w:['smoke (detector|alarm)','detector de humo','beeping','pitando']},
   {k:'lockout', cat:'maintenance', issue:'a door or lock problem', w:['locked out','door','puerta','\\block\\b','cerradura','key ?card','caja fuerte','\\bsafe\\b']},
@@ -694,12 +793,27 @@ function toast(html, cls){
   while ($('#toasts').children.length > 4) $('#toasts').lastChild.remove();
 }
 let actx = null;
-function beep(){
-  if (!S.sound) return;
-  try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); const o = actx.createOscillator(), g = actx.createGain();
-    o.type = 'sine'; o.frequency.value = 880; g.gain.setValueAtTime(.0001, actx.currentTime); g.gain.exponentialRampToValueAtTime(.2, actx.currentTime + .02);
-    g.gain.exponentialRampToValueAtTime(.0001, actx.currentTime + .35); o.connect(g).connect(actx.destination); o.start(); o.stop(actx.currentTime + .4); } catch {}
+function audio(){ try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume(); return actx; } catch { return null; } }
+['pointerdown','keydown','touchend'].forEach(ev => document.addEventListener(ev, () => audio(), {once:true, passive:true}));
+function note(c, t, f, dur, vol, type){
+  const o = c.createOscillator(), o2 = c.createOscillator(), g = c.createGain(), g2 = c.createGain();
+  o.type = type || 'sine'; o.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f * 2.01; g2.gain.value = .22;
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .012); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  o.connect(g); o2.connect(g2).connect(g); g.connect(c.destination); o.start(t); o2.start(t); o.stop(t + dur + .05); o2.stop(t + dur + .05);
 }
+// FA-Hotel signature: a soft three-note bell, G5 - D6 - G6. Urgent: a sharper two-tone call, played twice.
+function chime(kind, force){
+  if (!S.sound && !force) return;
+  const c = audio(); if (!c) return; const t = c.currentTime + .03;
+  if (kind === 'urgent') {
+    [0, .16, .32, .62, .78, .94].forEach((d, i) => note(c, t + d, i % 2 ? 1175 : 1568, .14, .22, 'triangle'));
+    if (navigator.vibrate) navigator.vibrate([200, 90, 200, 90, 400]);
+  } else {
+    [[784, 0], [1175, .09], [1568, .18]].forEach(([f, d], i) => note(c, t + d, f, i === 2 ? .9 : .5, .16));
+    if (navigator.vibrate) navigator.vibrate(120);
+  }
+}
+const beep = () => chime('normal');
 function setSoundIcon(){ $('#soundWave').style.display = S.sound ? '' : 'none'; $('#soundBtn').setAttribute('aria-label', S.sound ? 'Sound on' : 'Sound off'); }
 
 /* ===== sync ===== */
@@ -712,14 +826,16 @@ async function refresh(){
     S.messages = d.messages.map(m => ({...m, created_at: T(m.created_at)}));
     S.orders = d.orders.map(o => ({...o, created_at: T(o.created_at), done_at: T(o.done_at), started_at: T(o.started_at)}));
     S.lost = d.lost.map(l => ({...l, created_at: T(l.created_at), resolved_at: T(l.resolved_at)}));
+    let newSound = null;
     S.orders.forEach(o => {
       const prev = S.known.get(o.id);
       if (!S.firstLoad) {
-        if (prev === undefined && o.status === 'open' && o.created_by !== S.me.id) { toast(`<b>${esc(o.ticket)}</b> ${esc(o.summary)}`, 'new'); beep(); }
+        if (prev === undefined && o.status === 'open' && o.created_by !== S.me.id) { const u = prioOf(o).level === 'urgent'; toast(`<b>${u ? 'URGENT · ' : ''}${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); }
         if ((prev === 'open' || prev === 'in_progress') && o.status === 'done' && o.done_by_id !== S.me.id) toast(killLine(o).replace('<span class="k-ico">✓</span>', '✓ '));
       }
       S.known.set(o.id, o.status);
     });
+    if (newSound) chime(newSound);
     render(); S.firstLoad = false; failCount = 0;
   } catch (e) {
     if (S.token && ++failCount === 3) toast('Connection problem. Retrying…');
@@ -858,7 +974,7 @@ $('#csvBtn').onclick = async () => {
     const q = v => { v = v == null ? '' : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
     const csv = [cols.join(',')].concat(rows.map(r => cols.map(c => q(r[c])).join(','))).join('\n');
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
-    a.download = 'shift-chat-orders-' + new Date().toISOString().slice(0,10) + '.csv'; document.body.appendChild(a); a.click(); a.remove();
+    a.download = 'fa-hotel-orders-' + new Date().toISOString().slice(0,10) + '.csv'; document.body.appendChild(a); a.click(); a.remove();
   } catch (e) { toast(esc(e.message)); }
 };
 
@@ -868,11 +984,12 @@ const standalone = window.matchMedia('(display-mode: standalone)').matches || na
 function pushState(){
   const b = $('#pushBanner');
   if (!('serviceWorker' in navigator)) { b.hidden = true; return; }
-  if (isIOS && !standalone) { b.hidden = false; $('#pushText').textContent = 'To get alerts on iPhone: tap Share, then "Add to Home Screen", and open Shift Chat from the new icon.'; $('#pushBtn').hidden = true; return; }
+  if (Date.now() < ls.get('sc.pushLater', 0)) { b.hidden = true; return; }
+  if (isIOS && !standalone) { b.hidden = false; $('#pushText').textContent = 'For alerts on iPhone: tap Share, then "Add to Home Screen", and open FA-Hotel from the new icon.'; $('#pushBtn').hidden = true; return; }
   if (!('PushManager' in window) || !('Notification' in window)) { b.hidden = true; return; }
   if (Notification.permission === 'granted' && ls.get('sc.pushOk', false)) { b.hidden = true; return; }
   if (Notification.permission === 'denied') { b.hidden = false; $('#pushText').textContent = 'Alerts are blocked for this site. Turn them on in your phone settings for this browser.'; $('#pushBtn').hidden = true; return; }
-  b.hidden = false; $('#pushBtn').hidden = false; $('#pushText').textContent = 'Get an alert on this phone when an order for your department comes in.';
+  b.hidden = false; $('#pushBtn').hidden = false; $('#pushText').textContent = 'Turn on alerts so this phone rings when a new order comes in.';
 }
 function b64u(s){ const p = '='.repeat((4 - s.length % 4) % 4); const b = atob((s + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(b, c => c.charCodeAt(0)); }
 async function enablePush(){
@@ -893,6 +1010,8 @@ async function resubscribe(){
   } catch {}
 }
 $('#pushBtn').onclick = enablePush;
+$('#pushLater').onclick = () => { ls.set('sc.pushLater', Date.now() + 2 * 86400e3); pushState(); };
+function alertsLabel(){ if (!('Notification' in window) || !('serviceWorker' in navigator)) return 'This browser cannot get alerts.'; if (isIOS && !standalone) return 'Add FA-Hotel to the Home Screen to get alerts.'; if (Notification.permission === 'denied') return 'Alerts are blocked in this phone\'s settings.'; return Notification.permission === 'granted' && ls.get('sc.pushOk', false) ? 'Alerts are on for this phone.' : 'Alerts are off for this phone.'; }
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 
 /* login */
@@ -928,9 +1047,19 @@ function signOut(expired){
   if (t && !expired) rpc('sc_logout', {p_token: t}).catch(() => {});
   S.known.clear(); S.firstLoad = true; showLogin(expired ? ERR.SESSION_EXPIRED : '');
 }
-$('#whoBtn').onclick = () => openModal(`<h2>${esc(S.me.name)}</h2><p class="lead">${esc(roleOf(S.me.role).label)} · ${esc(S.hotel ? S.hotel.name : '')}</p>
+$('#whoBtn').onclick = () => {
+  const canTurnOn = 'Notification' in window && 'serviceWorker' in navigator && !(isIOS && !standalone) && Notification.permission !== 'denied' && !(Notification.permission === 'granted' && ls.get('sc.pushOk', false));
+  openModal(`<h2>${esc(S.me.name)}</h2><p class="lead">${esc(roleOf(S.me.role).label)} · ${esc(S.hotel ? S.hotel.name : '')}</p>
+  <div class="sect" style="margin-top:0;border-top:0;padding-top:0"><h3>Alerts</h3><p class="hint">${esc(alertsLabel())}</p>${canTurnOn ? '<button class="btn pri sm" id="mPush">Turn on alerts</button>' : ''}</div>
+  <div class="sect"><h3>Sounds</h3><p class="hint">FA-Hotel has its own tone for new orders and a stronger one for urgent orders.</p>
+  <div class="sound-test"><button class="btn sm" id="tNormal">Play new order</button><button class="btn sm" id="tUrgent">Play urgent</button></div></div>
   <p class="small">On a shared phone or computer, sign out at the end of your shift.</p>
-  <div class="btnrow"><button class="btn pri" id="soBtn">Sign out</button><button class="btn" data-close>Close</button></div>`) || ($('#soBtn').onclick = () => { closeModal(); signOut(false); });
+  <div class="btnrow"><button class="btn pri" id="soBtn">Sign out</button><button class="btn" data-close>Close</button></div>`);
+  $('#soBtn').onclick = () => { closeModal(); signOut(false); };
+  $('#tNormal').onclick = () => chime('normal', true);
+  $('#tUrgent').onclick = () => chime('urgent', true);
+  if ($('#mPush')) $('#mPush').onclick = () => { closeModal(); enablePush(); };
+};
 function enterApp(){
   $('#login').hidden = true; $('#app').hidden = false;
   $('#sfRole').innerHTML = ROLES.map(r => `<option value="${r.id}">${r.label}</option>`).join('');
@@ -952,7 +1081,7 @@ function setTab(t){
 document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => setTab(b.dataset.tab));
 function setKind(k){
   S.kind = k; document.querySelectorAll('.kinds button').forEach(x => x.setAttribute('aria-pressed', x.dataset.kind === k));
-  $('#input').placeholder = k === 'note' ? 'Ej: VIP en la 405, aniversario' : k === 'handoff' ? 'What the next shift needs to know' : 'Ej: necesito un duvet para la 230, por favor';
+  $('#input').placeholder = k === 'note' ? 'Nota: VIP en la 405, aniversario' : k === 'handoff' ? 'Lo que el próximo turno debe saber' : 'Escribe un pedido: toallas para la 230';
   livePreview();
 }
 document.querySelectorAll('.kinds button').forEach(b => b.onclick = () => { setKind(b.dataset.kind); $('#input').focus(); });
@@ -992,7 +1121,7 @@ function livePreview(){
 }
 $('#input').addEventListener('input', () => { autosize(); livePreview(); });
 $('#input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && window.matchMedia('(min-width: 900px)').matches) { e.preventDefault(); send(); } });
-$('#soundBtn').onclick = () => { S.sound = !S.sound; ls.set('sc.sound', S.sound); setSoundIcon(); if (S.sound) beep(); };
+$('#soundBtn').onclick = () => { S.sound = !S.sound; ls.set('sc.sound', S.sound); setSoundIcon(); if (S.sound) chime('normal'); };
 setInterval(() => { if (S.me) { renderOrders(); } }, 30000);
 
 /* boot */
