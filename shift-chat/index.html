@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1F5F8B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Shift Chat">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<title>Shift Chat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+
+/* Layout: chat column + "now serving" order queue on the right (tabs on phones). Rooms shown as key-fob tags. */
+:root{
+  --bg:#EEF1F4; --surface:#FFFFFF; --surface-2:#F6F8FA; --line:#D9DFE6;
+  --ink:#15202B; --ink-2:#4A5866; --ink-3:#7A8794;
+  --accent:#1F5F8B; --accent-ink:#FFFFFF; --accent-soft:#E2EEF6;
+  --urgent:#C2362B; --urgent-soft:#FBE7E4; --high:#C77A12; --high-soft:#FCF0DC; --ok:#2D7D4F; --ok-soft:#E3F3E9;
+  --note:#FFF6D6; --note-line:#E9D58A; --handoff:#E9E6FB; --handoff-line:#B9B1EE;
+  --r-fd:#1F5F8B; --r-hk:#2B8A7A; --r-hm:#5B7F2A; --r-eng:#B5641A; --r-mgr:#6B4FB8;
+  --f-display:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --shadow:0 1px 2px rgba(21,32,43,.06),0 4px 14px rgba(21,32,43,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F151B; --surface:#17202A; --surface-2:#1C2733; --line:#2A3846;
+  --ink:#E8EEF3; --ink-2:#AAB7C3; --ink-3:#7D8B98;
+  --accent:#5FA8DA; --accent-ink:#0B1824; --accent-soft:#1B3346;
+  --urgent:#F0796D; --urgent-soft:#3A1F1C; --high:#E9A750; --high-soft:#36290F; --ok:#6CC791; --ok-soft:#17321F;
+  --note:#2F2A14; --note-line:#6B5C21; --handoff:#24213D; --handoff-line:#4E4690;
+  --r-fd:#6EB2E0; --r-hk:#5CC4B1; --r-hm:#9BC765; --r-eng:#EAA25E; --r-mgr:#A992EC;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F151B; --surface:#17202A; --surface-2:#1C2733; --line:#2A3846;
+  --ink:#E8EEF3; --ink-2:#AAB7C3; --ink-3:#7D8B98;
+  --accent:#5FA8DA; --accent-ink:#0B1824; --accent-soft:#1B3346;
+  --urgent:#F0796D; --urgent-soft:#3A1F1C; --high:#E9A750; --high-soft:#36290F; --ok:#6CC791; --ok-soft:#17321F;
+  --note:#2F2A14; --note-line:#6B5C21; --handoff:#24213D; --handoff-line:#4E4690;
+  --r-fd:#6EB2E0; --r-hk:#5CC4B1; --r-hm:#9BC765; --r-eng:#EAA25E; --r-mgr:#A992EC;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.4;overflow:hidden}
+*{box-sizing:border-box}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{height:100%;display:flex;flex-direction:column}
+header.top{display:flex;align-items:center;gap:12px;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));background:var(--surface);border-bottom:1px solid var(--line)}
+.brand{font-family:var(--f-display);font-weight:800;font-size:18px;letter-spacing:-.01em;white-space:nowrap}
+.brand small{display:block;font-family:var(--f-body);font-weight:500;font-size:12px;color:var(--ink-3);letter-spacing:0}
+.top .spacer{flex:1}
+.who{display:flex;align-items:center;gap:8px;min-width:0;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:4px 10px 4px 4px;font-size:13px}
+.who .av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:11px;flex:none}
+.who span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;width:36px;height:36px;display:grid;place-items:center;color:var(--ink-2);flex:none}
+.iconbtn svg{width:18px;height:18px}
+.mode{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--high-soft);color:var(--high);white-space:nowrap}
+.mode.live{background:var(--ok-soft);color:var(--ok)}
+
+.tabs{display:none}
+.main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 400px}
+.col{min-height:0;display:flex;flex-direction:column;min-width:0}
+.chatcol{border-right:1px solid var(--line)}
+
+/* pinned notes strip */
+.pins{background:var(--surface);border-bottom:1px solid var(--line);padding-block:8px;padding-left:16px;padding-right:16px}
+.pins summary{cursor:pointer;font-weight:600;font-size:13px;color:var(--ink-2);list-style:none;display:flex;align-items:center;gap:8px}
+.pins summary::-webkit-details-marker{display:none}
+.pins summary .chev{transition:transform .15s}
+.pins[open] summary .chev{transform:rotate(90deg)}
+.pinlist{display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:30vh;overflow:auto}
+.pin{border-radius:10px;padding:8px 10px;font-size:13.5px;border:1px solid var(--note-line);background:var(--note)}
+.pin.handoff{border-color:var(--handoff-line);background:var(--handoff)}
+.pin .meta{font-size:11.5px;color:var(--ink-3);margin-bottom:2px}
+
+.demo{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2);background:var(--accent-soft);padding-block:6px;padding-left:16px;padding-right:16px}
+.demo button{border:0;background:none;color:var(--accent);font-weight:600;padding:0;text-decoration:underline}
+
+.feed{flex:1;min-height:0;overflow-y:auto;padding:14px 16px 8px;display:flex;flex-direction:column;gap:10px}
+.shiftdiv{align-self:center;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:4px 10px;border:1px dashed var(--line);border-radius:999px;margin-block:6px}
+.msg{display:flex;gap:10px;max-width:640px}
+.msg .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px;flex:none}
+.msg .bub{min-width:0;flex:1}
+.msg .head{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;font-size:12.5px}
+.msg .name{font-weight:700;font-size:13.5px}
+.rolechip{font-size:11px;font-weight:600;padding:1px 6px;border-radius:5px;color:var(--surface);}
+.msg .time{color:var(--ink-3);font-family:var(--f-mono);font-size:11px}
+.msg .body{background:var(--surface);border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:8px 11px;margin-top:3px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere}
+.msg.note .body{background:var(--note);border-color:var(--note-line)}
+.msg.handoff .body{background:var(--handoff);border-color:var(--handoff-line)}
+.kindtag{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.msg.mine{margin-left:auto;flex-direction:row-reverse}
+.msg.mine .head{justify-content:flex-end}
+.msg.mine .body{border-radius:14px 4px 14px 14px}
+.msg.mine:not(.note):not(.handoff) .body{background:var(--accent-soft);border-color:transparent}
+.ex{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+.extracted{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.xchip{display:inline-flex;align-items:center;gap:6px;font-size:12px;border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:2px 9px 2px 3px;color:var(--ink-2)}
+.xchip b{font-family:var(--f-mono);font-size:11px;background:var(--ink);color:var(--surface);border-radius:999px;padding:1px 6px}
+.xchip.done{text-decoration:line-through;opacity:.65}
+.xchip.done b{background:var(--ok)}
+.empty{margin:auto;text-align:center;color:var(--ink-3);max-width:300px;font-size:14px}
+
+/* composer */
+.composer{background:var(--surface);border-top:1px solid var(--line);padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:16px;display:flex;flex-direction:column;gap:8px}
+.kinds{display:flex;gap:6px;flex-wrap:wrap}
+.kinds button{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:4px 11px;font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.kinds button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.row{display:flex;gap:8px;align-items:flex-end}
+.row textarea{flex:1;min-width:0;resize:none;border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:10px 12px;min-height:44px;max-height:140px;font-size:16px}
+.send{border:0;background:var(--accent);color:var(--accent-ink);border-radius:12px;height:44px;padding:0 16px;font-weight:700;font-family:var(--f-display);flex:none}
+.preview{font-size:12px;color:var(--ink-2);min-height:16px}
+.preview b{color:var(--accent)}
+
+/* orders panel */
+.panel{background:var(--surface-2)}
+.qhead{padding:14px 16px 10px;display:flex;align-items:flex-end;gap:12px;border-bottom:1px solid var(--line);background:var(--surface)}
+.qhead h2{margin:0;font-family:var(--f-display);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.qhead .big{font-family:var(--f-display);font-weight:800;font-size:34px;line-height:1;letter-spacing:-.02em}
+.qhead .sub{font-size:12px;color:var(--ink-3)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px 0}
+.filters button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:600;color:var(--ink-2)}
+.filters button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.orders{flex:1;min-height:0;overflow-y:auto;padding:10px 16px 16px;display:flex;flex-direction:column;gap:10px}
+.order{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:start;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:12px;padding:10px 12px 10px 10px;box-shadow:var(--shadow)}
+.order.p-urgent{border-left-color:var(--urgent)}
+.order.p-high{border-left-color:var(--high)}
+.fob{position:relative;background:var(--ink);color:var(--surface);border-radius:10px 10px 22px 22px;padding:16px 4px 9px;text-align:center;font-family:var(--f-mono);font-weight:600;font-size:18px;letter-spacing:.02em}
+.fob::before{content:"";position:absolute;top:5px;left:50%;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:var(--surface)}
+.fob small{display:block;font-size:9px;letter-spacing:.12em;opacity:.7;font-weight:500}
+.fob.none{background:var(--ink-3);font-size:13px}
+.ohead{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11.5px}
+.ticket{font-family:var(--f-mono);font-weight:600;color:var(--ink-2)}
+.prio{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:1px 6px;border-radius:5px;background:var(--surface-2);color:var(--ink-2)}
+.prio.urgent{background:var(--urgent-soft);color:var(--urgent)}
+.prio.high{background:var(--high-soft);color:var(--high)}
+.cat{font-size:11px;font-weight:600;color:var(--ink-3)}
+.age{margin-left:auto;font-family:var(--f-mono);color:var(--ink-3)}
+.osum{font-family:var(--f-display);font-weight:700;font-size:16px;line-height:1.25;margin-top:4px;text-wrap:balance}
+.osum em{font-style:normal;color:var(--accent)}
+.oquote{font-size:12.5px;color:var(--ink-3);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.oact{display:flex;gap:8px;margin-top:10px}
+.oact button{border-radius:10px;padding:9px 14px;font-weight:700;font-size:14px;border:1px solid var(--line);background:var(--surface-2)}
+.oact .done{background:var(--ok);color:#fff;border-color:var(--ok);flex:1}
+.qempty{margin:24px auto;text-align:center;color:var(--ink-3);font-size:14px;max-width:260px}
+
+.killfeed{border-top:1px solid var(--line);background:var(--surface);padding:10px 16px 12px;max-height:34%;overflow-y:auto}
+.killfeed h3{margin:0 0 6px;font-family:var(--f-display);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.kill{display:flex;gap:8px;align-items:baseline;font-size:13px;padding:4px 0;border-bottom:1px dashed var(--line)}
+.kill:last-child{border-bottom:0}
+.kill .k-ico{color:var(--ok);font-weight:800}
+.kill .k-ico.x{color:var(--ink-3)}
+.kill .who2{font-weight:700}
+.kill .t{margin-left:auto;font-family:var(--f-mono);font-size:11px;color:var(--ink-3);white-space:nowrap}
+
+/* game-style toasts */
+.toasts{position:fixed;top:calc(64px + env(safe-area-inset-top,0px));right:max(12px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:6px;z-index:40;pointer-events:none;max-width:min(380px,calc(100vw - 24px))}
+.toast{background:rgba(12,18,24,.88);color:#F1F5F8;border-radius:8px;padding:7px 11px;font-size:13px;font-weight:500;box-shadow:0 6px 18px rgba(0,0,0,.25);animation:tin .25s ease-out}
+.toast b{color:#8FE3AE}
+.toast .tgt{color:#9CC9EB;font-weight:700}
+.toast.new b{color:#FFD27A}
+@keyframes tin{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.toast{animation:none}}
+
+/* dialogs */
+.scrim{position:fixed;inset:0;background:rgba(10,15,20,.55);display:grid;place-items:center;z-index:50;padding:16px}
+.dialog{background:var(--surface);border-radius:16px;width:min(440px,100%);max-height:calc(100% - 20px);overflow:auto;padding:22px 20px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.dialog h2{margin:0 0 4px;font-family:var(--f-display);font-weight:800;font-size:22px;letter-spacing:-.01em}
+.dialog p.lead{margin:0 0 16px;color:var(--ink-2);font-size:14px}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field label{font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.field input,.field select{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:16px;width:100%}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.err{color:var(--urgent);font-size:13px;min-height:18px;margin-bottom:6px}
+.primary{width:100%;border:0;background:var(--accent);color:var(--accent-ink);border-radius:12px;padding:12px;font-weight:800;font-family:var(--f-display);font-size:16px}
+.ghost{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 12px;font-weight:600;font-size:14px}
+.sect{border-top:1px solid var(--line);margin-top:16px;padding-top:14px}
+.sect h3{margin:0 0 8px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.hint{font-size:12.5px;color:var(--ink-3);margin:0 0 10px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+
+@media (max-width:899px){
+  .main{grid-template-columns:minmax(0,1fr)}
+  .tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--line);padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
+  .tabs button{flex:1;border:0;background:none;padding:10px 4px;font-weight:700;font-size:14px;color:var(--ink-3);border-bottom:3px solid transparent;font-family:var(--f-display)}
+  .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+  .tabs .cnt{display:inline-block;min-width:20px;padding:0 6px;border-radius:999px;background:var(--urgent);color:#fff;font-size:12px;margin-left:4px}
+  .tabs .cnt:empty{display:none}
+  .main[data-tab="chat"] .panel{display:none}
+  .main[data-tab="orders"] .chatcol{display:none}
+  .chatcol{border-right:0}
+  .who span{max-width:80px}
+  .brand small{display:none}
+  .killfeed{max-height:40%}
+}
+@media (max-width:420px){ .mode{display:none} }
+
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+[hidden]{display:none!important}
+/* v1 additions */
+.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--line);padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px));overflow-x:auto}
+.tabs button{flex:1 0 auto;border:0;background:none;padding:10px 10px;font-weight:700;font-size:14px;color:var(--ink-3);border-bottom:3px solid transparent;font-family:var(--f-display);white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tabs .cnt{display:inline-block;min-width:20px;padding:0 6px;border-radius:999px;background:var(--urgent);color:#fff;font-size:12px;margin-left:4px}
+.tabs .cnt:empty{display:none}
+@media (min-width:900px){ .tabs button[data-tab="orders"]{display:none} }
+.view{flex:1;min-height:0;overflow-y:auto;padding-block:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.view .inner{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card h2{margin:0 0 10px;font-family:var(--f-display);font-size:17px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.field textarea{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:16px;width:100%;resize:vertical;min-height:70px}
+.list{display:flex;flex-direction:column;gap:8px}
+.li{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.li .grow{flex:1;min-width:0}
+.li .t1{font-weight:700}
+.li .t2{font-size:12.5px;color:var(--ink-3)}
+.pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:var(--surface);border:1px solid var(--line);color:var(--ink-2)}
+.pill.warn{background:var(--urgent-soft);color:var(--urgent);border-color:transparent}
+.pill.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.pill.prog{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.small{font-size:12.5px;color:var(--ink-3)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-weight:700;font-size:14px}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.okb{background:var(--ok);color:#fff;border-color:var(--ok)}
+.btn.sm{padding:5px 9px;font-size:12.5px}
+.oact{flex-wrap:wrap}
+.oact .start{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.assigned{font-size:12px;margin-top:4px;color:var(--accent);font-weight:600}
+.roomlink{background:none;border:0;padding:0;color:inherit;font:inherit;text-decoration:underline dotted;cursor:pointer}
+.readby{font-size:11.5px;color:var(--ink-3);margin-top:3px;background:none;border:0;padding:0;text-align:left}
+.newbtn{margin-left:auto}
+.banner{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--accent-soft);border-radius:12px;padding:10px 12px;font-size:13px;margin:10px 16px 0}
+.banner .grow{flex:1;min-width:160px}
+table.rep{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+table.rep th,table.rep td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+table.rep th:first-child,table.rep td:first-child{text-align:left}
+.scroll-x{overflow-x:auto}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.photos img{width:100%;border-radius:10px;border:1px solid var(--line)}
+.pinbox{letter-spacing:.5em;font-family:var(--f-mono);font-size:22px!important;text-align:center}
+.loginwrap{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:45;padding:16px;overflow:auto}
+.loginwrap .dialog{box-shadow:var(--shadow)}
+.loginlogo{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.loginlogo img{width:44px;height:44px;border-radius:10px}
+</style>
+</head>
+<body>
+<div class="app" id="app" hidden>
+  <header class="top">
+    <div class="brand">Shift Chat<small id="hotelName">—</small></div>
+    <div class="spacer"></div>
+    <button class="who" id="whoBtn" aria-label="Your account"><span class="av" id="whoAv"></span><span id="whoName"></span></button>
+    <button class="iconbtn" id="soundBtn" aria-label="Sound on" title="Sound for new orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path id="soundWave" d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg></button>
+  </header>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-tab="chat" aria-selected="true">Chat</button>
+    <button role="tab" data-tab="orders" aria-selected="false">Orders<span class="cnt" id="tabCnt"></span></button>
+    <button role="tab" data-tab="lost" aria-selected="false">Lost &amp; Found</button>
+    <button role="tab" data-tab="rooms" aria-selected="false">Rooms</button>
+    <button role="tab" data-tab="team" aria-selected="false" id="teamTab" hidden>Manager</button>
+  </nav>
+
+  <div class="main" id="main" data-tab="chat">
+    <section class="col chatcol" aria-label="Chat">
+      <details class="pins" id="pins" open hidden>
+        <summary><svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m9 6 6 6-6 6"/></svg><span id="pinTitle">Notes for this shift</span></summary>
+        <div class="pinlist" id="pinList"></div>
+      </details>
+      <div class="feed" id="feed" aria-live="polite"></div>
+      <form class="composer" id="composer">
+        <div class="kinds" role="group" aria-label="Message type">
+          <button type="button" data-kind="chat" aria-pressed="true">Message</button>
+          <button type="button" data-kind="note" aria-pressed="false">Guest note</button>
+          <button type="button" data-kind="handoff" aria-pressed="false">Shift handoff</button>
+        </div>
+        <div class="row">
+          <textarea id="input" rows="1" placeholder="Ej: necesito un duvet para la 230, por favor" aria-label="Message" maxlength="1000"></textarea>
+          <button class="send" type="submit" id="sendBtn">Send</button>
+        </div>
+        <div class="preview" id="preview"></div>
+      </form>
+    </section>
+    <aside class="col panel" aria-label="Orders">
+      <div class="qhead">
+        <div><h2>Now serving</h2><div class="sub">Open orders, highest priority first</div></div>
+        <div class="big" id="qCount">0</div>
+        <button class="btn pri sm newbtn" id="newOrderBtn">+ New</button>
+      </div>
+      <div class="banner" id="pushBanner" hidden><span class="grow" id="pushText"></span><button class="btn sm pri" id="pushBtn">Turn on alerts</button></div>
+      <div class="filters" id="filters" role="group" aria-label="Filter orders">
+        <button data-f="all" aria-pressed="true">All</button>
+        <button data-f="mine" aria-pressed="false">Mine</button>
+        <button data-f="housekeeping" aria-pressed="false">Housekeeping</button>
+        <button data-f="maintenance" aria-pressed="false">Maintenance</button>
+        <button data-f="frontdesk" aria-pressed="false">Front desk</button>
+      </div>
+      <div class="orders" id="orders"></div>
+      <div class="killfeed"><h3>Completed today</h3><div id="kills"></div></div>
+    </aside>
+  </div>
+
+  <section class="view" id="view-lost" hidden><div class="inner">
+    <form class="card" id="lfForm">
+      <h2>Log a found item</h2>
+      <div class="field"><label for="lfItem">What was found</label><input id="lfItem" required maxlength="200" placeholder="Black iPhone charger"></div>
+      <div class="grid2">
+        <div class="field"><label for="lfLoc">Where</label><input id="lfLoc" maxlength="120" placeholder="Nightstand, pool, lobby"></div>
+        <div class="field"><label for="lfRoom">Room (optional)</label><input id="lfRoom" maxlength="6" inputmode="numeric"></div>
+      </div>
+      <div class="field"><label for="lfNotes">Notes (optional)</label><input id="lfNotes" maxlength="500" placeholder="Stored in the HK office, shelf 2"></div>
+      <button class="btn pri" type="submit">Save item</button>
+    </form>
+    <div class="card"><h2>Holding (<span id="lfCount">0</span>)</h2><div class="list" id="lfList"></div></div>
+    <div class="card"><h2>Returned or discarded, last 7 days</h2><div class="list" id="lfDone"></div></div>
+  </div></section>
+
+  <section class="view" id="view-rooms" hidden><div class="inner">
+    <form class="card" id="roomForm">
+      <h2>Room history</h2>
+      <div class="row"><input id="roomInput" class="field" style="flex:1;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:16px" inputmode="numeric" maxlength="6" placeholder="Room number, e.g. 230" aria-label="Room number"><button class="btn pri" type="submit">Look up</button></div>
+      <p class="small" style="margin:8px 0 0">Shows the last 6 months of orders, messages and lost items for that room.</p>
+    </form>
+    <div id="roomOut"></div>
+  </div></section>
+
+  <section class="view" id="view-team" hidden><div class="inner">
+    <div class="card">
+      <h2>Last 7 days</h2>
+      <div class="scroll-x"><table class="rep" id="repTable"></table></div>
+      <div class="btnrow" style="margin-top:10px"><button class="btn" id="csvBtn">Download orders (CSV, 30 days)</button></div>
+    </div>
+    <form class="card" id="staffForm">
+      <h2>Add staff</h2>
+      <p class="small" style="margin:0 0 10px">They sign in with exactly this first and last name. The first PIN they type becomes their PIN.</p>
+      <div class="grid2">
+        <div class="field"><label for="sfFirst">First name</label><input id="sfFirst" required maxlength="30"></div>
+        <div class="field"><label for="sfLast">Last name</label><input id="sfLast" required maxlength="30"></div>
+        <div class="field"><label for="sfRole">Department</label><select id="sfRole"></select></div>
+      </div>
+      <div class="err" id="sfErr"></div>
+      <button class="btn pri" type="submit">Add to team</button>
+    </form>
+    <div class="card"><h2>Team at <span id="teamHotel"></span></h2><div class="list" id="staffList"></div></div>
+  </div></section>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<div class="loginwrap" id="login" hidden>
+  <form class="dialog" id="loginForm" autocomplete="off">
+    <div class="loginlogo"><img src="apple-touch-icon.png" alt=""><div><h2 style="margin:0">Shift Chat</h2><div class="small">Front desk · Housekeeping · Engineering</div></div></div>
+    <p class="lead">Sign in with your first and last name and your 4-digit PIN. First time? The PIN you type now becomes yours.</p>
+    <div class="field"><label for="fHotel">Hotel</label><select id="fHotel"></select></div>
+    <div class="two">
+      <div class="field"><label for="fFirst">First name</label><input id="fFirst" autocomplete="given-name" required></div>
+      <div class="field"><label for="fLast">Last name</label><input id="fLast" autocomplete="family-name" required></div>
+    </div>
+    <div class="field"><label for="fPin">PIN</label><input id="fPin" class="pinbox" type="password" inputmode="numeric" pattern="\d{4}" maxlength="4" autocomplete="off" required></div>
+    <div class="err" id="loginErr"></div>
+    <button class="primary" type="submit" id="loginBtn">Enter</button>
+  </form>
+</div>
+
+<div class="scrim" id="modal" hidden><div class="dialog" id="modalBody"></div></div>
+<input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
+
+<script>
+(() => {
+'use strict';
+const API = 'https://ilqlluhsyxlwersrnmob.supabase.co';
+const KEY = 'sb_publishable_FGX3oLS67ifrHc1CUGkmPQ_s338NdmZ';
+const VAPID_PUBLIC = 'BLeJi7cmVh-i65_4U4Hi0jKZ2KuUuocB4yT_iUsLHobAxRAvJz-rWM8C8vV19rAjM1sG_W6onQNLGfxJLbp8-zU';
+const ROLES = [
+  {id:'fd',  label:'Front Desk',  color:'--r-fd'},
+  {id:'hk',  label:'Housekeeper', color:'--r-hk'},
+  {id:'hm',  label:'Houseman',    color:'--r-hm'},
+  {id:'eng', label:'Engineering', color:'--r-eng'},
+  {id:'mgr', label:'Manager',     color:'--r-mgr'},
+];
+const CATS = { housekeeping:'Housekeeping', maintenance:'Maintenance', frontdesk:'Front desk' };
+const TZ = 'America/New_York';
+const ERR = {
+  NOT_ON_LIST: 'That name is not on the team list for this hotel. Check the spelling or ask your manager to add you.',
+  WRONG_PIN: 'Wrong PIN. After 5 tries the account locks for 15 minutes.',
+  LOCKED: 'Too many wrong PINs. Try again in 15 minutes or ask your manager to reset your PIN.',
+  PIN_FORMAT: 'The PIN must be 4 digits.',
+  SESSION_EXPIRED: 'Please sign in again.',
+  MANAGER_ONLY: 'Only managers can do that.',
+  DUPLICATE_NAME: 'Someone with that name is already on the team.',
+  NOT_YOURSELF: 'You cannot remove your own manager access.',
+  MAX_PHOTOS: 'An order can have up to 3 photos.',
+  DETAILS_REQUIRED: 'Write what needs to be done.',
+};
+
+/* helpers */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ls = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  del(k){ try { localStorage.removeItem(k); } catch {} },
+};
+const roleOf = id => ROLES.find(r => r.id === id) || ROLES[0];
+const roleColor = id => `var(${roleOf(id).color})`;
+const initials = n => String(n||'').split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0]).join('').toUpperCase();
+const fmtTime = ms => new Date(ms).toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit', timeZone: TZ});
+const fmtDate = ms => new Date(ms).toLocaleDateString('en-US', {month:'short', day:'numeric', timeZone: TZ});
+const ago = ms => { const m = Math.max(0, Math.round((Date.now() - ms)/60000)); return m < 1 ? 'now' : m < 60 ? m + 'm' : m < 1440 ? Math.floor(m/60) + 'h ' + (m%60) + 'm' : Math.floor(m/1440) + 'd'; };
+const daysOld = ms => Math.floor((Date.now() - ms) / 86400000);
+const hourNY = ms => +new Date(ms).toLocaleString('en-US', {hour:'numeric', hour12:false, timeZone: TZ}) % 24;
+const shiftOf = ms => { const h = hourNY(ms); return h >= 7 && h < 15 ? 'AM shift · 7 AM to 3 PM' : h >= 15 && h < 23 ? 'PM shift · 3 PM to 11 PM' : 'Night audit · 11 PM to 7 AM'; };
+const dayNY = ms => new Date(ms).toLocaleDateString('en-US', {timeZone: TZ});
+const T = x => x ? Date.parse(x) : null;
+
+/* ============ PARSER: guest requests in English + Spanish ============ */
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+// order matters: multi-word / more specific patterns first. Matched text is blanked out so later patterns don't double count.
+const ITEMS = [
+  // front desk
+  {k:'latecheckout', cat:'frontdesk', one:'late checkout', w:['late check ?-?out','salida tarde','check ?-?out tarde','late co']},
+  {k:'earlycheckin', cat:'frontdesk', one:'early check-in', w:['early check ?-?in','entrada temprano','check ?-?in temprano']},
+  {k:'wakeup', cat:'frontdesk', one:'wake-up call', w:['wake ?-?up call','llamada (para|de) despertar','despertador']},
+  {k:'keys', cat:'frontdesk', one:'new key', many:'new keys', w:['new keys?','llaves? nuevas?','nuevas? llaves?','otra llave','another key','re-?key','duplicate key']},
+  {k:'roommove', cat:'frontdesk', one:'room move', w:['room (move|change)','move (rooms?|to another room)','cambi\\w* de (habitacion|cuarto)','mover(lo|la|los)? de (habitacion|cuarto)']},
+  {k:'noise', cat:'frontdesk', one:'noise complaint', w:['noise','noisy','loud','ruido\\w*']},
+  {k:'wifi', cat:'frontdesk', one:'Wi-Fi help', mass:true, w:['wi-?fi','internet']},
+  {k:'parking', cat:'frontdesk', one:'parking help', mass:true, w:['parking','estacionamiento','parqueo']},
+  {k:'lost', cat:'frontdesk', one:'lost item', w:['lost and found','lost item','objetos? perdidos?','se le olvido','left (his|her|their|an?) ']},
+  // housekeeping
+  {k:'tp', cat:'housekeeping', one:'toilet paper', mass:true, w:['toilet paper','papel (de bano|higienico|sanitario|toilet)','\\btp\\b']},
+  {k:'washcloth', cat:'housekeeping', one:'washcloth', many:'washcloths', w:['wash ?cloths?','toallitas?','panitos?']},
+  {k:'bathmat', cat:'housekeeping', one:'bath mat', many:'bath mats', w:['bath ?mats?','alfombras? de bano','tapete de bano']},
+  {k:'towels', cat:'housekeeping', one:'towel', many:'towels', w:['(bath |hand |pool )?towels?','toallas?']},
+  {k:'duvet', cat:'housekeeping', one:'duvet', many:'duvets', w:['duvets?','edredon(es)?','comforters?','duvet covers?']},
+  {k:'blanket', cat:'housekeeping', one:'blanket', many:'blankets', w:['blankets?','cobijas?','frazadas?','mantas?','sabanas? de lana']},
+  {k:'pillow', cat:'housekeeping', one:'pillow', many:'pillows', w:['pillows?','almohadas?']},
+  {k:'sheets', cat:'housekeeping', one:'set of sheets', many:'sets of sheets', w:['sheets?','sabanas?','linens?','ropa de cama']},
+  {k:'toiletries', cat:'housekeeping', one:'toiletries', mass:true, w:['toiletries','amenities','shampoo','champu','conditioner','acondicionador','soaps?','jabon(es)?','lotion','locion','body wash']},
+  {k:'crib', cat:'housekeeping', one:'crib', many:'cribs', w:['cribs?','cunas?','pack ?n ?play','corral']},
+  {k:'rollaway', cat:'housekeeping', one:'rollaway bed', many:'rollaway beds', w:['roll ?-?away( beds?)?','extra beds?','camas? (extra|plegables?|adicional(es)?)']},
+  {k:'hairdryer', cat:'housekeeping', one:'hair dryer', many:'hair dryers', w:['hair ?dryers?','blow ?dryers?','secador(a|es)?( de pelo)?']},
+  {k:'iron', cat:'housekeeping', one:'iron and board', many:'irons', w:['ironing board','tabla de planchar','\\biron\\b','plancha']},
+  {k:'hangers', cat:'housekeeping', one:'hanger', many:'hangers', w:['hangers?','ganchos?','perchas?']},
+  {k:'coffee', cat:'housekeeping', one:'coffee', mass:true, w:['coffee( pods)?','k-?cups?','\\bcafe\\b']},
+  {k:'cups', cat:'housekeeping', one:'cup', many:'cups', w:['\\bcups?\\b','vasos?']},
+  {k:'trash', cat:'housekeeping', one:'trash pickup', mass:true, w:['trash','garbage','basura']},
+  {k:'clean', cat:'housekeeping', one:'room cleaning', mass:true, w:['clean(ing|ed)?','limpia(r|rla|rlo)?','limpieza','service (the|their|his|her) room','servicio (de|a la) (cuarto|habitacion)','refresh']},
+  // maintenance (issue = how the card reads)
+  {k:'leak', cat:'maintenance', issue:'a leak', urgent:true, w:['leak\\w*','fuga','gote\\w*','water on the floor','agua (en|por) el piso','inunda\\w*','flood\\w*']},
+  {k:'pests', cat:'maintenance', issue:'pests', urgent:true, w:['bed ?bugs?','chinches?','roach\\w*','cucaracha\\w*','\\bbugs?\\b','insect\\w*','plagas?','hormigas?','\\bants\\b']},
+  {k:'smoke', cat:'maintenance', issue:'a smoke detector problem', w:['smoke (detector|alarm)','detector de humo','beeping','pitando']},
+  {k:'lockout', cat:'maintenance', issue:'a door or lock problem', w:['locked out','door','puerta','\\block\\b','cerradura','key ?card','caja fuerte','\\bsafe\\b']},
+  {k:'hotwater', cat:'maintenance', issue:'no hot water', urgent:true, w:['no hot water','sin agua caliente','no hay agua caliente','agua fria']},
+  {k:'shower', cat:'maintenance', issue:'a shower or tub problem', w:['shower','ducha','regadera','bath ?tub','banera','\\btina\\b','hot water','agua caliente']},
+  {k:'toilet', cat:'maintenance', issue:'a toilet problem', w:['toilets?','inodoro','\\bwc\\b','tapad[oa]','clogg?ed','\\bclog\\b','\\bsanitario\\b']},
+  {k:'sink', cat:'maintenance', issue:'a sink or drain problem', w:['\\bsink\\b','lavamanos','lavabo','fregadero','drain','desague']},
+  {k:'ac', cat:'maintenance', issue:'an A/C problem', w:['\\ba/?c\\b','air ?condition\\w*','aire( acondicionado)?','\\bheat(er|ing)?\\b','calefaccion','thermostat','termostato','\\bptac\\b']},
+  {k:'tv', cat:'maintenance', issue:'a TV problem', w:['\\btv\\b','\\btele\\b','television','remote','control remoto']},
+  {k:'fridge', cat:'maintenance', issue:'a fridge or microwave problem', w:['fridge','refrigerat\\w*','nevera','refrigerador','microwave','microondas']},
+  {k:'lights', cat:'maintenance', issue:'a lights problem', w:['lights?','\\bluz\\b','luces','bombill\\w*','\\bfocos?\\b','lamps?','lampara']},
+  {k:'outlet', cat:'maintenance', issue:'an outlet problem', w:['outlets?','enchufes?','tomacorrientes?']},
+  {k:'window', cat:'maintenance', issue:'a window or curtain problem', w:['windows?','ventanas?','blinds','cortinas?','curtains?']},
+];
+ITEMS.forEach(it => it.re = new RegExp(it.w.map(p => p.startsWith('\\b') ? p : '\\b' + p).join('|'), 'g'));
+
+const RX = {
+  intent: /\b(need|needs|needed|want|wants|request\w*|please|pls|bring|send|deliver|asked? for|asking|can (you|someone)|necesit\w*|quier\w*|pide|pidio|pidiendo|solicit\w*|por ?favor|porfa|lleva(r|rle|n)?|traer|trae|manda(r|rle)?|envia(r|rle)?|falta\w*|hace falta|broken|not working|doesn'?t work|isn'?t working|won'?t|stopped|fix|repair|out of|no (funciona|sirve|prende|enciende|enfria|calienta|tiene|hay|baja|sale|abre|cierra)|dan(ad|ia)\w*|rot[oa]s?|arregl\w*|reparar|revisar|check (on|the))\b/,
+  urgent: /\b(urgent\w*|asap|emergenc\w*|right now|ahora mismo|ya mismo|rapido|quick(ly)?|immediately|inmediat\w*|cuanto antes|lo antes posible)\b|\bya[!. ]*$/,
+  waiting: /\b(waiting|esperando|espera|in the room|en la habitacion|en el cuarto|at the desk|en el lobby|en recepcion)\b/,
+  vip: /\b(vip|gold|platinum|diamond|elite|titanium)\b/,
+  upset: /\b(upset|angry|mad|molest\w*|enojad\w*|bravo|brava|frustrad\w*|complain\w*|quej\w*)\b/,
+};
+const NUMWORDS = {un:1,una:1,uno:1,one:1,a:1,an:1,dos:2,two:2,tres:3,three:3,cuatro:4,four:4,cinco:5,five:5,seis:6,six:6,par:2,couple:2,'2x':2};
+
+function findRooms(t){
+  const rooms = []; const seen = new Set();
+  const push = (r, idx) => { r = r.toUpperCase(); if (!seen.has(r)) { seen.add(r); rooms.push({room:r, idx}); } };
+  const reTagged = /(?:\broom|\brm|\bhab(?:itacion)?|\bcuarto|\bsuite|#)\s*\.?\s*#?\s*(\d{3,4}[a-z]?)\b/g;
+  const reArticle = /\b(?:la|el|en|para|in|to|for|del|al)\s+(\d{3,4})\b(?!\s*(?:am|pm|dolares|dollars|usd|minutes|minutos|\$|:))/g;
+  let m;
+  while ((m = reTagged.exec(t))) push(m[1], m.index);
+  if (!rooms.length) while ((m = reArticle.exec(t))) push(m[1], m.index);
+  if (rooms.length) { const reMore = /(?:,|\by\b|\band\b|&|\/)\s*(\d{3,4})\b/g; while ((m = reMore.exec(t))) push(m[1], m.index); }
+  if (!rooms.length) {
+    const reBare = /(?<![\d$:.,])\b(\d{3,4})\b(?![\d:.,]|\s*(?:am|pm|\$|dolares|dollars|usd))/g;
+    while ((m = reBare.exec(t))) { const n = +m[1]; if (n >= 100 && n <= 1999) push(m[1], m.index); }
+  }
+  return rooms;
+}
+
+function qtyBefore(t, idx){
+  const before = t.slice(Math.max(0, idx - 18), idx).trim().split(/\s+/).slice(-2);
+  for (let i = before.length - 1; i >= 0; i--) {
+    const w = before[i].replace(/[^a-z0-9]/g, '');
+    if (/^\d{1,2}$/.test(w) && +w > 0 && +w <= 20) return +w;
+    if (w in NUMWORDS) return NUMWORDS[w];
+    if (!['more','mas','extra','additional','adicional','adicionales','de','of','some','unas','unos','algunas','algunos','otra','otro','another','new','nuevas','nuevos','clean','limpias','limpios'].includes(w)) break;
+  }
+  return null;
+}
+
+function parse(text){
+  let t = ' ' + norm(text) + ' ';
+  const rooms = findRooms(t);
+  // blank out room numbers so they aren't read as quantities
+  let work = t;
+  rooms.forEach(r => { work = work.replace(new RegExp('\\b' + r.room.toLowerCase() + '\\b', 'g'), ' '.repeat(r.room.length)); });
+  const found = [];
+  for (const it of ITEMS) {
+    it.re.lastIndex = 0; let m; let first = null; let qty = null;
+    while ((m = it.re.exec(work))) {
+      if (first == null) { first = m.index; qty = qtyBefore(work, m.index); if (qty == null && /s\s*$/.test(m[0]) && it.many) qty = 'pl'; }
+      work = work.slice(0, m.index) + ' '.repeat(m[0].length) + work.slice(m.index + m[0].length);
+      it.re.lastIndex = m.index + m[0].length;
+    }
+    if (first != null) found.push({it, idx:first, qty});
+  }
+  if (!found.length) return [];
+  const intent = RX.intent.test(t), urgent = RX.urgent.test(t);
+  const anyMaint = found.some(f => f.it.cat === 'maintenance');
+  if (!rooms.length && !intent && !urgent) return [];
+  if (rooms.length && !intent && !urgent && !anyMaint && found.every(f => f.it.cat === 'frontdesk') && !/\b(late|tarde|temprano|early)\b/.test(t)) return [];
+  let base = 0;
+  if (urgent) base += 3;
+  if (RX.waiting.test(t)) base += 1;
+  if (RX.vip.test(t)) base += 1;
+  if (RX.upset.test(t)) base += 1;
+  const groups = {};
+  found.sort((a, b) => a.idx - b.idx).forEach(f => { (groups[f.it.cat] = groups[f.it.cat] || []).push(f); });
+  const roomList = rooms.length ? rooms.map(r => r.room) : [null];
+  const out = [];
+  for (const room of roomList) for (const cat in groups) {
+    const g = groups[cat];
+    const items = g.map(f => ({k:f.it.k, label: labelFor(f.it, f.qty), issue: f.it.issue || null, qty: f.qty}));
+    let p = base + (cat === 'maintenance' ? 1 : 0) + (g.some(f => f.it.urgent) ? 2 : 0);
+    out.push({category:cat, room, items, base_priority:p});
+  }
+  return out;
+}
+function labelFor(it, qty){
+  if (it.issue) return it.issue;
+  if (it.mass) return it.one;
+  if (qty === 'pl') return 'extra ' + it.many;
+  if (qty && qty > 1) return qty + ' ' + (it.many || it.one + 's');
+  return (/^[aeiou]/.test(it.one) ? 'an ' : 'a ') + it.one;
+}
+const joinList = a => a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+function summaryFor(o, firstName){
+  const room = o.room ? (o.category === 'frontdesk' ? ' for room ' : ' in room ') + o.room : '';
+  if (o.category === 'maintenance') return `${firstName} reports ${joinList(o.items.map(i => i.label))}${room}`;
+  return `${firstName} needs ${joinList(o.items.map(i => i.label))}${room}`;
+}
+function prioOf(o){
+  const ageMin = (Date.now() - o.created_at) / 60000;
+  const score = o.base_priority + Math.floor(ageMin / 15);
+  return {score, level: score >= 4 ? 'urgent' : score >= 2 ? 'high' : 'normal'};
+}
+
+
+
+/* API */
+async function rpc(fn, args){
+  const r = await fetch(API + '/rest/v1/rpc/' + fn, { method:'POST', headers:{'Content-Type':'application/json', apikey: KEY}, body: JSON.stringify(args || {}) });
+  const txt = await r.text(); let j = null; try { j = txt ? JSON.parse(txt) : null; } catch {}
+  if (!r.ok) {
+    const code = (j && j.message) || 'ERROR';
+    if (code === 'SESSION_EXPIRED') { signOut(true); }
+    throw new Error(ERR[code] || code);
+  }
+  return j;
+}
+const call = (fn, args) => rpc(fn, {p_token: S.token, ...args});
+function notify(orderIds){
+  if (!orderIds || !orderIds.length) return;
+  fetch(API + '/functions/v1/notify', { method:'POST', headers:{'Content-Type':'application/json', apikey: KEY}, body: JSON.stringify({token: S.token, order_ids: orderIds}) }).catch(() => {});
+}
+
+/* state */
+const S = { token: ls.get('sc.token', null), me: ls.get('sc.me', null), hotel: null, messages: [], orders: [], lost: [], staff: [],
+  kind:'chat', filter:'all', tab:'chat', sound: ls.get('sc.sound', true), known: new Map(), firstLoad: true, readSent: new Set() };
+
+/* ===== render ===== */
+function render(){
+  if (!S.me) return;
+  $('#hotelName').textContent = S.hotel ? S.hotel.name : '';
+  $('#whoName').textContent = S.me.name;
+  $('#whoAv').textContent = initials(S.me.name); $('#whoAv').style.background = roleColor(S.me.role);
+  $('#teamTab').hidden = S.me.role !== 'mgr';
+  renderFeed(); renderPins(); renderOrders(); renderKills(); renderLost(); markRead();
+}
+function roomLinks(text){ return esc(text).replace(/\b(\d{3,4})\b/g, (m, r) => (+r >= 100 && +r <= 1999) ? `<button class="roomlink" data-room="${r}">${r}</button>` : m); }
+function renderFeed(){
+  const feed = $('#feed'); const nearBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 120;
+  const byMsg = {}; S.orders.forEach(o => (byMsg[o.message_id] = byMsg[o.message_id] || []).push(o));
+  let html = '', last = '';
+  if (!S.messages.length) html = '<div class="empty">No messages in the last 3 days. Write the first one below: a guest request, a guest note, or your shift handoff.</div>';
+  S.messages.forEach(m => {
+    const sh = dayNY(m.created_at) + shiftOf(m.created_at);
+    if (sh !== last) { html += `<div class="shiftdiv">${esc(fmtDate(m.created_at))} · ${esc(shiftOf(m.created_at))}</div>`; last = sh; }
+    const mine = m.staff_id === S.me.id;
+    const tag = m.kind === 'note' ? '<span class="kindtag">Guest note</span>' : m.kind === 'handoff' ? '<span class="kindtag">Shift handoff</span>' : '';
+    const chips = (byMsg[m.id] || []).map(o => `<span class="xchip ${o.status === 'done' || o.status === 'dismissed' ? 'done' : ''}"><b>${esc(o.ticket)}</b>${esc(o.room ? 'Room ' + o.room : 'No room')} · ${esc(o.status === 'in_progress' ? 'in progress' : o.status === 'open' ? CATS[o.category] : o.status)}</span>`).join('');
+    const rb = m.read_by ? `<button class="readby" data-readby="${esc(m.id)}">Read by ${m.read_by.length}</button>` : '';
+    html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''}">
+      <div class="av" style="background:${roleColor(m.role)}">${esc(initials(m.author))}</div>
+      <div class="bub"><div class="head"><span class="name">${esc(m.author)}</span><span class="rolechip" style="background:${roleColor(m.role)}">${esc(roleOf(m.role).label)}</span>${tag}<span class="time">${fmtTime(m.created_at)}</span></div>
+      <div class="body">${roomLinks(m.body)}</div>${chips ? `<div class="extracted">${chips}</div>` : ''}${rb}</div></div>`;
+  });
+  feed.innerHTML = html;
+  if (nearBottom || S.firstLoad) feed.scrollTop = feed.scrollHeight;
+}
+function renderPins(){
+  const since = Date.now() - 24*3600e3;
+  const pins = S.messages.filter(m => m.kind !== 'chat' && m.created_at > since).sort((a, b) => b.created_at - a.created_at);
+  $('#pins').hidden = !pins.length;
+  $('#pinTitle').textContent = `Notes and handoffs, last 24 hours (${pins.length})`;
+  $('#pinList').innerHTML = pins.map(p => `<div class="pin ${p.kind}"><div class="meta">${p.kind === 'note' ? 'Guest note' : 'Handoff'} · ${esc(p.author)} · ${fmtTime(p.created_at)} · read by ${(p.read_by||[]).length}</div>${roomLinks(p.body)}</div>`).join('');
+}
+function markRead(){
+  if (S.tab !== 'chat' && window.matchMedia('(max-width:899px)').matches) return;
+  if (document.visibilityState !== 'visible') return;
+  const ids = S.messages.filter(m => m.kind !== 'chat' && !(m.read_by || []).includes(S.me.name) && !S.readSent.has(m.id)).map(m => m.id);
+  if (!ids.length) return;
+  ids.forEach(id => S.readSent.add(id));
+  call('sc_read', {p_ids: ids}).catch(() => ids.forEach(id => S.readSent.delete(id)));
+}
+function orderCard(o, p){
+  const first = o.author.split(' ')[0];
+  const sum = esc(o.summary).replace(esc(first), `<em>${esc(first)}</em>`);
+  const src = o.message_id && S.messages.find(m => m.id === o.message_id);
+  const quote = src ? `“${esc(src.body)}”` : (o.details ? esc(o.details) : '');
+  const st = o.status === 'in_progress' ? '<span class="pill prog">In progress</span>' : '';
+  const acts = [];
+  if (o.status === 'open') acts.push(`<button class="start" data-act="start" data-id="${o.id}">I'm on it</button>`);
+  acts.push(`<button class="done" data-act="done" data-id="${o.id}">Done</button>`);
+  acts.push(`<button data-act="more" data-id="${o.id}" aria-label="More actions">•••</button>`);
+  return `<div class="order p-${p.level}">
+    <button class="fob ${o.room ? '' : 'none'}" ${o.room ? `data-room="${esc(o.room)}"` : ''} style="border:0"><small>ROOM</small>${esc(o.room || 'n/a')}</button>
+    <div style="min-width:0">
+      <div class="ohead"><span class="ticket">${esc(o.ticket)}</span><span class="prio ${p.level}">${p.level}</span>${st}<span class="cat">${esc(CATS[o.category])}</span><span class="age">${ago(o.created_at)}</span></div>
+      <div class="osum">${sum}</div>
+      ${quote ? `<div class="oquote">${quote}</div>` : ''}
+      ${o.assigned_name ? `<div class="assigned">Assigned to ${esc(o.assigned_name)}</div>` : ''}
+      ${o.photos ? `<button class="readby" data-photos="${o.id}">${o.photos} photo${o.photos > 1 ? 's' : ''}</button>` : ''}
+      <div class="oact">${acts.join('')}</div>
+    </div></div>`;
+}
+function renderOrders(){
+  const open = S.orders.filter(o => o.status === 'open' || o.status === 'in_progress').map(o => ({o, p: prioOf(o)}))
+    .sort((a, b) => b.p.score - a.p.score || a.o.created_at - b.o.created_at);
+  const shown = open.filter(x => S.filter === 'all' || (S.filter === 'mine' ? x.o.assigned_to === S.me.id : x.o.category === S.filter));
+  $('#qCount').textContent = open.length; $('#tabCnt').textContent = open.length || '';
+  $('#orders').innerHTML = shown.length ? shown.map(x => orderCard(x.o, x.p)).join('')
+    : `<div class="qempty">${open.length ? 'Nothing here for this filter.' : 'All clear. New requests from the chat land here.'}</div>`;
+}
+function killLine(o){
+  const who = `<span class="who2" style="color:${roleColor(o.done_role)}">${esc(o.done_by)}</span> (${esc(roleOf(o.done_role).label)})`;
+  const what = esc((o.items && o.items.length ? o.items.map(i => i.issue || String(i.label).replace(/^an? /, '')).join(', ') : (o.details || '')));
+  if (o.status === 'dismissed') return `<span class="k-ico x">✕</span><span>${who} cleared ${esc(o.ticket)} (not a task)</span>`;
+  return `<span class="k-ico">✓</span><span>${who} completed the ${esc(CATS[o.category].toLowerCase())} request${o.room ? ' for room <b>' + esc(o.room) + '</b>' : ''}${what ? ': ' + what : ''}</span>`;
+}
+function renderKills(){
+  const today = dayNY(Date.now());
+  const done = S.orders.filter(o => (o.status === 'done' || o.status === 'dismissed') && o.done_at && dayNY(o.done_at) === today).sort((a, b) => b.done_at - a.done_at);
+  $('#kills').innerHTML = done.length ? done.map(o => `<div class="kill">${killLine(o)}<span class="t">${fmtTime(o.done_at)}</span></div>`).join('') : '<div class="small">Finished orders show up here.</div>';
+}
+function renderLost(){
+  const held = S.lost.filter(l => l.status === 'held');
+  $('#lfCount').textContent = held.length;
+  $('#lfList').innerHTML = held.length ? held.map(l => {
+    const d = daysOld(l.created_at);
+    return `<div class="li"><div class="grow"><div class="t1">${esc(l.item)} ${d >= 90 ? '<span class="pill warn">90+ days</span>' : ''}</div>
+      <div class="t2">${esc([l.location, l.room ? 'Room ' + l.room : ''].filter(Boolean).join(' · '))}${l.notes ? ' · ' + esc(l.notes) : ''}</div>
+      <div class="t2">Found by ${esc(l.found_by)} · ${fmtDate(l.created_at)} (${d} day${d === 1 ? '' : 's'})</div></div>
+      <div class="btnrow" style="flex-direction:column"><button class="btn sm okb" data-lf="returned" data-id="${l.id}">Returned</button><button class="btn sm" data-lf="discarded" data-id="${l.id}">Discarded</button></div></div>`;
+  }).join('') : '<div class="small">Nothing on hold.</div>';
+  const done = S.lost.filter(l => l.status !== 'held');
+  $('#lfDone').innerHTML = done.length ? done.map(l => `<div class="li"><div class="grow"><div class="t1">${esc(l.item)} <span class="pill ${l.status === 'returned' ? 'ok' : ''}">${esc(l.status)}</span></div>
+      <div class="t2">${esc(l.resolved_by || '')} · ${l.resolved_at ? fmtDate(l.resolved_at) : ''}</div></div><button class="btn sm" data-lf="held" data-id="${l.id}">Undo</button></div>`).join('') : '<div class="small">None.</div>';
+}
+function toast(html, cls){
+  const el = document.createElement('div'); el.className = 'toast ' + (cls || ''); el.innerHTML = html;
+  $('#toasts').prepend(el); setTimeout(() => el.remove(), 6500);
+  while ($('#toasts').children.length > 4) $('#toasts').lastChild.remove();
+}
+let actx = null;
+function beep(){
+  if (!S.sound) return;
+  try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); const o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'sine'; o.frequency.value = 880; g.gain.setValueAtTime(.0001, actx.currentTime); g.gain.exponentialRampToValueAtTime(.2, actx.currentTime + .02);
+    g.gain.exponentialRampToValueAtTime(.0001, actx.currentTime + .35); o.connect(g).connect(actx.destination); o.start(); o.stop(actx.currentTime + .4); } catch {}
+}
+function setSoundIcon(){ $('#soundWave').style.display = S.sound ? '' : 'none'; $('#soundBtn').setAttribute('aria-label', S.sound ? 'Sound on' : 'Sound off'); }
+
+/* ===== sync ===== */
+let busy = false, timer = null, failCount = 0;
+async function refresh(){
+  if (!S.token || busy) return; busy = true;
+  try {
+    const d = await call('sc_sync', {});
+    S.me = d.me; ls.set('sc.me', S.me); S.hotel = d.hotel; S.staff = d.staff;
+    S.messages = d.messages.map(m => ({...m, created_at: T(m.created_at)}));
+    S.orders = d.orders.map(o => ({...o, created_at: T(o.created_at), done_at: T(o.done_at), started_at: T(o.started_at)}));
+    S.lost = d.lost.map(l => ({...l, created_at: T(l.created_at), resolved_at: T(l.resolved_at)}));
+    S.orders.forEach(o => {
+      const prev = S.known.get(o.id);
+      if (!S.firstLoad) {
+        if (prev === undefined && o.status === 'open' && o.created_by !== S.me.id) { toast(`<b>${esc(o.ticket)}</b> ${esc(o.summary)}`, 'new'); beep(); }
+        if ((prev === 'open' || prev === 'in_progress') && o.status === 'done' && o.done_by_id !== S.me.id) toast(killLine(o).replace('<span class="k-ico">✓</span>', '✓ '));
+      }
+      S.known.set(o.id, o.status);
+    });
+    render(); S.firstLoad = false; failCount = 0;
+  } catch (e) {
+    if (S.token && ++failCount === 3) toast('Connection problem. Retrying…');
+  } finally { busy = false; }
+}
+function startPolling(){ clearInterval(timer); timer = setInterval(() => { if (document.visibilityState === 'visible') refresh(); }, 4000); }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refresh(); });
+if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', () => refresh());
+
+/* ===== actions ===== */
+async function send(){
+  const body = $('#input').value.trim(); if (!body) return;
+  const btn = $('#sendBtn'); btn.disabled = true;
+  const first = S.me.first_name;
+  const orders = (S.kind === 'handoff' ? [] : parse(body)).map(o => ({...o, summary: summaryFor(o, first)}));
+  const rooms = findRooms(' ' + norm(body) + ' ').map(r => r.room);
+  try {
+    const r = await call('sc_post', {p_kind: S.kind, p_body: body, p_rooms: rooms, p_orders: orders});
+    $('#input').value = ''; autosize(); $('#preview').textContent = '';
+    (r.order_ids || []).forEach(id => S.known.set(id, 'open'));
+    notify(r.order_ids);
+    if (orders.length) toast(`Sent to orders: <b>${esc(orders.map(o => o.room ? 'room ' + o.room : CATS[o.category]).join(', '))}</b>`, 'new');
+    if (S.kind !== 'chat') setKind('chat');
+    await refresh(); $('#feed').scrollTop = $('#feed').scrollHeight;
+  } catch (e) { toast('Not sent: ' + esc(e.message)); }
+  finally { btn.disabled = false; }
+}
+async function orderAction(id, act, assignee){
+  try { await call('sc_order_update', {p_order: id, p_action: act, p_assignee: assignee || null}); if (act === 'assign') notify([id]); await refresh(); }
+  catch (e) { toast('Could not update: ' + esc(e.message)); }
+}
+
+/* modal */
+function openModal(html){ $('#modalBody').innerHTML = html; $('#modal').hidden = false; }
+function closeModal(){ $('#modal').hidden = true; $('#modalBody').innerHTML = ''; }
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal' || e.target.closest('[data-close]')) closeModal(); });
+
+function moreMenu(id){
+  const o = S.orders.find(x => x.id === id); if (!o) return;
+  const opts = S.staff.map(s => `<option value="${s.id}" ${s.id === o.assigned_to ? 'selected' : ''}>${esc(s.name)} · ${esc(roleOf(s.role).label)}</option>`).join('');
+  openModal(`<h2>${esc(o.ticket)}${o.room ? ' · Room ' + esc(o.room) : ''}</h2><p class="lead">${esc(o.summary)}</p>
+    <div class="field"><label for="asg">Assign to</label><select id="asg"><option value="">Choose a person</option>${opts}</select></div>
+    <div class="btnrow" style="margin-bottom:14px"><button class="btn pri" id="asgBtn">Assign</button><button class="btn" id="photoBtn">Add photo</button>${o.photos ? `<button class="btn" data-photos="${o.id}">See photos</button>` : ''}</div>
+    <div class="btnrow"><button class="btn" id="dismissBtn">Not a task</button><button class="btn" data-close>Close</button></div>`);
+  $('#asgBtn').onclick = () => { const v = $('#asg').value; if (!v) return; closeModal(); orderAction(id, 'assign', v); };
+  $('#dismissBtn').onclick = () => { closeModal(); orderAction(id, 'dismiss'); };
+  $('#photoBtn').onclick = () => { photoFor = id; $('#photoInput').value = ''; $('#photoInput').click(); };
+}
+let photoFor = null;
+$('#photoInput').addEventListener('change', async () => {
+  const f = $('#photoInput').files[0]; if (!f || !photoFor) return;
+  try {
+    const data = await shrink(f, 1100, .72);
+    await call('sc_photo_add', {p_order: photoFor, p_data: data});
+    closeModal(); toast('Photo added'); refresh();
+  } catch (e) { toast('Photo not saved: ' + esc(e.message)); }
+});
+function shrink(file, max, q){
+  return new Promise((res, rej) => {
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = () => { const k = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement('canvas');
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url); let d = c.toDataURL('image/jpeg', q); if (d.length > 590000) d = c.toDataURL('image/jpeg', .5); res(d); };
+    img.onerror = () => rej(new Error('Could not read that image'));
+    img.src = url;
+  });
+}
+async function showPhotos(id){
+  openModal('<h2>Photos</h2><p class="lead">Loading…</p>');
+  try { const p = await call('sc_photos', {p_order: id});
+    openModal(`<h2>Photos</h2><div class="photos">${p.map(x => `<figure style="margin:0"><img src="${esc(x.data)}" alt="Order photo"><figcaption class="small">${esc(x.added_by)} · ${fmtTime(T(x.created_at))}</figcaption></figure>`).join('')}</div><div class="btnrow" style="margin-top:12px"><button class="btn" data-close>Close</button></div>`);
+  } catch (e) { openModal(`<h2>Photos</h2><p class="err">${esc(e.message)}</p><button class="btn" data-close>Close</button>`); }
+}
+function newOrder(){
+  openModal(`<h2>New order</h2><p class="lead">For anything the chat didn't pick up.</p>
+    <div class="grid2"><div class="field"><label for="noCat">Department</label><select id="noCat"><option value="housekeeping">Housekeeping</option><option value="maintenance">Maintenance</option><option value="frontdesk">Front desk</option></select></div>
+    <div class="field"><label for="noRoom">Room</label><input id="noRoom" inputmode="numeric" maxlength="6"></div></div>
+    <div class="field"><label for="noDet">What needs to be done</label><textarea id="noDet" maxlength="500"></textarea></div>
+    <label style="display:flex;gap:8px;align-items:center;margin-bottom:12px;font-weight:600"><input type="checkbox" id="noUrg"> Urgent</label>
+    <div class="err" id="noErr"></div>
+    <div class="btnrow"><button class="btn pri" id="noSave">Create order</button><button class="btn" data-close>Cancel</button></div>`);
+  $('#noSave').onclick = async () => {
+    try { const r = await call('sc_order_new', {p_category: $('#noCat').value, p_room: $('#noRoom').value, p_details: $('#noDet').value, p_urgent: $('#noUrg').checked});
+      closeModal(); S.known.set(r.order_id, 'open'); notify([r.order_id]); refresh(); }
+    catch (e) { $('#noErr').textContent = e.message; }
+  };
+}
+async function roomHistory(room){
+  setTab('rooms'); $('#roomInput').value = room; $('#roomOut').innerHTML = '<div class="small">Loading…</div>';
+  try {
+    const d = await call('sc_room', {p_room: room});
+    const ord = d.orders.map(o => `<div class="li"><div class="grow"><div class="t1">${esc(o.ticket)} · ${esc(o.summary)}</div><div class="t2">${fmtDate(T(o.created_at))} ${fmtTime(T(o.created_at))} · ${esc(o.status.replace('_',' '))}${o.done_by ? ' by ' + esc(o.done_by) : ''}</div></div></div>`).join('');
+    const msg = d.messages.map(m => `<div class="li"><div class="grow"><div class="t1">${esc(m.author)} <span class="small">${m.kind !== 'chat' ? esc(m.kind) : ''}</span></div><div>${esc(m.body)}</div><div class="t2">${fmtDate(T(m.created_at))} ${fmtTime(T(m.created_at))}</div></div></div>`).join('');
+    const lf = d.lost.map(l => `<div class="li"><div class="grow"><div class="t1">${esc(l.item)}</div><div class="t2">${esc(l.status)} · ${fmtDate(T(l.created_at))}</div></div></div>`).join('');
+    $('#roomOut').innerHTML = `<div class="card"><h2>Room ${esc(room)} · orders (${d.orders.length})</h2><div class="list">${ord || '<div class="small">None.</div>'}</div></div>
+      <div class="card"><h2>Messages that mention ${esc(room)} (${d.messages.length})</h2><div class="list">${msg || '<div class="small">None.</div>'}</div></div>
+      <div class="card"><h2>Lost &amp; found (${d.lost.length})</h2><div class="list">${lf || '<div class="small">None.</div>'}</div></div>`;
+  } catch (e) { $('#roomOut').innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+}
+
+/* manager */
+async function loadTeam(){
+  if (S.me.role !== 'mgr') return;
+  $('#teamHotel').textContent = S.hotel ? S.hotel.name : '';
+  try {
+    const [rep, staff] = await Promise.all([call('sc_report', {p_days: 7}), call('sc_staff_admin', {})]);
+    $('#repTable').innerHTML = '<tr><th>Hotel</th><th>Open now</th><th>New</th><th>Done</th><th>Avg time</th><th>Lost items</th><th>90+ days</th></tr>' +
+      rep.map(r => `<tr><td>${esc(r.hotel)}</td><td>${r.open}</td><td>${r.created}</td><td>${r.done}</td><td>${r.avg_minutes == null ? '–' : r.avg_minutes + ' min'}</td><td>${r.lost_held}</td><td>${r.lost_over_90}</td></tr>`).join('');
+    $('#staffList').innerHTML = staff.map(s => `<div class="li" data-staff="${s.id}"><div class="grow">
+        <div class="t1">${esc(s.first_name)} ${esc(s.last_name)} ${!s.active ? '<span class="pill">Inactive</span>' : s.locked ? '<span class="pill warn">Locked</span>' : s.pin_set ? '<span class="pill ok">PIN set</span>' : '<span class="pill">No PIN yet</span>'}</div>
+        <div class="t2">${s.last_seen ? 'Last seen ' + fmtDate(T(s.last_seen)) + ' ' + fmtTime(T(s.last_seen)) : 'Never signed in'}</div>
+        <div class="btnrow" style="margin-top:6px"><select class="btn sm" data-role>${ROLES.map(r => `<option value="${r.id}" ${r.id === s.role ? 'selected' : ''}>${r.label}</option>`).join('')}</select>
+        <button class="btn sm" data-save>Save</button>${s.pin_set || s.locked ? '<button class="btn sm" data-reset>Reset PIN</button>' : ''}
+        <button class="btn sm" data-active="${s.active ? 0 : 1}">${s.active ? 'Deactivate' : 'Reactivate'}</button></div></div></div>`).join('');
+    S.adminStaff = staff;
+  } catch (e) { toast(esc(e.message)); }
+}
+$('#staffList').addEventListener('click', async e => {
+  const row = e.target.closest('[data-staff]'); if (!row) return; const s = (S.adminStaff || []).find(x => x.id === row.dataset.staff); if (!s) return;
+  const role = row.querySelector('[data-role]').value; let active = s.active, reset = false;
+  if (e.target.matches('[data-reset]')) reset = true; else if (e.target.matches('[data-active]')) active = e.target.dataset.active === '1'; else if (!e.target.matches('[data-save]')) return;
+  try { await call('sc_staff_save', {p_id: s.id, p_first: s.first_name, p_last: s.last_name, p_role: role, p_active: active, p_reset_pin: reset});
+    toast(reset ? `PIN reset. ${esc(s.first_name)} picks a new one at next sign-in.` : 'Saved'); loadTeam(); }
+  catch (err) { toast(esc(err.message)); }
+});
+$('#staffForm').addEventListener('submit', async e => {
+  e.preventDefault(); $('#sfErr').textContent = '';
+  try { await call('sc_staff_save', {p_id: null, p_first: cleanName($('#sfFirst').value), p_last: cleanName($('#sfLast').value), p_role: $('#sfRole').value, p_active: true, p_reset_pin: false});
+    toast('Added ' + esc(cleanName($('#sfFirst').value) + ' ' + cleanName($('#sfLast').value))); $('#sfFirst').value = ''; $('#sfLast').value = ''; loadTeam(); }
+  catch (err) { $('#sfErr').textContent = err.message; }
+});
+$('#csvBtn').onclick = async () => {
+  try {
+    const rows = await call('sc_export', {p_days: 30});
+    const cols = ['hotel','ticket','created_at','category','room','summary','requested_by','status','assigned_to','done_by','done_at','minutes_to_done'];
+    const q = v => { v = v == null ? '' : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    const csv = [cols.join(',')].concat(rows.map(r => cols.map(c => q(r[c])).join(','))).join('\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+    a.download = 'shift-chat-orders-' + new Date().toISOString().slice(0,10) + '.csv'; document.body.appendChild(a); a.click(); a.remove();
+  } catch (e) { toast(esc(e.message)); }
+};
+
+/* push */
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+function pushState(){
+  const b = $('#pushBanner');
+  if (!('serviceWorker' in navigator)) { b.hidden = true; return; }
+  if (isIOS && !standalone) { b.hidden = false; $('#pushText').textContent = 'To get alerts on iPhone: tap Share, then "Add to Home Screen", and open Shift Chat from the new icon.'; $('#pushBtn').hidden = true; return; }
+  if (!('PushManager' in window) || !('Notification' in window)) { b.hidden = true; return; }
+  if (Notification.permission === 'granted' && ls.get('sc.pushOk', false)) { b.hidden = true; return; }
+  if (Notification.permission === 'denied') { b.hidden = false; $('#pushText').textContent = 'Alerts are blocked for this site. Turn them on in your phone settings for this browser.'; $('#pushBtn').hidden = true; return; }
+  b.hidden = false; $('#pushBtn').hidden = false; $('#pushText').textContent = 'Get an alert on this phone when an order for your department comes in.';
+}
+function b64u(s){ const p = '='.repeat((4 - s.length % 4) % 4); const b = atob((s + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(b, c => c.charCodeAt(0)); }
+async function enablePush(){
+  try {
+    const perm = await Notification.requestPermission(); if (perm !== 'granted') { pushState(); return; }
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: b64u(VAPID_PUBLIC)});
+    const j = sub.toJSON();
+    await call('sc_push_sub', {p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth});
+    ls.set('sc.pushOk', true); toast('Alerts are on for this phone'); pushState();
+  } catch (e) { toast('Could not turn on alerts: ' + esc(e.message)); }
+}
+async function resubscribe(){
+  try { if (!('serviceWorker' in navigator) || Notification.permission !== 'granted') return;
+    const reg = await navigator.serviceWorker.ready; const sub = await reg.pushManager.getSubscription(); if (!sub) { ls.set('sc.pushOk', false); return; }
+    const j = sub.toJSON(); await call('sc_push_sub', {p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth}); ls.set('sc.pushOk', true);
+  } catch {}
+}
+$('#pushBtn').onclick = enablePush;
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+/* login */
+const cleanName = s => s.trim().replace(/\s+/g, ' ').replace(/[<>]/g, '').slice(0, 30).replace(/(^|[\s-])(\p{L})/gu, (a, b, c) => b + c.toUpperCase());
+async function showLogin(msg){
+  $('#app').hidden = true; $('#login').hidden = false; $('#loginErr').textContent = msg || '';
+  if (!$('#fHotel').options.length) {
+    try { const h = await rpc('sc_hotels'); $('#fHotel').innerHTML = h.map(x => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join(''); }
+    catch { $('#loginErr').textContent = 'Could not reach the server. Check the internet connection.'; }
+    const last = ls.get('sc.lastLogin', null);
+    $('#fHotel').value = (last && last.hotel) || 'MGT';
+    if (last) { $('#fFirst').value = last.first || ''; $('#fLast').value = last.last || ''; }
+  }
+  setTimeout(() => ($('#fFirst').value ? $('#fPin') : $('#fFirst')).focus(), 50);
+}
+$('#loginForm').addEventListener('submit', async e => {
+  e.preventDefault(); $('#loginErr').textContent = '';
+  const first = cleanName($('#fFirst').value), last = cleanName($('#fLast').value), pin = $('#fPin').value.trim(), hotel = $('#fHotel').value;
+  if (!first || !last) { $('#loginErr').textContent = 'First and last name are both required.'; return; }
+  if (!/^\d{4}$/.test(pin)) { $('#loginErr').textContent = ERR.PIN_FORMAT; return; }
+  $('#loginBtn').disabled = true;
+  try {
+    const r = await rpc('sc_login', {p_hotel: hotel, p_first: first, p_last: last, p_pin: pin});
+    if (r.error) { $('#loginErr').textContent = ERR[r.error] || r.error; return; }
+    S.token = r.token; S.me = r.me; ls.set('sc.token', r.token); ls.set('sc.me', r.me); ls.set('sc.lastLogin', {hotel, first, last});
+    $('#fPin').value = ''; enterApp();
+    if (r.first_time) toast('Welcome! Your PIN is saved. Use the same PIN next time.', 'new');
+  } catch (err) { $('#loginErr').textContent = err.message; }
+  finally { $('#loginBtn').disabled = false; }
+});
+function signOut(expired){
+  const t = S.token; S.token = null; S.me = null; ls.del('sc.token'); ls.del('sc.me'); clearInterval(timer);
+  if (t && !expired) rpc('sc_logout', {p_token: t}).catch(() => {});
+  S.known.clear(); S.firstLoad = true; showLogin(expired ? ERR.SESSION_EXPIRED : '');
+}
+$('#whoBtn').onclick = () => openModal(`<h2>${esc(S.me.name)}</h2><p class="lead">${esc(roleOf(S.me.role).label)} · ${esc(S.hotel ? S.hotel.name : '')}</p>
+  <p class="small">On a shared phone or computer, sign out at the end of your shift.</p>
+  <div class="btnrow"><button class="btn pri" id="soBtn">Sign out</button><button class="btn" data-close>Close</button></div>`) || ($('#soBtn').onclick = () => { closeModal(); signOut(false); });
+function enterApp(){
+  $('#login').hidden = true; $('#app').hidden = false;
+  $('#sfRole').innerHTML = ROLES.map(r => `<option value="${r.id}">${r.label}</option>`).join('');
+  setSoundIcon(); pushState(); resubscribe(); refresh(); startPolling();
+  if (location.hash === '#orders') setTab('orders');
+}
+
+/* tabs & wiring */
+function setTab(t){
+  S.tab = t; document.querySelectorAll('#tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === t));
+  const desktop = window.matchMedia('(min-width:900px)').matches;
+  const inMain = t === 'chat' || t === 'orders';
+  $('#main').hidden = !inMain; $('#main').dataset.tab = t;
+  ['lost','rooms','team'].forEach(v => $('#view-' + v).hidden = t !== v);
+  if (desktop && t === 'orders') setTab('chat');
+  if (t === 'team') loadTeam();
+  if (t === 'chat') { $('#feed').scrollTop = $('#feed').scrollHeight; markRead(); }
+}
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => setTab(b.dataset.tab));
+function setKind(k){
+  S.kind = k; document.querySelectorAll('.kinds button').forEach(x => x.setAttribute('aria-pressed', x.dataset.kind === k));
+  $('#input').placeholder = k === 'note' ? 'Ej: VIP en la 405, aniversario' : k === 'handoff' ? 'What the next shift needs to know' : 'Ej: necesito un duvet para la 230, por favor';
+  livePreview();
+}
+document.querySelectorAll('.kinds button').forEach(b => b.onclick = () => { setKind(b.dataset.kind); $('#input').focus(); });
+document.querySelectorAll('#filters button').forEach(b => b.onclick = () => { S.filter = b.dataset.f; document.querySelectorAll('#filters button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderOrders(); });
+$('#orders').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.room) return roomHistory(b.dataset.room);
+  if (b.dataset.photos) return showPhotos(b.dataset.photos);
+  if (b.dataset.act === 'more') return moreMenu(b.dataset.id);
+  if (b.dataset.act) { b.disabled = true; orderAction(b.dataset.id, b.dataset.act); }
+});
+document.addEventListener('click', e => {
+  const r = e.target.closest('.roomlink'); if (r && !e.target.closest('#orders')) { closeModal(); roomHistory(r.dataset.room); return; }
+  const p = e.target.closest('#modal [data-photos]'); if (p) { showPhotos(p.dataset.photos); return; }
+  const rb = e.target.closest('[data-readby]'); if (rb) { const m = S.messages.find(x => x.id === rb.dataset.readby);
+    openModal(`<h2>Read by</h2><div class="list">${(m.read_by||[]).map(n => `<div class="li">${esc(n)}</div>`).join('')}</div><div class="btnrow" style="margin-top:12px"><button class="btn" data-close>Close</button></div>`); }
+});
+$('#lfForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  try { await call('sc_lf_add', {p_item: $('#lfItem').value, p_location: $('#lfLoc').value, p_room: $('#lfRoom').value, p_notes: $('#lfNotes').value});
+    ['#lfItem','#lfLoc','#lfRoom','#lfNotes'].forEach(s => $(s).value = ''); toast('Item saved'); refresh(); }
+  catch (err) { toast(esc(err.message)); }
+});
+document.querySelector('#view-lost').addEventListener('click', async e => {
+  const b = e.target.closest('[data-lf]'); if (!b) return; b.disabled = true;
+  try { await call('sc_lf_update', {p_id: b.dataset.id, p_status: b.dataset.lf}); refresh(); } catch (err) { toast(esc(err.message)); }
+});
+$('#roomForm').addEventListener('submit', e => { e.preventDefault(); const r = $('#roomInput').value.trim(); if (r) roomHistory(r); });
+$('#newOrderBtn').onclick = newOrder;
+$('#composer').addEventListener('submit', e => { e.preventDefault(); send(); });
+const autosize = () => { const t = $('#input'); t.style.height = 'auto'; t.style.height = Math.min(140, t.scrollHeight) + 'px'; };
+function livePreview(){
+  const v = $('#input').value.trim();
+  if (!v || S.kind === 'handoff' || !S.me) { $('#preview').textContent = ''; return; }
+  const o = parse(v);
+  $('#preview').innerHTML = o.length ? 'Will create: ' + o.map(x => `<b>${esc(summaryFor(x, S.me.first_name))}</b>`).join(' · ') : '';
+}
+$('#input').addEventListener('input', () => { autosize(); livePreview(); });
+$('#input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && window.matchMedia('(min-width: 900px)').matches) { e.preventDefault(); send(); } });
+$('#soundBtn').onclick = () => { S.sound = !S.sound; ls.set('sc.sound', S.sound); setSoundIcon(); if (S.sound) beep(); };
+setInterval(() => { if (S.me) { renderOrders(); } }, 30000);
+
+/* boot */
+if (S.token && S.me) enterApp(); else showLogin();
+})();
+</script>
+</body>
+</html>
