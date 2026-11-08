@@ -618,12 +618,13 @@ function renderFeed(){
   feed.innerHTML = html;
   if (nearBottom || S.firstLoad) feed.scrollTop = feed.scrollHeight;
 }
+function readBy(r){ r = r || []; if (!r.length) return 'not read yet'; return 'read by ' + (r.length <= 3 ? esc(r.map(n => n.split(' ')[0]).join(', ')) : r.length); }
 function renderPins(){
   const since = Date.now() - 24*3600e3;
   const pins = S.messages.filter(m => m.kind !== 'chat' && m.created_at > since).sort((a, b) => b.created_at - a.created_at);
   $('#pins').hidden = !pins.length;
   $('#pinTitle').textContent = `Notes and handoffs, last 24 hours (${pins.length})`;
-  $('#pinList').innerHTML = pins.map(p => `<div class="pin ${p.kind}"><div class="meta">${p.kind === 'note' ? 'Guest note' : 'Handoff'} · ${esc(p.author)} · ${fmtTime(p.created_at)} · read by ${(p.read_by||[]).length}</div>${roomLinks(p.body)}</div>`).join('');
+  $('#pinList').innerHTML = pins.map(p => `<div class="pin ${p.kind}"><div class="meta">${p.kind === 'note' ? 'Guest note' : 'Handoff'} · ${esc(p.author)} · ${fmtTime(p.created_at)} · ${readBy(p.read_by)}</div>${roomLinks(p.body)}</div>`).join('');
 }
 function markRead(){
   if (S.tab !== 'chat' && window.matchMedia('(max-width:899px)').matches) return;
