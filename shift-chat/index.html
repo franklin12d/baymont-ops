@@ -350,6 +350,26 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
 .loginlogo h2{font-size:24px}
 .sound-test{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
 @media (max-width:899px){ .composer{margin:4px 10px 14px} .brand small{display:block} }
+/* v3: mentions + shift */
+.composer{position:relative}
+.mmenu{position:absolute;left:8px;right:8px;bottom:calc(100% + 8px);background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lift);max-height:min(290px,45vh);overflow-y:auto;padding:6px;z-index:30}
+.mmenu[hidden]{display:none}
+.mmenu .mh{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:6px 10px 4px}
+.mopt{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;text-align:left;padding:8px 10px;border-radius:10px;min-height:44px}
+.mopt[aria-selected="true"],.mopt:hover{background:var(--accent-soft)}
+.mopt .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px;flex:none}
+.mopt .gi{background:var(--accent-soft);color:var(--accent);font-size:15px}
+.mopt .mt{display:flex;flex-direction:column;min-width:0}
+.mopt .mt b{font-weight:600;font-size:14.5px;color:var(--ink)}
+.mopt .mt small{font-size:12px;color:var(--ink-3)}
+.mention{color:var(--accent);font-weight:600}
+.mention.me{background:var(--accent-soft);border-radius:6px;padding:0 4px}
+.msg.tome .body{box-shadow:inset 3px 0 0 var(--accent)}
+.who.off .av{opacity:.45}
+.who .offtag{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.depts{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--ink-2);margin-top:6px}
+.depts label{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:3px 9px;background:var(--surface)}
+.shiftrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
 </style>
 </head>
 <body>
@@ -357,7 +377,7 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
   <header class="top">
     <div class="brand"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="faG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3D6BFF"/><stop offset="1" stop-color="#0E1726"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#faG)"/><text x="15.5" y="21.2" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="13.5" letter-spacing="-.4" fill="#fff">FA</text><circle cx="25.6" cy="6.6" r="2.2" fill="#9DB4FF"/></svg><div class="bt">FA-Hotel<small id="hotelName">—</small></div></div>
     <div class="spacer"></div>
-    <button class="who" id="whoBtn" aria-label="Your account"><span class="av" id="whoAv"></span><span id="whoName"></span></button>
+    <button class="who" id="whoBtn" aria-label="Your account"><span class="av" id="whoAv"></span><span id="whoName"></span><span class="offtag" id="whoOff" hidden>Off shift</span></button>
     <button class="iconbtn" id="soundBtn" aria-label="Sound on" title="Sound for new orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path id="soundWave" d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg></button>
   </header>
   <nav class="tabs" role="tablist" id="tabs">
@@ -377,13 +397,14 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
       </details>
       <div class="feed" id="feed" aria-live="polite"></div>
       <form class="composer" id="composer">
+        <div class="mmenu" id="mmenu" role="listbox" aria-label="People and teams" hidden></div>
         <div class="kinds" role="group" aria-label="Message type">
           <button type="button" data-kind="chat" aria-pressed="true">Message</button>
           <button type="button" data-kind="note" aria-pressed="false">Guest note</button>
           <button type="button" data-kind="handoff" aria-pressed="false">Shift handoff</button>
         </div>
         <div class="row">
-          <textarea id="input" rows="1" placeholder="Escribe un pedido: toallas para la 230" aria-label="Message" maxlength="1000"></textarea>
+          <textarea id="input" rows="1" placeholder="Escribe un pedido, o @ para avisar a alguien" aria-label="Message" maxlength="1000"></textarea>
           <button class="send" type="submit" id="sendBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Send</button>
         </div>
         <div class="preview" id="preview"></div>
@@ -486,6 +507,16 @@ const ROLES = [
   {id:'mgr', label:'Manager',     color:'--r-mgr'},
 ];
 const CATS = { housekeeping:'Housekeeping', maintenance:'Maintenance', frontdesk:'Front desk' };
+const CAT_GROUP = { housekeeping:'hk', maintenance:'eng', frontdesk:'fd' };
+// @ groups. "all" is managers only.
+const GROUPS = [
+  {k:'all', tag:'todos',         label:'Todos',         hint:'Everyone at this hotel', icon:'✦', alias:['todos','todo','all','everyone']},
+  {k:'hk',  tag:'housekeeping',  label:'Housekeeping',  hint:'Housekeepers and housemen', icon:'⌂', alias:['housekeeping','hk','limpieza','camaristas']},
+  {k:'eng', tag:'mantenimiento', label:'Mantenimiento', hint:'Engineering', icon:'⚙', alias:['mantenimiento','maintenance','eng','engineering','ingenieria']},
+  {k:'fd',  tag:'front',         label:'Front desk',    hint:'Front desk', icon:'☎', alias:['front','frontdesk','recepcion','fd']},
+  {k:'mgr', tag:'gerentes',      label:'Gerentes',      hint:'Managers', icon:'★', alias:['gerentes','gerente','managers','manager','mgr']},
+];
+const DEPTS = [{id:'fd', label:'Front desk'}, {id:'hk', label:'Housekeeping'}, {id:'eng', label:'Engineering'}];
 const TZ = 'America/New_York';
 const ERR = {
   NOT_ON_LIST: 'That name is not on the team list for this hotel. Check the spelling or ask your manager to add you.',
@@ -498,6 +529,7 @@ const ERR = {
   NOT_YOURSELF: 'You cannot remove your own manager access.',
   MAX_PHOTOS: 'An order can have up to 3 photos.',
   DETAILS_REQUIRED: 'Write what needs to be done.',
+  ALL_MGR_ONLY: 'Only managers can use @todos.',
 };
 
 /* helpers */
@@ -678,14 +710,32 @@ async function rpc(fn, args){
   return j;
 }
 const call = (fn, args) => rpc(fn, {p_token: S.token, ...args});
-function notify(orderIds){
-  if (!orderIds || !orderIds.length) return;
-  fetch(API + '/functions/v1/notify', { method:'POST', headers:{'Content-Type':'application/json', apikey: KEY}, body: JSON.stringify({token: S.token, order_ids: orderIds}) }).catch(() => {});
+function notify(orderIds, messageId){
+  orderIds = orderIds || [];
+  if (!orderIds.length && !messageId) return;
+  const body = {token: S.token, order_ids: orderIds}; if (messageId) body.message_id = messageId;
+  fetch(API + '/functions/v1/notify', { method:'POST', headers:{'Content-Type':'application/json', apikey: KEY}, body: JSON.stringify(body) }).catch(() => {});
 }
+/* who an alert is for: same rules as the server */
+const inGroup = (st, g) => g === 'all' || (g === 'mgr' && st.role === 'mgr')
+  || (g === 'hk' && (st.role === 'hk' || st.role === 'hm' || (st.depts || []).includes('hk')))
+  || (g === 'eng' && (st.role === 'eng' || (st.depts || []).includes('eng')))
+  || (g === 'fd' && (st.role === 'fd' || (st.depts || []).includes('fd')));
+const onShift = () => !S.me || S.me.on_shift !== false;
+function orderForMe(o, urgent){
+  if (!onShift() && !urgent) return false;
+  if (o.assigned_to) return o.assigned_to === S.me.id;
+  return inGroup(S.me, CAT_GROUP[o.category]) || (urgent && S.me.role === 'mgr');
+}
+function mentionsMe(m){
+  if (!S.me || m.staff_id === S.me.id) return false;
+  return (m.mention_staff || []).includes(S.me.id) || (m.mention_groups || []).some(g => inGroup(S.me, g));
+}
+const msgUrgent = m => S.orders.some(o => o.message_id === m.id && prioOf(o).level === 'urgent');
 
 /* state */
 const S = { token: ls.get('sc.token', null), me: ls.get('sc.me', null), hotel: null, messages: [], orders: [], lost: [], staff: [],
-  kind:'chat', filter:'all', tab:'chat', sound: ls.get('sc.sound', true), known: new Map(), firstLoad: true, readSent: new Set() };
+  kind:'chat', filter:'all', tab:'chat', sound: ls.get('sc.sound', true), known: new Map(), knownAsg: new Map(), knownMsg: new Set(), firstLoad: true, readSent: new Set(), picked: [] };
 
 /* ===== render ===== */
 function render(){
@@ -693,6 +743,7 @@ function render(){
   $('#hotelName').textContent = S.hotel ? S.hotel.name : '';
   $('#whoName').textContent = S.me.name;
   $('#whoAv').textContent = initials(S.me.name); $('#whoAv').style.background = roleColor(S.me.role);
+  $('#whoBtn').classList.toggle('off', !onShift()); $('#whoOff').hidden = onShift();
   $('#teamTab').hidden = S.me.role !== 'mgr';
   renderFeed(); renderPins(); renderOrders(); renderKills(); renderLost(); markRead();
 }
@@ -705,17 +756,31 @@ function renderFeed(){
   S.messages.forEach(m => {
     const sh = dayNY(m.created_at) + shiftOf(m.created_at);
     if (sh !== last) { html += `<div class="shiftdiv">${esc(fmtDate(m.created_at))} · ${esc(shiftOf(m.created_at))}</div>`; last = sh; }
-    const mine = m.staff_id === S.me.id;
+    const mine = m.staff_id === S.me.id; const tome = mentionsMe(m);
     const tag = m.kind === 'note' ? '<span class="kindtag">Guest note</span>' : m.kind === 'handoff' ? '<span class="kindtag">Shift handoff</span>' : '';
     const chips = (byMsg[m.id] || []).map(o => `<span class="xchip ${o.status === 'done' || o.status === 'dismissed' ? 'done' : ''}"><b>${esc(o.ticket)}</b>${esc(o.room ? 'Room ' + o.room : 'No room')} · ${esc(o.status === 'in_progress' ? 'in progress' : o.status === 'open' ? CATS[o.category] : o.status)}</span>`).join('');
     const rb = m.read_by ? `<button class="readby" data-readby="${esc(m.id)}">Read by ${m.read_by.length}</button>` : '';
-    html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''}">
+    html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''} ${tome ? 'tome' : ''}">
       <div class="av" style="background:${roleColor(m.role)}">${esc(initials(m.author))}</div>
       <div class="bub"><div class="head"><span class="name">${esc(m.author)}</span><span class="rolechip" style="background:${roleColor(m.role)}">${esc(roleOf(m.role).label)}</span>${tag}<span class="time">${fmtTime(m.created_at)}</span></div>
-      <div class="body">${roomLinks(m.body)}</div>${chips ? `<div class="extracted">${chips}</div>` : ''}${rb}</div></div>`;
+      <div class="body">${markMentions(roomLinks(m.body), m)}</div>${chips ? `<div class="extracted">${chips}</div>` : ''}${rb}</div></div>`;
   });
   feed.innerHTML = html;
   if (nearBottom || S.firstLoad) feed.scrollTop = feed.scrollHeight;
+}
+function markMentions(html, m){
+  const labels = [];
+  (m.mention_staff || []).forEach(id => { const st = S.staff.find(x => x.id === id); if (st) labels.push([st.name, id === S.me.id], [st.first_name || st.name.split(' ')[0], id === S.me.id]); });
+  (m.mention_groups || []).forEach(k => { const g = GROUPS.find(x => x.k === k); if (g) labels.push([g.tag, inGroup(S.me, k)], ...g.alias.map(a => [a, inGroup(S.me, k)])); });
+  if (!labels.length) return html;
+  labels.sort((a, b) => b[0].length - a[0].length);
+  const done = new Set();
+  for (const [lab, me] of labels) {
+    const k = norm(lab); if (done.has(k)) continue; done.add(k);
+    const re = new RegExp('@' + esc(lab).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![\\p{L}])', 'giu');
+    html = html.replace(re, x => `<span class="mention${me ? ' me' : ''}">${x}</span>`);
+  }
+  return html.replace(/<span class="mention( me)?"><span class="mention( me)?">(.*?)<\/span><\/span>/g, '<span class="mention$1">$3</span>');
 }
 function readBy(r){ r = r || []; if (!r.length) return 'not read yet'; return 'read by ' + (r.length <= 3 ? esc(r.map(n => n.split(' ')[0]).join(', ')) : r.length); }
 function renderPins(){
@@ -830,10 +895,22 @@ async function refresh(){
     S.orders.forEach(o => {
       const prev = S.known.get(o.id);
       if (!S.firstLoad) {
-        if (prev === undefined && o.status === 'open' && o.created_by !== S.me.id) { const u = prioOf(o).level === 'urgent'; toast(`<b>${u ? 'URGENT · ' : ''}${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); }
+        if (prev === undefined && o.status === 'open' && o.created_by !== S.me.id) { const u = prioOf(o).level === 'urgent';
+          if (orderForMe(o, u)) { toast(`<b>${u ? 'URGENT · ' : ''}${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); } }
+        const pa = S.knownAsg.get(o.id);
+        if (prev !== undefined && prev === o.status && pa !== S.me.id && o.assigned_to === S.me.id && (o.status === 'open' || o.status === 'in_progress')) {
+          const u = prioOf(o).level === 'urgent';
+          if (onShift() || u) { toast(`<b>Assigned to you · ${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); } }
         if ((prev === 'open' || prev === 'in_progress') && o.status === 'done' && o.done_by_id !== S.me.id) toast(killLine(o).replace('<span class="k-ico">✓</span>', '✓ '));
       }
-      S.known.set(o.id, o.status);
+      S.known.set(o.id, o.status); S.knownAsg.set(o.id, o.assigned_to || null);
+    });
+    S.messages.forEach(m => {
+      if (!S.firstLoad && !S.knownMsg.has(m.id) && mentionsMe(m)) {
+        const u = msgUrgent(m);
+        if (onShift() || u) { toast(`<b>@ ${esc(m.author)}</b> ${esc(m.body.length > 90 ? m.body.slice(0, 90) + '…' : m.body)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); }
+      }
+      S.knownMsg.add(m.id);
     });
     if (newSound) chime(newSound);
     render(); S.firstLoad = false; failCount = 0;
@@ -845,19 +922,91 @@ function startPolling(){ clearInterval(timer); timer = setInterval(() => { if (d
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refresh(); });
 if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', () => refresh());
 
+/* ===== mentions ===== */
+const others = () => S.staff.filter(st => st.id !== S.me.id);
+const groupsFor = () => GROUPS.filter(g => g.k !== 'all' || S.me.role === 'mgr');
+const hasTag = (nb, lab) => { const t = '@' + norm(lab); let i = nb.indexOf(t);
+  while (i >= 0) { if (!/[\p{L}]/u.test(nb[i + t.length] || '')) return true; i = nb.indexOf(t, i + 1); } return false; };
+// mention text routes the alert; it is not part of the request the parser reads
+function stripMentions(body){
+  const labs = S.picked.map(p => p.label).concat(others().map(st => st.name)).sort((a, b) => b.length - a.length);
+  labs.forEach(l => { body = body.replace(new RegExp('@' + l.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![\\p{L}])', 'giu'), ' '); });
+  return body.replace(/@[\p{L}][\p{L}'-]*/gu, ' ').replace(/\s+/g, ' ').trim();
+}
+function mentionsIn(body){
+  const nb = norm(body), staff = new Set(), groups = new Set();
+  // picked from the menu, still present in the text
+  S.picked.forEach(p => { if (hasTag(nb, p.label)) (p.type === 'g' ? groups : staff).add(p.id); });
+  // full names typed out
+  others().forEach(st => { if (hasTag(nb, st.name)) staff.add(st.id); });
+  // single words: a team, or a first name only one person has
+  for (const mt of nb.matchAll(/@([\p{L}][\p{L}'-]*)/gu)) {
+    const w = mt[1];
+    const g = GROUPS.find(x => x.alias.includes(w)); if (g) { groups.add(g.k); continue; }
+    const hits = others().filter(st => norm(st.first_name || st.name.split(' ')[0]) === w);
+    if (hits.length === 1) staff.add(hits[0].id);
+  }
+  if (groups.has('all') && S.me.role !== 'mgr') { groups.delete('all'); toast(ERR.ALL_MGR_ONLY); }
+  return {staff: [...staff], groups: [...groups]};
+}
+function mentionNames(m){
+  const n = m.groups.map(k => '@' + GROUPS.find(g => g.k === k).tag).concat(m.staff.map(id => (S.staff.find(st => st.id === id) || {}).name || ''));
+  return n.filter(Boolean).join(', ');
+}
+let menuItems = [], menuSel = 0, menuAt = -1;
+function closeMenu(){ $('#mmenu').hidden = true; menuItems = []; menuAt = -1; }
+function mentionQuery(){
+  const t = $('#input'); const upto = t.value.slice(0, t.selectionStart);
+  const m = upto.match(/(^|\s)@([\p{L}'-]*)$/u);
+  return m ? {at: upto.length - m[2].length - 1, q: norm(m[2])} : null;
+}
+function updateMenu(){
+  if (!S.me) return;
+  const mq = mentionQuery(); if (!mq) return closeMenu();
+  const q = mq.q;
+  const gs = groupsFor().filter(g => !q || g.alias.some(a => a.startsWith(q)) || norm(g.label).startsWith(q));
+  const ps = others().filter(st => { if (!q) return true; const n = norm(st.name); return n.split(' ').some(w => w.startsWith(q)); }).slice(0, 30);
+  menuItems = gs.map(g => ({type:'g', id:g.k, label:g.tag, title:g.label, sub:g.hint, icon:g.icon}))
+    .concat(ps.map(st => ({type:'s', id:st.id, label:st.name, title:st.name, sub:roleOf(st.role).label, role:st.role})));
+  if (!menuItems.length) return closeMenu();
+  menuAt = mq.at; menuSel = Math.min(menuSel, menuItems.length - 1);
+  let html = '', hd = '';
+  menuItems.forEach((it, i) => {
+    const h = it.type === 'g' ? 'Teams' : 'People'; if (h !== hd) { html += `<div class="mh">${h}</div>`; hd = h; }
+    const av = it.type === 'g' ? `<span class="av gi">${it.icon}</span>` : `<span class="av" style="background:${roleColor(it.role)}">${esc(initials(it.title))}</span>`;
+    html += `<button type="button" class="mopt" role="option" data-mi="${i}" aria-selected="${i === menuSel}">${av}<span class="mt"><b>${it.type === 'g' ? '@' + esc(it.label) : esc(it.title)}</b><small>${esc(it.sub)}</small></span></button>`;
+  });
+  const mm = $('#mmenu'); mm.innerHTML = html; mm.hidden = false;
+  const sel = mm.querySelector('[aria-selected="true"]'); if (sel) sel.scrollIntoView({block:'nearest'});
+}
+function pickMention(i){
+  const it = menuItems[i]; if (!it) return;
+  const t = $('#input'); const end = t.selectionStart;
+  const ins = '@' + it.label + ' ';
+  t.value = t.value.slice(0, menuAt) + ins + t.value.slice(end);
+  const pos = menuAt + ins.length; t.setSelectionRange(pos, pos);
+  if (!S.picked.some(p => p.type === it.type && p.id === it.id)) S.picked.push({type: it.type, id: it.id, label: it.label});
+  closeMenu(); autosize(); livePreview(); t.focus();
+}
+$('#mmenu').addEventListener('pointerdown', e => e.preventDefault());
+$('#mmenu').addEventListener('click', e => { const b = e.target.closest('[data-mi]'); if (b) pickMention(+b.dataset.mi); });
+
 /* ===== actions ===== */
 async function send(){
   const body = $('#input').value.trim(); if (!body) return;
   const btn = $('#sendBtn'); btn.disabled = true;
   const first = S.me.first_name;
-  const orders = (S.kind === 'handoff' ? [] : parse(body)).map(o => ({...o, summary: summaryFor(o, first)}));
+  const orders = (S.kind === 'handoff' ? [] : parse(stripMentions(body))).map(o => ({...o, summary: summaryFor(o, first)}));
   const rooms = findRooms(' ' + norm(body) + ' ').map(r => r.room);
   try {
-    const r = await call('sc_post', {p_kind: S.kind, p_body: body, p_rooms: rooms, p_orders: orders});
-    $('#input').value = ''; autosize(); $('#preview').textContent = '';
+    const mentions = mentionsIn(body);
+    const r = await call('sc_post', {p_kind: S.kind, p_body: body, p_rooms: rooms, p_orders: orders, p_mentions: mentions});
+    $('#input').value = ''; autosize(); $('#preview').textContent = ''; S.picked = []; closeMenu();
     (r.order_ids || []).forEach(id => S.known.set(id, 'open'));
-    notify(r.order_ids);
+    if (r.message_id) S.knownMsg.add(r.message_id);
+    notify(r.order_ids, r.mentioned ? r.message_id : null);
     if (orders.length) toast(`Sent to orders: <b>${esc(orders.map(o => o.room ? 'room ' + o.room : CATS[o.category]).join(', '))}</b>`, 'new');
+    else if (r.mentioned) toast(`Alert sent to <b>${esc(mentionNames(mentions))}</b>`, 'new');
     if (S.kind !== 'chat') setKind('chat');
     await refresh(); $('#feed').scrollTop = $('#feed').scrollHeight;
   } catch (e) { toast('Not sent: ' + esc(e.message)); }
@@ -949,7 +1098,8 @@ async function loadTeam(){
         <div class="t2">${s.last_seen ? 'Last seen ' + fmtDate(T(s.last_seen)) + ' ' + fmtTime(T(s.last_seen)) : 'Never signed in'}</div>
         <div class="btnrow" style="margin-top:6px"><select class="btn sm" data-role>${ROLES.map(r => `<option value="${r.id}" ${r.id === s.role ? 'selected' : ''}>${r.label}</option>`).join('')}</select>
         <button class="btn sm" data-save>Save</button>${s.pin_set || s.locked ? '<button class="btn sm" data-reset>Reset PIN</button>' : ''}
-        <button class="btn sm" data-active="${s.active ? 0 : 1}">${s.active ? 'Deactivate' : 'Reactivate'}</button></div></div></div>`).join('');
+        <button class="btn sm" data-active="${s.active ? 0 : 1}">${s.active ? 'Deactivate' : 'Reactivate'}</button></div>
+        <div class="depts"><span>Also alerts for:</span>${DEPTS.map(d => `<label><input type="checkbox" data-dept="${d.id}" ${(s.depts || []).includes(d.id) ? 'checked' : ''}>${d.label}</label>`).join('')}</div></div></div>`).join('');
     S.adminStaff = staff;
   } catch (e) { toast(esc(e.message)); }
 }
@@ -957,7 +1107,8 @@ $('#staffList').addEventListener('click', async e => {
   const row = e.target.closest('[data-staff]'); if (!row) return; const s = (S.adminStaff || []).find(x => x.id === row.dataset.staff); if (!s) return;
   const role = row.querySelector('[data-role]').value; let active = s.active, reset = false;
   if (e.target.matches('[data-reset]')) reset = true; else if (e.target.matches('[data-active]')) active = e.target.dataset.active === '1'; else if (!e.target.matches('[data-save]')) return;
-  try { await call('sc_staff_save', {p_id: s.id, p_first: s.first_name, p_last: s.last_name, p_role: role, p_active: active, p_reset_pin: reset});
+  const depts = [...row.querySelectorAll('[data-dept]:checked')].map(x => x.dataset.dept);
+  try { await call('sc_staff_save', {p_id: s.id, p_first: s.first_name, p_last: s.last_name, p_role: role, p_active: active, p_reset_pin: reset, p_depts: depts});
     toast(reset ? `PIN reset. ${esc(s.first_name)} picks a new one at next sign-in.` : 'Saved'); loadTeam(); }
   catch (err) { toast(esc(err.message)); }
 });
@@ -1050,12 +1201,18 @@ function signOut(expired){
 $('#whoBtn').onclick = () => {
   const canTurnOn = 'Notification' in window && 'serviceWorker' in navigator && !(isIOS && !standalone) && Notification.permission !== 'denied' && !(Notification.permission === 'granted' && ls.get('sc.pushOk', false));
   openModal(`<h2>${esc(S.me.name)}</h2><p class="lead">${esc(roleOf(S.me.role).label)} · ${esc(S.hotel ? S.hotel.name : '')}</p>
-  <div class="sect" style="margin-top:0;border-top:0;padding-top:0"><h3>Alerts</h3><p class="hint">${esc(alertsLabel())}</p>${canTurnOn ? '<button class="btn pri sm" id="mPush">Turn on alerts</button>' : ''}</div>
+  <div class="sect" style="margin-top:0;border-top:0;padding-top:0"><h3>Shift</h3><div class="shiftrow"><p class="hint" style="margin:0">${onShift() ? 'On shift: you get the alerts meant for you.' : 'Off shift: you only get urgent alerts.'}</p><button class="btn sm ${onShift() ? '' : 'pri'}" id="mShift">${onShift() ? 'Go off shift' : 'Start shift'}</button></div></div>
+  <div class="sect"><h3>Alerts</h3><p class="hint">${esc(alertsLabel())}</p>${canTurnOn ? '<button class="btn pri sm" id="mPush">Turn on alerts</button>' : ''}</div>
   <div class="sect"><h3>Sounds</h3><p class="hint">FA-Hotel has its own tone for new orders and a stronger one for urgent orders.</p>
   <div class="sound-test"><button class="btn sm" id="tNormal">Play new order</button><button class="btn sm" id="tUrgent">Play urgent</button></div></div>
   <p class="small">On a shared phone or computer, sign out at the end of your shift.</p>
   <div class="btnrow"><button class="btn pri" id="soBtn">Sign out</button><button class="btn" data-close>Close</button></div>`);
   $('#soBtn').onclick = () => { closeModal(); signOut(false); };
+  $('#mShift').onclick = async () => {
+    try { const me = await call('sc_shift', {p_on: !onShift()}); S.me = {...S.me, ...me}; ls.set('sc.me', S.me); render(); closeModal();
+      toast(onShift() ? 'Shift started. Alerts are on.' : 'Off shift. Only urgent alerts will reach you.'); }
+    catch (err) { toast(esc(err.message)); }
+  };
   $('#tNormal').onclick = () => chime('normal', true);
   $('#tUrgent').onclick = () => chime('urgent', true);
   if ($('#mPush')) $('#mPush').onclick = () => { closeModal(); enablePush(); };
@@ -1081,7 +1238,7 @@ function setTab(t){
 document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => setTab(b.dataset.tab));
 function setKind(k){
   S.kind = k; document.querySelectorAll('.kinds button').forEach(x => x.setAttribute('aria-pressed', x.dataset.kind === k));
-  $('#input').placeholder = k === 'note' ? 'Nota: VIP en la 405, aniversario' : k === 'handoff' ? 'Lo que el próximo turno debe saber' : 'Escribe un pedido: toallas para la 230';
+  $('#input').placeholder = k === 'note' ? 'Nota: VIP en la 405, aniversario' : k === 'handoff' ? 'Lo que el próximo turno debe saber' : 'Escribe un pedido, o @ para avisar a alguien';
   livePreview();
 }
 document.querySelectorAll('.kinds button').forEach(b => b.onclick = () => { setKind(b.dataset.kind); $('#input').focus(); });
@@ -1116,11 +1273,20 @@ const autosize = () => { const t = $('#input'); t.style.height = 'auto'; t.style
 function livePreview(){
   const v = $('#input').value.trim();
   if (!v || S.kind === 'handoff' || !S.me) { $('#preview').textContent = ''; return; }
-  const o = parse(v);
+  const o = parse(stripMentions(v));
   $('#preview').innerHTML = o.length ? 'Will create: ' + o.map(x => `<b>${esc(summaryFor(x, S.me.first_name))}</b>`).join(' · ') : '';
 }
-$('#input').addEventListener('input', () => { autosize(); livePreview(); });
-$('#input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && window.matchMedia('(min-width: 900px)').matches) { e.preventDefault(); send(); } });
+$('#input').addEventListener('input', () => { autosize(); livePreview(); menuSel = 0; updateMenu(); });
+$('#input').addEventListener('click', updateMenu);
+$('#input').addEventListener('blur', () => setTimeout(closeMenu, 150));
+$('#input').addEventListener('keydown', e => {
+  if (!$('#mmenu').hidden && menuItems.length) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); menuSel = (menuSel + (e.key === 'ArrowDown' ? 1 : -1) + menuItems.length) % menuItems.length; updateMenu(); return; }
+    if (e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); pickMention(menuSel); return; }
+    if (e.key === 'Escape') { e.preventDefault(); closeMenu(); return; }
+  }
+  if (e.key === 'Enter' && !e.shiftKey && window.matchMedia('(min-width: 900px)').matches) { e.preventDefault(); send(); }
+});
 $('#soundBtn').onclick = () => { S.sound = !S.sound; ls.set('sc.sound', S.sound); setSoundIcon(); if (S.sound) chime('normal'); };
 setInterval(() => { if (S.me) { renderOrders(); } }, 30000);
 
