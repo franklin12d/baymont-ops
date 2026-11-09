@@ -113,6 +113,12 @@ header.top{display:flex;align-items:center;gap:12px;padding-block:10px;padding-l
 .send{border:0;background:var(--accent);color:var(--accent-ink);border-radius:12px;height:44px;padding:0 16px;font-weight:700;font-family:var(--f-display);flex:none}
 .preview{font-size:12px;color:var(--ink-2);min-height:16px}
 .preview b{color:var(--accent)}
+.wizdots{display:flex;gap:6px;margin:0 0 14px}.wizdots span{height:4px;flex:1;border-radius:4px;background:var(--line)}.wizdots span.on{background:var(--grad,var(--accent))}
+.wizlist{margin:0 0 10px;padding:0;list-style:none;counter-reset:w}
+.wizlist li{counter-increment:w;position:relative;padding:8px 0 8px 40px;font-size:15px;line-height:1.35;border-bottom:1px solid var(--line)}
+.wizlist li:last-child{border-bottom:0}
+.wizlist li::before{content:counter(w);position:absolute;left:0;top:6px;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:14px;display:grid;place-items:center}
+.wizwarn{background:color-mix(in srgb,var(--accent) 12%,transparent);border-radius:10px;padding:10px 12px;font-weight:600;font-size:14px}
 .preview .pvwarn{color:var(--warn,#B45309);font-weight:600}
 .preview .pvfix{border:0;background:var(--accent);color:#fff;font:inherit;font-weight:600;border-radius:999px;padding:3px 10px;margin-left:4px;cursor:pointer}
 
@@ -1060,6 +1066,52 @@ const ES = {
 "A soft pip for each new chat message. Alerts meant for you keep their own tone.": "Un pip suave por cada mensaje nuevo en el chat. Los avisos que son para ti tienen su propio tono.",
 "On": "Activado",
 "Off": "Apagado"
+,
+"Show me how": "Muéstrame cómo",
+"For alerts on iPhone, FrankShift needs to be on the Home Screen.": "Para recibir avisos en iPhone, FrankShift tiene que estar en la pantalla de inicio.",
+"Alert setup guide": "Guía para activar avisos",
+"FrankShift can ring this phone when an order or a message is for you, even with the app closed.": "FrankShift puede sonar en este teléfono cuando una orden o un mensaje es para ti, aunque la app esté cerrada.",
+"It takes about a minute. This guide shows you each step.": "Toma como un minuto. Esta guía te muestra cada paso.",
+"Start": "Empezar",
+"Add FrankShift to the Home Screen": "Agrega FrankShift a la pantalla de inicio",
+"On iPhone, alerts only work when FrankShift is opened from its own icon.": "En iPhone, los avisos solo funcionan si abres FrankShift desde su propio ícono.",
+"First open this page in Safari. Other browsers on iPhone can't add it to the Home Screen.": "Primero abre esta página en Safari. Otros navegadores en iPhone no pueden agregarla a la pantalla de inicio.",
+"Tap the Share button at the bottom of Safari.": "Toca el botón Compartir abajo en Safari.",
+"Scroll down, choose Add to Home Screen, then tap Add.": "Baja, elige Agregar a pantalla de inicio y toca Agregar.",
+"Close Safari and open FrankShift from the new icon.": "Cierra Safari y abre FrankShift desde el ícono nuevo.",
+"Sign in again. This guide opens there to finish.": "Entra de nuevo. Esta guía se abre ahí para terminar.",
+"Needs iPhone software iOS 16.4 or newer.": "Necesita iOS 16.4 o más reciente.",
+"Got it": "Entendido",
+"Alerts are blocked": "Los avisos están bloqueados",
+"This phone said no to alerts for FrankShift. You can change it in a minute.": "Este teléfono bloqueó los avisos de FrankShift. Lo puedes cambiar en un minuto.",
+"Open the iPhone Settings app.": "Abre la app Ajustes del iPhone.",
+"Go to Notifications, then FrankShift.": "Entra en Notificaciones y luego en FrankShift.",
+"Turn on Allow Notifications and Sounds.": "Activa Permitir notificaciones y Sonidos.",
+"Come back here and tap Check again.": "Vuelve aquí y toca Revisar de nuevo.",
+"Tap the icon at the left of the address bar.": "Toca el ícono a la izquierda de la barra de dirección.",
+"Open Permissions or Site settings, then Notifications.": "Abre Permisos o Configuración del sitio y luego Notificaciones.",
+"Choose Allow.": "Elige Permitir.",
+"Check again": "Revisar de nuevo",
+"This browser can't get alerts": "Este navegador no puede recibir avisos",
+"Open FrankShift in Chrome on Android, or in Safari on iPhone.": "Abre FrankShift en Chrome en Android, o en Safari en iPhone.",
+"Allow alerts": "Permite los avisos",
+"Tap the button below. When the phone asks, choose Allow.": "Toca el botón de abajo. Cuando el teléfono pregunte, elige Permitir.",
+"Test the sound": "Prueba el sonido",
+"Tap Send test alert, then lock the phone or go to the home screen.": "Toca Enviar alerta de prueba y luego bloquea el teléfono o ve a la pantalla de inicio.",
+"The alert comes in about 8 seconds with the phone's own notification sound.": "La alerta llega en unos 8 segundos con el sonido de notificaciones del teléfono.",
+"Did the phone ring?": "¿Sonó el teléfono?",
+"Yes, it rang": "Sí, sonó",
+"No sound": "No sonó",
+"No sound? Check these": "¿No sonó? Revisa esto",
+"Turn up the notification volume and turn off silent mode.": "Sube el volumen de notificaciones y quita el modo silencio.",
+"Turn off Do Not Disturb or Focus.": "Quita No molestar o Concentración.",
+"Open Settings, then Notifications, then FrankShift, and turn on Sounds.": "Abre Ajustes, luego Notificaciones, luego FrankShift, y activa Sonidos.",
+"Long-press a FrankShift alert and set it to Alerting or turn on Sound.": "Mantén presionada una alerta de FrankShift y elige Alertar o activa el Sonido.",
+"Open Settings, then Apps, then Chrome, then Notifications, and allow sound for sites.": "Abre Ajustes, luego Aplicaciones, luego Chrome, luego Notificaciones, y permite el sonido para los sitios.",
+"Try again": "Probar de nuevo",
+"You're all set": "Todo listo",
+"This phone will ring for orders and messages meant for you, even with the app closed.": "Este teléfono sonará con las órdenes y mensajes para ti, aunque la app esté cerrada.",
+"You can open this guide again in Settings.": "Puedes abrir esta guía otra vez en Ajustes."
 };
 const ES_RX = [
   [/^(.+) is on it$/, "$1 lo está atendiendo"],
@@ -1892,23 +1944,23 @@ function pushState(){
   const b = $('#pushBanner');
   if (!('serviceWorker' in navigator)) { b.hidden = true; return; }
   if (Date.now() < ls.get('sc.pushLater', 0)) { b.hidden = true; return; }
-  if (isIOS && !standalone) { b.hidden = false; $('#pushText').textContent = 'For alerts on iPhone: tap Share, then "Add to Home Screen", and open FrankShift from the new icon.'; $('#pushBtn').hidden = true; return; }
+  if (isIOS && !standalone) { b.hidden = false; $('#pushText').textContent = 'For alerts on iPhone, FrankShift needs to be on the Home Screen.'; $('#pushBtn').hidden = false; $('#pushBtn').textContent = 'Show me how'; return; }
   if (!('PushManager' in window) || !('Notification' in window)) { b.hidden = true; return; }
   if (Notification.permission === 'granted' && ls.get('sc.pushOk', false)) { b.hidden = true; return; }
-  if (Notification.permission === 'denied') { b.hidden = false; $('#pushText').textContent = 'Alerts are blocked for this site. Turn them on in your phone settings for this browser.'; $('#pushBtn').hidden = true; return; }
-  b.hidden = false; $('#pushBtn').hidden = false; $('#pushText').textContent = 'Turn on alerts so this phone rings when a new order comes in.';
+  if (Notification.permission === 'denied') { b.hidden = false; $('#pushText').textContent = 'Alerts are blocked for this site. Turn them on in your phone settings for this browser.'; $('#pushBtn').hidden = false; $('#pushBtn').textContent = 'Show me how'; return; }
+  b.hidden = false; $('#pushBtn').hidden = false; $('#pushBtn').textContent = 'Turn on'; $('#pushText').textContent = 'Turn on alerts so this phone rings when a new order comes in.';
 }
 function b64u(s){ const p = '='.repeat((4 - s.length % 4) % 4); const b = atob((s + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(b, c => c.charCodeAt(0)); }
 async function enablePush(){
   try {
-    const perm = await Notification.requestPermission(); if (perm !== 'granted') { pushState(); return; }
+    const perm = await Notification.requestPermission(); if (perm !== 'granted') { pushState(); return false; }
     const reg = await navigator.serviceWorker.ready;
     let sub = await reg.pushManager.getSubscription();
     if (!sub) sub = await reg.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: b64u(VAPID_PUBLIC)});
     const j = sub.toJSON();
     await call('sc_push_sub', {p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth});
-    ls.set('sc.pushOk', true); toast('Alerts are on for this phone'); pushState();
-  } catch (e) { toast('Could not turn on alerts: ' + esc(e.message)); }
+    ls.set('sc.pushOk', true); toast('Alerts are on for this phone'); pushState(); return true;
+  } catch (e) { toast('Could not turn on alerts: ' + esc(e.message)); return false; }
 }
 async function resubscribe(){
   try { if (!('serviceWorker' in navigator) || Notification.permission !== 'granted') return;
@@ -1916,19 +1968,93 @@ async function resubscribe(){
     const j = sub.toJSON(); await call('sc_push_sub', {p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth}); ls.set('sc.pushOk', true);
   } catch {}
 }
-$('#pushBtn').onclick = enablePush;
+$('#pushBtn').onclick = () => openAlertWizard();
 $('#pushLater').onclick = () => { ls.set('sc.pushLater', Date.now() + 2 * 86400e3); pushState(); };
 function alertsLabel(){ if (!('Notification' in window) || !('serviceWorker' in navigator)) return 'This browser cannot get alerts.'; if (isIOS && !standalone) return 'Add FrankShift to the Home Screen to get alerts.'; if (Notification.permission === 'denied') return 'Alerts are blocked in this phone\'s settings.'; return Notification.permission === 'granted' && ls.get('sc.pushOk', false) ? 'Alerts are on for this phone.' : 'Alerts are off for this phone.'; }
 const alertsOn = () => 'Notification' in window && 'serviceWorker' in navigator && Notification.permission === 'granted' && ls.get('sc.pushOk', false);
 const canTurnOnAlerts = () => 'Notification' in window && 'serviceWorker' in navigator && !(isIOS && !standalone) && Notification.permission !== 'denied' && !alertsOn();
 function alertsHtml(){
-  return `<p class="hint">${esc(alertsLabel())}</p>${canTurnOnAlerts() ? '<button class="btn pri sm" data-alert="on">Turn on alerts</button>' : ''}`
+  return `<p class="hint">${esc(alertsLabel())}</p><div class="btnrow">${canTurnOnAlerts() ? '<button class="btn pri sm" data-alert="on">Turn on alerts</button>' : ''}<button class="btn sm" data-alert="wiz">Alert setup guide</button></div>`
     + (alertsOn() ? `<p class="hint" style="margin-top:8px">Check it rings with the app closed: tap the button, then lock the phone. The alert comes in about 8 seconds with the phone's own sound.</p><button class="btn sm" data-alert="test">Send test alert</button>` : '');
 }
 function wireAlerts(){
-  document.querySelectorAll('#modalBody [data-alert]').forEach(b => b.onclick = () => { if (b.dataset.alert === 'on') { closeModal(); enablePush(); } else { b.disabled = true; testAlert(); } });
+  document.querySelectorAll('#modalBody [data-alert]').forEach(b => b.onclick = () => { if (b.dataset.alert === 'on' || b.dataset.alert === 'wiz') { openAlertWizard(b.dataset.alert === 'on' ? alertRoute() : 'intro'); } else { b.disabled = true; testAlert(); } });
 }
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+/* ===== alert setup guide ===== */
+const isAndroid = /android/i.test(navigator.userAgent);
+const iosOtherBrowser = isIOS && /CriOS|FxiOS|EdgiOS|OPiOS/i.test(navigator.userAgent);
+function alertRoute(){
+  if (isIOS && !standalone) return 'install';
+  if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) return 'unsupported';
+  if (Notification.permission === 'denied') return 'blocked';
+  return alertsOn() ? 'test' : 'allow';
+}
+const wizList = items => '<ol class="wizlist">' + items.map(t => `<li>${esc(t)}</li>`).join('') + '</ol>';
+function wizDots(page){
+  const order = ['intro', ['install', 'blocked', 'allow', 'unsupported'], ['test', 'fix'], 'done'];
+  const at = order.findIndex(x => Array.isArray(x) ? x.includes(page) : x === page);
+  return `<div class="wizdots" aria-hidden="true">${order.map((x, i) => `<span class="${i <= at ? 'on' : ''}"></span>`).join('')}</div>`;
+}
+function openAlertWizard(page){
+  page = page || 'intro';
+  let h = '', btns = '';
+  if (page === 'intro') {
+    h = `<h2>Turn on alerts</h2><p class="lead">FrankShift can ring this phone when an order or a message is for you, even with the app closed.</p><p class="hint">It takes about a minute. This guide shows you each step.</p>`;
+    btns = `<button class="btn pri" data-wiz="next">Start</button><button class="btn" data-wiz="later">Not now</button>`;
+  } else if (page === 'install') {
+    h = `<h2>Add FrankShift to the Home Screen</h2><p class="lead">On iPhone, alerts only work when FrankShift is opened from its own icon.</p>`
+      + (iosOtherBrowser ? `<p class="wizwarn">First open this page in Safari. Other browsers on iPhone can't add it to the Home Screen.</p>` : '')
+      + wizList(['Tap the Share button at the bottom of Safari.', 'Scroll down, choose Add to Home Screen, then tap Add.', 'Close Safari and open FrankShift from the new icon.', 'Sign in again. This guide opens there to finish.'])
+      + `<p class="small">Needs iPhone software iOS 16.4 or newer.</p>`;
+    btns = `<button class="btn pri" data-close>Got it</button>`;
+  } else if (page === 'blocked') {
+    h = `<h2>Alerts are blocked</h2><p class="lead">This phone said no to alerts for FrankShift. You can change it in a minute.</p>`
+      + (isIOS ? wizList(['Open the iPhone Settings app.', 'Go to Notifications, then FrankShift.', 'Turn on Allow Notifications and Sounds.', 'Come back here and tap Check again.'])
+               : wizList(['Tap the icon at the left of the address bar.', 'Open Permissions or Site settings, then Notifications.', 'Choose Allow.', 'Come back here and tap Check again.']));
+    btns = `<button class="btn pri" data-wiz="check">Check again</button><button class="btn" data-close>Close</button>`;
+  } else if (page === 'unsupported') {
+    h = `<h2>This browser can't get alerts</h2><p class="lead">Open FrankShift in Chrome on Android, or in Safari on iPhone.</p>`;
+    btns = `<button class="btn" data-close>Close</button>`;
+  } else if (page === 'allow') {
+    h = `<h2>Allow alerts</h2><p class="lead">Tap the button below. When the phone asks, choose Allow.</p>`;
+    btns = `<button class="btn pri" data-wiz="allow">Turn on alerts</button><button class="btn" data-wiz="later">Not now</button>`;
+  } else if (page === 'test') {
+    h = `<h2>Test the sound</h2><p class="lead">Tap Send test alert, then lock the phone or go to the home screen.</p><p class="hint">The alert comes in about 8 seconds with the phone's own notification sound.</p>
+      <div id="wizAsk" hidden><p class="lead" style="margin-top:14px">Did the phone ring?</p><div class="btnrow"><button class="btn pri" data-wiz="rang">Yes, it rang</button><button class="btn" data-wiz="silent">No sound</button></div></div>`;
+    btns = `<button class="btn pri" data-wiz="test">Send test alert</button>`;
+  } else if (page === 'fix') {
+    h = `<h2>No sound? Check these</h2>`
+      + wizList(['Turn up the notification volume and turn off silent mode.', 'Turn off Do Not Disturb or Focus.'].concat(isIOS
+        ? ['Open Settings, then Notifications, then FrankShift, and turn on Sounds.']
+        : ['Long-press a FrankShift alert and set it to Alerting or turn on Sound.', 'Open Settings, then Apps, then Chrome, then Notifications, and allow sound for sites.']));
+    btns = `<button class="btn pri" data-wiz="retest">Try again</button><button class="btn" data-close>Close</button>`;
+  } else if (page === 'done') {
+    h = `<h2>You're all set</h2><p class="lead">This phone will ring for orders and messages meant for you, even with the app closed.</p><p class="hint">You can open this guide again in Settings.</p>`;
+    btns = `<button class="btn pri" data-close>Done</button>`;
+  }
+  openModal(`<div class="wiz" data-page="${page}">${wizDots(page)}${h}<div class="btnrow wizbtns" style="margin-top:16px">${btns}</div></div>`);
+  document.querySelectorAll('#modalBody [data-wiz]').forEach(b => b.onclick = async () => {
+    const a = b.dataset.wiz;
+    if (a === 'next' || a === 'check') return openAlertWizard(alertRoute());
+    if (a === 'later') { ls.set('sc.wizLater', Date.now() + 12 * 3600e3); return closeModal(); }
+    if (a === 'allow') { b.disabled = true; const ok = await enablePush(); return openAlertWizard(ok ? 'test' : alertRoute() === 'allow' ? 'allow' : alertRoute()); }
+    if (a === 'test') { b.disabled = true; await testAlert(); const q = $('#wizAsk'); if (q) q.hidden = false; return; }
+    if (a === 'rang') { ls.set('sc.wizDone', true); return openAlertWizard('done'); }
+    if (a === 'silent') return openAlertWizard('fix');
+    if (a === 'retest') return openAlertWizard('test');
+  });
+}
+// open the guide by itself until this phone has alerts on (not more than every 12 hours after "Not now")
+function maybeAlertWizard(){
+  setTimeout(() => {
+    if (!S.me || !$('#modal').hidden || alertsOn() || Date.now() < ls.get('sc.wizLater', 0)) return;
+    if (!('serviceWorker' in navigator) && !isIOS) return;
+    openAlertWizard();
+  }, 1500);
+}
+
 
 /* login */
 const cleanName = s => s.trim().replace(/\s+/g, ' ').replace(/[<>]/g, '').slice(0, 30).replace(/(^|[\s-])(\p{L})/gu, (a, b, c) => b + c.toUpperCase());
@@ -2103,7 +2229,7 @@ $('#setBtn').onclick = () => openSettings();
 function enterApp(){
   $('#login').hidden = true; $('#app').hidden = false;
   $('#sfRole').innerHTML = ROLES.map(r => `<option value="${r.id}">${r.label}</option>`).join('');
-  setSoundIcon(); pushState(); resubscribe(); refresh(); startPolling();
+  setSoundIcon(); pushState(); resubscribe(); refresh(); startPolling(); maybeAlertWizard();
   if (location.hash === '#orders') setTab('orders');
   if (location.hash === '#team' && S.me && S.me.role === 'mgr') setTab('team');
 }
