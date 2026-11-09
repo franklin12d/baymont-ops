@@ -370,6 +370,18 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
 .depts{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--ink-2);margin-top:6px}
 .depts label{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:3px 9px;background:var(--surface)}
 .shiftrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+/* v4: profile photos, sign-in suggestions */
+.av.hasp{background-size:cover !important;background-position:center !important;color:transparent !important}
+.namesug{display:flex;flex-direction:column;gap:4px;margin:-4px 0 12px}
+.namesug[hidden]{display:none}
+.namesug .hint{font-size:12px;color:var(--ink-3);margin:0 2px 2px}
+.namesug button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:10px 12px;min-height:44px;font-size:15px}
+.namesug button:hover,.namesug button:focus-visible{border-color:var(--accent);background:var(--accent-soft)}
+.namesug .ini{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:11px;flex:none}
+.pfrow{display:flex;align-items:center;gap:14px}
+.pfrow .av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:22px;flex:none}
+.li .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px;flex:none}
+.li.withav{display:flex;gap:10px;align-items:flex-start}
 </style>
 </head>
 <body>
@@ -484,6 +496,7 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
       <div class="field"><label for="fFirst">First name</label><input id="fFirst" autocomplete="given-name" required></div>
       <div class="field"><label for="fLast">Last name</label><input id="fLast" autocomplete="family-name" required></div>
     </div>
+    <div class="namesug" id="nameSug" role="listbox" aria-label="Is this you?" hidden></div>
     <div class="field"><label for="fPin">PIN</label><input id="fPin" class="pinbox" type="password" inputmode="numeric" pattern="\d{4}" maxlength="4" autocomplete="off" required></div>
     <div class="err" id="loginErr"></div>
     <button class="primary" type="submit" id="loginBtn">Enter</button>
@@ -492,6 +505,8 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
 
 <div class="scrim" id="modal" hidden><div class="dialog" id="modalBody"></div></div>
 <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
+<input type="file" id="avatarInput" accept="image/*" hidden>
+<style id="avStyles"></style>
 
 <script>
 (() => {
@@ -530,6 +545,7 @@ const ERR = {
   MAX_PHOTOS: 'An order can have up to 3 photos.',
   DETAILS_REQUIRED: 'Write what needs to be done.',
   ALL_MGR_ONLY: 'Only managers can use @todos.',
+  BAD_PHOTO: 'That photo could not be saved. Try another one.',
 };
 
 /* helpers */
@@ -543,6 +559,16 @@ const ls = {
 const roleOf = id => ROLES.find(r => r.id === id) || ROLES[0];
 const roleColor = id => `var(${roleOf(id).color})`;
 const initials = n => String(n||'').split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0]).join('').toUpperCase();
+/* profile photos: cached per person, drawn through one stylesheet so the feed stays light */
+const AV = new Map(Object.entries((() => { try { return JSON.parse(localStorage.getItem('sc.av') || '{}'); } catch { return {}; } })()));
+const avKey = id => 'avp-' + String(id).replace(/[^a-z0-9-]/gi, '');
+const hasAv = id => !!(id && AV.get(id));
+const avClass = id => hasAv(id) ? ' hasp ' + avKey(id) : '';
+function avStyles(){
+  let css = ''; AV.forEach((v, id) => { if (v && v.data && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(v.data)) css += '.' + avKey(id) + '{background-image:url(' + v.data + ')}\n'; });
+  const el = document.getElementById('avStyles'); if (el && el.textContent !== css) el.textContent = css;
+}
+function saveAv(){ try { const o = {}; AV.forEach((v, k) => { if (v) o[k] = v; }); localStorage.setItem('sc.av', JSON.stringify(o)); } catch {} }
 const fmtTime = ms => new Date(ms).toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit', timeZone: TZ});
 const fmtDate = ms => new Date(ms).toLocaleDateString('en-US', {month:'short', day:'numeric', timeZone: TZ});
 const ago = ms => { const m = Math.max(0, Math.round((Date.now() - ms)/60000)); return m < 1 ? 'now' : m < 60 ? m + 'm' : m < 1440 ? Math.floor(m/60) + 'h ' + (m%60) + 'm' : Math.floor(m/1440) + 'd'; };
@@ -742,7 +768,7 @@ function render(){
   if (!S.me) return;
   $('#hotelName').textContent = S.hotel ? S.hotel.name : '';
   $('#whoName').textContent = S.me.name;
-  $('#whoAv').textContent = initials(S.me.name); $('#whoAv').style.background = roleColor(S.me.role);
+  $('#whoAv').textContent = initials(S.me.name); $('#whoAv').style.background = roleColor(S.me.role); $('#whoAv').className = 'av' + avClass(S.me.id);
   $('#whoBtn').classList.toggle('off', !onShift()); $('#whoOff').hidden = onShift();
   $('#teamTab').hidden = S.me.role !== 'mgr';
   renderFeed(); renderPins(); renderOrders(); renderKills(); renderLost(); markRead();
@@ -761,7 +787,7 @@ function renderFeed(){
     const chips = (byMsg[m.id] || []).map(o => `<span class="xchip ${o.status === 'done' || o.status === 'dismissed' ? 'done' : ''}"><b>${esc(o.ticket)}</b>${esc(o.room ? 'Room ' + o.room : 'No room')} · ${esc(o.status === 'in_progress' ? 'in progress' : o.status === 'open' ? CATS[o.category] : o.status)}</span>`).join('');
     const rb = m.read_by ? `<button class="readby" data-readby="${esc(m.id)}">Read by ${m.read_by.length}</button>` : '';
     html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''} ${tome ? 'tome' : ''}">
-      <div class="av" style="background:${roleColor(m.role)}">${esc(initials(m.author))}</div>
+      <div class="av${avClass(m.staff_id)}" style="background:${roleColor(m.role)}">${esc(initials(m.author))}</div>
       <div class="bub"><div class="head"><span class="name">${esc(m.author)}</span><span class="rolechip" style="background:${roleColor(m.role)}">${esc(roleOf(m.role).label)}</span>${tag}<span class="time">${fmtTime(m.created_at)}</span></div>
       <div class="body">${markMentions(roomLinks(m.body), m)}</div>${chips ? `<div class="extracted">${chips}</div>` : ''}${rb}</div></div>`;
   });
@@ -879,6 +905,13 @@ function chime(kind, force){
   }
 }
 const beep = () => chime('normal');
+// "I'm on it": two quick rising notes. "Done": a bright three-note sparkle.
+function fx(kind){
+  if (!S.sound) return;
+  const c = audio(); if (!c) return; const t = c.currentTime + .02;
+  if (kind === 'start') { [[1047, 0], [1568, .08]].forEach(([f, d], i) => note(c, t + d, f, i ? .32 : .16, .14)); if (navigator.vibrate) navigator.vibrate(40); }
+  else { [[1319, 0], [1568, .07], [2093, .14]].forEach(([f, d], i) => note(c, t + d, f, i === 2 ? .7 : .22, .15, 'triangle')); if (navigator.vibrate) navigator.vibrate([30, 40, 60]); }
+}
 function setSoundIcon(){ $('#soundWave').style.display = S.sound ? '' : 'none'; $('#soundBtn').setAttribute('aria-label', S.sound ? 'Sound on' : 'Sound off'); }
 
 /* ===== sync ===== */
@@ -891,7 +924,7 @@ async function refresh(){
     S.messages = d.messages.map(m => ({...m, created_at: T(m.created_at)}));
     S.orders = d.orders.map(o => ({...o, created_at: T(o.created_at), done_at: T(o.done_at), started_at: T(o.started_at)}));
     S.lost = d.lost.map(l => ({...l, created_at: T(l.created_at), resolved_at: T(l.resolved_at)}));
-    let newSound = null;
+    let newSound = null, doneSound = false;
     S.orders.forEach(o => {
       const prev = S.known.get(o.id);
       if (!S.firstLoad) {
@@ -901,7 +934,7 @@ async function refresh(){
         if (prev !== undefined && prev === o.status && pa !== S.me.id && o.assigned_to === S.me.id && (o.status === 'open' || o.status === 'in_progress')) {
           const u = prioOf(o).level === 'urgent';
           if (onShift() || u) { toast(`<b>Assigned to you · ${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); } }
-        if ((prev === 'open' || prev === 'in_progress') && o.status === 'done' && o.done_by_id !== S.me.id) toast(killLine(o).replace('<span class="k-ico">✓</span>', '✓ '));
+        if ((prev === 'open' || prev === 'in_progress') && o.status === 'done' && o.done_by_id !== S.me.id) { toast(killLine(o).replace('<span class="k-ico">✓</span>', '✓ ')); if (o.created_by === S.me.id) doneSound = true; }
       }
       S.known.set(o.id, o.status); S.knownAsg.set(o.id, o.assigned_to || null);
     });
@@ -912,7 +945,8 @@ async function refresh(){
       }
       S.knownMsg.add(m.id);
     });
-    if (newSound) chime(newSound);
+    if (newSound) chime(newSound); else if (doneSound) fx('done');
+    syncAvatars();
     render(); S.firstLoad = false; failCount = 0;
   } catch (e) {
     if (S.token && ++failCount === 3) toast('Connection problem. Retrying…');
@@ -921,6 +955,44 @@ async function refresh(){
 function startPolling(){ clearInterval(timer); timer = setInterval(() => { if (document.visibilityState === 'visible') refresh(); }, 4000); }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refresh(); });
 if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', () => refresh());
+
+/* ===== profile photos ===== */
+let avBusy = false;
+async function syncAvatars(){
+  if (avBusy || !S.me) return;
+  const people = S.staff.concat([S.me]);
+  const want = people.filter(p => p.photo_at && (!AV.get(p.id) || AV.get(p.id).at !== p.photo_at)).map(p => p.id);
+  let changed = false;
+  people.forEach(p => { if (!p.photo_at && AV.get(p.id)) { AV.delete(p.id); changed = true; } });
+  if (want.length) {
+    avBusy = true;
+    try { const r = await call('sc_avatars', {p_ids: [...new Set(want)].slice(0, 60)});
+      const at = Object.fromEntries(people.map(p => [p.id, p.photo_at]));
+      Object.entries(r || {}).forEach(([id, v]) => AV.set(id, {data: v.data, at: at[id] || v.at})); changed = true; }
+    catch {} finally { avBusy = false; }
+  }
+  if (changed) { saveAv(); avStyles(); render(); }
+}
+let avatarFor = null;
+function pickAvatar(staffId){ avatarFor = staffId || null; $('#avatarInput').value = ''; $('#avatarInput').click(); }
+function squareAvatar(file){
+  return new Promise((res, rej) => {
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = () => { const n = 160, c = document.createElement('canvas'); c.width = n; c.height = n;
+      const side = Math.min(img.width, img.height), sx = (img.width - side) / 2, sy = (img.height - side) / 2;
+      c.getContext('2d').drawImage(img, sx, sy, side, side, 0, 0, n, n); URL.revokeObjectURL(url);
+      let d = c.toDataURL('image/jpeg', .8); if (d.length > 70000) d = c.toDataURL('image/jpeg', .55); res(d); };
+    img.onerror = () => rej(new Error('Could not read that image'));
+    img.src = url;
+  });
+}
+$('#avatarInput').addEventListener('change', async () => {
+  const f = $('#avatarInput').files[0]; if (!f) return;
+  try { const data = await squareAvatar(f);
+    await call('sc_avatar_set', {p_staff: avatarFor, p_data: data});
+    closeModal(); toast('Photo saved', 'new'); await refresh(); if (S.tab === 'team') loadTeam(); }
+  catch (e) { toast('Photo not saved: ' + esc(e.message)); }
+});
 
 /* ===== mentions ===== */
 const others = () => S.staff.filter(st => st.id !== S.me.id);
@@ -973,7 +1045,7 @@ function updateMenu(){
   let html = '', hd = '';
   menuItems.forEach((it, i) => {
     const h = it.type === 'g' ? 'Teams' : 'People'; if (h !== hd) { html += `<div class="mh">${h}</div>`; hd = h; }
-    const av = it.type === 'g' ? `<span class="av gi">${it.icon}</span>` : `<span class="av" style="background:${roleColor(it.role)}">${esc(initials(it.title))}</span>`;
+    const av = it.type === 'g' ? `<span class="av gi">${it.icon}</span>` : `<span class="av${avClass(it.id)}" style="background:${roleColor(it.role)}">${esc(initials(it.title))}</span>`;
     html += `<button type="button" class="mopt" role="option" data-mi="${i}" aria-selected="${i === menuSel}">${av}<span class="mt"><b>${it.type === 'g' ? '@' + esc(it.label) : esc(it.title)}</b><small>${esc(it.sub)}</small></span></button>`;
   });
   const mm = $('#mmenu'); mm.innerHTML = html; mm.hidden = false;
@@ -1013,7 +1085,9 @@ async function send(){
   finally { btn.disabled = false; }
 }
 async function orderAction(id, act, assignee){
-  try { await call('sc_order_update', {p_order: id, p_action: act, p_assignee: assignee || null}); if (act === 'assign') notify([id]); await refresh(); }
+  try { await call('sc_order_update', {p_order: id, p_action: act, p_assignee: assignee || null});
+    if (act === 'start') fx('start'); else if (act === 'done') fx('done');
+    if (act === 'assign') notify([id]); await refresh(); }
   catch (e) { toast('Could not update: ' + esc(e.message)); }
 }
 
@@ -1093,12 +1167,12 @@ async function loadTeam(){
     const [rep, staff] = await Promise.all([call('sc_report', {p_days: 7}), call('sc_staff_admin', {})]);
     $('#repTable').innerHTML = '<tr><th>Hotel</th><th>Open now</th><th>New</th><th>Done</th><th>Avg time</th><th>Lost items</th><th>90+ days</th></tr>' +
       rep.map(r => `<tr><td>${esc(r.hotel)}</td><td>${r.open}</td><td>${r.created}</td><td>${r.done}</td><td>${r.avg_minutes == null ? '–' : r.avg_minutes + ' min'}</td><td>${r.lost_held}</td><td>${r.lost_over_90}</td></tr>`).join('');
-    $('#staffList').innerHTML = staff.map(s => `<div class="li" data-staff="${s.id}"><div class="grow">
+    $('#staffList').innerHTML = staff.map(s => `<div class="li withav" data-staff="${s.id}"><span class="av${avClass(s.id)}" style="background:${roleColor(s.role)}">${esc(initials(s.first_name + ' ' + s.last_name))}</span><div class="grow">
         <div class="t1">${esc(s.first_name)} ${esc(s.last_name)} ${!s.active ? '<span class="pill">Inactive</span>' : s.locked ? '<span class="pill warn">Locked</span>' : s.pin_set ? '<span class="pill ok">PIN set</span>' : '<span class="pill">No PIN yet</span>'}</div>
         <div class="t2">${s.last_seen ? 'Last seen ' + fmtDate(T(s.last_seen)) + ' ' + fmtTime(T(s.last_seen)) : 'Never signed in'}</div>
         <div class="btnrow" style="margin-top:6px"><select class="btn sm" data-role>${ROLES.map(r => `<option value="${r.id}" ${r.id === s.role ? 'selected' : ''}>${r.label}</option>`).join('')}</select>
         <button class="btn sm" data-save>Save</button>${s.pin_set || s.locked ? '<button class="btn sm" data-reset>Reset PIN</button>' : ''}
-        <button class="btn sm" data-active="${s.active ? 0 : 1}">${s.active ? 'Deactivate' : 'Reactivate'}</button></div>
+        <button class="btn sm" data-active="${s.active ? 0 : 1}">${s.active ? 'Deactivate' : 'Reactivate'}</button><button class="btn sm" data-photo>Photo</button></div>
         <div class="depts"><span>Also alerts for:</span>${DEPTS.map(d => `<label><input type="checkbox" data-dept="${d.id}" ${(s.depts || []).includes(d.id) ? 'checked' : ''}>${d.label}</label>`).join('')}</div></div></div>`).join('');
     S.adminStaff = staff;
   } catch (e) { toast(esc(e.message)); }
@@ -1106,6 +1180,7 @@ async function loadTeam(){
 $('#staffList').addEventListener('click', async e => {
   const row = e.target.closest('[data-staff]'); if (!row) return; const s = (S.adminStaff || []).find(x => x.id === row.dataset.staff); if (!s) return;
   const role = row.querySelector('[data-role]').value; let active = s.active, reset = false;
+  if (e.target.matches('[data-photo]')) return pickAvatar(s.id);
   if (e.target.matches('[data-reset]')) reset = true; else if (e.target.matches('[data-active]')) active = e.target.dataset.active === '1'; else if (!e.target.matches('[data-save]')) return;
   const depts = [...row.querySelectorAll('[data-dept]:checked')].map(x => x.dataset.dept);
   try { await call('sc_staff_save', {p_id: s.id, p_first: s.first_name, p_last: s.last_name, p_role: role, p_active: active, p_reset_pin: reset, p_depts: depts});
@@ -1178,8 +1253,34 @@ async function showLogin(msg){
   }
   setTimeout(() => ($('#fFirst').value ? $('#fPin') : $('#fFirst')).focus(), 50);
 }
+let sugTimer = null, sugSeq = 0;
+function nameSuggest(){
+  clearTimeout(sugTimer);
+  const q = ($('#fFirst').value + ' ' + $('#fLast').value).trim();
+  if (q.length < 2) { $('#nameSug').hidden = true; return; }
+  sugTimer = setTimeout(async () => {
+    const seq = ++sugSeq;
+    try { const r = await rpc('sc_login_names', {p_hotel: $('#fHotel').value, p_q: q});
+      if (seq !== sugSeq) return;
+      const exact = r.length === 1 && cleanName($('#fFirst').value) === r[0].first && cleanName($('#fLast').value) === (r[0].last || cleanName($('#fLast').value));
+      if (!r.length || exact) { $('#nameSug').hidden = true; return; }
+      $('#nameSug').innerHTML = '<div class="hint">Is this you? Tap your name.</div>' + r.map((n, i) => `<button type="button" data-sug="${i}"><span class="ini">${esc(initials(n.first + ' ' + n.last))}</span>${esc((n.first + ' ' + (n.last || '')).trim())}</button>`).join('');
+      $('#nameSug').hidden = false; $('#nameSug')._list = r;
+    } catch { $('#nameSug').hidden = true; }
+  }, 220);
+}
+$('#fFirst').addEventListener('input', nameSuggest);
+$('#fLast').addEventListener('input', nameSuggest);
+$('#fHotel').addEventListener('change', nameSuggest);
+$('#nameSug').addEventListener('click', e => {
+  const b = e.target.closest('[data-sug]'); if (!b) return; const n = ($('#nameSug')._list || [])[+b.dataset.sug]; if (!n) return;
+  $('#fFirst').value = n.first; $('#fLast').value = n.last || ''; $('#nameSug').hidden = true;
+  (n.last ? $('#fPin') : $('#fLast')).focus();
+  if (!n.last) $('#loginErr').textContent = 'Type your last name too. It gets saved the first time you sign in.';
+});
+
 $('#loginForm').addEventListener('submit', async e => {
-  e.preventDefault(); $('#loginErr').textContent = '';
+  e.preventDefault(); $('#loginErr').textContent = ''; $('#nameSug').hidden = true;
   const first = cleanName($('#fFirst').value), last = cleanName($('#fLast').value), pin = $('#fPin').value.trim(), hotel = $('#fHotel').value;
   if (!first || !last) { $('#loginErr').textContent = 'First and last name are both required.'; return; }
   if (!/^\d{4}$/.test(pin)) { $('#loginErr').textContent = ERR.PIN_FORMAT; return; }
@@ -1200,7 +1301,9 @@ function signOut(expired){
 }
 $('#whoBtn').onclick = () => {
   const canTurnOn = 'Notification' in window && 'serviceWorker' in navigator && !(isIOS && !standalone) && Notification.permission !== 'denied' && !(Notification.permission === 'granted' && ls.get('sc.pushOk', false));
-  openModal(`<h2>${esc(S.me.name)}</h2><p class="lead">${esc(roleOf(S.me.role).label)} · ${esc(S.hotel ? S.hotel.name : '')}</p>
+  openModal(`<div class="pfrow" style="margin-bottom:14px"><span class="av${avClass(S.me.id)}" style="background:${roleColor(S.me.role)}">${esc(initials(S.me.name))}</span>
+  <div><h2 style="margin:0">${esc(S.me.name)}</h2><p class="lead" style="margin:2px 0 8px">${esc(roleOf(S.me.role).label)} · ${esc(S.hotel ? S.hotel.name : '')}</p>
+  <div class="btnrow"><button class="btn sm" id="mPhoto">${hasAv(S.me.id) ? 'Change photo' : 'Add photo'}</button>${hasAv(S.me.id) ? '<button class="btn sm" id="mPhotoDel">Remove</button>' : ''}</div></div></div>
   <div class="sect" style="margin-top:0;border-top:0;padding-top:0"><h3>Shift</h3><div class="shiftrow"><p class="hint" style="margin:0">${onShift() ? 'On shift: you get the alerts meant for you.' : 'Off shift: you only get urgent alerts.'}</p><button class="btn sm ${onShift() ? '' : 'pri'}" id="mShift">${onShift() ? 'Go off shift' : 'Start shift'}</button></div></div>
   <div class="sect"><h3>Alerts</h3><p class="hint">${esc(alertsLabel())}</p>${canTurnOn ? '<button class="btn pri sm" id="mPush">Turn on alerts</button>' : ''}</div>
   <div class="sect"><h3>Sounds</h3><p class="hint">FA-Hotel has its own tone for new orders and a stronger one for urgent orders.</p>
@@ -1208,6 +1311,8 @@ $('#whoBtn').onclick = () => {
   <p class="small">On a shared phone or computer, sign out at the end of your shift.</p>
   <div class="btnrow"><button class="btn pri" id="soBtn">Sign out</button><button class="btn" data-close>Close</button></div>`);
   $('#soBtn').onclick = () => { closeModal(); signOut(false); };
+  $('#mPhoto').onclick = () => pickAvatar(null);
+  if ($('#mPhotoDel')) $('#mPhotoDel').onclick = async () => { try { await call('sc_avatar_set', {p_staff: null, p_data: null}); closeModal(); toast('Photo removed'); refresh(); } catch (err) { toast(esc(err.message)); } };
   $('#mShift').onclick = async () => {
     try { const me = await call('sc_shift', {p_on: !onShift()}); S.me = {...S.me, ...me}; ls.set('sc.me', S.me); render(); closeModal();
       toast(onShift() ? 'Shift started. Alerts are on.' : 'Off shift. Only urgent alerts will reach you.'); }
@@ -1291,6 +1396,7 @@ $('#soundBtn').onclick = () => { S.sound = !S.sound; ls.set('sc.sound', S.sound)
 setInterval(() => { if (S.me) { renderOrders(); } }, 30000);
 
 /* boot */
+avStyles();
 if (S.token && S.me) enterApp(); else showLogin();
 })();
 </script>
