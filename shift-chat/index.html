@@ -113,6 +113,8 @@ header.top{display:flex;align-items:center;gap:12px;padding-block:10px;padding-l
 .send{border:0;background:var(--accent);color:var(--accent-ink);border-radius:12px;height:44px;padding:0 16px;font-weight:700;font-family:var(--f-display);flex:none}
 .preview{font-size:12px;color:var(--ink-2);min-height:16px}
 .preview b{color:var(--accent)}
+.preview .pvwarn{color:var(--warn,#B45309);font-weight:600}
+.preview .pvfix{border:0;background:var(--accent);color:#fff;font:inherit;font-weight:600;border-radius:999px;padding:3px 10px;margin-left:4px;cursor:pointer}
 
 /* orders panel */
 .panel{background:var(--surface-2)}
@@ -1049,6 +1051,15 @@ const ES = {
 "This phone is not set up for alerts yet. Turn on alerts first.": "Este teléfono aún no tiene los avisos activos. Activa los avisos primero.",
 "Could not send the test alert. Check the connection and try again.": "No se pudo enviar la alerta de prueba. Revisa la conexión e intenta de nuevo.",
 "Check it rings with the app closed: tap the button, then lock the phone. The alert comes in about 8 seconds with the phone's own sound.": "Comprueba que suena con la app cerrada: toca el botón y bloquea el teléfono. La alerta llega en unos 8 segundos con el sonido del teléfono."
+,
+"Shift handoffs don't make orders.": "Las entregas de turno no crean órdenes.",
+"Make it an order": "Convertir en orden"
+,
+"Play chat pip": "Escuchar pip del chat",
+"Chat pip": "Pip del chat",
+"A soft pip for each new chat message. Alerts meant for you keep their own tone.": "Un pip suave por cada mensaje nuevo en el chat. Los avisos que son para ti tienen su propio tono.",
+"On": "Activado",
+"Off": "Apagado"
 };
 const ES_RX = [
   [/^(.+) is on it$/, "$1 lo está atendiendo"],
@@ -1182,7 +1193,7 @@ const ITEMS = [
   {k:'coffee', cat:'housekeeping', one:'coffee', mass:true, w:['coffee( pods)?','k-?cups?','\\bcafe\\b']},
   {k:'cups', cat:'housekeeping', one:'cup', many:'cups', w:['\\bcups?\\b','vasos?']},
   {k:'trash', cat:'housekeeping', one:'trash pickup', mass:true, w:['trash','garbage','basura']},
-  {k:'clean', cat:'housekeeping', one:'room cleaning', mass:true, w:['clean(ing|ed)?','limpia(r|rla|rlo)?','limpieza','service (the|their|his|her) room','servicio (de|a la) (cuarto|habitacion)','refresh']},
+  {k:'clean', cat:'housekeeping', one:'room cleaning', mass:true, w:['clean(ing|ed)?','limpia(r|rla|rlo)?','limpi(en|e)','limpieza','service (the|their|his|her) room','servicio (de|a la|al|para la) (cuarto|habitacion|hab)','(quiere|quieren|pide|piden|pidio|necesita|necesitan) servicio','servicio (a|para) la','refresh']},
   // maintenance (issue = how the card reads)
   {k:'leak', cat:'maintenance', issue:'a leak', urgent:true, w:['leak\\w*','fuga','gote\\w*','water on the floor','agua (en|por) el piso','inunda\\w*','flood\\w*','(se )?(esta )?(sale|saliendo|salir) (el |la )?agua','bote de agua','botando agua','salidero','water (is )?(coming|leaking|dripping)']},
   {k:'pests', cat:'maintenance', issue:'pests', urgent:true, w:['bed ?bugs?','chinches?','roach\\w*','cucaracha\\w*','\\bbugs?\\b','insect\\w*','plagas?','hormigas?','\\bants\\b']},
@@ -1545,6 +1556,12 @@ function chime(kind, force){
   }
 }
 const beep = () => chime('normal');
+const pipOn = () => ls.get('sc.pip', true);
+function pip(force){
+  if (!S.sound && !force) return;
+  const c = audio(); if (!c) return;
+  note(c, c.currentTime + .02, 880, .07, .07);
+}
 // "I'm on it": two quick rising notes. "Done": a bright three-note sparkle.
 function fx(kind){
   if (!S.sound) return;
@@ -1564,7 +1581,7 @@ async function refresh(){
     S.messages = d.messages.map(m => ({...m, created_at: T(m.created_at)}));
     S.orders = d.orders.map(o => ({...o, created_at: T(o.created_at), done_at: T(o.done_at), started_at: T(o.started_at)}));
     S.lost = d.lost.map(l => ({...l, created_at: T(l.created_at), resolved_at: T(l.resolved_at)}));
-    let newSound = null, doneSound = false, startSound = false;
+    let newSound = null, doneSound = false, startSound = false, newMsg = false;
     S.orders.forEach(o => {
       const prev = S.known.get(o.id);
       if (!S.firstLoad) {
@@ -1583,6 +1600,7 @@ async function refresh(){
       S.known.set(o.id, o.status); S.knownAsg.set(o.id, o.assigned_to || null);
     });
     S.messages.forEach(m => {
+      if (!S.firstLoad && !S.knownMsg.has(m.id) && m.staff_id !== S.me.id) newMsg = true;
       if (!S.firstLoad && !S.knownMsg.has(m.id) && mentionsMe(m)) {
         const u = msgUrgent(m);
         if (onShift() || u) { toast(`<b>@ ${esc(m.author)}</b> ${esc(!m.body ? 'Sent a photo' : m.body.length > 90 ? m.body.slice(0, 90) + '…' : m.body)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); }
@@ -1595,7 +1613,7 @@ async function refresh(){
       S.knownReset.add(x.id + x.at);
     });
     $('#teamCnt').textContent = S.resets.length || '';
-    if (newSound) chime(newSound); else if (doneSound) fx('done'); else if (startSound) fx('start');
+    if (newSound) chime(newSound); else if (doneSound) fx('done'); else if (startSound) fx('start'); else if (newMsg && pipOn() && onShift()) pip();
     syncAvatars();
     render(); S.firstLoad = false; failCount = 0;
   } catch (e) {
@@ -1718,7 +1736,8 @@ async function send(){
   const body = $('#input').value.trim(); const photo = S.pendingPhoto; if (!body && !photo) return;
   const btn = $('#sendBtn'); btn.disabled = true;
   const first = S.me.first_name;
-  const orders = (S.kind === 'handoff' ? [] : parse(stripMentions(body))).map(o => ({...o, summary: summaryFor(o, first)}));
+  const wantOrders = S.kind !== 'handoff' || /@\p{L}/u.test(body);
+  const orders = (wantOrders ? parse(stripMentions(body)) : []).map(o => ({...o, summary: summaryFor(o, first)}));
   const rooms = findRooms(' ' + norm(body) + ' ').map(r => r.room);
   try {
     const mentions = mentionsIn(body);
@@ -2001,7 +2020,7 @@ $('#whoBtn').onclick = () => {
   <div class="sect" style="margin-top:0;border-top:0;padding-top:0"><h3>Shift</h3><div class="shiftrow"><p class="hint" style="margin:0">${onShift() ? 'On shift: you get the alerts meant for you.' : 'Off shift: you only get urgent alerts.'}</p><button class="btn sm ${onShift() ? '' : 'pri'}" id="mShift">${onShift() ? 'Go off shift' : 'Start shift'}</button></div></div>
   <div class="sect"><h3>Alerts</h3>${alertsHtml()}</div>
   <div class="sect"><h3>Sounds</h3><p class="hint">FrankShift has its own tone for new orders and a stronger one for urgent orders.</p>
-  <div class="sound-test"><button class="btn sm" id="tNormal">Play new order</button><button class="btn sm" id="tUrgent">Play urgent</button></div></div>
+  <div class="sound-test"><button class="btn sm" id="tNormal">Play new order</button><button class="btn sm" id="tUrgent">Play urgent</button><button class="btn sm" id="tPip">Play chat pip</button></div></div>
   <p class="small">On a shared phone or computer, sign out at the end of your shift.</p>
   <div class="btnrow"><button class="btn pri" id="soBtn">Sign out</button><button class="btn" data-close>Close</button></div>`);
   $('#soBtn').onclick = () => { closeModal(); signOut(false); };
@@ -2013,6 +2032,7 @@ $('#whoBtn').onclick = () => {
   };
   $('#tNormal').onclick = () => chime('normal', true);
   $('#tUrgent').onclick = () => chime('urgent', true);
+  $('#tPip').onclick = () => pip(true);
   wireAlerts();
 };
 function openChangePin(){
@@ -2051,6 +2071,7 @@ function openSettings(){
     </form></div>
   <div class="sect setsect"><h3>Alerts</h3>${alertsHtml()}</div>
   <div class="sect setsect"><h3>Security</h3><p class="hint">Change your PIN any time. Other phones signed in as you are signed out.</p><button class="btn sm" id="sPin">Change PIN</button></div>
+  <div class="sect setsect"><h3>Chat pip</h3><p class="hint">A soft pip for each new chat message. Alerts meant for you keep their own tone.</p>${segHtml('pip', pipOn() ? 'on' : 'off', [['on', 'On'], ['off', 'Off']])}</div>
   <div class="sect setsect"><h3>Language</h3>${segHtml('lang', LANG, [['en', 'English'], ['es', 'Español']])}</div>
   <div class="sect setsect"><h3>Appearance</h3>${segHtml('theme', THEME, [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']])}</div>
   <div class="btnrow" style="margin-top:16px"><button class="btn" data-close>Close</button></div>`);
@@ -2073,7 +2094,8 @@ function openSettings(){
   document.querySelectorAll('#modalBody [data-seg] button').forEach(btn => btn.onclick = () => {
     const kind = btn.parentElement.dataset.seg, v = btn.dataset.v;
     if (kind === 'lang') { if (v !== LANG) setLang(v); return; }
-    THEME = v; ls.set('sc.theme', v); applyTheme();
+    if (kind === 'pip') { ls.set('sc.pip', v === 'on'); if (v === 'on') pip(true); }
+    else { THEME = v; ls.set('sc.theme', v); applyTheme(); }
     btn.parentElement.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === btn));
   });
 }
@@ -2134,8 +2156,13 @@ $('#composer').addEventListener('submit', e => { e.preventDefault(); send(); });
 const autosize = () => { const t = $('#input'); t.style.height = 'auto'; t.style.height = Math.min(140, t.scrollHeight) + 'px'; };
 function livePreview(){
   const v = $('#input').value.trim();
-  if (!v || S.kind === 'handoff' || !S.me) { $('#preview').textContent = ''; return; }
+  if (!v || !S.me) { $('#preview').textContent = ''; return; }
   const o = parse(stripMentions(v));
+  if (o.length && S.kind === 'handoff' && !/@\p{L}/u.test(v)) {
+    $('#preview').innerHTML = `<span class="pvwarn">Shift handoffs don't make orders.</span> <button type="button" class="pvfix" id="mkOrder">Make it an order</button>`;
+    $('#mkOrder').onclick = () => { setKind('chat'); $('#input').focus(); };
+    return;
+  }
   $('#preview').innerHTML = o.length ? 'Will create: ' + o.map(x => `<b>${esc(summaryFor(x, S.me.first_name))}</b>`).join(' · ') : '';
 }
 $('#input').addEventListener('input', () => { autosize(); livePreview(); menuSel = 0; updateMenu(); });
