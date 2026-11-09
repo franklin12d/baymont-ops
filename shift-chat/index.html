@@ -761,6 +761,7 @@ function applyTheme(){
   document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute('content', THEME === 'auto' ? (/dark/.test(m.media) ? '#0F172A' : '#FFFFFF') : (dark ? '#0F172A' : '#FFFFFF')));
 }
 applyTheme(); document.documentElement.lang = LANG;
+try { if (window.caches) caches.open('fs-pref').then(c => c.put('fs-lang', new Response(LANG))).catch(() => {}); } catch {}
 const roleColor = id => `var(${roleOf(id).color})`;
 const initials = n => String(n||'').split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0]).join('').toUpperCase();
 /* profile photos: cached per person, drawn through one stylesheet so the feed stays light */
@@ -1042,8 +1043,16 @@ const ES = {
 "low": "baja",
 "Settings": "Ajustes",
 "ROOM": "HAB"
+,
+"Send test alert": "Enviar alerta de prueba",
+"Test alert in 8 seconds. Lock the phone or leave the app now.": "La alerta de prueba llega en 8 segundos. Bloquea el teléfono o sal de la app ahora.",
+"This phone is not set up for alerts yet. Turn on alerts first.": "Este teléfono aún no tiene los avisos activos. Activa los avisos primero.",
+"Could not send the test alert. Check the connection and try again.": "No se pudo enviar la alerta de prueba. Revisa la conexión e intenta de nuevo.",
+"Check it rings with the app closed: tap the button, then lock the phone. The alert comes in about 8 seconds with the phone's own sound.": "Comprueba que suena con la app cerrada: toca el botón y bloquea el teléfono. La alerta llega en unos 8 segundos con el sonido del teléfono."
 };
 const ES_RX = [
+  [/^(.+) is on it$/, "$1 lo está atendiendo"],
+  [/^(.+): not a task$/, "$1: no es tarea"],
   [/^__never__$/, ''], [/^Front Desk · (.+) · User$/, "Recepción · $1 · Usuario"],
   [/^Front Desk · (.+)$/, "Recepción · $1"],
   [/^Housekeeper · (.+) · User$/, "Camarista · $1 · Usuario"],
@@ -1299,6 +1308,18 @@ async function rpc(fn, args){
   return j;
 }
 const call = (fn, args) => rpc(fn, {p_token: S.token, ...args});
+function notifyStatus(orderId){
+  fetch(API + '/functions/v1/notify', { method:'POST', headers:{'Content-Type':'application/json', apikey: KEY}, body: JSON.stringify({token: S.token, status_order: orderId}) }).catch(() => {});
+}
+async function testAlert(){
+  try {
+    const res = await fetch(API + '/functions/v1/notify', { method:'POST', headers:{'Content-Type':'application/json', apikey: KEY}, body: JSON.stringify({token: S.token, test: true}) });
+    if (!res.ok) throw new Error('');
+    let j = {}; try { j = JSON.parse(await res.text()) || {}; } catch {}
+    if (!j.phones) { toast('This phone is not set up for alerts yet. Turn on alerts first.'); return; }
+    toast('Test alert in 8 seconds. Lock the phone or leave the app now.', 'new');
+  } catch { toast('Could not send the test alert. Check the connection and try again.'); }
+}
 function notify(orderIds, messageId){
   orderIds = orderIds || [];
   if (!orderIds.length && !messageId) return;
@@ -1543,7 +1564,7 @@ async function refresh(){
     S.messages = d.messages.map(m => ({...m, created_at: T(m.created_at)}));
     S.orders = d.orders.map(o => ({...o, created_at: T(o.created_at), done_at: T(o.done_at), started_at: T(o.started_at)}));
     S.lost = d.lost.map(l => ({...l, created_at: T(l.created_at), resolved_at: T(l.resolved_at)}));
-    let newSound = null, doneSound = false;
+    let newSound = null, doneSound = false, startSound = false;
     S.orders.forEach(o => {
       const prev = S.known.get(o.id);
       if (!S.firstLoad) {
@@ -1553,6 +1574,10 @@ async function refresh(){
         if (prev !== undefined && prev === o.status && pa !== S.me.id && o.assigned_to === S.me.id && (o.status === 'open' || o.status === 'in_progress')) {
           const u = prioOf(o).level === 'urgent';
           if (onShift() || u) { toast(`<b>Assigned to you · ${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); } }
+        if (prev === 'open' && o.status === 'in_progress' && o.created_by === S.me.id && o.assigned_to !== S.me.id) {
+          toast(`<b>${esc(o.assigned_name || 'Someone')} is on it</b> ${esc(o.ticket)} · ${esc(o.summary)}`, 'new'); startSound = true; }
+        if ((prev === 'open' || prev === 'in_progress') && o.status === 'dismissed' && o.created_by === S.me.id && o.done_by_id !== S.me.id) {
+          toast(`<b>${esc(o.done_by || 'Someone')}: not a task</b> ${esc(o.ticket)} · ${esc(o.summary)}`); }
         if ((prev === 'open' || prev === 'in_progress') && o.status === 'done' && o.done_by_id !== S.me.id) { toast(killLine(o).replace('<span class="k-ico">✓</span>', '✓ ')); if (o.created_by === S.me.id) doneSound = true; }
       }
       S.known.set(o.id, o.status); S.knownAsg.set(o.id, o.assigned_to || null);
@@ -1570,7 +1595,7 @@ async function refresh(){
       S.knownReset.add(x.id + x.at);
     });
     $('#teamCnt').textContent = S.resets.length || '';
-    if (newSound) chime(newSound); else if (doneSound) fx('done');
+    if (newSound) chime(newSound); else if (doneSound) fx('done'); else if (startSound) fx('start');
     syncAvatars();
     render(); S.firstLoad = false; failCount = 0;
   } catch (e) {
@@ -1713,7 +1738,9 @@ async function send(){
 async function orderAction(id, act, assignee){
   try { await call('sc_order_update', {p_order: id, p_action: act, p_assignee: assignee || null});
     if (act === 'start') fx('start'); else if (act === 'done') fx('done');
-    if (act === 'assign') notify([id]); await refresh(); }
+    if (act === 'assign') notify([id]);
+    if (act === 'start' || act === 'done' || act === 'dismiss') notifyStatus(id);
+    await refresh(); }
   catch (e) { toast('Could not update: ' + esc(e.message)); }
 }
 
@@ -1873,6 +1900,15 @@ async function resubscribe(){
 $('#pushBtn').onclick = enablePush;
 $('#pushLater').onclick = () => { ls.set('sc.pushLater', Date.now() + 2 * 86400e3); pushState(); };
 function alertsLabel(){ if (!('Notification' in window) || !('serviceWorker' in navigator)) return 'This browser cannot get alerts.'; if (isIOS && !standalone) return 'Add FrankShift to the Home Screen to get alerts.'; if (Notification.permission === 'denied') return 'Alerts are blocked in this phone\'s settings.'; return Notification.permission === 'granted' && ls.get('sc.pushOk', false) ? 'Alerts are on for this phone.' : 'Alerts are off for this phone.'; }
+const alertsOn = () => 'Notification' in window && 'serviceWorker' in navigator && Notification.permission === 'granted' && ls.get('sc.pushOk', false);
+const canTurnOnAlerts = () => 'Notification' in window && 'serviceWorker' in navigator && !(isIOS && !standalone) && Notification.permission !== 'denied' && !alertsOn();
+function alertsHtml(){
+  return `<p class="hint">${esc(alertsLabel())}</p>${canTurnOnAlerts() ? '<button class="btn pri sm" data-alert="on">Turn on alerts</button>' : ''}`
+    + (alertsOn() ? `<p class="hint" style="margin-top:8px">Check it rings with the app closed: tap the button, then lock the phone. The alert comes in about 8 seconds with the phone's own sound.</p><button class="btn sm" data-alert="test">Send test alert</button>` : '');
+}
+function wireAlerts(){
+  document.querySelectorAll('#modalBody [data-alert]').forEach(b => b.onclick = () => { if (b.dataset.alert === 'on') { closeModal(); enablePush(); } else { b.disabled = true; testAlert(); } });
+}
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 
 /* login */
@@ -1959,12 +1995,11 @@ function signOut(expired){
   S.known.clear(); S.firstLoad = true; showLogin(expired ? ERR.SESSION_EXPIRED : '');
 }
 $('#whoBtn').onclick = () => {
-  const canTurnOn = 'Notification' in window && 'serviceWorker' in navigator && !(isIOS && !standalone) && Notification.permission !== 'denied' && !(Notification.permission === 'granted' && ls.get('sc.pushOk', false));
   openModal(`<div class="pfrow" style="margin-bottom:14px"><span class="av${avClass(S.me.id)}" style="background:${roleColor(S.me.role)}">${esc(initials(S.me.name))}</span>
   <div><h2 style="margin:0">${esc(S.me.name)}</h2><p class="lead" style="margin:2px 0 8px">${esc(roleOf(S.me.role).label)} · ${esc(S.hotel ? S.hotel.name : '')}${S.me.username ? ` · User <span class="uname">${esc(S.me.username)}</span>` : ''}</p>
   <div class="btnrow"><button class="btn sm" id="mSettings">Settings</button></div></div></div>
   <div class="sect" style="margin-top:0;border-top:0;padding-top:0"><h3>Shift</h3><div class="shiftrow"><p class="hint" style="margin:0">${onShift() ? 'On shift: you get the alerts meant for you.' : 'Off shift: you only get urgent alerts.'}</p><button class="btn sm ${onShift() ? '' : 'pri'}" id="mShift">${onShift() ? 'Go off shift' : 'Start shift'}</button></div></div>
-  <div class="sect"><h3>Alerts</h3><p class="hint">${esc(alertsLabel())}</p>${canTurnOn ? '<button class="btn pri sm" id="mPush">Turn on alerts</button>' : ''}</div>
+  <div class="sect"><h3>Alerts</h3>${alertsHtml()}</div>
   <div class="sect"><h3>Sounds</h3><p class="hint">FrankShift has its own tone for new orders and a stronger one for urgent orders.</p>
   <div class="sound-test"><button class="btn sm" id="tNormal">Play new order</button><button class="btn sm" id="tUrgent">Play urgent</button></div></div>
   <p class="small">On a shared phone or computer, sign out at the end of your shift.</p>
@@ -1978,7 +2013,7 @@ $('#whoBtn').onclick = () => {
   };
   $('#tNormal').onclick = () => chime('normal', true);
   $('#tUrgent').onclick = () => chime('urgent', true);
-  if ($('#mPush')) $('#mPush').onclick = () => { closeModal(); enablePush(); };
+  wireAlerts();
 };
 function openChangePin(){
     openModal(`<h2>Change PIN</h2><form id="cpForm" autocomplete="off">
@@ -2014,6 +2049,7 @@ function openSettings(){
       <div class="err" id="pfErr"></div>
       <button class="btn pri" type="submit" id="pfSave">Save profile</button>
     </form></div>
+  <div class="sect setsect"><h3>Alerts</h3>${alertsHtml()}</div>
   <div class="sect setsect"><h3>Security</h3><p class="hint">Change your PIN any time. Other phones signed in as you are signed out.</p><button class="btn sm" id="sPin">Change PIN</button></div>
   <div class="sect setsect"><h3>Language</h3>${segHtml('lang', LANG, [['en', 'English'], ['es', 'Español']])}</div>
   <div class="sect setsect"><h3>Appearance</h3>${segHtml('theme', THEME, [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']])}</div>
@@ -2026,6 +2062,7 @@ function openSettings(){
   $('#sPhoto').onclick = () => pickAvatar(null);
   if ($('#sPhotoDel')) $('#sPhotoDel').onclick = async () => { try { await call('sc_avatar_set', {p_staff: null, p_data: null}); closeModal(); toast('Photo removed'); refresh(); } catch (err) { toast(esc(err.message)); } };
   $('#sPin').onclick = () => openChangePin();
+  wireAlerts();
   $('#pfForm').onsubmit = async ev => {
     ev.preventDefault(); $('#pfErr').textContent = '';
     try {
