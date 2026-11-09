@@ -405,6 +405,60 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
 .pfrow .av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:22px;flex:none}
 .li .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px;flex:none}
 .li.withav{display:flex;gap:10px;align-items:flex-start}
+
+/* ===== FA-Hotel theme v6: modern messenger look ===== */
+:root{--bub:#EEF0F4;--bub-ink:#0E1726;--grad:linear-gradient(135deg,#3D6BFF 0%,#6A4DFF 100%);--feedbg:#FFFFFF}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bub:#222A36;--bub-ink:#EEF2F7;--feedbg:#0E131B}}
+:root[data-theme="dark"]{--bub:#222A36;--bub-ink:#EEF2F7;--feedbg:#0E131B}
+header.top{background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:saturate(1.6) blur(14px);-webkit-backdrop-filter:saturate(1.6) blur(14px);position:relative;z-index:5}
+.who{border:0;background:var(--surface-2);border-radius:999px;padding:4px 14px 4px 4px}
+.who .av{width:34px;height:34px;font-size:12px;box-shadow:0 0 0 2px var(--surface),0 0 0 4px color-mix(in srgb,var(--accent) 45%,transparent)}
+.who.off .av{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--line)}
+.iconbtn{border-radius:50%;border:0}
+.chatcol{background:var(--feedbg)}
+.feed{gap:2px;padding:12px 14px 10px;background:var(--feedbg);scroll-behavior:smooth}
+.shiftdiv{background:none;box-shadow:none;border:0;color:var(--ink-3);font-size:11px;font-weight:600;letter-spacing:.06em;margin:14px 0 6px;padding:0}
+.msg{gap:8px;max-width:min(560px,92%);align-items:flex-end}
+.msg.first{margin-top:12px}
+.msg .av{width:38px;height:38px;font-size:13px;margin-bottom:2px}
+.msg.more .av{visibility:hidden}
+.msg.mine .av{display:none}
+.msg .bub{display:flex;flex-direction:column;align-items:flex-start;min-width:0;flex:0 1 auto}
+.msg.mine .bub{align-items:flex-end}
+.msg .head{padding:0 12px;margin-bottom:2px;gap:6px}
+.msg.cont .head{display:none}
+.msg.mine .head .name,.msg.mine .head .rolechip{display:none}
+.msg .name{font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.rolechip{font-size:10px;padding:0 6px;border-radius:999px;line-height:16px}
+.msg .time{font-size:11px;color:var(--ink-3)}
+.msg .body{background:var(--bub);color:var(--bub-ink);box-shadow:none;border:0;border-radius:20px;padding:9px 14px;font-size:15.5px;line-height:1.4;margin-top:0;max-width:100%}
+.msg:not(.mine).cont .body{border-top-left-radius:6px}
+.msg:not(.mine).more .body{border-bottom-left-radius:6px}
+.msg.mine.cont .body{border-top-right-radius:6px}
+.msg.mine.more .body{border-bottom-right-radius:6px}
+.msg.mine:not(.note):not(.handoff) .body{background:var(--grad);color:#fff;box-shadow:0 4px 14px color-mix(in srgb,#3D6BFF 25%,transparent)}
+.msg.mine:not(.note):not(.handoff) .body .mention{color:#fff;background:rgba(255,255,255,.22)}
+.msg.note .body{background:var(--note);color:var(--ink);box-shadow:inset 0 0 0 1px var(--note-line)}
+.msg.handoff .body{background:var(--handoff);color:var(--ink);box-shadow:inset 0 0 0 1px var(--handoff-line)}
+.msg.tome:not(.mine) .body{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--accent) 55%,transparent)}
+.msg .extracted{margin-top:4px}
+.msg .readby{margin-top:3px}
+.mphoto{border-radius:20px;max-width:260px;box-shadow:var(--shadow)}
+.msg .body + .mphoto{margin-top:3px}
+.rxrow{margin-top:-8px;padding:0 8px;position:relative;z-index:1}
+.rx{box-shadow:var(--shadow);border:0;background:var(--surface)}
+.rx.add{opacity:.85}
+.msg.pop{animation:msgpop .28s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes msgpop{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.msg.pop{animation:none}.feed{scroll-behavior:auto}}
+.composer{border:0;border-radius:28px;box-shadow:0 1px 0 var(--line),0 10px 30px rgba(14,23,38,.10);padding:8px}
+.composer .row{align-items:center;gap:6px}
+.row textarea{border-radius:22px;min-height:46px;padding:12px 16px}
+.attach{width:44px;height:44px;border-radius:50%;background:none;color:var(--accent)}
+.attach:hover{background:var(--accent-soft)}
+.send{width:46px;height:46px;padding:0;border-radius:50%;justify-content:center;background:var(--grad);color:#fff;font-size:0;gap:0}
+.send svg{width:20px;height:20px}
+.kinds button{border-radius:999px}
 </style>
 </head>
 <body>
@@ -819,19 +873,24 @@ function renderFeed(){
   const byMsg = {}; S.orders.forEach(o => (byMsg[o.message_id] = byMsg[o.message_id] || []).push(o));
   let html = '', last = '';
   if (!S.messages.length) html = '<div class="empty">No messages in the last 3 days. Write the first one below: a guest request, a guest note, or your shift handoff.</div>';
-  S.messages.forEach(m => {
-    const sh = dayNY(m.created_at) + shiftOf(m.created_at);
+  const shOf = m => dayNY(m.created_at) + shiftOf(m.created_at);
+  const grp = (a, b) => !!(a && b && a.staff_id === b.staff_id && a.kind === 'chat' && b.kind === 'chat' && b.created_at - a.created_at < 5 * 60e3 && shOf(a) === shOf(b));
+  S.messages.forEach((m, i) => {
+    const sh = shOf(m);
+    const cont = grp(S.messages[i - 1], m), more = grp(m, S.messages[i + 1]);
+    const pop = !S.firstLoad && S.rendered && !S.rendered.has(m.id) ? ' pop' : '';
     if (sh !== last) { html += `<div class="shiftdiv">${esc(fmtDate(m.created_at))} · ${esc(shiftOf(m.created_at))}</div>`; last = sh; }
     const mine = m.staff_id === S.me.id; const tome = mentionsMe(m);
     const tag = m.kind === 'note' ? '<span class="kindtag">Guest note</span>' : m.kind === 'handoff' ? '<span class="kindtag">Shift handoff</span>' : '';
     const chips = (byMsg[m.id] || []).map(o => `<span class="xchip ${o.status === 'done' || o.status === 'dismissed' ? 'done' : ''}"><b>${esc(o.ticket)}</b>${esc(o.room ? 'Room ' + o.room : 'No room')} · ${esc(o.status === 'in_progress' ? 'in progress' : o.status === 'open' ? CATS[o.category] : o.status)}</span>`).join('');
     const rb = m.read_by ? `<button class="readby" data-readby="${esc(m.id)}">Read by ${m.read_by.length}</button>` : '';
-    html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''} ${tome ? 'tome' : ''}">
+    html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''} ${tome ? 'tome' : ''} ${cont ? 'cont' : 'first'} ${more ? 'more' : 'last'}${pop}">
       <div class="av${avClass(m.staff_id)}" style="background:${roleColor(m.role)}">${esc(initials(m.author))}</div>
       <div class="bub"><div class="head"><span class="name">${esc(m.author)}</span><span class="rolechip" style="background:${roleColor(m.role)}">${esc(roleOf(m.role).label)}</span>${tag}<span class="time">${fmtTime(m.created_at)}</span></div>
       ${m.body ? `<div class="body">${markMentions(roomLinks(m.body), m)}</div>` : ''}${m.has_photo ? photoHtml(m) : ''}${chips ? `<div class="extracted">${chips}</div>` : ''}${rb}</div></div>`;
   });
   feed.innerHTML = html;
+  S.rendered = new Set(S.messages.map(m => m.id));
   if (nearBottom || S.firstLoad) feed.scrollTop = feed.scrollHeight;
   loadMsgPhotos();
 }
