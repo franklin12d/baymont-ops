@@ -28,7 +28,7 @@ self.addEventListener('push', e => {
       icon: 'icon-192.png',
       badge: 'icon-192.png',
       timestamp: Date.now(),
-      data: { url: self.registration.scope + (d.hash === '#team' ? '#team' : '#orders') },
+      data: { url: self.registration.scope + (d.hash === '#team' || d.hash === '#passon' ? d.hash : '#orders') },
     });
   }));
 });
