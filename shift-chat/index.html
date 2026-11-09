@@ -564,6 +564,18 @@ body{letter-spacing:0;font-feature-settings:normal}
 .pfrow .av.sm{width:56px;height:56px;font-size:19px}
 .pfform .grid2{gap:8px 10px}
 .loginwrap{background:radial-gradient(900px 520px at 50% -10%,color-mix(in srgb,#635BFF 22%,transparent),transparent 60%),var(--bg)}
+/* message kind buttons: bigger, one color each (matches the bubble it makes) */
+.kinds{gap:8px}
+.kinds button{--kc:#2F6BFF;font-size:14px;font-weight:700;padding:7px 16px;line-height:20px;border-radius:999px;border:1.5px solid color-mix(in srgb,var(--kc) 45%,transparent);background:color-mix(in srgb,var(--kc) 12%,transparent);color:var(--kc);box-shadow:none}
+.kinds button[data-kind="note"]{--kc:#C98A00}
+.kinds button[data-kind="handoff"]{--kc:#7C4DFF}
+.kinds button[aria-pressed="true"]{background:var(--kc);border-color:var(--kc);color:#fff;box-shadow:0 3px 10px color-mix(in srgb,var(--kc) 30%,transparent)}
+.kinds button[data-kind="chat"][aria-pressed="true"]{background:var(--grad,var(--kc));border-color:transparent}
+.fob.place{font-size:13px}
+@media (max-width:640px){
+  .kinds{gap:6px}
+  .kinds button{font-size:13px;padding:6px 13px;line-height:19px}
+}
 </style>
 </head>
 <body>
@@ -1112,6 +1124,12 @@ const ES = {
 "You're all set": "Todo listo",
 "This phone will ring for orders and messages meant for you, even with the app closed.": "Este teléfono sonará con las órdenes y mensajes para ti, aunque la app esté cerrada.",
 "You can open this guide again in Settings.": "Puedes abrir esta guía otra vez en Ajustes."
+,
+"AREA": "ÁREA",
+"Restrooms": "Baños",
+"Breakfast": "Desayuno",
+"Parking": "Parqueo",
+"Pool": "Piscina"
 };
 const ES_RX = [
   [/^(.+) is on it$/, "$1 lo está atendiendo"],
@@ -1161,9 +1179,12 @@ const ES_RX = [
 ];
 const I18N_SKIP = '.msg .body, .oquote, .name, #whoName, .uname, .mention, .mphoto, [data-noi18n], script, style';
 
-const SUM_ITEM = {"towel": ["toalla", "toallas", 1], "bath mat": ["alfombra de baño", "alfombras de baño", 1], "blanket": ["cobija", "cobijas", 1], "crib": ["cuna", "cunas", 1], "cup": ["vaso", "vasos", 0], "duvet": ["duvet", "duvets", 0], "hair dryer": ["secador de pelo", "secadores de pelo", 0], "hanger": ["gancho", "ganchos", 0], "iron and board": ["plancha y tabla", "planchas y tablas", 1], "new key": ["llave nueva", "llaves nuevas", 1], "pillow": ["almohada", "almohadas", 1], "rollaway bed": ["cama extra", "camas extra", 1], "set of sheets": ["juego de sábanas", "juegos de sábanas", 0], "washcloth": ["toallita", "toallitas", 1], "early check-in": ["entrada temprano", "entradas temprano", 1], "late checkout": ["salida tarde", "salidas tarde", 1], "lost item": ["objeto perdido", "objetos perdidos", 0], "noise complaint": ["queja de ruido", "quejas de ruido", 1], "room cleaning": ["limpieza de habitación", "limpiezas de habitación", 1], "room move": ["cambio de habitación", "cambios de habitación", 0], "wake-up call": ["llamada para despertar", "llamadas para despertar", 1]}, SUM_PL = {"bath mats": "bath mat", "blankets": "blanket", "cribs": "crib", "cups": "cup", "duvets": "duvet", "hair dryers": "hair dryer", "hangers": "hanger", "irons": "iron and board", "new keys": "new key", "pillows": "pillow", "rollaway beds": "rollaway bed", "sets of sheets": "set of sheets", "towels": "towel", "washcloths": "washcloth"}, SUM_WHOLE = {"a TV problem": "un problema con la TV", "a door or lock problem": "un problema de puerta o cerradura", "a fridge or microwave problem": "un problema con la nevera o el microondas", "a leak": "una fuga de agua", "a lights problem": "un problema de luces", "a shower or tub problem": "un problema de ducha o bañera", "a sink or drain problem": "un problema de lavamanos o desagüe", "a smoke detector problem": "un problema con el detector de humo", "a toilet problem": "un problema con el inodoro", "a window or curtain problem": "un problema de ventana o cortina", "an A/C problem": "un problema con el A/C", "an outlet problem": "un problema con un enchufe", "no hot water": "sin agua caliente", "pests": "plagas", "coffee": "café", "toilet paper": "papel higiénico", "toiletries": "artículos de baño", "Wi-Fi help": "ayuda con el Wi-Fi", "parking help": "ayuda con el parqueo", "trash pickup": "recoger la basura"};
+const SUM_ITEM = {"towel": ["toalla", "toallas", 1], "bath mat": ["alfombra de baño", "alfombras de baño", 1], "blanket": ["cobija", "cobijas", 1], "crib": ["cuna", "cunas", 1], "cup": ["vaso", "vasos", 0], "duvet": ["duvet", "duvets", 0], "hair dryer": ["secador de pelo", "secadores de pelo", 0], "hanger": ["gancho", "ganchos", 0], "iron and board": ["plancha y tabla", "planchas y tablas", 1], "new key": ["llave nueva", "llaves nuevas", 1], "pillow": ["almohada", "almohadas", 1], "rollaway bed": ["cama extra", "camas extra", 1], "set of sheets": ["juego de sábanas", "juegos de sábanas", 0], "washcloth": ["toallita", "toallitas", 1], "early check-in": ["entrada temprano", "entradas temprano", 1], "late checkout": ["salida tarde", "salidas tarde", 1], "lost item": ["objeto perdido", "objetos perdidos", 0], "noise complaint": ["queja de ruido", "quejas de ruido", 1], "room cleaning": ["limpieza de habitación", "limpiezas de habitación", 1], "room move": ["cambio de habitación", "cambios de habitación", 0], "wake-up call": ["llamada para despertar", "llamadas para despertar", 1]}, SUM_PL = {"bath mats": "bath mat", "blankets": "blanket", "cribs": "crib", "cups": "cup", "duvets": "duvet", "hair dryers": "hair dryer", "hangers": "hanger", "irons": "iron and board", "new keys": "new key", "pillows": "pillow", "rollaway beds": "rollaway bed", "sets of sheets": "set of sheets", "towels": "towel", "washcloths": "washcloth"}, SUM_WHOLE = {"a TV problem": "un problema con la TV", "a door or lock problem": "un problema de puerta o cerradura", "a fridge or microwave problem": "un problema con la nevera o el microondas", "a leak": "una fuga de agua", "a lights problem": "un problema de luces", "a shower or tub problem": "un problema de ducha o bañera", "a sink or drain problem": "un problema de lavamanos o desagüe", "a smoke detector problem": "un problema con el detector de humo", "a toilet problem": "un problema con el inodoro", "a window or curtain problem": "un problema de ventana o cortina", "an A/C problem": "un problema con el A/C", "an outlet problem": "un problema con un enchufe", "no hot water": "sin agua caliente", "pests": "plagas", "coffee": "café", "toilet paper": "papel higiénico", "toiletries": "artículos de baño", "Wi-Fi help": "ayuda con el Wi-Fi", "parking help": "ayuda con el parqueo", "trash pickup": "recoger la basura", "cleaning": "limpieza", "room cleaning": "limpieza de habitación", "a check": "una revisión", "a pickup": "recoger"};
+const SUM_PLACE = {"in the lobby": "en el lobby", "in the public restrooms": "en los baños públicos", "in the breakfast area": "en el área de desayuno", "in the parking lot": "en el parqueo", "at the pool": "en la piscina"};
 function trItem(ph){
   if (SUM_WHOLE[ph]) return SUM_WHOLE[ph];
+  const pk = ph.match(/^(.+) pickup$/);
+  if (pk) { const one = SUM_PL[pk[1]] || pk[1], it = SUM_ITEM[one]; return 'recoger ' + (it ? it[1] : SUM_WHOLE[pk[1]] || pk[1]); }
   const m = ph.match(/^(a|an|extra|\d+) (.+)$/); if (!m) return ph;
   const one = SUM_PL[m[2]] || m[2], it = SUM_ITEM[one]; if (!it) return ph;
   if (m[1] === 'a' || m[1] === 'an') return (it[2] ? 'una ' : 'un ') + it[0];
@@ -1171,6 +1192,7 @@ function trItem(ph){
   return m[1] + ' ' + it[1];
 }
 function trSummary(k){
+  for (const at in SUM_PLACE) if (k.endsWith(' ' + at)) { const v = trSummary(k.slice(0, -at.length - 1)); return v && v + ' ' + SUM_PLACE[at]; }
   const m = k.match(/^((?:[A-Z]+-\d+ · )?)(.+?) (needs|reports) (.+?)(?: (?:in|for) room (\S+))?$/); if (!m) return null;
   const items = m[4].split(/, | and /).map(trItem);
   const list = items.length < 2 ? items[0] : items.slice(0, -1).join(', ') + ' y ' + items[items.length - 1];
@@ -1245,7 +1267,9 @@ const ITEMS = [
   {k:'coffee', cat:'housekeeping', one:'coffee', mass:true, w:['coffee( pods)?','k-?cups?','\\bcafe\\b']},
   {k:'cups', cat:'housekeeping', one:'cup', many:'cups', w:['\\bcups?\\b','vasos?']},
   {k:'trash', cat:'housekeeping', one:'trash pickup', mass:true, w:['trash','garbage','basura']},
-  {k:'clean', cat:'housekeeping', one:'room cleaning', mass:true, w:['clean(ing|ed)?','limpia(r|rla|rlo)?','limpi(en|e)','limpieza','service (the|their|his|her) room','servicio (de|a la|al|para la) (cuarto|habitacion|hab)','(quiere|quieren|pide|piden|pidio|necesita|necesitan) servicio','servicio (a|para) la','refresh']},
+  {k:'clean', cat:'housekeeping', one:'room cleaning', mass:true, verb:true, w:['(?<!\\b(is|are|was|looks?|all|so|very|muy|esta|estan|quedo|quedaron) )clean(ing|ed)?\\b(?! (towels?|sheets?|linens?|pillows?|blankets?|cups?|washcloths?|bath ?mats?)\\b)','(?<!\\b(esta|estan|muy|quedo|quedaron|toallas?|sabanas?|almohadas?|cobijas?) )limpia(r|rla|rlo|rlas|rlos)?\\b','limpi(en|e)\\b','limpieza','dirty','messy','a mess\\b','suci[oa]s?\\b','service (the|their|his|her) room','servicio (de|a la|al|para la) (cuarto|habitacion|hab)','(quiere|quieren|pide|piden|pidio|necesita|necesitan) servicio','servicio (a|para) la','refresh']},
+  {k:'pickup', cat:'housekeeping', one:'a pickup', mass:true, verb:true, w:['pick(ed|ing|s)? ?-?up\\b','collect\\w*','recog\\w*','recoj\\w*']},
+  {k:'check', cat:'housekeeping', one:'a check', mass:true, verb:true, w:['check(s|ed|ing)?\\b(?![ -]?(in|out)\\b)','verif\\w*','revis\\w*','review\\w*','inspect\\w*','inspecciona\\w*','chequea\\w*']},
   // maintenance (issue = how the card reads)
   {k:'leak', cat:'maintenance', issue:'a leak', urgent:true, w:['leak\\w*','fuga','gote\\w*','water on the floor','agua (en|por) el piso','inunda\\w*','flood\\w*','(se )?(esta )?(sale|saliendo|salir) (el |la )?agua','bote de agua','botando agua','salidero','water (is )?(coming|leaking|dripping)']},
   {k:'pests', cat:'maintenance', issue:'pests', urgent:true, w:['bed ?bugs?','chinches?','roach\\w*','cucaracha\\w*','\\bbugs?\\b','insect\\w*','plagas?','hormigas?','\\bants\\b']},
@@ -1264,8 +1288,26 @@ const ITEMS = [
 ];
 ITEMS.forEach(it => it.re = new RegExp(it.w.map(p => p.startsWith('\\b') ? p : '\\b' + p).join('|'), 'g'));
 
+// common areas: an order there has no room, the place goes at the end of its summary
+const PLACES = [
+  {k:'lobby', cat:'housekeeping', at:'in the lobby', label:'Lobby', w:['lobby']},
+  {k:'restrooms', cat:'housekeeping', at:'in the public restrooms', label:'Restrooms', w:['public (bath|rest) ?rooms?','rest ?rooms?','bath ?rooms?','(?<!\\b(papel|alfombras?|tapete) (de|del) )banos?( publicos?)?\\b']},
+  {k:'breakfast', cat:'housekeeping', at:'in the breakfast area', label:'Breakfast', w:['breakfast( area| room)?','(area|salon|cuarto) de(l)? desayuno','desayuno']},
+  {k:'parking', cat:'maintenance', at:'in the parking lot', label:'Parking', w:['parking( lot)?','parqueo','estacionamiento']},
+  {k:'pool', cat:'maintenance', at:'at the pool', label:'Pool', w:['pool(?! towels?)','piscina','alberca']},
+];
+PLACES.forEach(pl => pl.re = new RegExp(pl.w.map(x => '\\b' + x).join('|'), 'g'));
+const placeOf = o => o && !o.room && o.summary ? PLACES.find(pl => o.summary.endsWith(' ' + pl.at)) || null : null;
+function findPlaces(t){
+  const out = [];
+  for (const pl of PLACES) { pl.re.lastIndex = 0; const m = pl.re.exec(t); if (m) out.push({pl, idx: m.index, end: m.index + m[0].length}); }
+  out.sort((a, b) => a.idx - b.idx);
+  // "baños del lobby", "restrooms by the pool": one place, the first one named
+  return out.filter((x, i) => !out.slice(0, i).some(y => x.idx >= y.end && /^\s*(del?|de la|en el|en la|cerca del?|in the|at the|by the|near the|of the|next to the)\s*$/.test(t.slice(y.end, x.idx))));
+}
+
 const RX = {
-  intent: /\b(need|needs|needed|want|wants|request\w*|please|pls|bring|send|deliver|asked? for|asking|can (you|someone)|necesit\w*|quier\w*|pide|pidio|pidiendo|solicit\w*|por ?favor|porfa|lleva(r|rle|n)?|traer|trae|manda(r|rle)?|envia(r|rle)?|falta\w*|hace falta|broken|not working|doesn'?t work|isn'?t working|won'?t|stopped|fix|repair|out of|no (funciona|sirve|prende|enciende|enfria|calienta|tiene|hay|baja|sale|abre|cierra)|dan(ad|ia)\w*|rot[oa]s?|arregl\w*|reparar|revisar|check (on|the))\b/,
+  intent: /\b(need|needs|needed|want|wants|request\w*|please|pls|bring|send|deliver|asked? for|asking|can (you|someone)|necesit\w*|quier\w*|pide|pidio|pidiendo|solicit\w*|por ?favor|porfa|lleva(r|rle|n)?|traer|trae|manda(r|rle)?|envia(r|rle)?|falta\w*|hace falta|broken|not working|doesn'?t work|isn'?t working|won'?t|stopped|fix|repair|out of|no (funciona|sirve|prende|enciende|enfria|calienta|tiene|hay|baja|sale|abre|cierra)|dan(ad|ia)\w*|rot[oa]s?|arregl\w*|reparar|revis\w*|verific\w*|limpi\w*|recog\w*|recoj\w*|clean|pick ?up|inspect\w*|check (on|the))\b/,
   urgent: /\b(urgent\w*|asap|emergenc\w*|right now|ahora mismo|ya mismo|rapido|quick(ly)?|immediately|inmediat\w*|cuanto antes|lo antes posible)\b|\bya[!. ]*$/,
   waiting: /\b(waiting|esperando|espera|in the room|en la habitacion|en el cuarto|at the desk|en el lobby|en recepcion)\b/,
   vip: /\b(vip|gold|platinum|diamond|elite|titanium)\b/,
@@ -1306,7 +1348,14 @@ function parse(text){
   // blank out room numbers so they aren't read as quantities
   let work = t;
   rooms.forEach(r => { work = work.replace(new RegExp('\\b' + r.room.toLowerCase() + '\\b', 'g'), ' '.repeat(r.room.length)); });
-  const found = [];
+  const NOUNS = 'towels?|sheets?|linens?|pillows?|blankets?|cups?|washcloths?|bath ?mats?|dishes|plates';
+  const dirtyAdj = new RegExp('\\b(dirty|used) (' + NOUNS + ')\\b').test(work) || /\b(toallas?|sabanas?|platos?|vasos?) (suci|usad)[ao]s?\b/.test(work);
+  work = work.replace(new RegExp('\\b(clean|dirty|used) (?=(' + NOUNS + ')\\b)', 'g'), m => ' '.repeat(m.length))
+             .replace(/\b(toallas?|sabanas?|almohadas?|cobijas?|vasos?|platos?) (limpi[ao]s?|suci[ao]s?|usad[ao]s?)\b/g, (m, a, b) => a + ' '.repeat(b.length + 1));
+  // common areas count only when no room is named; their words are blanked so "parking" isn't also read as parking help
+  const places = rooms.length ? [] : findPlaces(work);
+  places.forEach(x => { x.pl.re.lastIndex = 0; work = work.replace(x.pl.re, m => ' '.repeat(m.length)); });
+  let found = [];
   for (const it of ITEMS) {
     it.re.lastIndex = 0; let m; let first = null; let qty = null;
     while ((m = it.re.exec(work))) {
@@ -1316,25 +1365,38 @@ function parse(text){
     }
     if (first != null) found.push({it, idx:first, qty});
   }
+  // a parking question with nothing else to do is front desk help, not a job in the lot
+  if (places.length === 1 && places[0].pl.k === 'parking' && !found.length && RX.intent.test(t)) return [{category:'frontdesk', room:null, place:null, items:[{k:'parking', label:'parking help', issue:null, qty:null}], base_priority: RX.urgent.test(t) ? 3 : 0}];
   if (!found.length) return [];
+  const isVerb = f => f.it.k === 'check' || f.it.k === 'pickup';
+  if (!rooms.length && !places.length && found.every(isVerb)) return [];
+  // "pick up towels at the pool" reads as a towel pickup; a check or pickup next to a real item just rides along
+  const real = found.filter(f => !isVerb(f));
+  if (real.length) {
+    const pick = (dirtyAdj || found.some(f => f.it.k === 'pickup')) && !found.some(f => f.it.k === 'trash');
+    real.forEach(f => { if (pick && f.it.cat === 'housekeeping' && !f.it.verb) f.pickup = true; });
+    found = real;
+  }
   const intent = RX.intent.test(t), urgent = RX.urgent.test(t);
   const anyMaint = found.some(f => f.it.cat === 'maintenance');
-  if (!rooms.length && !intent && !urgent) return [];
+  if (!rooms.length && !places.length && !intent && !urgent) return [];
   if (rooms.length && !intent && !urgent && !anyMaint && found.every(f => f.it.cat === 'frontdesk') && !/\b(late|tarde|temprano|early)\b/.test(t)) return [];
   let base = 0;
   if (urgent) base += 3;
   if (RX.waiting.test(t)) base += 1;
   if (RX.vip.test(t)) base += 1;
   if (RX.upset.test(t)) base += 1;
-  const groups = {};
-  found.sort((a, b) => a.idx - b.idx).forEach(f => { (groups[f.it.cat] = groups[f.it.cat] || []).push(f); });
-  const roomList = rooms.length ? rooms.map(r => r.room) : [null];
   const out = [];
-  for (const room of roomList) for (const cat in groups) {
-    const g = groups[cat];
-    const items = g.map(f => ({k:f.it.k, label: labelFor(f.it, f.qty), issue: f.it.issue || null, qty: f.qty}));
-    let p = base + (cat === 'maintenance' ? 1 : 0) + (g.some(f => f.it.urgent) ? 2 : 0);
-    out.push({category:cat, room, items, base_priority:p});
+  const locs = rooms.length ? rooms.map(r => ({room: r.room, pl: null})) : places.length ? places.map(x => ({room: null, pl: x.pl})) : [{room: null, pl: null}];
+  for (const loc of locs) {
+    const groups = {};
+    found.slice().sort((a, b) => a.idx - b.idx).forEach(f => { const cat = isVerb(f) && loc.pl ? loc.pl.cat : f.it.cat; (groups[cat] = groups[cat] || []).push(f); });
+    for (const cat in groups) {
+      const g = groups[cat];
+      const items = g.map(f => ({k:f.it.k, label: f.pickup ? (f.it.mass ? f.it.one : f.it.one) + ' pickup' : f.it.k === 'clean' && loc.pl ? 'cleaning' : labelFor(f.it, f.qty), issue: f.it.issue || null, qty: f.qty}));
+      let p = base + (cat === 'maintenance' && g.some(f => f.it.issue) ? 1 : 0) + (g.some(f => f.it.urgent) ? 2 : 0);
+      out.push({category:cat, room: loc.room, place: loc.pl ? loc.pl.k : null, items, base_priority:p});
+    }
   }
   return out;
 }
@@ -1347,8 +1409,9 @@ function labelFor(it, qty){
 }
 const joinList = a => a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
 function summaryFor(o, firstName){
-  const room = o.room ? (o.category === 'frontdesk' ? ' for room ' : ' in room ') + o.room : '';
-  if (o.category === 'maintenance') return `${firstName} reports ${joinList(o.items.map(i => i.label))}${room}`;
+  const pl = o.place && PLACES.find(x => x.k === o.place);
+  const room = o.room ? (o.category === 'frontdesk' ? ' for room ' : ' in room ') + o.room : pl ? ' ' + pl.at : '';
+  if (o.category === 'maintenance' && o.items.some(i => i.issue)) return `${firstName} reports ${joinList(o.items.map(i => i.label))}${room}`;
   return `${firstName} needs ${joinList(o.items.map(i => i.label))}${room}`;
 }
 function prioOf(o){
@@ -1436,7 +1499,7 @@ function renderFeed(){
     if (sh !== last) { html += `<div class="shiftdiv">${esc(fmtDate(m.created_at))} · ${esc(shiftOf(m.created_at))}</div>`; last = sh; }
     const mine = m.staff_id === S.me.id; const tome = mentionsMe(m);
     const tag = m.kind === 'note' ? '<span class="kindtag">Guest note</span>' : m.kind === 'handoff' ? '<span class="kindtag">Shift handoff</span>' : '';
-    const chips = (byMsg[m.id] || []).map(o => `<span class="xchip ${o.status === 'done' || o.status === 'dismissed' ? 'done' : ''}"><b>${esc(o.ticket)}</b>${esc(o.room ? 'Room ' + o.room : 'No room')} · ${esc(o.status === 'in_progress' ? 'in progress' : o.status === 'open' ? CATS[o.category] : o.status)}</span>`).join('');
+    const chips = (byMsg[m.id] || []).map(o => `<span class="xchip ${o.status === 'done' || o.status === 'dismissed' ? 'done' : ''}"><b>${esc(o.ticket)}</b>${esc(o.room ? 'Room ' + o.room : placeOf(o) ? placeOf(o).label : 'No room')} · ${esc(o.status === 'in_progress' ? 'in progress' : o.status === 'open' ? CATS[o.category] : o.status)}</span>`).join('');
     const rb = m.read_by ? `<button class="readby" data-readby="${esc(m.id)}">Read by ${m.read_by.length}</button>` : '';
     html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''} ${tome ? 'tome' : ''} ${cont ? 'cont' : 'first'} ${more ? 'more' : 'last'}${pop}">
       <div class="av${avClass(m.staff_id)}" style="background:${roleColor(m.role)}">${esc(initials(m.author))}</div>
@@ -1538,7 +1601,7 @@ function orderCard(o, p){
   acts.push(`<button class="done" data-act="done" data-id="${o.id}">Done</button>`);
   acts.push(`<button data-act="more" data-id="${o.id}" aria-label="More actions">•••</button>`);
   return `<div class="order p-${p.level}">
-    <button class="fob ${o.room ? '' : 'none'}" ${o.room ? `data-room="${esc(o.room)}"` : ''} style="border:0"><small>ROOM</small>${esc(o.room || 'n/a')}</button>
+    ${(pl => pl && !o.room ? `<button class="fob place" style="border:0"><small>AREA</small>${esc(pl.label)}</button>` : `<button class="fob ${o.room ? '' : 'none'}" ${o.room ? `data-room="${esc(o.room)}"` : ''} style="border:0"><small>ROOM</small>${esc(o.room || 'n/a')}</button>`)(placeOf(o))}
     <div style="min-width:0">
       <div class="ohead"><span class="ticket">${esc(o.ticket)}</span><span class="prio ${p.level}">${p.level}</span>${st}<span class="cat">${esc(CATS[o.category])}</span><span class="age">${ago(o.created_at)}</span></div>
       <div class="osum">${sum}</div>
@@ -1799,7 +1862,7 @@ async function send(){
     (r.order_ids || []).forEach(id => S.known.set(id, 'open'));
     if (r.message_id) S.knownMsg.add(r.message_id);
     notify(r.order_ids, r.mentioned ? r.message_id : null);
-    if (orders.length) toast(`Sent to orders: <b>${esc(orders.map(o => o.room ? 'room ' + o.room : CATS[o.category]).join(', '))}</b>`, 'new');
+    if (orders.length) toast(`Sent to orders: <b>${esc(orders.map(o => o.room ? 'room ' + o.room : o.place ? PLACES.find(x => x.k === o.place).label : CATS[o.category]).join(', '))}</b>`, 'new');
     else if (r.mentioned) toast(`Alert sent to <b>${esc(mentionNames(mentions))}</b>`, 'new');
     if (S.kind !== 'chat') setKind('chat');
     await refresh(); $('#feed').scrollTop = $('#feed').scrollHeight;
