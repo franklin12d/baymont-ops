@@ -1,20 +1,35 @@
-// FA-Hotel service worker: push notifications only (no offline cache, so staff always get the latest version).
+// FrankShift service worker: push notifications only (no offline cache, so staff always get the latest version).
+// The phone plays its own notification sound; FrankShift's in-app tones play while the app is open.
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 
+// The app saves the language the person picked, so alerts come in that language.
+async function lang(){
+  try { const r = await (await caches.open('fs-pref')).match('fs-lang'); const v = r ? (await r.text()).trim() : ''; if (v === 'es' || v === 'en') return v; } catch {}
+  return /^es\b/i.test((self.navigator && self.navigator.language) || '') ? 'es' : 'en';
+}
+const VIBE = { urgent: [200, 90, 200, 90, 400], start: [80, 60, 160], done: [60, 50, 60, 50, 220], test: [200, 100, 200] };
+
 self.addEventListener('push', e => {
   let d = {};
-  try { d = e.data ? e.data.json() : {}; } catch { d = { title: 'FA-Hotel', body: e.data && e.data.text() }; }
+  try { d = e.data ? e.data.json() : {}; } catch { d = { title: 'FrankShift', body: e.data && e.data.text() }; }
   const urgent = !!d.urgent || /^URGENT/.test(d.title || '');
-  e.waitUntil(self.registration.showNotification(d.title || 'FA-Hotel', {
-    body: d.body || 'New request',
-    tag: d.tag || undefined,
-    renotify: true,
-    requireInteraction: urgent,
-    vibrate: urgent ? [200, 90, 200, 90, 400] : [120],
-    icon: 'icon-192.png',
-    badge: 'icon-192.png',
-    data: { url: self.registration.scope + (d.hash === '#team' ? '#team' : '#orders') },
+  e.waitUntil(lang().then(l => {
+    const es = l === 'es';
+    const title = (es && d.title_es) || d.title || 'FrankShift';
+    const body = (es && d.body_es) || d.body || (es ? 'Nuevo pedido' : 'New request');
+    return self.registration.showNotification(title, {
+      body,
+      tag: d.tag || undefined,
+      renotify: true,
+      silent: false,
+      requireInteraction: urgent,
+      vibrate: urgent ? VIBE.urgent : VIBE[d.kind] || [200, 100, 200],
+      icon: 'icon-192.png',
+      badge: 'icon-192.png',
+      timestamp: Date.now(),
+      data: { url: self.registration.scope + (d.hash === '#team' ? '#team' : '#orders') },
+    });
   }));
 });
 
