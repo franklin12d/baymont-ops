@@ -14,7 +14,7 @@ self.addEventListener('push', e => {
     vibrate: urgent ? [200, 90, 200, 90, 400] : [120],
     icon: 'icon-192.png',
     badge: 'icon-192.png',
-    data: { url: self.registration.scope + '#orders' },
+    data: { url: self.registration.scope + (d.hash === '#team' ? '#team' : '#orders') },
   }));
 });
 

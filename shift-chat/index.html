@@ -379,6 +379,29 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
 .namesug button:hover,.namesug button:focus-visible{border-color:var(--accent);background:var(--accent-soft)}
 .namesug .ini{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:11px;flex:none}
 .pfrow{display:flex;align-items:center;gap:14px}
+.uname{font-family:var(--f-mono);font-size:11.5px;font-weight:700;letter-spacing:.06em;background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--ink-2);margin-left:4px}
+.pill.ask{background:var(--urgent-soft);color:var(--urgent);border-color:transparent}
+#reloadBtn.spin svg{animation:rspin .8s linear infinite}
+@keyframes rspin{to{transform:rotate(360deg)}}
+.attach{border:0;background:var(--surface-2);color:var(--ink-2);border-radius:16px;width:46px;height:50px;display:grid;place-items:center;flex:none}
+.attach svg{width:20px;height:20px}
+.pendphoto{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2)}
+.pendphoto[hidden]{display:none}
+.pendphoto img{width:52px;height:52px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.mphoto{display:block;border:0;padding:0;margin-top:4px;background:var(--surface-2);border-radius:14px;overflow:hidden;max-width:240px;min-height:60px;min-width:120px}
+.mphoto img{display:block;width:100%;max-height:300px;object-fit:cover}
+.mphoto .ld{display:grid;place-items:center;height:120px;font-size:12px;color:var(--ink-3)}
+.rxrow{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.msg.mine .rxrow{justify-content:flex-end}
+.rx{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:2px 8px;font-size:14px;line-height:22px;min-height:28px;color:var(--ink-2)}
+.rx b{font-size:12px;margin-left:3px}
+.rx.mine{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.rx.add{font-weight:700;color:var(--ink-3)}
+.rxpick{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:6px;box-shadow:var(--shadow);max-width:300px}
+.msg.mine .rxpick{margin-left:auto}
+.rxpick button{border:0;background:none;font-size:20px;width:36px;height:36px;border-radius:10px}
+.rxpick button:hover,.rxpick button.on{background:var(--accent-soft)}
+.bigphoto{display:block;max-width:100%;max-height:70vh;margin:0 auto 12px;border-radius:12px}
 .pfrow .av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:22px;flex:none}
 .li .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px;flex:none}
 .li.withav{display:flex;gap:10px;align-items:flex-start}
@@ -390,6 +413,7 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
     <div class="brand"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="faG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3D6BFF"/><stop offset="1" stop-color="#0E1726"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#faG)"/><text x="15.5" y="21.2" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="13.5" letter-spacing="-.4" fill="#fff">FA</text><circle cx="25.6" cy="6.6" r="2.2" fill="#9DB4FF"/></svg><div class="bt">FA-Hotel<small id="hotelName">—</small></div></div>
     <div class="spacer"></div>
     <button class="who" id="whoBtn" aria-label="Your account"><span class="av" id="whoAv"></span><span id="whoName"></span><span class="offtag" id="whoOff" hidden>Off shift</span></button>
+    <button class="iconbtn" id="reloadBtn" aria-label="Refresh" title="Refresh the app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button>
     <button class="iconbtn" id="soundBtn" aria-label="Sound on" title="Sound for new orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path id="soundWave" d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg></button>
   </header>
   <nav class="tabs" role="tablist" id="tabs">
@@ -397,7 +421,7 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
     <button role="tab" data-tab="orders" aria-selected="false">Orders<span class="cnt" id="tabCnt"></span></button>
     <button role="tab" data-tab="lost" aria-selected="false">Lost &amp; Found</button>
     <button role="tab" data-tab="rooms" aria-selected="false">Rooms</button>
-    <button role="tab" data-tab="team" aria-selected="false" id="teamTab" hidden>Manager</button>
+    <button role="tab" data-tab="team" aria-selected="false" id="teamTab" hidden>Manager<span class="cnt" id="teamCnt"></span></button>
   </nav>
   <div class="banner" id="pushBanner" hidden><span class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span><span class="grow" id="pushText"></span><button class="btn sm pri" id="pushBtn">Turn on</button><button class="linkbtn" id="pushLater">Not now</button></div>
 
@@ -415,7 +439,9 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
           <button type="button" data-kind="note" aria-pressed="false">Guest note</button>
           <button type="button" data-kind="handoff" aria-pressed="false">Shift handoff</button>
         </div>
+        <div class="pendphoto" id="pendPhoto" hidden><img id="pendImg" alt="Photo to send"><span class="grow">Photo ready to send</span><button type="button" class="linkbtn" id="pendDel">Remove</button></div>
         <div class="row">
+          <button type="button" class="attach" id="attachBtn" aria-label="Send a photo" title="Send a photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
           <textarea id="input" rows="1" placeholder="Escribe un pedido, o @ para avisar a alguien" aria-label="Message" maxlength="1000"></textarea>
           <button class="send" type="submit" id="sendBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Send</button>
         </div>
@@ -481,7 +507,7 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
       <div class="err" id="sfErr"></div>
       <button class="btn pri" type="submit">Add to team</button>
     </form>
-    <div class="card"><h2>Team at <span id="teamHotel"></span></h2><div class="list" id="staffList"></div></div>
+    <div class="card"><h2>Team at <span id="teamHotel"></span></h2><p class="small" style="margin:-4px 0 10px">Each person signs in with their user. New users and PIN resets start with 0000, and the app asks them to pick their own PIN.</p><div class="btnrow" style="margin-bottom:10px"><button class="btn sm" id="usersCsv">Download user list</button></div><div class="list" id="staffList"></div></div>
   </div></section>
 </div>
 
@@ -490,22 +516,31 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
 <div class="loginwrap" id="login" hidden>
   <form class="dialog" id="loginForm" autocomplete="off">
     <div class="loginlogo"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="faG2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3D6BFF"/><stop offset="1" stop-color="#0E1726"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#faG2)"/><text x="15.5" y="21.2" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="13.5" letter-spacing="-.4" fill="#fff">FA</text><circle cx="25.6" cy="6.6" r="2.2" fill="#9DB4FF"/></svg><div><h2 style="margin:0">FA-Hotel</h2><div class="small">Front desk · Housekeeping · Engineering</div></div></div>
-    <p class="lead">Sign in with your first and last name and your 4-digit PIN. First time? The PIN you type now becomes yours.</p>
+    <p class="lead">Sign in with your user and your 4-digit PIN. Your user is the first 2 letters of your first name and of your last name, like FRAL for Franklin Alvarez.</p>
     <div class="field"><label for="fHotel">Hotel</label><select id="fHotel"></select></div>
-    <div class="two">
-      <div class="field"><label for="fFirst">First name</label><input id="fFirst" autocomplete="given-name" required></div>
-      <div class="field"><label for="fLast">Last name</label><input id="fLast" autocomplete="family-name" required></div>
-    </div>
+    <div class="field"><label for="fUser">User</label><input id="fUser" autocomplete="username" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="FRAL" required></div>
     <div class="namesug" id="nameSug" role="listbox" aria-label="Is this you?" hidden></div>
     <div class="field"><label for="fPin">PIN</label><input id="fPin" class="pinbox" type="password" inputmode="numeric" pattern="\d{4}" maxlength="4" autocomplete="off" required></div>
+    <p class="small" style="margin:-4px 0 12px">First time? Use the PIN your manager gave you. You'll pick your own right after.</p>
     <div class="err" id="loginErr"></div>
     <button class="primary" type="submit" id="loginBtn">Enter</button>
+    <div style="text-align:center;margin-top:8px"><button type="button" class="linkbtn" id="forgotBtn">Forgot your PIN?</button></div>
+  </form>
+  <form class="dialog" id="pinForm" autocomplete="off" hidden>
+    <h2 style="margin:0 0 6px">Pick your PIN</h2>
+    <p class="lead" id="pinLead">Choose 4 numbers only you know. You'll use them every time you sign in.</p>
+    <div class="field"><label for="pNew">New PIN</label><input id="pNew" class="pinbox" type="password" inputmode="numeric" pattern="\d{4}" maxlength="4" autocomplete="new-password" required></div>
+    <div class="field"><label for="pNew2">Type it again</label><input id="pNew2" class="pinbox" type="password" inputmode="numeric" pattern="\d{4}" maxlength="4" autocomplete="new-password" required></div>
+    <div class="err" id="pinErr"></div>
+    <button class="primary" type="submit" id="pinBtn">Save PIN</button>
+    <div style="text-align:center;margin-top:8px"><button type="button" class="linkbtn" id="pinCancel">Back</button></div>
   </form>
 </div>
 
 <div class="scrim" id="modal" hidden><div class="dialog" id="modalBody"></div></div>
 <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
 <input type="file" id="avatarInput" accept="image/*" hidden>
+<input type="file" id="chatPhotoInput" accept="image/*" hidden>
 <style id="avStyles"></style>
 
 <script>
@@ -534,7 +569,7 @@ const GROUPS = [
 const DEPTS = [{id:'fd', label:'Front desk'}, {id:'hk', label:'Housekeeping'}, {id:'eng', label:'Engineering'}];
 const TZ = 'America/New_York';
 const ERR = {
-  NOT_ON_LIST: 'That name is not on the team list for this hotel. Check the spelling or ask your manager to add you.',
+  NOT_ON_LIST: 'That user is not on the team list for this hotel. Check the letters or ask your manager.',
   WRONG_PIN: 'Wrong PIN. After 5 tries the account locks for 15 minutes.',
   LOCKED: 'Too many wrong PINs. Try again in 15 minutes or ask your manager to reset your PIN.',
   PIN_FORMAT: 'The PIN must be 4 digits.',
@@ -546,6 +581,10 @@ const ERR = {
   DETAILS_REQUIRED: 'Write what needs to be done.',
   ALL_MGR_ONLY: 'Only managers can use @todos.',
   BAD_PHOTO: 'That photo could not be saved. Try another one.',
+  PIN_DEFAULT: 'Pick a PIN other than 0000.',
+  PIN_CHANGE_REQUIRED: 'Please sign in again and pick your PIN.',
+  BAD_EMOJI: 'That reaction is not available.',
+  TOO_MANY: 'Too many at once.',
 };
 
 /* helpers */
@@ -565,7 +604,7 @@ const avKey = id => 'avp-' + String(id).replace(/[^a-z0-9-]/gi, '');
 const hasAv = id => !!(id && AV.get(id));
 const avClass = id => hasAv(id) ? ' hasp ' + avKey(id) : '';
 function avStyles(){
-  let css = ''; AV.forEach((v, id) => { if (v && v.data && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(v.data)) css += '.' + avKey(id) + '{background-image:url(' + v.data + ')}\n'; });
+  let css = ''; AV.forEach((v, id) => { if (v && v.data && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(v.data)) css += '.' + avKey(id) + '{background-image:url(' + v.data + ') !important}\n'; });
   const el = document.getElementById('avStyles'); if (el && el.textContent !== css) el.textContent = css;
 }
 function saveAv(){ try { const o = {}; AV.forEach((v, k) => { if (v) o[k] = v; }); localStorage.setItem('sc.av', JSON.stringify(o)); } catch {} }
@@ -730,7 +769,7 @@ async function rpc(fn, args){
   const txt = await r.text(); let j = null; try { j = txt ? JSON.parse(txt) : null; } catch {}
   if (!r.ok) {
     const code = (j && j.message) || 'ERROR';
-    if (code === 'SESSION_EXPIRED') { signOut(true); }
+    if (code === 'SESSION_EXPIRED' || code === 'PIN_CHANGE_REQUIRED') { signOut(true); }
     throw new Error(ERR[code] || code);
   }
   return j;
@@ -761,7 +800,8 @@ const msgUrgent = m => S.orders.some(o => o.message_id === m.id && prioOf(o).lev
 
 /* state */
 const S = { token: ls.get('sc.token', null), me: ls.get('sc.me', null), hotel: null, messages: [], orders: [], lost: [], staff: [],
-  kind:'chat', filter:'all', tab:'chat', sound: ls.get('sc.sound', true), known: new Map(), knownAsg: new Map(), knownMsg: new Set(), firstLoad: true, readSent: new Set(), picked: [] };
+  kind:'chat', filter:'all', tab:'chat', sound: ls.get('sc.sound', true), known: new Map(), knownAsg: new Map(), knownMsg: new Set(), firstLoad: true, readSent: new Set(), picked: [],
+  resets: [], knownReset: new Set(), pendingPhoto: null, rxOpen: null };
 
 /* ===== render ===== */
 function render(){
@@ -789,11 +829,61 @@ function renderFeed(){
     html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''} ${tome ? 'tome' : ''}">
       <div class="av${avClass(m.staff_id)}" style="background:${roleColor(m.role)}">${esc(initials(m.author))}</div>
       <div class="bub"><div class="head"><span class="name">${esc(m.author)}</span><span class="rolechip" style="background:${roleColor(m.role)}">${esc(roleOf(m.role).label)}</span>${tag}<span class="time">${fmtTime(m.created_at)}</span></div>
-      <div class="body">${markMentions(roomLinks(m.body), m)}</div>${chips ? `<div class="extracted">${chips}</div>` : ''}${rb}</div></div>`;
+      ${m.body ? `<div class="body">${markMentions(roomLinks(m.body), m)}</div>` : ''}${m.has_photo ? photoHtml(m) : ''}${chips ? `<div class="extracted">${chips}</div>` : ''}${rb}</div></div>`;
   });
   feed.innerHTML = html;
   if (nearBottom || S.firstLoad) feed.scrollTop = feed.scrollHeight;
+  loadMsgPhotos();
 }
+/* ===== photos in the chat ===== */
+const REACTS = ['\u{1FAE1}','\u{1F44C}','\u{1F44D}','\u{1F44E}','\u{1F44F}','\u2714','\u26A0','\u2620','\u{1F4DD}','\u2757','\u203C','\u2049','\u{1F4AF}','\u2705','\u274E','\u2611'];
+const rxShow = e => (/^[\u2000-\u27ff]$/.test(e) && !['\u2705','\u274E','\u2757'].includes(e)) ? e + '\uFE0F' : e;
+const MPH = new Map(); let mphBusy = false;
+function photoHtml(m){
+  const d = MPH.get(m.id);
+  const img = d ? `<img src="${esc(d)}" alt="Photo from ${esc(m.author)}">` : '<span class="ld">Loading photo…</span>';
+  const rx = (m.reactions || []).map(x => `<button class="rx ${x.mine ? 'mine' : ''}" data-rx="${esc(m.id)}" data-e="${esc(x.e)}" title="${esc((x.names || []).join(', '))}">${rxShow(esc(x.e))}<b>${x.n}</b></button>`).join('');
+  const pick = S.rxOpen === m.id ? `<div class="rxpick" role="group" aria-label="Pick a reaction">${REACTS.map(e => `<button data-rx="${esc(m.id)}" data-e="${e}" class="${(m.reactions || []).some(x => x.e === e && x.mine) ? 'on' : ''}">${rxShow(e)}</button>`).join('')}</div>` : '';
+  return `<button class="mphoto" data-mphoto="${esc(m.id)}" aria-label="Open photo">${img}</button>
+    <div class="rxrow">${rx}<button class="rx add" data-rxadd="${esc(m.id)}" aria-label="Add a reaction">${S.rxOpen === m.id ? '×' : '+'}</button></div>${pick}`;
+}
+async function loadMsgPhotos(){
+  if (mphBusy || !S.token) return;
+  const want = S.messages.filter(m => m.has_photo && !MPH.has(m.id)).map(m => m.id);
+  if (!want.length) return;
+  mphBusy = true; let got = false;
+  try { for (const id of want.slice(-12)) { try { const d = await call('sc_msg_photo', {p_message: id});
+      if (typeof d === 'string' && /^data:image\/(jpeg|png|webp);base64,/.test(d)) { MPH.set(id, d); got = true; } else MPH.set(id, ''); } catch {} } }
+  finally { mphBusy = false; }
+  if (got) renderFeed();
+}
+async function react(mid, e){
+  const m = S.messages.find(x => x.id === mid); if (!m) return;
+  const list = m.reactions = (m.reactions || []).map(x => ({...x}));
+  const cur = list.find(x => x.e === e);
+  if (cur && cur.mine) { cur.n--; cur.mine = false; cur.names = (cur.names || []).filter(n => n !== S.me.name); if (!cur.n) list.splice(list.indexOf(cur), 1); }
+  else if (cur) { cur.n++; cur.mine = true; cur.names = (cur.names || []).concat(S.me.name); }
+  else list.push({e, n: 1, mine: true, names: [S.me.name]});
+  S.rxOpen = null; renderFeed();
+  try { await call('sc_react', {p_message: mid, p_emoji: e}); } catch (err) { toast(esc(err.message)); }
+  refresh();
+}
+$('#feed').addEventListener('click', e => {
+  const a = e.target.closest('[data-rxadd]'); if (a) { S.rxOpen = S.rxOpen === a.dataset.rxadd ? null : a.dataset.rxadd; renderFeed(); return; }
+  const x = e.target.closest('[data-rx]'); if (x) { react(x.dataset.rx, x.dataset.e); return; }
+  const ph = e.target.closest('[data-mphoto]'); if (ph) { const d = MPH.get(ph.dataset.mphoto); const m = S.messages.find(y => y.id === ph.dataset.mphoto);
+    if (d) openModal(`<img class="bigphoto" src="${esc(d)}" alt="Photo"><p class="small">${esc(m ? m.author + ' · ' + fmtTime(m.created_at) : '')}</p><div class="btnrow"><button class="btn" data-close>Close</button></div>`); }
+});
+$('#attachBtn').onclick = () => { $('#chatPhotoInput').value = ''; $('#chatPhotoInput').click(); };
+$('#chatPhotoInput').addEventListener('change', async () => {
+  const f = $('#chatPhotoInput').files[0]; if (!f) return;
+  try { setPendingPhoto(await shrink(f, 1100, .72)); } catch (e) { toast(esc(e.message)); }
+});
+function setPendingPhoto(d){
+  S.pendingPhoto = d || null; $('#pendPhoto').hidden = !d; $('#pendImg').src = d || '';
+  if (d) $('#input').focus();
+}
+$('#pendDel').onclick = () => setPendingPhoto(null);
 function markMentions(html, m){
   const labels = [];
   (m.mention_staff || []).forEach(id => { const st = S.staff.find(x => x.id === id); if (st) labels.push([st.name, id === S.me.id], [st.first_name || st.name.split(' ')[0], id === S.me.id]); });
@@ -941,10 +1031,16 @@ async function refresh(){
     S.messages.forEach(m => {
       if (!S.firstLoad && !S.knownMsg.has(m.id) && mentionsMe(m)) {
         const u = msgUrgent(m);
-        if (onShift() || u) { toast(`<b>@ ${esc(m.author)}</b> ${esc(m.body.length > 90 ? m.body.slice(0, 90) + '…' : m.body)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); }
+        if (onShift() || u) { toast(`<b>@ ${esc(m.author)}</b> ${esc(!m.body ? 'Sent a photo' : m.body.length > 90 ? m.body.slice(0, 90) + '…' : m.body)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); }
       }
       S.knownMsg.add(m.id);
     });
+    S.resets = d.resets || [];
+    S.resets.forEach(x => {
+      if (!S.firstLoad && !S.knownReset.has(x.id + x.at)) { toast(`<b>PIN reset request</b> ${esc(x.name)} (${esc(x.user)}). Open Manager to reset it.`, 'new'); newSound = newSound || 'normal'; }
+      S.knownReset.add(x.id + x.at);
+    });
+    $('#teamCnt').textContent = S.resets.length || '';
     if (newSound) chime(newSound); else if (doneSound) fx('done');
     syncAvatars();
     render(); S.firstLoad = false; failCount = 0;
@@ -1065,15 +1161,16 @@ $('#mmenu').addEventListener('click', e => { const b = e.target.closest('[data-m
 
 /* ===== actions ===== */
 async function send(){
-  const body = $('#input').value.trim(); if (!body) return;
+  const body = $('#input').value.trim(); const photo = S.pendingPhoto; if (!body && !photo) return;
   const btn = $('#sendBtn'); btn.disabled = true;
   const first = S.me.first_name;
   const orders = (S.kind === 'handoff' ? [] : parse(stripMentions(body))).map(o => ({...o, summary: summaryFor(o, first)}));
   const rooms = findRooms(' ' + norm(body) + ' ').map(r => r.room);
   try {
     const mentions = mentionsIn(body);
-    const r = await call('sc_post', {p_kind: S.kind, p_body: body, p_rooms: rooms, p_orders: orders, p_mentions: mentions});
+    const r = await call('sc_post', {p_kind: S.kind, p_body: body, p_rooms: rooms, p_orders: orders, p_mentions: mentions, p_photo: photo});
     $('#input').value = ''; autosize(); $('#preview').textContent = ''; S.picked = []; closeMenu();
+    if (photo && r.message_id) MPH.set(r.message_id, photo); setPendingPhoto(null);
     (r.order_ids || []).forEach(id => S.known.set(id, 'open'));
     if (r.message_id) S.knownMsg.add(r.message_id);
     notify(r.order_ids, r.mentioned ? r.message_id : null);
@@ -1168,10 +1265,10 @@ async function loadTeam(){
     $('#repTable').innerHTML = '<tr><th>Hotel</th><th>Open now</th><th>New</th><th>Done</th><th>Avg time</th><th>Lost items</th><th>90+ days</th></tr>' +
       rep.map(r => `<tr><td>${esc(r.hotel)}</td><td>${r.open}</td><td>${r.created}</td><td>${r.done}</td><td>${r.avg_minutes == null ? '–' : r.avg_minutes + ' min'}</td><td>${r.lost_held}</td><td>${r.lost_over_90}</td></tr>`).join('');
     $('#staffList').innerHTML = staff.map(s => `<div class="li withav" data-staff="${s.id}"><span class="av${avClass(s.id)}" style="background:${roleColor(s.role)}">${esc(initials(s.first_name + ' ' + s.last_name))}</span><div class="grow">
-        <div class="t1">${esc(s.first_name)} ${esc(s.last_name)} ${!s.active ? '<span class="pill">Inactive</span>' : s.locked ? '<span class="pill warn">Locked</span>' : s.pin_set ? '<span class="pill ok">PIN set</span>' : '<span class="pill">No PIN yet</span>'}</div>
+        <div class="t1">${esc(s.first_name)} ${esc(s.last_name)} <span class="uname">${esc(s.username || '')}</span> ${s.reset_requested && s.active ? '<span class="pill ask">Asked for PIN reset</span>' : ''} ${!s.active ? '<span class="pill">Inactive</span>' : s.locked ? '<span class="pill warn">Locked</span>' : s.pin_set ? '<span class="pill ok">PIN set</span>' : '<span class="pill">PIN 0000</span>'}</div>
         <div class="t2">${s.last_seen ? 'Last seen ' + fmtDate(T(s.last_seen)) + ' ' + fmtTime(T(s.last_seen)) : 'Never signed in'}</div>
         <div class="btnrow" style="margin-top:6px"><select class="btn sm" data-role>${ROLES.map(r => `<option value="${r.id}" ${r.id === s.role ? 'selected' : ''}>${r.label}</option>`).join('')}</select>
-        <button class="btn sm" data-save>Save</button>${s.pin_set || s.locked ? '<button class="btn sm" data-reset>Reset PIN</button>' : ''}
+        <button class="btn sm" data-save>Save</button>${s.pin_set || s.locked || s.reset_requested ? `<button class="btn sm ${s.reset_requested ? 'pri' : ''}" data-reset>Reset PIN</button>` : ''}
         <button class="btn sm" data-active="${s.active ? 0 : 1}">${s.active ? 'Deactivate' : 'Reactivate'}</button><button class="btn sm" data-photo>Photo</button></div>
         <div class="depts"><span>Also alerts for:</span>${DEPTS.map(d => `<label><input type="checkbox" data-dept="${d.id}" ${(s.depts || []).includes(d.id) ? 'checked' : ''}>${d.label}</label>`).join('')}</div></div></div>`).join('');
     S.adminStaff = staff;
@@ -1184,15 +1281,24 @@ $('#staffList').addEventListener('click', async e => {
   if (e.target.matches('[data-reset]')) reset = true; else if (e.target.matches('[data-active]')) active = e.target.dataset.active === '1'; else if (!e.target.matches('[data-save]')) return;
   const depts = [...row.querySelectorAll('[data-dept]:checked')].map(x => x.dataset.dept);
   try { await call('sc_staff_save', {p_id: s.id, p_first: s.first_name, p_last: s.last_name, p_role: role, p_active: active, p_reset_pin: reset, p_depts: depts});
-    toast(reset ? `PIN reset. ${esc(s.first_name)} picks a new one at next sign-in.` : 'Saved'); loadTeam(); }
+    toast(reset ? `PIN reset. ${esc(s.first_name)} signs in as ${esc(s.username)} with 0000 and picks a new PIN.` : 'Saved'); loadTeam(); refresh(); }
   catch (err) { toast(esc(err.message)); }
 });
 $('#staffForm').addEventListener('submit', async e => {
   e.preventDefault(); $('#sfErr').textContent = '';
   try { await call('sc_staff_save', {p_id: null, p_first: cleanName($('#sfFirst').value), p_last: cleanName($('#sfLast').value), p_role: $('#sfRole').value, p_active: true, p_reset_pin: false});
-    toast('Added ' + esc(cleanName($('#sfFirst').value) + ' ' + cleanName($('#sfLast').value))); $('#sfFirst').value = ''; $('#sfLast').value = ''; loadTeam(); }
+    const nf = cleanName($('#sfFirst').value), nl = cleanName($('#sfLast').value); $('#sfFirst').value = ''; $('#sfLast').value = ''; await loadTeam();
+    const ns = (S.adminStaff || []).find(x => x.first_name === nf && x.last_name === nl);
+    toast('Added ' + esc((nf + ' ' + nl).trim()) + (ns ? `. User <b>${esc(ns.username)}</b>, first PIN 0000.` : '')); }
   catch (err) { $('#sfErr').textContent = err.message; }
 });
+$('#usersCsv').onclick = () => {
+  const rows = (S.adminStaff || []).filter(x => x.active);
+  const q = v => { v = v == null ? '' : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const csv = ['User,First name,Last name,Department,PIN'].concat(rows.map(x => [x.username, x.first_name, x.last_name, roleOf(x.role).label, x.pin_set ? 'Own PIN' : '0000 (must change)'].map(q).join(','))).join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], {type: 'text/csv'}));
+  a.download = `fa-hotel-users-${S.hotel ? S.hotel.id : ''}.csv`; document.body.appendChild(a); a.click(); a.remove();
+};
 $('#csvBtn').onclick = async () => {
   try {
     const rows = await call('sc_export', {p_days: 30});
@@ -1249,51 +1355,75 @@ async function showLogin(msg){
     catch { $('#loginErr').textContent = 'Could not reach the server. Check the internet connection.'; }
     const last = ls.get('sc.lastLogin', null);
     $('#fHotel').value = (last && last.hotel) || 'MGT';
-    if (last) { $('#fFirst').value = last.first || ''; $('#fLast').value = last.last || ''; }
+    if (last && last.user) $('#fUser').value = last.user;
   }
-  setTimeout(() => ($('#fFirst').value ? $('#fPin') : $('#fFirst')).focus(), 50);
+  $('#loginForm').hidden = false; $('#pinForm').hidden = true; S.pendingToken = null;
+  setTimeout(() => ($('#fUser').value ? $('#fPin') : $('#fUser')).focus(), 50);
 }
 let sugTimer = null, sugSeq = 0;
 function nameSuggest(){
   clearTimeout(sugTimer);
-  const q = ($('#fFirst').value + ' ' + $('#fLast').value).trim();
-  if (q.length < 2) { $('#nameSug').hidden = true; return; }
+  const q = $('#fUser').value.trim();
+  if (q.replace(/\s/g, '').length < 2) { $('#nameSug').hidden = true; return; }
   sugTimer = setTimeout(async () => {
     const seq = ++sugSeq;
     try { const r = await rpc('sc_login_names', {p_hotel: $('#fHotel').value, p_q: q});
       if (seq !== sugSeq) return;
-      const exact = r.length === 1 && cleanName($('#fFirst').value) === r[0].first && cleanName($('#fLast').value) === (r[0].last || cleanName($('#fLast').value));
+      const exact = r.length === 1 && userOf($('#fUser').value) === r[0].user;
       if (!r.length || exact) { $('#nameSug').hidden = true; return; }
-      $('#nameSug').innerHTML = '<div class="hint">Is this you? Tap your name.</div>' + r.map((n, i) => `<button type="button" data-sug="${i}"><span class="ini">${esc(initials(n.first + ' ' + n.last))}</span>${esc((n.first + ' ' + (n.last || '')).trim())}</button>`).join('');
+      $('#nameSug').innerHTML = '<div class="hint">Is this you? Tap your name.</div>' + r.map((n, i) => `<button type="button" data-sug="${i}"><span class="ini">${esc(initials(n.first + ' ' + n.last))}</span><span class="grow">${esc((n.first + ' ' + (n.last || '')).trim())}</span><span class="uname">${esc(n.user)}</span></button>`).join('');
       $('#nameSug').hidden = false; $('#nameSug')._list = r;
     } catch { $('#nameSug').hidden = true; }
   }, 220);
 }
-$('#fFirst').addEventListener('input', nameSuggest);
-$('#fLast').addEventListener('input', nameSuggest);
+const userOf = v => String(v || '').toUpperCase().replace(/\s/g, '');
+$('#fUser').addEventListener('input', nameSuggest);
 $('#fHotel').addEventListener('change', nameSuggest);
 $('#nameSug').addEventListener('click', e => {
   const b = e.target.closest('[data-sug]'); if (!b) return; const n = ($('#nameSug')._list || [])[+b.dataset.sug]; if (!n) return;
-  $('#fFirst').value = n.first; $('#fLast').value = n.last || ''; $('#nameSug').hidden = true;
-  (n.last ? $('#fPin') : $('#fLast')).focus();
-  if (!n.last) $('#loginErr').textContent = 'Type your last name too. It gets saved the first time you sign in.';
+  $('#fUser').value = n.user; $('#nameSug').hidden = true; $('#loginErr').textContent = ''; $('#fPin').focus();
 });
 
 $('#loginForm').addEventListener('submit', async e => {
   e.preventDefault(); $('#loginErr').textContent = ''; $('#nameSug').hidden = true;
-  const first = cleanName($('#fFirst').value), last = cleanName($('#fLast').value), pin = $('#fPin').value.trim(), hotel = $('#fHotel').value;
-  if (!first || !last) { $('#loginErr').textContent = 'First and last name are both required.'; return; }
+  const user = userOf($('#fUser').value), pin = $('#fPin').value.trim(), hotel = $('#fHotel').value;
+  if (user.length < 2) { $('#loginErr').textContent = 'Type your user, like FRAL.'; return; }
   if (!/^\d{4}$/.test(pin)) { $('#loginErr').textContent = ERR.PIN_FORMAT; return; }
   $('#loginBtn').disabled = true;
   try {
-    const r = await rpc('sc_login', {p_hotel: hotel, p_first: first, p_last: last, p_pin: pin});
+    const r = await rpc('sc_login_user', {p_hotel: hotel, p_user: user, p_pin: pin});
     if (r.error) { $('#loginErr').textContent = ERR[r.error] || r.error; return; }
-    S.token = r.token; S.me = r.me; ls.set('sc.token', r.token); ls.set('sc.me', r.me); ls.set('sc.lastLogin', {hotel, first, last});
-    $('#fPin').value = ''; enterApp();
-    if (r.first_time) toast('Welcome! Your PIN is saved. Use the same PIN next time.', 'new');
+    ls.set('sc.lastLogin', {hotel, user}); $('#fPin').value = '';
+    if (r.must_change) { S.pendingToken = r.token; S.pendingMe = r.me; $('#loginForm').hidden = true; $('#pinForm').hidden = false;
+      $('#pinLead').textContent = `Hi ${r.me.first_name}! Choose 4 numbers only you know. You'll use them every time you sign in.`; $('#pinErr').textContent = '';
+      setTimeout(() => $('#pNew').focus(), 50); return; }
+    S.token = r.token; S.me = r.me; ls.set('sc.token', r.token); ls.set('sc.me', r.me);
+    enterApp();
   } catch (err) { $('#loginErr').textContent = err.message; }
   finally { $('#loginBtn').disabled = false; }
 });
+$('#pinForm').addEventListener('submit', async e => {
+  e.preventDefault(); $('#pinErr').textContent = '';
+  const a = $('#pNew').value.trim(), b = $('#pNew2').value.trim();
+  if (!/^\d{4}$/.test(a)) { $('#pinErr').textContent = ERR.PIN_FORMAT; return; }
+  if (a === '0000') { $('#pinErr').textContent = ERR.PIN_DEFAULT; return; }
+  if (a !== b) { $('#pinErr').textContent = 'The two PINs are different. Type them again.'; return; }
+  $('#pinBtn').disabled = true;
+  try { const me = await rpc('sc_pin_change', {p_token: S.pendingToken, p_old: null, p_new: a});
+    S.token = S.pendingToken; S.me = me; S.pendingToken = null; ls.set('sc.token', S.token); ls.set('sc.me', me);
+    $('#pNew').value = ''; $('#pNew2').value = ''; enterApp(); toast('Your PIN is saved. Use it next time you sign in.', 'new'); }
+  catch (err) { $('#pinErr').textContent = err.message; }
+  finally { $('#pinBtn').disabled = false; }
+});
+$('#pinCancel').onclick = () => { $('#pNew').value = ''; $('#pNew2').value = ''; showLogin(); };
+$('#forgotBtn').onclick = async () => {
+  const user = userOf($('#fUser').value), hotel = $('#fHotel').value;
+  if (user.length < 2) { $('#loginErr').textContent = 'Type your user first, like FRAL. Then tap Forgot your PIN.'; $('#fUser').focus(); return; }
+  try { await rpc('sc_pin_reset_request', {p_hotel: hotel, p_user: user});
+    fetch(API + '/functions/v1/notify', { method:'POST', headers:{'Content-Type':'application/json', apikey: KEY}, body: JSON.stringify({reset: {hotel, user}}) }).catch(() => {});
+    $('#loginErr').textContent = ''; toast(`Your manager got a request to reset the PIN for ${esc(user)}. After the reset, sign in with the PIN your manager gives you.`, 'new'); }
+  catch (err) { $('#loginErr').textContent = err.message; }
+};
 function signOut(expired){
   const t = S.token; S.token = null; S.me = null; ls.del('sc.token'); ls.del('sc.me'); clearInterval(timer);
   if (t && !expired) rpc('sc_logout', {p_token: t}).catch(() => {});
@@ -1302,8 +1432,8 @@ function signOut(expired){
 $('#whoBtn').onclick = () => {
   const canTurnOn = 'Notification' in window && 'serviceWorker' in navigator && !(isIOS && !standalone) && Notification.permission !== 'denied' && !(Notification.permission === 'granted' && ls.get('sc.pushOk', false));
   openModal(`<div class="pfrow" style="margin-bottom:14px"><span class="av${avClass(S.me.id)}" style="background:${roleColor(S.me.role)}">${esc(initials(S.me.name))}</span>
-  <div><h2 style="margin:0">${esc(S.me.name)}</h2><p class="lead" style="margin:2px 0 8px">${esc(roleOf(S.me.role).label)} · ${esc(S.hotel ? S.hotel.name : '')}</p>
-  <div class="btnrow"><button class="btn sm" id="mPhoto">${hasAv(S.me.id) ? 'Change photo' : 'Add photo'}</button>${hasAv(S.me.id) ? '<button class="btn sm" id="mPhotoDel">Remove</button>' : ''}</div></div></div>
+  <div><h2 style="margin:0">${esc(S.me.name)}</h2><p class="lead" style="margin:2px 0 8px">${esc(roleOf(S.me.role).label)} · ${esc(S.hotel ? S.hotel.name : '')}${S.me.username ? ` · User <span class="uname">${esc(S.me.username)}</span>` : ''}</p>
+  <div class="btnrow"><button class="btn sm" id="mPhoto">${hasAv(S.me.id) ? 'Change photo' : 'Add photo'}</button>${hasAv(S.me.id) ? '<button class="btn sm" id="mPhotoDel">Remove</button>' : ''}<button class="btn sm" id="mPin">Change PIN</button></div></div></div>
   <div class="sect" style="margin-top:0;border-top:0;padding-top:0"><h3>Shift</h3><div class="shiftrow"><p class="hint" style="margin:0">${onShift() ? 'On shift: you get the alerts meant for you.' : 'Off shift: you only get urgent alerts.'}</p><button class="btn sm ${onShift() ? '' : 'pri'}" id="mShift">${onShift() ? 'Go off shift' : 'Start shift'}</button></div></div>
   <div class="sect"><h3>Alerts</h3><p class="hint">${esc(alertsLabel())}</p>${canTurnOn ? '<button class="btn pri sm" id="mPush">Turn on alerts</button>' : ''}</div>
   <div class="sect"><h3>Sounds</h3><p class="hint">FA-Hotel has its own tone for new orders and a stronger one for urgent orders.</p>
@@ -1312,6 +1442,19 @@ $('#whoBtn').onclick = () => {
   <div class="btnrow"><button class="btn pri" id="soBtn">Sign out</button><button class="btn" data-close>Close</button></div>`);
   $('#soBtn').onclick = () => { closeModal(); signOut(false); };
   $('#mPhoto').onclick = () => pickAvatar(null);
+  $('#mPin').onclick = () => {
+    openModal(`<h2>Change PIN</h2><form id="cpForm" autocomplete="off">
+      <div class="field"><label for="cpOld">Current PIN</label><input id="cpOld" class="pinbox" type="password" inputmode="numeric" maxlength="4" required></div>
+      <div class="field"><label for="cpNew">New PIN</label><input id="cpNew" class="pinbox" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" required></div>
+      <div class="field"><label for="cpNew2">Type it again</label><input id="cpNew2" class="pinbox" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" required></div>
+      <div class="err" id="cpErr"></div><div class="btnrow"><button class="btn pri" type="submit">Save PIN</button><button class="btn" type="button" data-close>Cancel</button></div></form>`);
+    $('#cpForm').onsubmit = async ev => { ev.preventDefault(); const a = $('#cpNew').value.trim();
+      if (!/^\d{4}$/.test(a)) { $('#cpErr').textContent = ERR.PIN_FORMAT; return; }
+      if (a === '0000') { $('#cpErr').textContent = ERR.PIN_DEFAULT; return; }
+      if (a !== $('#cpNew2').value.trim()) { $('#cpErr').textContent = 'The two PINs are different. Type them again.'; return; }
+      try { await rpc('sc_pin_change', {p_token: S.token, p_old: $('#cpOld').value.trim(), p_new: a}); closeModal(); toast('PIN changed. Other phones signed in as you were signed out.', 'new'); }
+      catch (err) { $('#cpErr').textContent = err.message; } };
+  };
   if ($('#mPhotoDel')) $('#mPhotoDel').onclick = async () => { try { await call('sc_avatar_set', {p_staff: null, p_data: null}); closeModal(); toast('Photo removed'); refresh(); } catch (err) { toast(esc(err.message)); } };
   $('#mShift').onclick = async () => {
     try { const me = await call('sc_shift', {p_on: !onShift()}); S.me = {...S.me, ...me}; ls.set('sc.me', S.me); render(); closeModal();
@@ -1327,6 +1470,7 @@ function enterApp(){
   $('#sfRole').innerHTML = ROLES.map(r => `<option value="${r.id}">${r.label}</option>`).join('');
   setSoundIcon(); pushState(); resubscribe(); refresh(); startPolling();
   if (location.hash === '#orders') setTab('orders');
+  if (location.hash === '#team' && S.me && S.me.role === 'mgr') setTab('team');
 }
 
 /* tabs & wiring */
@@ -1392,6 +1536,14 @@ $('#input').addEventListener('keydown', e => {
   }
   if (e.key === 'Enter' && !e.shiftKey && window.matchMedia('(min-width: 900px)').matches) { e.preventDefault(); send(); }
 });
+$('#reloadBtn').onclick = async () => {
+  $('#reloadBtn').classList.add('spin');
+  try {
+    if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) (await navigator.serviceWorker.getRegistrations()).forEach(g => g.update().catch(() => {}));
+    await Promise.race([fetch(location.href.split('#')[0], {cache: 'reload'}).catch(() => {}), new Promise(z => setTimeout(z, 4000))]);
+  } catch {}
+  location.reload();
+};
 $('#soundBtn').onclick = () => { S.sound = !S.sound; ls.set('sc.sound', S.sound); setSoundIcon(); if (S.sound) chime('normal'); };
 setInterval(() => { if (S.me) { renderOrders(); } }, 30000);
 
