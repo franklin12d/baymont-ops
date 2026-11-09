@@ -8,7 +8,7 @@ async function lang(){
   try { const r = await (await caches.open('fs-pref')).match('fs-lang'); const v = r ? (await r.text()).trim() : ''; if (v === 'es' || v === 'en') return v; } catch {}
   return /^es\b/i.test((self.navigator && self.navigator.language) || '') ? 'es' : 'en';
 }
-const VIBE = { urgent: [200, 90, 200, 90, 400], start: [80, 60, 160], done: [60, 50, 60, 50, 220], test: [200, 100, 200] };
+const VIBE = { alarm: [400, 120, 400, 120, 400, 120, 600], urgent: [200, 90, 200, 90, 400], start: [80, 60, 160], done: [60, 50, 60, 50, 220], test: [200, 100, 200] };
 
 self.addEventListener('push', e => {
   let d = {};
@@ -24,7 +24,7 @@ self.addEventListener('push', e => {
       renotify: true,
       silent: false,
       requireInteraction: urgent,
-      vibrate: urgent ? VIBE.urgent : VIBE[d.kind] || [200, 100, 200],
+      vibrate: VIBE[d.kind === 'alarm' ? 'alarm' : urgent ? 'urgent' : d.kind] || [200, 100, 200],
       icon: 'icon-192.png',
       badge: 'icon-192.png',
       timestamp: Date.now(),

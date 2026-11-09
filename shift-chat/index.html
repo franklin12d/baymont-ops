@@ -1167,6 +1167,16 @@ const ES = {
 "Try again": "Probar de nuevo",
 "You're all set": "Todo listo",
 "This phone will ring for orders and messages meant for you, even with the app closed.": "Este teléfono sonará con las órdenes y mensajes para ti, aunque la app esté cerrada.",
+"Test sound and vibration": "Prueba sonido y vibración",
+"The alert comes in about 8 seconds with the phone's own notification sound and vibration.": "La alerta llega en unos 8 segundos con el sonido y la vibración de notificaciones del teléfono.",
+"Did the phone ring and vibrate?": "¿El teléfono sonó y vibró?",
+"Yes, both": "Sí, las dos",
+"Not both": "No, falta algo",
+"No sound or vibration? Check these": "¿No sonó o no vibró? Revisa esto",
+"Open Settings, then Sounds and Haptics, and set Haptics to Always Play.": "Abre Ajustes, luego Sonidos y vibraciones, y pon Vibración en Reproducir siempre.",
+"In the same alert settings, turn on Vibration.": "En esos mismos ajustes de la alerta, activa la Vibración.",
+"Open Settings, then Sounds and vibration, and turn on vibration for notifications.": "Abre Ajustes, luego Sonidos y vibración, y activa la vibración para notificaciones.",
+"This phone will ring and vibrate for orders and messages meant for you, even with the app closed.": "Este teléfono sonará y vibrará con las órdenes y mensajes para ti, aunque la app esté cerrada.",
 "You can open this guide again in Settings.": "Puedes abrir esta guía otra vez en Ajustes."
 ,
 "AREA": "ÁREA",
@@ -2174,17 +2184,17 @@ function openAlertWizard(page){
     h = `<h2>Allow alerts</h2><p class="lead">Tap the button below. When the phone asks, choose Allow.</p>`;
     btns = `<button class="btn pri" data-wiz="allow">Turn on alerts</button><button class="btn" data-wiz="later">Not now</button>`;
   } else if (page === 'test') {
-    h = `<h2>Test the sound</h2><p class="lead">Tap Send test alert, then lock the phone or go to the home screen.</p><p class="hint">The alert comes in about 8 seconds with the phone's own notification sound.</p>
-      <div id="wizAsk" hidden><p class="lead" style="margin-top:14px">Did the phone ring?</p><div class="btnrow"><button class="btn pri" data-wiz="rang">Yes, it rang</button><button class="btn" data-wiz="silent">No sound</button></div></div>`;
+    h = `<h2>Test sound and vibration</h2><p class="lead">Tap Send test alert, then lock the phone or go to the home screen.</p><p class="hint">The alert comes in about 8 seconds with the phone's own notification sound and vibration.</p>
+      <div id="wizAsk" hidden><p class="lead" style="margin-top:14px">Did the phone ring and vibrate?</p><div class="btnrow"><button class="btn pri" data-wiz="rang">Yes, both</button><button class="btn" data-wiz="silent">Not both</button></div></div>`;
     btns = `<button class="btn pri" data-wiz="test">Send test alert</button>`;
   } else if (page === 'fix') {
-    h = `<h2>No sound? Check these</h2>`
+    h = `<h2>No sound or vibration? Check these</h2>`
       + wizList(['Turn up the notification volume and turn off silent mode.', 'Turn off Do Not Disturb or Focus.'].concat(isIOS
-        ? ['Open Settings, then Notifications, then FrankShift, and turn on Sounds.']
-        : ['Long-press a FrankShift alert and set it to Alerting or turn on Sound.', 'Open Settings, then Apps, then Chrome, then Notifications, and allow sound for sites.']));
+        ? ['Open Settings, then Notifications, then FrankShift, and turn on Sounds.', 'Open Settings, then Sounds and Haptics, and set Haptics to Always Play.']
+        : ['Long-press a FrankShift alert and set it to Alerting or turn on Sound.', 'In the same alert settings, turn on Vibration.', 'Open Settings, then Sounds and vibration, and turn on vibration for notifications.', 'Open Settings, then Apps, then Chrome, then Notifications, and allow sound for sites.']));
     btns = `<button class="btn pri" data-wiz="retest">Try again</button><button class="btn" data-close>Close</button>`;
   } else if (page === 'done') {
-    h = `<h2>You're all set</h2><p class="lead">This phone will ring for orders and messages meant for you, even with the app closed.</p><p class="hint">You can open this guide again in Settings.</p>`;
+    h = `<h2>You're all set</h2><p class="lead">This phone will ring and vibrate for orders and messages meant for you, even with the app closed.</p><p class="hint">You can open this guide again in Settings.</p>`;
     btns = `<button class="btn pri" data-close>Done</button>`;
   }
   openModal(`<div class="wiz" data-page="${page}">${wizDots(page)}${h}<div class="btnrow wizbtns" style="margin-top:16px">${btns}</div></div>`);
