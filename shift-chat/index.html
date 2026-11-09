@@ -395,6 +395,23 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
 .attach svg{width:20px;height:20px}
 .pendphoto{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2)}
 .pendphoto[hidden]{display:none}
+.msg{position:relative;touch-action:pan-y}
+.msg.swiping{transition:none}
+.msg.snap{transition:transform .2s ease}
+.swipeic{position:absolute;left:-34px;top:50%;width:28px;height:28px;margin-top:-14px;border-radius:50%;background:var(--surface-2);color:var(--ink-2);display:grid;place-items:center;opacity:0;pointer-events:none}
+.swipeic svg{width:16px;height:16px}
+.rquote{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;max-width:420px;text-align:left;border:0;border-left:3px solid var(--accent);background:var(--surface-2);border-radius:8px;padding:5px 9px;margin:2px 0 4px;font:inherit;font-size:12.5px;color:var(--ink-2);cursor:pointer}
+.msg.mine .rquote{margin-left:auto}
+.rquote b{font-size:12px;color:var(--accent)}
+.rquote .rq,.rquote .rqp{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.replybar{display:flex;align-items:center;gap:10px;border-left:3px solid var(--accent);background:var(--surface-2);border-radius:10px;padding:6px 6px 6px 10px;font-size:13px}
+.replybar[hidden]{display:none}
+.replybar .grow{min-width:0;flex:1}
+.replybar b{display:block;font-size:12px;color:var(--accent)}
+.replybar .rq,.replybar .rqp{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+.replybar button{border:0;background:transparent;color:var(--ink-3);font-size:20px;line-height:1;width:34px;height:34px;border-radius:50%;flex:none}
+.msg.flash .bub{animation:mflash 1.4s ease}
+@keyframes mflash{0%,40%{background:var(--accent-soft);border-radius:14px}100%{background:transparent}}
 .pendphoto img{width:52px;height:52px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
 .mphoto{display:block;border:0;padding:0;margin-top:4px;background:var(--surface-2);border-radius:14px;overflow:hidden;max-width:240px;min-height:60px;min-width:120px}
 .mphoto img{display:block;width:100%;max-height:300px;object-fit:cover}
@@ -643,6 +660,7 @@ body{letter-spacing:0;font-feature-settings:normal}
           <button type="button" data-kind="note" aria-pressed="false">Guest note</button>
           <button type="button" data-kind="handoff" aria-pressed="false">Shift handoff</button>
         </div>
+        <div class="replybar" id="replyBar" hidden></div>
         <div class="pendphoto" id="pendPhoto" hidden><img id="pendImg" alt="Photo to send"><span class="grow">Photo ready to send</span><button type="button" class="linkbtn" id="pendDel">Remove</button></div>
         <div class="row">
           <button type="button" class="attach" id="attachBtn" aria-label="Send a photo" title="Send a photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
@@ -870,6 +888,10 @@ const ES = {
 "Send": "Enviar",
 "Send a photo": "Enviar una foto",
 "Photo ready to send": "Foto lista para enviar",
+"Replying to yourself": "Respondiendo a ti",
+"Cancel reply": "Cancelar respuesta",
+"That message is older than 3 days.": "Ese mensaje tiene más de 3 días.",
+"You": "Tú",
 "Remove": "Quitar",
 "Photo to send": "Foto para enviar",
 "People and teams": "Personas y equipos",
@@ -1231,6 +1253,7 @@ const ES = {
 "Pass-on posted": "Entrega publicada"
 };
 const ES_RX = [
+  [/^Replying to (.+)$/, 'Respondiendo a $1'],
   [/^(.+) is on it$/, "$1 lo está atendiendo"],
   [/^(.+): not a task$/, "$1: no es tarea"],
   [/^__never__$/, ''], [/^Front Desk · (.+) · User$/, "Recepción · $1 · Usuario"],
@@ -1276,7 +1299,7 @@ const ES_RX = [
   [/^(.+) completed the (.+)$/, "$1 completó $2"],
   [/^(\d+)m$/, "$1 min"]
 ];
-const I18N_SKIP = '.msg .body, .oquote, .name, #whoName, .uname, .mention, .mphoto, [data-noi18n], script, style';
+const I18N_SKIP = '.msg .body, .oquote, .rq, .name, #whoName, .uname, .mention, .mphoto, [data-noi18n], script, style';
 
 const SUM_ITEM = {"towel": ["toalla", "toallas", 1], "bath mat": ["alfombra de baño", "alfombras de baño", 1], "blanket": ["cobija", "cobijas", 1], "crib": ["cuna", "cunas", 1], "cup": ["vaso", "vasos", 0], "duvet": ["duvet", "duvets", 0], "hair dryer": ["secador de pelo", "secadores de pelo", 0], "hanger": ["gancho", "ganchos", 0], "iron and board": ["plancha y tabla", "planchas y tablas", 1], "new key": ["llave nueva", "llaves nuevas", 1], "pillow": ["almohada", "almohadas", 1], "rollaway bed": ["cama extra", "camas extra", 1], "set of sheets": ["juego de sábanas", "juegos de sábanas", 0], "washcloth": ["toallita", "toallitas", 1], "early check-in": ["entrada temprano", "entradas temprano", 1], "late checkout": ["salida tarde", "salidas tarde", 1], "lost item": ["objeto perdido", "objetos perdidos", 0], "noise complaint": ["queja de ruido", "quejas de ruido", 1], "room cleaning": ["limpieza de habitación", "limpiezas de habitación", 1], "room move": ["cambio de habitación", "cambios de habitación", 0], "wake-up call": ["llamada para despertar", "llamadas para despertar", 1]}, SUM_PL = {"bath mats": "bath mat", "blankets": "blanket", "cribs": "crib", "cups": "cup", "duvets": "duvet", "hair dryers": "hair dryer", "hangers": "hanger", "irons": "iron and board", "new keys": "new key", "pillows": "pillow", "rollaway beds": "rollaway bed", "sets of sheets": "set of sheets", "towels": "towel", "washcloths": "washcloth"}, SUM_WHOLE = {"a TV problem": "un problema con la TV", "a door or lock problem": "un problema de puerta o cerradura", "a fridge or microwave problem": "un problema con la nevera o el microondas", "a leak": "una fuga de agua", "a lights problem": "un problema de luces", "a shower or tub problem": "un problema de ducha o bañera", "a sink or drain problem": "un problema de lavamanos o desagüe", "a smoke detector problem": "un problema con el detector de humo", "a toilet problem": "un problema con el inodoro", "a window or curtain problem": "un problema de ventana o cortina", "an A/C problem": "un problema con el A/C", "an outlet problem": "un problema con un enchufe", "no hot water": "sin agua caliente", "pests": "plagas", "coffee": "café", "toilet paper": "papel higiénico", "toiletries": "artículos de baño", "Wi-Fi help": "ayuda con el Wi-Fi", "parking help": "ayuda con el parqueo", "trash pickup": "recoger la basura", "cleaning": "limpieza", "room cleaning": "limpieza de habitación", "a check": "una revisión", "a pickup": "recoger"};
 const SUM_PLACE = {"in the lobby": "en el lobby", "in the public restrooms": "en los baños públicos", "in the breakfast area": "en el área de desayuno", "in the parking lot": "en el parqueo", "at the pool": "en la piscina"};
@@ -1600,10 +1623,12 @@ function renderFeed(){
     const tag = m.kind === 'note' ? '<span class="kindtag">Guest note</span>' : m.kind === 'handoff' ? '<span class="kindtag">Shift handoff</span>' : '';
     const chips = (byMsg[m.id] || []).map(o => `<span class="xchip ${o.status === 'done' || o.status === 'dismissed' ? 'done' : ''}"><b>${esc(o.ticket)}</b>${esc(o.room ? 'Room ' + o.room : placeOf(o) ? placeOf(o).label : 'No room')} · ${esc(o.status === 'in_progress' ? 'in progress' : o.status === 'open' ? CATS[o.category] : o.status)}</span>`).join('');
     const rb = m.read_by ? `<button class="readby" data-readby="${esc(m.id)}">Read by ${m.read_by.length}</button>` : '';
-    html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''} ${tome ? 'tome' : ''} ${cont ? 'cont' : 'first'} ${more ? 'more' : 'last'}${pop}">
+    const rq = m.reply ? `<button class="rquote" data-jump="${esc(m.reply.id)}"><b>${esc(m.reply.staff_id === S.me.id ? 'You' : m.reply.author)}</b>${m.reply.body ? `<span class="rq">${esc(m.reply.body)}</span>` : `<span class="rqp">${m.reply.has_photo ? 'Photo' : ''}</span>`}</button>` : '';
+    html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''} ${tome ? 'tome' : ''} ${cont ? 'cont' : 'first'} ${more ? 'more' : 'last'}${pop}" data-mid="${esc(m.id)}">
+      <span class="swipeic" aria-hidden="true">${REPLY_IC}</span>
       <div class="av${avClass(m.staff_id)}" style="background:${roleColor(m.role)}">${esc(initials(m.author))}</div>
       <div class="bub"><div class="head"><span class="name">${esc(m.author)}</span><span class="rolechip" style="background:${roleColor(m.role)}">${esc(roleOf(m.role).label)}</span>${tag}<span class="time">${fmtTime(m.created_at)}</span></div>
-      ${m.body ? `<div class="body">${markMentions(roomLinks(m.body), m)}</div>` : ''}${m.has_photo ? photoHtml(m) : ''}${chips ? `<div class="extracted">${chips}</div>` : ''}${rb}</div></div>`;
+      ${rq}${m.body ? `<div class="body">${markMentions(roomLinks(m.body), m)}</div>` : ''}${m.has_photo ? photoHtml(m) : ''}${chips ? `<div class="extracted">${chips}</div>` : ''}${rb}</div></div>`;
   });
   feed.innerHTML = html;
   S.rendered = new Set(S.messages.map(m => m.id));
@@ -1643,7 +1668,64 @@ async function react(mid, e){
   try { await call('sc_react', {p_message: mid, p_emoji: e}); } catch (err) { toast(esc(err.message)); }
   refresh();
 }
+/* ===== reply: swipe a message to the right, like WhatsApp ===== */
+const REPLY_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v5"/></svg>';
+function setReply(id){
+  const m = id && S.messages.find(x => x.id === id);
+  S.replyTo = m ? m.id : null;
+  const bar = $('#replyBar');
+  if (!m) { bar.hidden = true; bar.innerHTML = ''; return; }
+  bar.innerHTML = `<div class="grow"><b>Replying to ${esc(m.staff_id === S.me.id ? 'yourself' : m.author)}</b>${m.body ? `<span class="rq">${esc(m.body)}</span>` : `<span class="rqp">${m.has_photo ? 'Photo' : ''}</span>`}</div><button type="button" id="replyX" aria-label="Cancel reply">×</button>`;
+  bar.hidden = false;
+  $('#replyX').onclick = () => { setReply(null); $('#input').focus(); };
+  if (navigator.vibrate) navigator.vibrate(15);
+  $('#input').focus();
+}
+(() => {
+  let sw = null, swiped = 0;
+  const feed = $('#feed');
+  feed.addEventListener('pointerdown', e => {
+    if (e.button > 0) return;
+    const el = e.target.closest('.msg'); if (!el || e.target.closest('.rxpick, textarea, input')) return;
+    sw = {el, x: e.clientX, y: e.clientY, dx: 0, on: false, id: e.pointerId};
+  });
+  feed.addEventListener('pointermove', e => {
+    if (!sw || e.pointerId !== sw.id) return;
+    const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
+    if (!sw.on) {
+      if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) { sw = null; return; }
+      if (dx > 12 && dx > Math.abs(dy) * 1.3) { sw.on = true; sw.el.classList.add('swiping'); try { sw.el.setPointerCapture(e.pointerId); } catch {} }
+      else return;
+    }
+    sw.dx = Math.max(0, Math.min(dx, 90));
+    const shift = sw.dx < 60 ? sw.dx : 60 + (sw.dx - 60) * .35;
+    sw.el.style.transform = `translateX(${shift}px)`;
+    const ic = sw.el.querySelector('.swipeic'); if (ic) ic.style.opacity = Math.min(1, sw.dx / 60);
+    if (sw.dx >= 60 && !sw.buzz) { sw.buzz = true; if (navigator.vibrate) navigator.vibrate(10); }
+  });
+  const end = e => {
+    if (!sw || (e.pointerId !== undefined && e.pointerId !== sw.id)) return;
+    const s0 = sw; sw = null;
+    if (!s0.on) return;
+    s0.el.classList.remove('swiping'); s0.el.classList.add('snap'); s0.el.style.transform = '';
+    const ic = s0.el.querySelector('.swipeic'); if (ic) ic.style.opacity = 0;
+    setTimeout(() => s0.el.classList.remove('snap'), 220);
+    swiped = Date.now();
+    if (s0.dx >= 60 && e.type === 'pointerup') setReply(s0.el.dataset.mid);
+  };
+  feed.addEventListener('pointerup', end); feed.addEventListener('pointercancel', end);
+  // a swipe is not a tap on a photo or button
+  feed.addEventListener('click', e => { if (Date.now() - swiped < 350) { e.stopPropagation(); e.preventDefault(); } }, true);
+  // desktop: double-click a message to reply
+  feed.addEventListener('dblclick', e => { const el = e.target.closest('.msg'); if (el && !e.target.closest('button')) setReply(el.dataset.mid); });
+})();
 $('#feed').addEventListener('click', e => {
+  const jq = e.target.closest('[data-jump]'); if (jq) {
+    const el = [...$('#feed').querySelectorAll('.msg[data-mid]')].find(x => x.dataset.mid === jq.dataset.jump);
+    if (el) { el.scrollIntoView({behavior: 'smooth', block: 'center'}); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+    else toast('That message is older than 3 days.');
+    return;
+  }
   const a = e.target.closest('[data-rxadd]'); if (a) { S.rxOpen = S.rxOpen === a.dataset.rxadd ? null : a.dataset.rxadd; renderFeed(); return; }
   const x = e.target.closest('[data-rx]'); if (x) { react(x.dataset.rx, x.dataset.e); return; }
   const ph = e.target.closest('[data-mphoto]'); if (ph) { const d = MPH.get(ph.dataset.mphoto); const m = S.messages.find(y => y.id === ph.dataset.mphoto);
@@ -1956,7 +2038,11 @@ async function send(){
   const rooms = findRooms(' ' + norm(body) + ' ').map(r => r.room);
   try {
     const mentions = mentionsIn(body);
-    const r = await call('sc_post', {p_kind: S.kind, p_body: body, p_rooms: rooms, p_orders: orders, p_mentions: mentions, p_photo: photo});
+    const rto = S.replyTo && S.messages.find(x => x.id === S.replyTo);
+    // the person you reply to gets the alert, like an @mention
+    if (rto && rto.staff_id && rto.staff_id !== S.me.id && !mentions.staff.includes(rto.staff_id) && S.staff.some(st => st.id === rto.staff_id)) mentions.staff.push(rto.staff_id);
+    const r = await call('sc_post', {p_kind: S.kind, p_body: body, p_rooms: rooms, p_orders: orders, p_mentions: mentions, p_photo: photo, p_reply: rto ? rto.id : null});
+    setReply(null);
     $('#input').value = ''; autosize(); $('#preview').textContent = ''; S.picked = []; closeMenu();
     if (photo && r.message_id) MPH.set(r.message_id, photo); setPendingPhoto(null);
     (r.order_ids || []).forEach(id => S.known.set(id, 'open'));
@@ -2608,6 +2694,7 @@ $('#input').addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); pickMention(menuSel); return; }
     if (e.key === 'Escape') { e.preventDefault(); closeMenu(); return; }
   }
+  if (e.key === 'Escape' && S.replyTo) { e.preventDefault(); setReply(null); return; }
   if (e.key === 'Enter' && !e.shiftKey && window.matchMedia('(min-width: 900px)').matches) { e.preventDefault(); send(); }
 });
 $('#reloadBtn').onclick = async () => {
