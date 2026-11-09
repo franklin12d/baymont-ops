@@ -459,6 +459,55 @@ header.top{background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop
 .send{width:46px;height:46px;padding:0;border-radius:50%;justify-content:center;background:var(--grad);color:#fff;font-size:0;gap:0}
 .send svg{width:20px;height:20px}
 .kinds button{border-radius:999px}
+
+/* ===== FA-Hotel theme v7: more room for the chat, finer shapes ===== */
+.msg .body{font-size:16px;line-height:1.38;letter-spacing:-.008em}
+.msg .time{font-size:10.5px;font-weight:500;opacity:.75}
+.msg .name{font-size:12px}
+.shiftdiv{align-self:center;text-align:center;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.extracted{gap:4px}
+.msg.mine .extracted{justify-content:flex-end}
+.xchip{font-size:11px;font-weight:600;gap:5px;border:0;padding:2px 9px 2px 2px;background:color-mix(in srgb,var(--ink) 6%,transparent);color:var(--ink-2)}
+.xchip b{font-size:10px;padding:1px 6px;background:var(--accent);color:#fff}
+.xchip.done{text-decoration:none;opacity:.6}
+.xchip.done b{background:var(--ok)}
+.readby{font-size:10.5px;opacity:.8;padding:0 10px}
+.tabs{scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+table.rep{font-size:12.5px}
+table.rep th,table.rep td{padding:6px 6px}
+@media (max-width:899px){
+  header.top{padding-block:6px;gap:6px;min-height:54px}
+  .mark{width:28px;height:28px}
+  .brand{font-size:16px;gap:8px}
+  .brand small{font-size:11px}
+  .who{padding:2px;background:none;gap:0}
+  .who #whoName{display:none}
+  .who .av{width:32px;height:32px}
+  .iconbtn{width:36px;height:36px}
+  .iconbtn svg{width:18px;height:18px}
+  .tabs{gap:0;padding-left:max(4px,env(safe-area-inset-left,0px));padding-right:max(4px,env(safe-area-inset-right,0px))}
+  .tabs button{flex:1 1 auto;min-width:0;padding:9px 5px;font-size:13.5px;letter-spacing:-.01em}
+  .tabs .cnt{min-width:17px;padding:0 5px;font-size:11px;line-height:17px;margin-left:3px}
+  .feed{padding:8px 10px 6px}
+  .msg{max-width:90%;gap:6px}
+  .msg.first{margin-top:10px}
+  .msg .av{width:34px;height:34px;font-size:12px}
+  .msg .body{padding:8px 13px}
+  .mphoto{max-width:min(270px,70vw)}
+  .composer{margin:2px 8px 8px;padding:5px 6px 6px;gap:4px;border-radius:26px}
+  .kinds{gap:4px;padding-left:6px}
+  .kinds button{font-size:11.5px;padding:2px 10px;line-height:20px}
+  .composer .row{gap:4px}
+  .row textarea{min-height:42px;padding:10px 14px;font-size:16px}
+  .attach{width:40px;height:40px}
+  .send{width:42px;height:42px}
+  .view{padding-block:12px;padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
+  .card{padding:12px;border-radius:16px}
+  table.rep{font-size:12px}
+  table.rep th,table.rep td{padding:6px 4px}
+}
+@media (max-width:360px){ .tabs button{font-size:12.5px;padding-inline:3px} .brand small{display:none} }
 </style>
 </head>
 <body>
@@ -496,7 +545,7 @@ header.top{background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop
         <div class="pendphoto" id="pendPhoto" hidden><img id="pendImg" alt="Photo to send"><span class="grow">Photo ready to send</span><button type="button" class="linkbtn" id="pendDel">Remove</button></div>
         <div class="row">
           <button type="button" class="attach" id="attachBtn" aria-label="Send a photo" title="Send a photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
-          <textarea id="input" rows="1" placeholder="Escribe un pedido, o @ para avisar a alguien" aria-label="Message" maxlength="1000"></textarea>
+          <textarea id="input" rows="1" placeholder="Mensaje, pedido o @nombre" aria-label="Message" maxlength="1000"></textarea>
           <button class="send" type="submit" id="sendBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Send</button>
         </div>
         <div class="preview" id="preview"></div>
@@ -552,7 +601,7 @@ header.top{background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop
     </div>
     <form class="card" id="staffForm">
       <h2>Add staff</h2>
-      <p class="small" style="margin:0 0 10px">They sign in with exactly this first and last name. The first PIN they type becomes their PIN.</p>
+      <p class="small" style="margin:0 0 10px">They get a user from their name (like FRAL) and sign in with PIN 0000, then pick their own PIN.</p>
       <div class="grid2">
         <div class="field"><label for="sfFirst">First name</label><input id="sfFirst" required maxlength="30"></div>
         <div class="field"><label for="sfLast">Last name</label><input id="sfLast" required maxlength="30"></div>
