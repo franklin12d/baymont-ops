@@ -8,12 +8,14 @@ async function lang(){
   try { const r = await (await caches.open('fs-pref')).match('fs-lang'); const v = r ? (await r.text()).trim() : ''; if (v === 'es' || v === 'en') return v; } catch {}
   return /^es\b/i.test((self.navigator && self.navigator.language) || '') ? 'es' : 'en';
 }
-const VIBE = { alarm: [400, 120, 400, 120, 400, 120, 600], urgent: [200, 90, 200, 90, 400], start: [80, 60, 160], done: [60, 50, 60, 50, 220], test: [200, 100, 200] };
+// Each kind feels different in the pocket: order = two short taps, urgent = fast long buzzing, alarm = three long buzzes.
+const VIBE = { order: [150, 100, 150], urgent: [300, 100, 300, 100, 300, 100, 300, 100, 700], alarm: [900, 250, 900, 250, 1200],
+  mention: [80, 60, 80], start: [80, 60, 160], done: [60, 50, 60, 50, 220], test: [200, 100, 200] };
 
 self.addEventListener('push', e => {
   let d = {};
   try { d = e.data ? e.data.json() : {}; } catch { d = { title: 'FrankShift', body: e.data && e.data.text() }; }
-  const urgent = !!d.urgent || /^URGENT/.test(d.title || '');
+  const urgent = !!d.urgent || /URGENT/.test(d.title || '');
   e.waitUntil(lang().then(l => {
     const es = l === 'es';
     const title = (es && d.title_es) || d.title || 'FrankShift';
