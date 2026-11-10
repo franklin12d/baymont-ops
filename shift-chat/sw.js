@@ -8,9 +8,12 @@ async function lang(){
   try { const r = await (await caches.open('fs-pref')).match('fs-lang'); const v = r ? (await r.text()).trim() : ''; if (v === 'es' || v === 'en') return v; } catch {}
   return /^es\b/i.test((self.navigator && self.navigator.language) || '') ? 'es' : 'en';
 }
-// Each kind feels different in the pocket: order = two short taps, urgent = fast long buzzing, alarm = three long buzzes.
+// Each kind feels different in the pocket: order = two short taps, urgent = fast long buzzing, alarm = three long buzzes,
+// maintenance (engineering) = three knocks and a long buzz.
 const VIBE = { order: [150, 100, 150], urgent: [300, 100, 300, 100, 300, 100, 300, 100, 700], alarm: [900, 250, 900, 250, 1200],
-  mention: [80, 60, 80], start: [80, 60, 160], done: [60, 50, 60, 50, 220], test: [200, 100, 200] };
+  mention: [80, 60, 80], start: [80, 60, 160], done: [60, 50, 60, 50, 220], test: [200, 100, 200],
+  // engineering: three quick knocks and a long buzz (like a hammer), twice when urgent
+  eng: [90, 70, 90, 70, 90, 220, 650], engUrgent: [90, 70, 90, 70, 90, 220, 650, 300, 90, 70, 90, 70, 90, 220, 900] };
 
 self.addEventListener('push', e => {
   let d = {};
@@ -26,7 +29,7 @@ self.addEventListener('push', e => {
       renotify: true,
       silent: false,
       requireInteraction: urgent,
-      vibrate: VIBE[d.kind === 'alarm' ? 'alarm' : urgent ? 'urgent' : d.kind] || [200, 100, 200],
+      vibrate: VIBE[d.kind === 'eng' ? (urgent ? 'engUrgent' : 'eng') : d.kind === 'alarm' ? 'alarm' : urgent ? 'urgent' : d.kind] || [200, 100, 200],
       icon: 'icon-192.png',
       badge: 'icon-192.png',
       timestamp: Date.now(),

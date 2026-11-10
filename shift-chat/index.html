@@ -158,6 +158,28 @@ header.top{display:flex;align-items:center;gap:12px;padding-block:10px;padding-l
 .killfeed h3{margin:0 0 6px;font-family:var(--f-display);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
 .kill{display:flex;gap:8px;align-items:baseline;font-size:13px;padding:4px 0;border-bottom:1px dashed var(--line)}
 .kill:last-child{border-bottom:0}
+.killfeed{position:relative;transition:max-height .22s ease}
+.killfeed.dragging{transition:none}
+.kgrab{display:block;width:100%;height:20px;margin:-10px 0 0;padding:0;background:none;border:0;cursor:grab;touch-action:none}
+.kgrab:active{cursor:grabbing}
+.kbar{display:block;width:44px;height:5px;border-radius:3px;background:var(--ink-3);opacity:.45;margin:7px auto 0}
+.killfeed h3{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none}
+.kcnt{font-variant-numeric:tabular-nums;opacity:.8}
+.kchev{margin-left:auto;font-size:15px;line-height:1;transition:transform .2s}
+.killfeed.min{max-height:none;padding-bottom:6px}
+.killfeed.min #kills{display:none}
+.killfeed.min .kchev{transform:rotate(180deg)}
+.kill{cursor:pointer;border-radius:8px}
+.kill:hover{background:var(--surface-2,rgba(0,0,0,.03))}
+.order{cursor:pointer}
+.dialog.odet{width:min(560px,100%)}
+.odet .ohead{margin-bottom:8px}
+.odet .odsum{font-size:21px;line-height:1.3;margin:4px 0 10px}
+.odet .odq{margin:0 0 14px;padding:10px 12px;border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:10px;font-size:16px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+.odet dl{display:grid;grid-template-columns:auto 1fr;gap:7px 14px;margin:0 0 16px;font-size:15px}
+.odet dt{color:var(--ink-2);font-weight:600}
+.odet dd{margin:0;word-break:break-word}
+.odet .pill.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:inherit;border-color:transparent}
 .kill .k-ico{color:var(--ok);font-weight:800}
 .kill .k-ico.x{color:var(--ink-3)}
 .kill .who2{font-weight:700}
@@ -756,7 +778,7 @@ body{letter-spacing:0;font-feature-settings:normal}
         <button data-f="later" aria-pressed="false">📅 Scheduled<span id="laterCnt" data-noi18n></span></button>
       </div>
       <div class="orders" id="orders"></div>
-      <div class="killfeed"><h3>Completed today</h3><div id="kills"></div></div>
+      <div class="killfeed" id="killfeed"><button type="button" class="kgrab" id="kGrab" aria-label="Minimize completed orders" aria-expanded="true"><span class="kbar"></span></button><h3 id="kHead"><span>Completed today</span><span class="kcnt" id="kCnt" data-noi18n></span><span class="kchev" aria-hidden="true">⌄</span></h3><div id="kills"></div></div>
     </aside>
   </div>
 
@@ -1021,6 +1043,24 @@ const ES = {
 "All": "Todas",
 "Mine": "Mías",
 "Completed today": "Completadas hoy",
+"Minimize completed orders": "Minimizar las completadas",
+"Show completed orders": "Mostrar las completadas",
+"In progress": "En proceso",
+"Requested by": "Pedida por",
+"Assigned to": "Asignada a",
+"Created": "Creada",
+"Started": "Empezada",
+"Completed by": "Completada por",
+"Completed": "Completada",
+"Closed by": "Cerrada por",
+"Closed": "Cerrada",
+"Total time": "Tiempo total",
+"Open for": "Abierta hace",
+"Area": "Área",
+"Details": "Detalle",
+"Scheduled for": "Programada para",
+"See photos": "Ver fotos",
+"Date and time": "Fecha y hora",
 "All clear. New requests from the chat land here.": "Todo al día. Los pedidos nuevos del chat llegan aquí.",
 "Nothing here for this filter.": "Nada aquí con este filtro.",
 "I'm on it": "Voy",
@@ -1381,6 +1421,7 @@ const ES = {
 };
 const ES_RX = [
   [/^Scheduled for (.+)$/, 'Programada para $1'],
+  [/^Assigned to (.+)$/, 'Asignada a $1'],
   [/^URGENT · Scheduled order due · (.+)$/, 'URGENTE · Ya toca la orden programada · $1'],
   [/^Scheduled order due · (.+)$/, 'Ya toca la orden programada · $1'],
   [/^Switching to (.+)…$/, 'Cambiando a $1…'],
@@ -1489,6 +1530,7 @@ if (LANG === 'es') {
     else if (m.target.nodeType === 1 && !m.target.closest(I18N_SKIP)) trEl(m.target);
   } }).observe(document.body, {childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: I18N_ATTRS});
 }
+if (LANG === 'es') $('#ticker')?.setAttribute('aria-label', 'Fecha y hora');
 function setLang(v){ ls.set('sc.lang', v); location.reload(); }
 
 /* ============ PARSER: guest requests in English + Spanish ============ */
@@ -1720,7 +1762,8 @@ const inGroup = (st, g) => g === 'all' || (g === 'mgr' && st.role === 'mgr')
 const onShift = () => !S.me || S.me.on_shift !== false;
 function orderForMe(o, urgent){
   if (!onShift() && !urgent) return false;
-  if (o.assigned_to) return o.assigned_to === S.me.id;
+  // every maintenance order reaches the whole engineering team on shift, even once it is assigned
+  if (o.assigned_to) return o.assigned_to === S.me.id || (o.category === 'maintenance' && inGroup(S.me, 'eng'));
   return inGroup(S.me, CAT_GROUP[o.category]) || (urgent && S.me.role === 'mgr');
 }
 function mentionsMe(m){
@@ -1994,7 +2037,7 @@ function orderCard(o, p){
   if (o.status === 'open' && !lt) acts.push(`<button class="start" data-act="start" data-id="${o.id}">I'm on it</button>`);
   acts.push(`<button class="done" data-act="done" data-id="${o.id}">Done</button>`);
   acts.push(`<button data-act="more" data-id="${o.id}" aria-label="More actions">•••</button>`);
-  return `<div class="order p-${p.level}">
+  return `<div class="order p-${p.level}" data-id="${o.id}">
     ${(pl => pl && !o.room ? `<button class="fob place" style="border:0"><small>AREA</small>${esc(pl.label)}</button>` : `<button class="fob ${o.room ? '' : 'none'}" ${o.room ? `data-room="${esc(o.room)}"` : ''} style="border:0"><small>ROOM</small>${esc(o.room || 'n/a')}</button>`)(placeOf(o))}
     <div style="min-width:0">
       <div class="ohead"><span class="ticket">${esc(o.ticket)}</span><span class="prio ${p.level}">${p.level}</span>${st}<span class="cat">${esc(CATS[o.category])}</span><span class="age">${lt ? '' : ago(startAt(o))}</span></div>
@@ -2024,7 +2067,8 @@ function killLine(o){
 function renderKills(){
   const today = dayNY(Date.now());
   const done = S.orders.filter(o => (o.status === 'done' || o.status === 'dismissed') && o.done_at && dayNY(o.done_at) === today).sort((a, b) => b.done_at - a.done_at);
-  $('#kills').innerHTML = done.length ? done.map(o => `<div class="kill">${killLine(o)}<span class="t">${fmtTime(o.done_at)}</span></div>`).join('') : '<div class="small">Finished orders show up here.</div>';
+  $('#kCnt').textContent = done.length ? '(' + done.length + ')' : '';
+  $('#kills').innerHTML = done.length ? done.map(o => `<div class="kill" role="button" tabindex="0" data-id="${o.id}">${killLine(o)}<span class="t">${fmtTime(o.done_at)}</span></div>`).join('') : '<div class="small">Finished orders show up here.</div>';
 }
 function renderLost(){
   const held = S.lost.filter(l => l.status === 'held');
@@ -2058,7 +2102,13 @@ function note(c, t, f, dur, vol, type){
 function chime(kind, force){
   if (!S.sound && !force) return;
   const c = audio(); if (!c) return; const t = c.currentTime + .03;
-  if (kind === 'urgent') {
+  if (kind === 'eng' || kind === 'engUrgent') {
+    // engineering: three quick knocks and a rising ring, like a hammer on a pipe; twice when urgent
+    const reps = kind === 'engUrgent' ? [0, 1.05] : [0];
+    reps.forEach(o => { [0, .11, .22].forEach(d => note(c, t + o + d, 392, .09, .24, 'square'));
+      note(c, t + o + .4, 784, .55, .2, 'triangle'); note(c, t + o + .4, 1175, .5, .08); });
+    if (navigator.vibrate) navigator.vibrate(kind === 'engUrgent' ? [90, 70, 90, 70, 90, 220, 650, 300, 90, 70, 90, 70, 90, 220, 900] : [90, 70, 90, 70, 90, 220, 650]);
+  } else if (kind === 'urgent') {
     [0, .16, .32, .62, .78, .94].forEach((d, i) => note(c, t + d, i % 2 ? 1175 : 1568, .14, .22, 'triangle'));
     if (navigator.vibrate) navigator.vibrate([200, 90, 200, 90, 400]);
   } else {
@@ -2067,6 +2117,9 @@ function chime(kind, force){
   }
 }
 const beep = () => chime('normal');
+// which tone wins when several things arrive at once: urgent, then engineering, then the usual bell
+const SRANK = {normal: 1, eng: 2, urgent: 3, engUrgent: 4};
+function pickSound(cur, o, u){ const k = o.category === 'maintenance' ? (u ? 'engUrgent' : 'eng') : u ? 'urgent' : 'normal'; return !cur || SRANK[k] > SRANK[cur] ? k : cur; }
 const pipOn = () => ls.get('sc.pip', true);
 function pip(force){
   if (!S.sound && !force) return;
@@ -2134,13 +2187,13 @@ async function refresh(){
       if (!S.firstLoad) {
         const lt = isLater(o);
         if (S.knownLater.has(o.id) && !lt && o.status === 'open') { const u = prioOf(o).level === 'urgent';
-          if (orderForMe(o, u) || o.created_by === S.me.id) { toast(`<b>${u ? 'URGENT · ' : ''}Scheduled order due · ${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); } }
+          if (orderForMe(o, u) || o.created_by === S.me.id) { toast(`<b>${u ? 'URGENT · ' : ''}Scheduled order due · ${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = pickSound(newSound, o, u); } }
         if (prev === undefined && o.status === 'open' && !lt && o.created_by !== S.me.id) { const u = prioOf(o).level === 'urgent';
-          if (orderForMe(o, u)) { toast(`<b>${u ? 'URGENT · ' : ''}${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); } }
+          if (orderForMe(o, u)) { toast(`<b>${u ? 'URGENT · ' : ''}${o.category === 'maintenance' ? '🔧 ' : ''}${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = pickSound(newSound, o, u); } }
         const pa = S.knownAsg.get(o.id);
         if (prev !== undefined && prev === o.status && pa !== S.me.id && o.assigned_to === S.me.id && (o.status === 'open' || o.status === 'in_progress') && !isLater(o)) {
           const u = prioOf(o).level === 'urgent';
-          if (onShift() || u) { toast(`<b>Assigned to you · ${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); } }
+          if (onShift() || u) { toast(`<b>Assigned to you · ${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = pickSound(newSound, o, u); } }
         if (prev === 'open' && o.status === 'in_progress' && o.created_by === S.me.id && o.assigned_to !== S.me.id) {
           toast(`<b>${esc(o.assigned_name || 'Someone')} is on it</b> ${esc(o.ticket)} · ${esc(o.summary)}`, 'new'); startSound = true; }
         if ((prev === 'open' || prev === 'in_progress') && o.status === 'dismissed' && o.created_by === S.me.id && o.done_by_id !== S.me.id) {
@@ -2319,8 +2372,8 @@ async function orderAction(id, act, assignee){
 }
 
 /* modal */
-function openModal(html){ $('#modalBody').innerHTML = html; $('#modal').hidden = false; }
-function closeModal(){ $('#modal').hidden = true; $('#modalBody').innerHTML = ''; }
+function openModal(html){ $('#modalBody').classList.remove('odet'); $('#modalBody').innerHTML = html; $('#modal').hidden = false; }
+function closeModal(){ $('#modal').hidden = true; $('#modalBody').innerHTML = ''; $('#modalBody').classList.remove('odet'); }
 $('#modal').addEventListener('click', e => { if (e.target.id === 'modal' || e.target.closest('[data-close]')) closeModal(); });
 
 function moreMenu(id){
@@ -2334,6 +2387,58 @@ function moreMenu(id){
   $('#dismissBtn').onclick = () => { closeModal(); orderAction(id, 'dismiss'); };
   $('#photoBtn').onclick = () => { photoFor = id; $('#photoInput').value = ''; $('#photoInput').click(); };
 }
+// full order detail, easier to read; open and finished orders alike
+const durTxt = ms => { const m = Math.max(0, Math.round(ms / 60000)); if (m < 60) return m + ' min'; const h = Math.floor(m / 60); if (h < 24) return h + ' h ' + (m % 60) + ' min'; return Math.floor(h / 24) + ' d ' + (h % 24) + ' h'; };
+const fmtFull = ms => (dayNY(ms) === dayNY(Date.now()) ? '' : fmtDate(ms) + ', ') + fmtTime(ms);
+function orderDetail(id){
+  const o = S.orders.find(x => x.id === id); if (!o) return;
+  const p = prioOf(o), lt = isLater(o), pl = placeOf(o), open = o.status === 'open' || o.status === 'in_progress';
+  const src = o.message_id && S.messages.find(m => m.id === o.message_id);
+  const quote = src ? src.body : (o.details && o.details !== o.summary ? o.details : '');
+  const SL = LANG === 'es' ? {done: 'Completada', dismissed: 'No es tarea', prog: 'En proceso', later: 'Programada', open: 'Abierta'} : {done: 'Completed', dismissed: 'Not a task', prog: 'In progress', later: 'Scheduled', open: 'Open'};
+  const stTxt = SL[o.status === 'done' ? 'done' : o.status === 'dismissed' ? 'dismissed' : o.status === 'in_progress' ? 'prog' : lt ? 'later' : 'open'];
+  const stCls = o.status === 'done' ? 'ok' : o.status === 'in_progress' ? 'prog' : lt ? 'later' : '';
+  const row = (k, v, raw) => v ? `<dt>${k}</dt><dd${raw ? ' data-noi18n' : ''}>${v}</dd>` : '';
+  const what = o.items && o.items.length ? o.items.map(i => i.issue || String(i.label)).join(', ') : '';
+  openModal(`<div class="ohead"><span class="ticket">${esc(o.ticket)}</span>${open ? `<span class="prio ${p.level}">${p.level}</span>` : ''}<span class="pill ${stCls}" data-noi18n>${stTxt}</span><span class="cat">${esc(CATS[o.category] || '')}</span></div>
+    <h2 class="odsum">${esc(o.summary)}</h2>
+    ${quote ? `<p class="odq" data-noi18n>${src ? '“' + esc(quote) + '”' : esc(quote)}</p>` : ''}
+    <dl>
+      ${o.room ? row('Room', `<button class="linkish roomlink" data-room="${esc(o.room)}">${esc(o.room)}</button>`) : pl ? row('Area', esc(pl.label)) : o.map_zone ? row('Area', esc(o.map_zone), true) : ''}
+      ${what && what !== o.summary ? row('Details', esc(what)) : ''}
+      ${row('Requested by', `${esc(o.author)} · <span>${esc(roleOf(o.role).label)}</span>`)}
+      ${row('Created', fmtFull(o.created_at))}
+      ${o.scheduled_for ? row('Scheduled for', fmtFull(o.scheduled_for)) : ''}
+      ${row('Assigned to', esc(o.assigned_name || ''), true)}
+      ${o.started_at ? row('Started', fmtFull(o.started_at)) : ''}
+      ${o.status === 'done' ? row('Completed by', `${esc(o.done_by || '')}${o.done_role ? ' · <span>' + esc(roleOf(o.done_role).label) + '</span>' : ''}`) : ''}
+      ${o.status === 'dismissed' ? row('Closed by', esc(o.done_by || '')) : ''}
+      ${o.done_at && !open ? row(o.status === 'done' ? 'Completed' : 'Closed', fmtFull(o.done_at)) : ''}
+      ${open ? (lt ? '' : row('Open for', durTxt(Date.now() - startAt(o)))) : o.done_at ? row('Total time', durTxt(o.done_at - startAt(o))) : ''}
+    </dl>
+    <div class="btnrow" style="margin-bottom:10px">${open && o.status === 'open' && !lt ? '<button class="btn pri" data-oact="start">I\'m on it</button>' : ''}${open ? '<button class="btn okb" data-oact="done">Done</button>' : ''}${o.photos ? `<button class="btn" data-photos="${o.id}">See photos</button>` : ''}</div>
+    <div class="btnrow">${open ? '<button class="btn" data-oact="more">More actions</button>' : ''}<button class="btn" data-close>Close</button></div>`);
+  $('#modalBody').classList.add('odet');
+  $('#modalBody').querySelectorAll('[data-oact]').forEach(b => b.onclick = () => { const a = b.dataset.oact; if (a === 'more') return moreMenu(id); closeModal(); orderAction(id, a); });
+}
+$('#kills').addEventListener('click', e => { const k = e.target.closest('.kill'); if (k) orderDetail(k.dataset.id); });
+$('#kills').addEventListener('keydown', e => { const k = e.target.closest('.kill'); if (k && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); orderDetail(k.dataset.id); } });
+// "Completed today" folds away: drag its handle down to minimize, up to open, or tap the handle or the title
+(() => {
+  const kf = $('#killfeed'), g = $('#kGrab');
+  const setMin = m => { kf.classList.toggle('min', m); g.setAttribute('aria-expanded', String(!m)); g.setAttribute('aria-label', tr(m ? 'Show completed orders' : 'Minimize completed orders')); ls.set('sc.killMin', m); };
+  setMin(!!ls.get('sc.killMin', false));
+  let y0 = null, h0 = 0, moved = 0;
+  g.addEventListener('pointerdown', e => { y0 = e.clientY; h0 = kf.getBoundingClientRect().height; moved = 0; kf.classList.add('dragging'); try { g.setPointerCapture(e.pointerId); } catch {} });
+  g.addEventListener('pointermove', e => { if (y0 == null) return; const dy = e.clientY - y0; moved = Math.max(moved, Math.abs(dy));
+    if (moved > 4) { if (kf.classList.contains('min') && dy < 0) kf.classList.remove('min'); kf.style.maxHeight = Math.max(44, h0 - dy) + 'px'; } });
+  const end = e => { if (y0 == null) return; const dy = (e.clientY ?? y0) - y0, wasMin = ls.get('sc.killMin', false); y0 = null; kf.classList.remove('dragging'); kf.style.maxHeight = '';
+    if (moved <= 4) setMin(!wasMin); else if (dy > 30) setMin(true); else if (dy < -30) setMin(false); else setMin(wasMin); };
+  g.addEventListener('pointerup', end); g.addEventListener('pointercancel', end);
+  g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setMin(!kf.classList.contains('min')); } });
+  g.addEventListener('click', e => { if (e.detail === 0) return; e.preventDefault(); });
+  $('#kHead').addEventListener('click', () => setMin(!kf.classList.contains('min')));
+})();
 let photoFor = null;
 $('#photoInput').addEventListener('change', async () => {
   const f = $('#photoInput').files[0]; if (!f || !photoFor) return;
@@ -3077,7 +3182,8 @@ function setKind(k){
 document.querySelectorAll('.kinds button').forEach(b => b.onclick = () => { setKind(b.dataset.kind); $('#input').focus(); });
 document.querySelectorAll('#filters button').forEach(b => b.onclick = () => { S.filter = b.dataset.f; document.querySelectorAll('#filters button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderOrders(); });
 $('#orders').addEventListener('click', e => {
-  const b = e.target.closest('button'); if (!b) return;
+  const b = e.target.closest('button');
+  if (!b) { const c = e.target.closest('.order'); if (c && !String(getSelection && getSelection()).trim()) orderDetail(c.dataset.id); return; }
   if (b.dataset.room) return roomHistory(b.dataset.room);
   if (b.dataset.photos) return showPhotos(b.dataset.photos);
   if (b.dataset.act === 'more') return moreMenu(b.dataset.id);

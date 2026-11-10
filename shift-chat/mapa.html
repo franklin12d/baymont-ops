@@ -2,6 +2,101 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<script>
+(function(){
+var lang='es';try{var v=JSON.parse(localStorage.getItem('sc.lang'));lang=(v==='en'||v==='es')?v:(/^es\b/i.test(navigator.language||'')?'es':'en');}catch(e){lang=/^es\b/i.test(navigator.language||'')?'es':'en';}
+window.MAPLANG=lang;window.LOC=lang==='en'?'en-US':'es-US';
+var D={
+'Abrir FrankShift':'Open FrankShift','Cargando…':'Loading…','Cargando órdenes…':'Loading orders…','Equipo':'Team','Separar pisos':'Separate floors','Todos':'All','Vista de planta':'Top view',
+'Órdenes abiertas':'Open orders','Buscar habitación u orden':'Search room or order','Foto ampliada':'Enlarged photo','Hab. u OT':'Room or order',
+'Maqueta 3D del Developer Inn Maingate':'3D model of Developer Inn Maingate','Orientar como el mapa y centrar':'Align with the map and center','Pisos':'Floors',
+'Volver a FrankShift':'Back to FrankShift','Cerrar':'Close','Volver':'Back','Filtro':'Filter','Más opciones':'More options','Eliminar orden':'Delete order',
+'Eliminar quita la orden del mapa y de FrankShift. Úsalo solo para órdenes creadas por error.':'Deleting removes the order from the map and from FrankShift. Use it only for orders created by mistake.',
+'Punto marcado en la maqueta.':'Spot marked on the model.','Para moverlo, toca otro lugar del área.':'To move it, tap another spot in the area.',
+'Ver en la maqueta':'Show on the model','Crear orden de trabajo':'Create work order','Agregar nota':'Add note','Crear orden':'Create order','Cancelar':'Cancel','Guardando…':'Saving…',
+'Agregar una nota: qué se hizo, qué falta, piezas…':'Add a note: work done, work pending, parts…','Prioridad':'Priority','Fotos':'Photos','Historial':'History',
+'Bloquear la habitación (fuera de servicio)':'Take the room out of order','Foto':'Photo','Asignada a':'Assigned to','Asignar a':'Assign to','Categoría':'Category','Estado':'Status',
+'Foto (opcional)':'Photo (optional)','Lugar exacto (opcional)':'Exact location (optional)','Ej.: tercer escalón, lado izquierdo':'E.g., third step, left side','Qué pasa':'Issue',
+'Cargando historial…':'Loading history…','Sin asignar':'Unassigned','sin asignar':'unassigned','Cargando personal…':'Loading staff…',
+'. Cada orden, nota, foto y cambio queda con tu nombre, la fecha y la hora.':'. Every order, note, photo and change is recorded with your name, date and time.',
+'Firmas como':'Signed in as','Para agregar o quitar personal usa Gerente en FrankShift.':'To add or remove staff, use Manager in FrankShift.','Sin fotos todavía.':'No photos yet.',
+'Puerta':'Door','Pasillo exterior':'Exterior walkway','Baño':'Bathroom','TV / cómoda':'TV / dresser','Cama':'Bed','Vanity / closet':'Vanity / closet','Hab. bloqueada':'Room out of order',
+'A/C (PTAC)':'A/C (PTAC)','Abierta':'Open','Abierta hace':'Open for','Abiertas':'Open','Agregó una foto':'Added a photo','Al día con FrankShift':'Up to date with FrankShift',
+'Ala central':'Central wing','Ala noreste':'Northeast wing','Ala oeste':'West wing','Ala sur':'South wing','Alta':'High','Asignada':'Assigned','Asignada o en espera':'Assigned or on hold',
+'Asignó la orden a':'Assigned the order to','Baja':'Low','Creada':'Created','Creó la orden':'Created the order','Descartada':'Dismissed',
+'Ej.: gotea la llave del lavamanos':'E.g., sink faucet is dripping','Ej.: luz fundida junto a la puerta':'E.g., light out next to the door',
+'El mapa de este hotel todavía no está listo. Por ahora solo está el de Maingate.':'The map for this hotel is not ready yet. For now, only Maingate is available.',
+'Eléctrico':'Electrical','En espera':'On hold','En proceso':'In progress',
+'Entra primero en FrankShift con tu usuario y PIN, y luego abre el mapa.':'Sign in to FrankShift with your user code and PIN first, then open the map.',
+'Escalera ala central':'Central wing stairs','Escalera ala noreste':'Northeast wing stairs','Escalera ala oeste':'West wing stairs','Escalera ala sur este':'Southeast wing stairs','Escalera ala sur oeste':'Southwest wing stairs',
+'Escribe una nota o elige una foto.':'Write a note or choose a photo.','Ese lugar no es válido.':'That location is not valid.','Esta orden fue eliminada.':'This order was deleted.',
+'Esta orden ya no existe.':'This order no longer exists.','Esta orden ya tiene el máximo de fotos.':'This order already has the maximum number of photos.','Estacionamiento':'Parking',
+'Front desk, desayuno y market':'Front desk, breakfast and market','Fuera de servicio':'Out of order','Hielo':'Ice','Ingeniería, Developer Inn Maingate':'Engineering, Developer Inn Maingate',
+'Junto al ala sur':'Next to the south wing','La foto es demasiado grande.':'The photo is too large.',
+'La orden se marca donde tocaste el área en la maqueta':'The order is pinned where you tapped the area on the model','Lavandería':'Laundry','Limpieza profunda':'Deep cleaning',
+'Media':'Medium','Mueble / equipo':'Furniture / equipment','Máquina de hielo':'Ice machine','Mías':'Mine',
+'No hay órdenes abiertas. Toca una habitación o un área en la maqueta para crear una.':'No open orders. Tap a room or area on the model to create one.',
+'No hay órdenes en este filtro.':'No orders match this filter.','No se pudo guardar. Revisa la conexión e intenta de nuevo.':'Could not save. Check your connection and try again.',
+'No se pudo usar esa foto.':'That photo could not be used.','No se pudo usar la foto.':'The photo could not be used.','Nota guardada.':'Note saved.','Orden eliminada.':'Order deleted.',
+'Otra persona':'Someone else','Otro':'Other','Pared de TV / cómoda':'TV / dresser wall','Pared, piso o techo':'Wall, floor or ceiling','Parque':'Park','Parque infantil':'Playground',
+'Personal de FrankShift para asignar órdenes':'FrankShift staff available for assignment','Piscina':'Pool','Plagas':'Pest control','Plomería':'Plumbing',
+'Primero elige a quién se asigna.':'Please choose an assignee first.','Primero toca el plano para marcar dónde está la avería.':'First tap the floor plan to mark where the problem is.',
+'Puerta / cerradura':'Door / lock','Puerta / entrada':'Door / entry','Punto actualizado.':'Location updated.','Punto marcado:':'Spot marked:','Quitó la asignación':'Removed the assignment',
+'Recepción':'Front desk','Resuelta':'Resolved','Resuelta hoy':'Resolved today','Resueltas':'Resolved','Seguridad':'Security',
+'Sin conexión: lo que ves puede estar desactualizado':'Offline: what you see may be out of date','Sin punto marcado: el pin irá al centro del área.':'No spot marked: the pin will go in the center of the area.',
+'Sin órdenes':'No orders','Sin órdenes abiertas':'No open orders','Solo lectura':'Read only','Solo quien creó la orden o un gerente puede eliminarla.':'Only the person who created the order or a manager can delete it.',
+'Tiempo total':'Total time','Toca el plano para crear una orden en ese punto':'Tap the floor plan to create an order at that spot','Toca el plano para marcar el punto exacto':'Tap the floor plan to mark the exact spot',
+'Tu sesión venció. Entra otra vez en FrankShift y vuelve al mapa.':'Your session expired. Sign in to FrankShift again and come back to the map.','Urgente':'Urgent',
+'Ventana / PTAC':'Window / PTAC','¿Eliminar esta orden y todo su historial?':'Delete this order and its entire history?','Área común':'Common area','Área de cama':'Bed area',
+'Órdenes de trabajo':'Work orders','Ingeniería':'Engineering','Gerencia':'Management','Mantenimiento':'Maintenance','Cargando tu usuario, intenta en un momento.':'Loading your profile, please try again in a moment.',
+'Mapa de ingeniería · FrankShift':'Engineering map · FrankShift','Foto de':'Photo of','Lista':'List','Mapa':'Map','Guardar':'Save','Eliminar':'Delete','Nota':'Note'
+};
+function T(s){if(s in D)return D[s];var c=s.charAt(0).toUpperCase()+s.slice(1);if(c in D){var r=D[c];return r.charAt(0).toLowerCase()+r.slice(1);}return null;}
+var R=[
+[/^Hab\. (\S+)$/,function(m){return 'Room '+m[1];}],
+[/^Piso (\d+)$/,function(m){return 'Floor '+m[1];}],
+[/^Piso (\d+), (.+)$/,function(m){return 'Floor '+m[1]+', '+(T(m[2])||m[2]);}],
+[/^Junto a (\S+) y (\S+)$/,function(m){return 'Next to '+m[1]+' and '+m[2];}],
+[/^Órdenes abiertas \((\d+)\)$/,function(m){return 'Open orders ('+m[1]+')';}],
+[/^(\d+) órdenes abiertas(, fuera de servicio)?$/,function(m){return m[1]+' open orders'+(m[2]?', out of order':'');}],
+[/^1 orden abierta(, fuera de servicio)?$/,function(m){return '1 open order'+(m[1]?', out of order':'');}],
+[/^Sin órdenes abiertas, fuera de servicio$/,function(){return 'No open orders, out of order';}],
+[/^Historial \((\d+) resueltas\)$/,function(m){return 'History ('+m[1]+' resolved)';}],
+[/^(.+) creada\.$/,function(m){return m[1]+' created.';}],
+[/^Cambio guardado a las (.+)\.$/,function(m){return 'Change saved at '+m[1]+'.';}],
+[/^Foto lista: (.+)$/,function(m){return 'Photo ready: '+m[1];}],
+[/^No encontré la habitación u orden (.+)\.$/,function(m){return 'No room or order found for '+m[1]+'.';}],
+[/^hace (.+)$/,function(m){return m[1]+' ago';}],
+[/^(.+), hace (.+)$/,function(m){return m[1]+', '+m[2]+' ago';}],
+[/^Cambió el estado de (.+) a$/,function(m){return 'Changed status from '+(T(m[1])||m[1])+' to';}],
+[/^Cambió la prioridad de (.+) a$/,function(m){return 'Changed priority from '+(T(m[1])||m[1])+' to';}],
+[/^Queda firmada por (.+)\. Sale en Órdenes de FrankShift y avisa a ingeniería\.$/,function(m){return 'Signed by '+m[1]+'. It will appear in FrankShift Orders and alert engineering.';}],
+[/^Plano de la habitación (.+)$/,function(m){return 'Floor plan of room '+m[1];}],
+[/^Foto de (.+)$/,function(m){return 'Photo of '+m[1];}],
+];
+function C(t){var r=T(t);if(r!=null)return r;for(var i=0;i<R.length;i++){var m=t.match(R[i][0]);if(m){r=R[i][1](m);if(r!=null)return r;}}return null;}
+function C2(t){var r=C(t);if(r!=null)return r;var e=t.match(/^(.*?)\s*([,:])$/);if(e&&e[1]){r=C2(e[1]);return r==null?null:r+e[2];}
+  if(t.indexOf(', ')>0){var ps=t.split(', '),ch=0;ps=ps.map(function(x){var y=C(x);if(y!=null){ch=1;return y;}return x;});if(ch)return ps.join(', ');}return null;}
+function L(s){if(lang!=='en'||s==null)return s;s=String(s);var t=s.trim();if(!t)return s;var r=C2(t);
+  if(r==null){if(/[áéíóúñ¿¡]|\b(Hab|Piso|de|la|el|orden|órdenes)\b/.test(t))(window.__miss=window.__miss||{})[t]=1;return s;}
+  var a=s.match(/^\s*/)[0],b=s.match(/\s*$/)[0];return a+r+b;}
+window.L=L;
+if(lang!=='en')return;
+var SKIP='.desc,.by,[data-raw],textarea,script,style,.team b,input';
+var ATTR=['placeholder','aria-label','title','alt'];
+function fixText(n){var p=n.parentNode;if(!p||p.nodeType!==1||(p.closest&&p.closest(SKIP)))return;
+  var v=n.nodeValue,w=L(v);if(w!==v){if(p.tagName==='OPTION'&&!p.hasAttribute('value'))p.setAttribute('value',v.trim());n.nodeValue=w;}}
+function fixEl(el){if(el.closest&&el.closest('[data-raw]'))return;for(var i=0;i<ATTR.length;i++){var k=ATTR[i],v=el.getAttribute&&el.getAttribute(k);if(v){var w=L(v);if(w!==v)el.setAttribute(k,w);}}}
+function walk(root){if(root.nodeType===3)return fixText(root);if(root.nodeType!==1)return;fixEl(root);
+  var it=document.createTreeWalker(root,5,null),n;while((n=it.nextNode())){if(n.nodeType===3)fixText(n);else fixEl(n);}}
+document.documentElement.lang='en';
+var mo=new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var m=ms[i];
+  if(m.type==='characterData')fixText(m.target);else if(m.type==='attributes')fixEl(m.target);else for(var j=0;j<m.addedNodes.length;j++)walk(m.addedNodes[j]);}});
+mo.observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:ATTR});
+document.addEventListener('DOMContentLoaded',function(){document.title=L(document.title);walk(document.body);});
+})();
+</script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mapa de ingeniería · FrankShift</title>
 <meta name="theme-color" content="#2559A7">
@@ -382,7 +477,7 @@ const rooms=targets.filter(t=>t.kind==='room');
 function sprite(text,hand,scale){
   const cv=document.createElement('canvas');const x=cv.getContext('2d');
   const font=hand?'400 64px "Patrick Hand","Comic Sans MS",cursive':'600 58px "Rubik",sans-serif';
-  x.font=font;const w=Math.ceil(x.measureText(text).width)+28;cv.width=w;cv.height=92;
+  text=L(text);x.font=font;const w=Math.ceil(x.measureText(text).width)+28;cv.width=w;cv.height=92;
   x.font=font;x.textAlign='center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=11;
   x.strokeStyle=css(hand?'--tagStroke':'--labelStroke');x.strokeText(text,w/2,48);
   x.fillStyle=css(hand?'--tagInk':'--labelInk');x.fillText(text,w/2,48);
@@ -661,7 +756,7 @@ function zoneName(u,v){
   if(u<0.3)return'Pared de TV / cómoda';return'Área de cama';
 }
 function fmt(iso){if(!iso)return'';const d=new Date(iso);const o={day:'numeric',month:'short',hour:'numeric',minute:'2-digit'};
-  if(d.getFullYear()!==new Date().getFullYear())o.year='numeric';return d.toLocaleString('es-US',o);}
+  if(d.getFullYear()!==new Date().getFullYear())o.year='numeric';return d.toLocaleString(LOC,o);}
 function dur(ms){const m=Math.max(0,Math.round(ms/60000));if(m<60)return m+' min';const h=Math.floor(m/60);if(h<24)return h+' h '+(m%60)+' min';return Math.floor(h/24)+' d '+(h%24)+' h';}
 const age=iso=>'hace '+dur(Date.now()-new Date(iso).getTime());
 const otNum=x=>x.num||('OT-'+String(x.createdAt||'').slice(2,10).replace(/-/g,''));
@@ -735,8 +830,8 @@ function renderPlan(){
 function ticketRow(id,x,showLoc){
   const t=byKey[x.loc];
   return'<button class="trow" data-act="ticket" data-id="'+id+'"><span class="tr-main"><b>'+esc(showLoc?locName(x):x.cat)+'</b>'+
-    '<span>'+esc(showLoc?x.cat+', '+(x.zone||''):(x.zone||''))+(x.desc?': '+esc(x.desc):'')+'</span>'+
-    '<span class="tr-meta">'+esc(otNum(x))+', '+esc(x.assignee?x.assignee:'sin asignar')+', '+esc(age(x.createdAt))+'</span></span>'+
+    '<span>'+esc((showLoc?[L(x.cat),L(x.zone||'')]:[L(x.zone||'')]).filter(Boolean).join(', '))+(x.desc?': <i data-raw style="font-style:normal">'+esc(x.desc)+'</i>':'')+'</span>'+
+    '<span class="tr-meta">'+esc(otNum(x))+', '+esc(x.assignee?x.assignee:L('sin asignar'))+', '+esc(L(age(x.createdAt)))+'</span></span>'+
     '<span class="tr-side"><span class="chip '+esc(x.priority)+'">'+esc(x.priority)+'</span><span class="chip st '+(STCLS[x.status]||'')+'">'+esc(x.status)+'</span></span></button>';
 }
 function renderTargetView(){
@@ -799,12 +894,12 @@ function renderTicketTop(){
 }
 function evText(e){
   switch(e.type){
-    case'creada':return'Creó la orden'+(e.text?': '+esc(e.text):'');
+    case'creada':return'Creó la orden'+(e.text?': <span data-raw>'+esc(e.text)+'</span>':'');
     case'asignada':return e.to?'Asignó la orden a <b>'+esc(e.to)+'</b>':'Quitó la asignación';
     case'estado':return'Cambió el estado de '+esc(e.from)+' a <b>'+esc(e.to)+'</b>';
     case'prioridad':return'Cambió la prioridad de '+esc(e.from)+' a <b>'+esc(e.to)+'</b>';
-    case'foto':return'Agregó una foto'+(e.text?': '+esc(e.text):'');
-    case'nota':return esc(e.text||'');
+    case'foto':return'Agregó una foto'+(e.text?': <span data-raw>'+esc(e.text)+'</span>':'');
+    case'nota':return'<span data-raw>'+esc(e.text||'')+'</span>';
     default:return esc(e.text||'');
   }
 }
@@ -823,7 +918,7 @@ async function changeField(field,val){
   if(!needMe()){renderTicketTop();return;}
   const p={};if(field==='assignee')p.assignee=val||null;else p[field]=val;
   if(await patchTicket(curTicket,p)){renderTicketTop();loadEvents(curTicket);
-    toast('Cambio guardado a las '+new Date().toLocaleTimeString('es-US',{hour:'numeric',minute:'2-digit'})+'.');}
+    toast('Cambio guardado a las '+new Date().toLocaleTimeString(LOC,{hour:'numeric',minute:'2-digit'})+'.');}
   else renderTicketTop();
 }
 
@@ -896,7 +991,7 @@ sheet.addEventListener('click',async e=>{
     if(t.isConnected){t.disabled=false;t.textContent='Agregar nota';}
   }
   else if(a==='zoom'){$('#lbimg').src=t.getAttribute('src');$('#lb').hidden=false;}
-  else if(a==='del'){if(!confirm('¿Eliminar esta orden y todo su historial?'))return;const tid=curTicket;if(await delTicket(tid)){toast('Orden eliminada.');openList();}}
+  else if(a==='del'){if(!confirm(L('¿Eliminar esta orden y todo su historial?')))return;const tid=curTicket;if(await delTicket(tid)){toast('Orden eliminada.');openList();}}
   else if(a==='filter'){listFilter=t.dataset.f;renderList();}
 });
 $('#lb').addEventListener('click',()=>{$('#lb').hidden=true;$('#lbimg').removeAttribute('src');});
