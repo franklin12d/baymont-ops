@@ -538,6 +538,9 @@ html[data-theme="dark"] body[data-hotel="HWY"]{--hotel:#60A5FA;--hotel-soft:#142
 .rxpick button.hot{transform:scale(1.45) translateY(-6px);background:var(--accent-soft)}
 .rxpick .rxcopy{display:grid;place-items:center;color:var(--ink-2);border-left:1px solid var(--line)!important;border-radius:0 10px 10px 0}
 .rxpick .rxcopy svg{width:18px;height:18px}
+.rxpick .rxedit{display:grid;place-items:center;color:var(--ink-2)}
+.rxpick .rxedit svg{width:18px;height:18px}
+.edtag{font-size:11px;color:var(--ink-2);font-style:italic}
 .msg .bub{-webkit-tap-highlight-color:transparent}
 @media (hover:none){.msg .bub{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}}
 .msg .bub>.body,.msg .bub>.mphoto{transition:transform .18s ease}
@@ -1076,6 +1079,15 @@ const ES = {
 "Save changes": "Guardar cambios",
 "Changes saved. The team was alerted.": "Cambios guardados. Se avisó al equipo.",
 "Nothing changed.": "No hubo cambios.",
+"Edit message": "Editar mensaje",
+"One point per line.": "Un punto por línea.",
+"Edit pass-on": "Editar entrega",
+"Edited": "Editado",
+"Message updated.": "Mensaje actualizado.",
+"Only who wrote it or a manager can edit it.": "Solo quien lo escribió o un gerente puede editarlo.",
+"Write the message first.": "Escribe el mensaje primero.",
+"A point with a comment or an alarm can't be removed. Keep the same number of lines or more.": "No se puede quitar un punto con comentario o alarma. Deja el mismo número de líneas o más.",
+"That message is no longer here.": "Ese mensaje ya no está.",
 "Write what needs to be done.": "Escribe qué hay que hacer.",
 "Only open orders can be edited.": "Solo se pueden editar órdenes abiertas.",
 "Order changed": "Orden cambiada",
@@ -1867,7 +1879,7 @@ function renderFeed(){
     html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''} ${tome ? 'tome' : ''} ${cont ? 'cont' : 'first'} ${more ? 'more' : 'last'}${pop}" data-mid="${esc(m.id)}">
       <span class="swipeic" aria-hidden="true">${REPLY_IC}</span>
       <div class="av${avClass(m.staff_id)}" style="background:${roleColor(m.role)}">${esc(initials(m.author))}</div>
-      <div class="bub"><div class="head"><span class="name">${esc(m.author)}</span><span class="rolechip" style="background:${roleColor(m.role)}">${esc(roleOf(m.role).label)}</span>${tag}<span class="time">${fmtTime(m.created_at)}</span></div>
+      <div class="bub"><div class="head"><span class="name">${esc(m.author)}</span><span class="rolechip" style="background:${roleColor(m.role)}">${esc(roleOf(m.role).label)}</span>${tag}<span class="time">${fmtTime(m.created_at)}</span>${edTag(m)}</div>
       ${rq}${m.body ? `<div class="body">${markMentions(roomLinks(m.body), m)}</div>` : ''}${m.has_photo ? photoHtml(m) : textRx(m)}${chips ? `<div class="extracted">${chips}</div>` : ''}${rb}</div></div>`;
   });
   feed.innerHTML = html;
@@ -1879,6 +1891,9 @@ function renderFeed(){
 const REACTS = ['\u{1FAE1}','\u{1F44C}','\u{1F44D}','\u{1F44E}','\u{1F44F}','\u2714','\u26A0','\u2620','\u{1F4DD}','\u2757','\u203C','\u2049','\u{1F4AF}','\u2705','\u274E','\u2611'];
 const rxShow = e => (/^[\u2000-\u27ff]$/.test(e) && !['\u2705','\u274E','\u2757'].includes(e)) ? e + '\uFE0F' : e;
 const MPH = new Map(); let mphBusy = false;
+const EDIT_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+const canEditMsg = m => !!(S.me && m && (m.staff_id === S.me.id || S.me.role === 'mgr') && (m.body || !m.has_photo));
+const edTag = m => m.edited_at ? `<span class="edtag" title="${esc((m.edited_by || '') + ' · ' + fmtFull(T(m.edited_at)))}">· <span>Edited</span></span>` : '';
 const COPY_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
 function rxChips(m){
   return (m.reactions || []).map(x => `<button class="rx ${x.mine ? 'mine' : ''}" data-rx="${esc(m.id)}" data-e="${esc(x.e)}" title="${esc((x.names || []).join(', '))}">${rxShow(esc(x.e))}<b>${x.n}</b></button>`).join('');
@@ -1886,7 +1901,8 @@ function rxChips(m){
 function rxPick(m){
   if (S.rxOpen !== m.id) return '';
   const cp = m.body ? `<button class="rxcopy" data-rxcopy="${esc(m.id)}" aria-label="Copy" title="Copy">${COPY_IC}</button>` : '';
-  return `<div class="rxpick" role="group" aria-label="Pick a reaction">${REACTS.map(e => `<button data-rx="${esc(m.id)}" data-e="${e}" class="${(m.reactions || []).some(x => x.e === e && x.mine) ? 'on' : ''}">${rxShow(e)}</button>`).join('')}${cp}</div>`;
+  const ed = canEditMsg(m) ? `<button class="rxedit" data-medit="${esc(m.id)}" aria-label="Edit" title="Edit">${EDIT_IC}</button>` : '';
+  return `<div class="rxpick" role="group" aria-label="Pick a reaction">${REACTS.map(e => `<button data-rx="${esc(m.id)}" data-e="${e}" class="${(m.reactions || []).some(x => x.e === e && x.mine) ? 'on' : ''}">${rxShow(e)}</button>`).join('')}${cp}${ed}</div>`;
 }
 function textRx(m){
   const rx = rxChips(m);
@@ -2039,6 +2055,7 @@ $('#feed').addEventListener('click', e => {
   }
   const a = e.target.closest('[data-rxadd]'); if (a) { S.rxOpen = S.rxOpen === a.dataset.rxadd ? null : a.dataset.rxadd; renderFeed(); return; }
   const x = e.target.closest('[data-rx]'); if (x) { react(x.dataset.rx, x.dataset.e); return; }
+  const me_ = e.target.closest('[data-medit]'); if (me_) { const m = S.messages.find(y => y.id === me_.dataset.medit); S.rxOpen = null; renderFeed(); if (m) editMessage(m); return; }
   const cp = e.target.closest('[data-rxcopy]'); if (cp) { const m = S.messages.find(y => y.id === cp.dataset.rxcopy); S.rxOpen = null; renderFeed(); if (m && m.body) copyText(m.body); return; }
   const ph = e.target.closest('[data-mphoto]'); if (ph) { const d = MPH.get(ph.dataset.mphoto); const m = S.messages.find(y => y.id === ph.dataset.mphoto);
     if (d) openModal(`<img class="bigphoto" src="${esc(d)}" alt="Photo"><p class="small">${esc(m ? m.author + ' · ' + fmtTime(m.created_at) : '')}</p><div class="btnrow"><button class="btn" data-close>Close</button></div>`); }
@@ -3242,7 +3259,7 @@ function poCard(x){
   const gen = extra(null);
   return `<div class="card po" data-pid="${x.id}">
     <div class="pohead"><span class="who">${esc(x.author)}</span><span class="small">${esc(fmtTime(x.created_at))}</span><span class="grow"></span>
-      <button type="button" class="btn sm" data-po="copy" data-id="${x.id}">Copy</button>${acts(null)}</div>
+      ${edTag(x)}${canEditMsg(x) ? `<button type="button" class="btn sm" data-po="edit" data-id="${x.id}">Edit</button>` : ''}<button type="button" class="btn sm" data-po="copy" data-id="${x.id}">Copy</button>${acts(null)}</div>
     <ol class="popts">${pts.map((t, i) => `<li><div class="poline"><div class="ptxt">${roomLinks(t)}</div>${acts(i)}</div>${extra(i)}</li>`).join('')}</ol>
     ${gen ? `<div class="pogen">${gen}</div>` : ''}</div>`;
 }
@@ -3272,6 +3289,24 @@ async function copyText(t){
   if (!done) { const ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
     document.body.appendChild(ta); ta.select(); try { done = document.execCommand('copy'); } catch {} ta.remove(); }
   toast(done ? 'Copied. Paste it anywhere.' : "Couldn't copy on this phone. Press and hold the text to copy it.", done ? 'new' : '');
+}
+// edit a chat message, a guest note or a pass-on (who wrote it, or a manager)
+const MEDERR = { NOT_ALLOWED: 'Only who wrote it or a manager can edit it.', BODY_REQUIRED: 'Write the message first.',
+  POINTS_IN_USE: 'A point with a comment or an alarm can\'t be removed. Keep the same number of lines or more.', NOT_FOUND: 'That message is no longer here.' };
+function editMessage(m){
+  const po = m.kind === 'handoff';
+  openModal(`<h2>${po ? 'Edit pass-on' : 'Edit message'}</h2>${po ? '<p class="hint">One point per line.</p>' : ''}
+    <form id="meForm"><div class="field"><textarea id="meText" rows="${po ? 6 : 4}" maxlength="1000" aria-label="Message"></textarea></div>
+    <div class="err" id="meErr" role="alert"></div>
+    <div class="btnrow" style="margin-top:10px"><button class="btn pri" type="submit" id="meSave">Save changes</button><button class="btn" type="button" data-close>Close</button></div></form>`);
+  $('#meText').value = m.body || ''; $('#meText').focus();
+  $('#meForm').onsubmit = async e => { e.preventDefault(); const v = $('#meText').value.trim(); $('#meErr').textContent = '';
+    if (!v && !m.has_photo) { $('#meErr').textContent = tr(MEDERR.BODY_REQUIRED); return; }
+    const btn = $('#meSave'); btn.disabled = true;
+    try { const r = await call('sc_message_edit', {p_message: m.id, p_body: v, p_rooms: findRooms(' ' + norm(v) + ' ').map(x => x.room)});
+      closeModal(); toast(r && r.changed ? 'Message updated.' : 'Nothing changed.', r && r.changed ? 'new' : '');
+      if (r && r.changed) { refresh(); if (po || S.tab === 'passon') loadPassons(); } }
+    catch (err) { $('#meErr').textContent = tr(MEDERR[err.message] || err.message); btn.disabled = false; } };
 }
 function poFind(id){ return S.po.find(x => x.id === id); }
 function poPtLabel(x, pt){ return pt === null ? x.author + ' · ' + fmtTime(x.created_at) : poPoints(x.body)[pt]; }
@@ -3342,6 +3377,7 @@ $('#view-passon').addEventListener('click', e => {
   const x = poFind(b.dataset.id); if (!x) return;
   const pt = b.dataset.pt === '' || b.dataset.pt == null ? null : +b.dataset.pt;
   if (b.dataset.po === 'copy') return copyText(poText(x));
+  if (b.dataset.po === 'edit') return editMessage({...x, kind: 'handoff'});
   if (b.dataset.po === 'comment') return poCommentModal(x, pt);
   if (b.dataset.po === 'alarm') return poAlarmModal(x, pt);
 });
