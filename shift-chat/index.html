@@ -422,6 +422,14 @@ html[data-theme="dark"] body[data-hotel="HWY"]{--hotel:#60A5FA;--hotel-soft:#142
 .tabs button[aria-selected="true"]::after{background:var(--hotel)!important}
 .tabs .tic .cnt{position:absolute;top:-3px;right:-4px;margin:0!important}
 .gearbtn{display:inline-flex;align-items:center;gap:6px}
+.ticker{overflow:hidden;background:var(--surface);border-bottom:1px solid var(--line);height:26px;display:flex;align-items:center;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.tk-track{display:flex;width:max-content;animation:tkmove 28s linear infinite}
+.tk-i{display:inline-flex;align-items:center;gap:10px;padding-right:10px;white-space:nowrap;font-size:12px;font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.tk-i b{font-weight:700;color:var(--ink)}
+.tk-i .tk-t{color:var(--hotel)}
+.tk-i i{width:5px;height:5px;border-radius:50%;background:var(--hotel);opacity:.7;flex:none}
+@keyframes tkmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.tk-track{animation:none}}
 @media (max-width:899px){ .tabs .tl{white-space:normal;text-align:center;max-width:84px;font-size:11.5px} .tabs button{padding-inline:2px!important;min-width:0} }
 .gearbtn svg{width:16px;height:16px}
 .brand .bt{position:relative}
@@ -673,6 +681,7 @@ body{letter-spacing:0;font-feature-settings:normal}
     <button class="iconbtn" id="soundBtn" aria-label="Sound on" title="Sound for new orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path id="soundWave" d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg></button>
     <button class="iconbtn" id="roomsBtn" aria-label="Search a room" title="Search a room"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
   </header>
+  <div class="ticker" id="ticker" aria-label="Date and time" data-noi18n><div class="tk-track"><span class="tk-i"><b class="tk-d"></b><i></i><b class="tk-t"></b><i></i><span class="tk-s"></span><i></i></span><span class="tk-i"><b class="tk-d"></b><i></i><b class="tk-t"></b><i></i><span class="tk-s"></span><i></i></span><span class="tk-i"><b class="tk-d"></b><i></i><b class="tk-t"></b><i></i><span class="tk-s"></span><i></i></span><span class="tk-i"><b class="tk-d"></b><i></i><b class="tk-t"></b><i></i><span class="tk-s"></span><i></i></span></div></div>
   <nav class="tabs" role="tablist" id="tabs">
     <button role="tab" data-tab="chat" aria-selected="true"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span class="tl">Chat</span></button>
     <button role="tab" data-tab="passon" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"/></svg><span class="cnt" id="poCnt"></span></span><span class="tl">Pass-on</span></button>
@@ -1941,6 +1950,18 @@ $('#hotelSel').addEventListener('change', async e => {
     setTimeout(() => reloadPage(), 250);
   } catch (err) { e.target.value = S.hotel.id; toast(esc(err.message)); }
 });
+
+/* ===== ticker: today's date, the time and the shift ===== */
+function tickTicker(){
+  const now = Date.now(), loc = LANG === 'es' ? 'es-US' : 'en-US';
+  let d = new Date(now).toLocaleDateString(loc, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: TZ});
+  d = d.charAt(0).toUpperCase() + d.slice(1);
+  const t = fmtTime(now), sh = tr(shiftOf(now));
+  document.querySelectorAll('#ticker .tk-i').forEach(x => {
+    x.querySelector('.tk-d').textContent = d; x.querySelector('.tk-t').textContent = t; x.querySelector('.tk-s').textContent = sh;
+  });
+}
+tickTicker(); setInterval(tickTicker, 10000);
 
 /* ===== sync ===== */
 let busy = false, timer = null, failCount = 0;
