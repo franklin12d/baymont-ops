@@ -789,6 +789,23 @@ body{letter-spacing:0;font-feature-settings:normal}
 /* messages always on white, also in dark mode (Franklin, Nov 10): the feed keeps the light colors */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .feed{--feedbg:#FFFFFF;--bub:#EEF0F4;--bub-ink:#0E1726;--surface:#FFFFFF;--surface-2:#F2F3F9;--line:#E3E6EF;--ink:#0F172A;--ink-2:#475569;--ink-3:#8A94A6;--accent:#635BFF;--accent-ink:#FFFFFF;--accent-soft:#EEEDFF;--urgent:#E0383E;--urgent-soft:#FDECEC;--high:#D97706;--high-soft:#FEF3E2;--ok:#059669;--ok-soft:#E3F7EF;--note:#FFF8E1;--note-line:#F1DE9A;--handoff:#F1EEFF;--handoff-line:#D3CBFB;--r-fd:#3B82F6;--r-hk:#0E9F8E;--r-hm:#5C9A12;--r-eng:#E5730F;--r-mgr:#635BFF;--shadow:0 1px 2px rgba(14,23,38,.05),0 6px 20px rgba(14,23,38,.06);color-scheme:light;color:var(--ink)}}
 :root[data-theme="dark"] .feed{--feedbg:#FFFFFF;--bub:#EEF0F4;--bub-ink:#0E1726;--surface:#FFFFFF;--surface-2:#F2F3F9;--line:#E3E6EF;--ink:#0F172A;--ink-2:#475569;--ink-3:#8A94A6;--accent:#635BFF;--accent-ink:#FFFFFF;--accent-soft:#EEEDFF;--urgent:#E0383E;--urgent-soft:#FDECEC;--high:#D97706;--high-soft:#FEF3E2;--ok:#059669;--ok-soft:#E3F7EF;--note:#FFF8E1;--note-line:#F1DE9A;--handoff:#F1EEFF;--handoff-line:#D3CBFB;--r-fd:#3B82F6;--r-hk:#0E9F8E;--r-hm:#5C9A12;--r-eng:#E5730F;--r-mgr:#635BFF;--shadow:0 1px 2px rgba(14,23,38,.05),0 6px 20px rgba(14,23,38,.06);color-scheme:light;color:var(--ink)}
+
+/* v1.1: version, update banner, offline banner, keyboard focus */
+.sysbar{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 8px);z-index:90;display:flex;align-items:center;gap:10px;
+  max-width:calc(100vw - 32px);padding:8px 10px 8px 14px;border-radius:12px;font-size:13.5px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.22)}
+.sysbar[hidden]{display:none}
+.sysbar.upd{background:#635BFF;color:#fff}
+.sysbar.off{background:#B42318;color:#fff;padding-right:14px}
+.sysbar button{border:0;border-radius:8px;padding:6px 12px;font:inherit;font-weight:700;background:#fff;color:#3F37C9;cursor:pointer}
+.sysbar button.x{background:transparent;color:#fff;padding:6px 8px}
+.verrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.verrow .vtag{font-weight:700;font-variant-numeric:tabular-nums}
+.wnlist{margin:8px 0 0;padding:0;list-style:none;max-height:58vh;overflow:auto}
+.wnlist li{padding:10px 0;border-top:1px solid var(--line)}
+.wnlist li:first-child{border-top:0}
+.wnlist .wv{font-weight:700}.wnlist .wd{color:var(--ink-3);font-size:12.5px;margin-left:6px}
+.wnlist ul{margin:4px 0 0 18px;padding:0}.wnlist ul li{border:0;padding:2px 0}
+button:focus-visible,a:focus-visible,[role="button"]:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #635BFF;outline-offset:2px}
 </style>
 </head>
 <body>
@@ -1328,7 +1345,7 @@ const ES = {
 "Play new order": "Probar orden nueva",
 "Play urgent": "Probar urgente",
 "On a shared phone or computer, sign out at the end of your shift.": "En un teléfono o computadora compartida, cierra sesión al terminar tu turno.",
-"Sign out": "Cerrar sesión",
+"Sign out": "Cerrar sesión", "About": "Acerca de", "What's new": "Novedades",
 "Photo removed": "Foto quitada",
 "Photo saved": "Foto guardada",
 "Photo not saved:": "La foto no se guardó:",
@@ -2385,13 +2402,20 @@ async function refresh(){
     $('#teamCnt').textContent = S.resets.length || '';
     if (newSound) chime(newSound); else if (editSound) chime('edit'); else if (doneSound) fx('done'); else if (startSound) fx('start'); else if (newMsg && pipOn() && onShift()) pip();
     syncAvatars();
-    render(); S.firstLoad = false; failCount = 0;
+    const sig = JSON.stringify(d);
+    if (S.firstLoad || sig !== S.lastSig) { S.lastSig = sig; render(); }
+    S.firstLoad = false; failCount = 0;
     renderAlarmBar(); pollAlarms(); if (S.tab === 'passon' && Date.now() - S.poAt > 20000) loadPassons();
   } catch (e) {
     if (S.token && ++failCount === 3) toast('Connection problem. Retrying…');
   } finally { busy = false; }
 }
-function startPolling(){ clearInterval(timer); timer = setInterval(() => { if (document.visibilityState === 'visible') refresh(); }, 4000); }
+let lastAct = Date.now(), idleTick = 0;
+['pointerdown', 'keydown', 'touchstart', 'wheel'].forEach(ev => document.addEventListener(ev, () => { lastAct = Date.now(); }, {passive: true, capture: true}));
+// every 4 seconds while someone uses the screen, every 8 when it sits idle (a front desk computer left open)
+function startPolling(){ clearInterval(timer); timer = setInterval(() => {
+  if (document.visibilityState !== 'visible' || navigator.onLine === false) return;
+  if (Date.now() - lastAct < 180e3 || ++idleTick % 2 === 0) refresh(); }, 4000); }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { S.alarmAt = 0; refresh(); } });
 if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', () => refresh());
 
@@ -3275,6 +3299,7 @@ function openSettings(){
   <div class="sect setsect"><h3>Chat pip</h3><p class="hint">A soft pip for each new chat message. Alerts meant for you keep their own tone.</p>${segHtml('pip', pipOn() ? 'on' : 'off', [['on', 'On'], ['off', 'Off']])}</div>
   <div class="sect setsect"><h3>Language</h3>${segHtml('lang', LANG, [['en', 'English'], ['es', 'Español']])}</div>
   <div class="sect setsect"><h3>Appearance</h3>${segHtml('theme', THEME, [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']])}</div>
+  <div class="sect setsect"><h3>About</h3><div class="verrow"><span>FrankShift <span class="vtag" data-noi18n>v${APP_VERSION}</span></span><button class="btn sm" id="sNew">What's new</button></div></div>
   <div class="btnrow" style="margin-top:16px"><button class="btn" data-close>Close</button></div>`);
   call('sc_profile_get', {}).then(pf => {
     if (!$('#pfForm') || !pf) return;
@@ -3284,6 +3309,7 @@ function openSettings(){
   $('#sPhoto').onclick = () => pickAvatar(null);
   if ($('#sPhotoDel')) $('#sPhotoDel').onclick = async () => { try { await call('sc_avatar_set', {p_staff: null, p_data: null}); closeModal(); toast('Photo removed'); refresh(); } catch (err) { toast(esc(err.message)); } };
   $('#sPin').onclick = () => openChangePin();
+  $('#sNew').onclick = () => openWhatsNew();
   wireAlerts();
   $('#pfForm').onsubmit = async ev => {
     ev.preventDefault(); $('#pfErr').textContent = '';
@@ -3838,6 +3864,65 @@ $('#view-dash').addEventListener('dragleave', e => { const z = e.target.closest(
 $('#view-dash').addEventListener('drop', e => { const z = e.target.closest('[data-dpdf]'); if (!z) return; e.preventDefault(); z.classList.remove('over'); dashTakePdf(e.dataTransfer && e.dataTransfer.files); });
 window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.tab === 'orders') setTab('orders'); });
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
+
+/* ===== v1.1: version, what's new, update banner, offline banner ===== */
+const APP_VERSION = '1.1.0';
+const CHANGES = [
+  {v: '1.1.0', d: '2026-11-10', en: ['Version number and What\'s new in Settings', 'A banner offers the new version as soon as it is published', 'A red banner when the phone loses connection; the app catches up when it\'s back', 'Lighter on data: the screen only redraws when something changed, and an idle screen checks every 8 seconds', 'Keyboard focus is easier to see on computers'],
+    es: ['Número de versión y Novedades en Ajustes', 'Un aviso ofrece la versión nueva apenas se publica', 'Un aviso rojo cuando el teléfono pierde conexión; la app se pone al día al volver', 'Gasta menos datos: la pantalla solo se redibuja si algo cambió, y una pantalla sin uso revisa cada 8 segundos', 'En computadora se ve mejor dónde está el foco del teclado']},
+  {v: '1.0.0', d: '2026-11-10', en: ['Edit chat messages and pass-ons', 'Pass-ons in their own tab', 'Desktop dashboard in Orders with the hotel numbers from the PMS reports', 'White chat background', '"Clean vacant / put in the system" becomes one Front Desk order for SynXis'],
+    es: ['Editar mensajes y pass-ons', 'Pass-ons en su propia pestaña', 'Tablero de escritorio en Órdenes con los números del PMS', 'Fondo blanco en el chat', '"Limpia vacante / poner en sistema" crea una sola orden para Front Desk en SynXis']},
+  {v: '0.9.0', d: '2026-11-10', en: ['Maingate map with tickets by status', 'Lost & Found', 'Order detail, calendar, schedule and edit orders', 'Engineering alerts'],
+    es: ['Mapa de Maingate con tickets por estado', 'Objetos perdidos', 'Detalle de orden, calendario, programar y editar órdenes', 'Alertas de ingeniería']},
+  {v: '0.8.0', d: '2026-11-10', en: ['Hold a message to react', 'Different vibration for order, urgent and alarm', 'Install app button and phone status for managers'],
+    es: ['Mantener presionado un mensaje para reaccionar', 'Vibración distinta para orden, urgente y alarma', 'Botón para instalar la app y estado de teléfonos para gerentes']},
+  {v: '0.7.0', d: '2026-11-10', en: ['Three hotels with a hotel switch and access per person', 'Hotel colors, tab icons, room search, date and shift ticker'],
+    es: ['Tres hoteles con cambio de hotel y acceso por persona', 'Colores por hotel, íconos, búsqueda de habitación, fecha y turno']},
+  {v: '0.6.0', d: '2026-11-09', en: ['Swipe a message to reply', 'Team search and invite link for managers'],
+    es: ['Deslizar un mensaje para responder', 'Búsqueda de equipo e invitación para gerentes']},
+  {v: '0.5.0', d: '2026-11-09', en: ['Orders for lobby, restrooms, breakfast, parking and pool', 'Pass-on log with comments and alarms'],
+    es: ['Órdenes para lobby, baños, desayuno, parqueo y piscina', 'Registro de pass-on con comentarios y alarmas']},
+  {v: '0.4.0', d: '2026-11-09', en: ['New name FrankShift and new look', 'English and Spanish', 'Alerts with the app closed and a setup guide'],
+    es: ['Nuevo nombre FrankShift y nuevo diseño', 'Inglés y español', 'Alertas con la app cerrada y guía para activarlas']},
+  {v: '0.3.0', d: '2026-11-09', en: ['Profile photos, first PIN and PIN reset requests', 'Photos in chat with reactions'],
+    es: ['Fotos de perfil, primer PIN y pedir PIN nuevo', 'Fotos en el chat con reacciones']},
+  {v: '0.2.0', d: '2026-11-08', en: ['@mentions with team alerts', 'On-shift switch', 'Own alert tones'],
+    es: ['@menciones con alertas al equipo', 'Interruptor de turno', 'Tonos de alerta propios']},
+  {v: '0.1.0', d: '2026-11-08', en: ['First version at Maingate: shift chat, orders panel, handoffs'],
+    es: ['Primera versión en Maingate: chat de turnos, panel de órdenes y entregas de turno']},
+];
+function openWhatsNew(){
+  const es = LANG === 'es';
+  openModal(`<h2>${es ? 'Novedades' : "What's new"}</h2><ol class="wnlist" data-noi18n>${CHANGES.map(c =>
+    `<li><span class="wv">v${esc(c.v)}</span><span class="wd">${esc(fmtDate(Date.parse(c.d + 'T12:00:00Z')))}</span><ul>${(es ? c.es : c.en).map(x => `<li>${esc(x)}</li>`).join('')}</ul></li>`).join('')}</ol>
+  <div class="btnrow" style="margin-top:12px"><button class="btn" data-close>${es ? 'Cerrar' : 'Close'}</button></div>`);
+}
+const sysBar = (id, cls) => { let b = document.getElementById(id); if (!b) { b = document.createElement('div'); b.id = id; b.className = 'sysbar ' + cls; b.hidden = true; b.setAttribute('role', 'status'); b.setAttribute('data-noi18n', ''); document.body.appendChild(b); } return b; };
+const newer = (a, b) => { const x = String(a).split('.').map(Number), y = String(b).split('.').map(Number); for (let i = 0; i < 3; i++) { if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0); } return false; };
+let verAt = 0, verSkip = '';
+async function checkVersion(){
+  if (Date.now() - verAt < 60e3) return; verAt = Date.now();
+  try {
+    const r = await fetch('version.json?t=' + Date.now(), {cache: 'no-store'}); if (!r.ok) return;
+    const v = String((await r.json()).version || '');
+    if (!/^\d+\.\d+\.\d+$/.test(v) || !newer(v, APP_VERSION) || v === verSkip) return;
+    const b = sysBar('updBar', 'upd'), es = LANG === 'es';
+    b.innerHTML = `<span>${es ? 'Nueva versión' : 'New version'} v${esc(v)}</span><button type="button" data-upd>${es ? 'Actualizar' : 'Update'}</button><button type="button" class="x" data-later aria-label="${es ? 'Después' : 'Later'}">✕</button>`;
+    b.querySelector('[data-upd]').onclick = () => { location.replace(location.pathname + '?v=' + encodeURIComponent(v) + location.hash); };
+    b.querySelector('[data-later]').onclick = () => { verSkip = v; b.hidden = true; };
+    b.hidden = false;
+  } catch {}
+}
+function netState(){
+  const b = sysBar('offBar', 'off'), off = navigator.onLine === false;
+  if (off) b.textContent = L2("No connection. Messages won't send until it's back.", 'Sin conexión. Los mensajes no salen hasta que vuelva.');
+  b.hidden = !off;
+}
+window.addEventListener('offline', netState);
+window.addEventListener('online', () => { netState(); if (S.token) refresh(); });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkVersion(); });
+setInterval(() => { if (document.visibilityState === 'visible') checkVersion(); }, 15 * 60e3);
+netState(); setTimeout(checkVersion, 3000);
 if (S.token && S.me) enterApp(); else showLogin();
 })();
 </script>
