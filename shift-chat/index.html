@@ -786,6 +786,9 @@ body{letter-spacing:0;font-feature-settings:normal}
   .kinds{gap:6px}
   .kinds button{font-size:13px;padding:6px 13px;line-height:19px}
 }
+/* messages always on white, also in dark mode (Franklin, Nov 10): the feed keeps the light colors */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .feed{--feedbg:#FFFFFF;--bub:#EEF0F4;--bub-ink:#0E1726;--surface:#FFFFFF;--surface-2:#F2F3F9;--line:#E3E6EF;--ink:#0F172A;--ink-2:#475569;--ink-3:#8A94A6;--accent:#635BFF;--accent-ink:#FFFFFF;--accent-soft:#EEEDFF;--urgent:#E0383E;--urgent-soft:#FDECEC;--high:#D97706;--high-soft:#FEF3E2;--ok:#059669;--ok-soft:#E3F7EF;--note:#FFF8E1;--note-line:#F1DE9A;--handoff:#F1EEFF;--handoff-line:#D3CBFB;--r-fd:#3B82F6;--r-hk:#0E9F8E;--r-hm:#5C9A12;--r-eng:#E5730F;--r-mgr:#635BFF;--shadow:0 1px 2px rgba(14,23,38,.05),0 6px 20px rgba(14,23,38,.06);color-scheme:light;color:var(--ink)}}
+:root[data-theme="dark"] .feed{--feedbg:#FFFFFF;--bub:#EEF0F4;--bub-ink:#0E1726;--surface:#FFFFFF;--surface-2:#F2F3F9;--line:#E3E6EF;--ink:#0F172A;--ink-2:#475569;--ink-3:#8A94A6;--accent:#635BFF;--accent-ink:#FFFFFF;--accent-soft:#EEEDFF;--urgent:#E0383E;--urgent-soft:#FDECEC;--high:#D97706;--high-soft:#FEF3E2;--ok:#059669;--ok-soft:#E3F7EF;--note:#FFF8E1;--note-line:#F1DE9A;--handoff:#F1EEFF;--handoff-line:#D3CBFB;--r-fd:#3B82F6;--r-hk:#0E9F8E;--r-hm:#5C9A12;--r-eng:#E5730F;--r-mgr:#635BFF;--shadow:0 1px 2px rgba(14,23,38,.05),0 6px 20px rgba(14,23,38,.06);color-scheme:light;color:var(--ink)}
 </style>
 </head>
 <body>
