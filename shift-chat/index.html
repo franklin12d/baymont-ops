@@ -439,6 +439,13 @@ html[data-theme="dark"] body[data-hotel="HWY"]{--hotel:#60A5FA;--hotel-soft:#142
 .acc label{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:3px 9px;background:var(--surface)}
 .acc label.home{opacity:.7}
 .pill.from{background:var(--accent-soft);color:var(--accent)}
+.devst{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.devsum{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--surface-2);border-radius:14px;padding:10px 12px;margin-bottom:10px}
+.devnums{display:flex;gap:18px}
+.devnums div{display:grid;grid-template-columns:auto auto;column-gap:5px;align-items:baseline}
+.devnums b{font-size:22px;line-height:1.1}
+.devnums span{font-size:12px;color:var(--ink-3)}
+.devnums small{grid-column:1/-1;font-size:12px;color:var(--ink-2)}
 .tsearch{display:flex;align-items:center;gap:10px;margin-bottom:10px;position:sticky;top:0;z-index:2;background:var(--surface);padding:4px 0}
 .tsearch input{flex:1;min-width:0;font:inherit;font-size:16px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink)}
 .tsearch .small{white-space:nowrap}
@@ -701,6 +708,7 @@ body{letter-spacing:0;font-feature-settings:normal}
     <button role="tab" data-tab="team" aria-selected="false" id="teamTab" hidden><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="cnt" id="teamCnt"></span></span><span class="tl">Manager</span></button>
   </nav>
   <div class="banner" id="pushBanner" hidden><span class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span><span class="grow" id="pushText"></span><button class="btn sm pri" id="pushBtn">Turn on</button><button class="linkbtn" id="pushLater">Not now</button></div>
+  <div class="banner" id="installBanner" hidden><span class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 7v7"/><path d="m9 11 3 3 3-3"/><path d="M10 18h4"/></svg></span><span class="grow" id="installText"></span><button class="btn sm pri" id="installBtn">Install</button><button class="linkbtn" id="installLater">Not now</button></div>
 
   <div class="alarmbar" id="alarmBar" role="alert" hidden></div>
   <div class="main" id="main" data-tab="chat">
@@ -798,7 +806,7 @@ body{letter-spacing:0;font-feature-settings:normal}
       <div class="err" id="sfErr"></div>
       <button class="btn pri" type="submit">Add to team</button>
     </form>
-    <div class="card"><h2>Team at <span id="teamHotel"></span></h2><p class="small" style="margin:-4px 0 10px">Each person signs in with their user. New users and PIN resets start with 0000, and the app asks them to pick their own PIN.</p><div class="btnrow" style="margin-bottom:10px"><button class="btn sm" id="usersCsv">Download user list</button></div><div class="tsearch"><input id="teamSearch" type="search" placeholder="Search name or user" aria-label="Search the team" autocomplete="off"><span class="small" id="teamFound"></span></div><div class="list" id="staffList"></div></div>
+    <div class="card"><h2>Team at <span id="teamHotel"></span></h2><p class="small" style="margin:-4px 0 10px">Each person signs in with their user. New users and PIN resets start with 0000, and the app asks them to pick their own PIN.</p><div class="btnrow" style="margin-bottom:10px"><button class="btn sm" id="usersCsv">Download user list</button></div><div class="devsum" id="devSum" hidden></div><div class="tsearch"><input id="teamSearch" type="search" placeholder="Search name or user" aria-label="Search the team" autocomplete="off"><span class="small" id="teamFound"></span></div><div class="list" id="staffList"></div></div>
   </div></section>
 </div>
 
@@ -1081,6 +1089,35 @@ const ES = {
 "Edit": "Editar",
 "Also alerts for:": "También avisos de:",
 "Switch hotel": "Cambiar de hotel",
+"Install": "Instalar",
+"Install app": "Instalar app",
+"Install FrankShift": "Instalar FrankShift",
+"App": "App",
+"On iPhone, alerts only work when FrankShift is on the Home Screen.": "En iPhone, los avisos solo funcionan cuando FrankShift está en la pantalla de inicio.",
+"Install FrankShift on this phone. It opens like an app and alerts work better.": "Instala FrankShift en este teléfono. Se abre como una app y los avisos funcionan mejor.",
+"FrankShift is already installed on this phone.": "FrankShift ya está instalada en este teléfono.",
+"FrankShift is installed. Open it from its icon.": "FrankShift está instalada. Ábrela desde su ícono.",
+"FrankShift is installed and open as an app.": "FrankShift está instalada y abierta como app.",
+"You are using FrankShift in the browser.": "Estás usando FrankShift en el navegador.",
+"It takes a few seconds and FrankShift then opens like any other app.": "Toma unos segundos y luego FrankShift se abre como cualquier otra app.",
+"Tap the menu button at the bottom right of the browser.": "Toca el botón de menú abajo a la derecha del navegador.",
+"Choose Add page to, then Home screen.": "Elige Agregar página a, y luego Pantalla de inicio.",
+"Open FrankShift from the new icon on your home screen.": "Abre FrankShift desde el ícono nuevo en tu pantalla de inicio.",
+"Tap the menu button (three dots) at the top right of Chrome.": "Toca el botón de menú (tres puntos) arriba a la derecha de Chrome.",
+"Choose Install app or Add to Home screen.": "Elige Instalar app o Agregar a la pantalla de inicio.",
+"In Chrome or Edge, click the install icon at the right end of the address bar.": "En Chrome o Edge, haz clic en el ícono de instalar al final de la barra de direcciones.",
+"Choose Install.": "Elige Instalar.",
+"Open FrankShift from its new icon.": "Abre FrankShift desde su ícono nuevo.",
+"Alerts on": "Avisos activos",
+"Alerts blocked": "Avisos bloqueados",
+"Needs Home Screen": "Falta pantalla de inicio",
+"Alerts off": "Avisos apagados",
+"Not opened yet": "Aún no la abre",
+"App installed": "App instalada",
+"Browser only": "Solo navegador",
+"of": "de",
+"Show who is missing alerts": "Ver a quién le faltan avisos",
+"Show everyone": "Ver a todos",
 "Search a room": "Buscar una habitación",
 "Can use:": "Puede usar:",
 "From": "De",
@@ -2316,19 +2353,39 @@ async function loadTeam(){
   if (S.me.role !== 'mgr') return;
   $('#teamHotel').textContent = S.hotel ? S.hotel.name : '';
   try {
-    const [rep, staff] = await Promise.all([call('sc_report', {p_days: 7}), call('sc_staff_admin', {})]);
+    const [rep, staff, dev] = await Promise.all([call('sc_report', {p_days: 7}), call('sc_staff_admin', {}), call('sc_device_status', {}).catch(() => null)]);
+    S.dev = {}; (dev || []).forEach(d => { S.dev[d.id] = d; });
     $('#repTable').innerHTML = '<tr><th>Hotel</th><th>Open now</th><th>New</th><th>Done</th><th>Avg time</th><th>Lost items</th><th>90+ days</th></tr>' +
       rep.map(r => `<tr><td>${esc(r.hotel)}</td><td>${r.open}</td><td>${r.created}</td><td>${r.done}</td><td>${r.avg_minutes == null ? '–' : r.avg_minutes + ' min'}</td><td>${r.lost_held}</td><td>${r.lost_over_90}</td></tr>`).join('');
     $('#staffList').innerHTML = staff.map(s => `<div class="li withav" data-staff="${s.id}"><span class="av${avClass(s.id)}" style="background:${roleColor(s.role)}">${esc(initials(s.first_name + ' ' + s.last_name))}</span><div class="grow">
         <div class="t1">${esc(s.first_name)} ${esc(s.last_name)} <span class="uname">${esc(s.username || '')}</span> ${S.hotel && s.home && s.home !== S.hotel.id ? `<span class="pill from">${esc(tr('From'))} <span data-noi18n>${esc(hotelShort(s.home))}</span></span>` : ''} ${s.reset_requested && s.active ? '<span class="pill ask">Asked for PIN reset</span>' : ''} ${!s.active ? '<span class="pill">Inactive</span>' : s.locked ? '<span class="pill warn">Locked</span>' : s.pin_set ? '<span class="pill ok">PIN set</span>' : '<span class="pill">PIN 0000</span>'}</div>
-        <div class="t2">${s.last_seen ? 'Last seen ' + fmtDate(T(s.last_seen)) + ' ' + fmtTime(T(s.last_seen)) : 'Never signed in'}</div>${s.phone || s.email ? `<div class="t2" data-noi18n>${esc([s.phone, s.email].filter(Boolean).join(' · '))}</div>` : ''}
+        <div class="t2">${s.last_seen ? 'Last seen ' + fmtDate(T(s.last_seen)) + ' ' + fmtTime(T(s.last_seen)) : 'Never signed in'}</div>${devPills(s)}${s.phone || s.email ? `<div class="t2" data-noi18n>${esc([s.phone, s.email].filter(Boolean).join(' · '))}</div>` : ''}
         <div class="btnrow" style="margin-top:6px"><select class="btn sm" data-role>${ROLES.map(r => `<option value="${r.id}" ${r.id === s.role ? 'selected' : ''}>${r.label}</option>`).join('')}</select>
         <button class="btn sm" data-save>Save</button>${s.pin_set || s.locked || s.reset_requested ? `<button class="btn sm ${s.reset_requested ? 'pri' : ''}" data-reset>Reset PIN</button>` : ''}
         ${s.active ? '<button class="btn sm pri" data-share>Share</button>' : ''}<button class="btn sm" data-active="${s.active ? 0 : 1}">${s.active ? 'Deactivate' : 'Reactivate'}</button><button class="btn sm" data-photo>Photo</button></div>
         <div class="depts"><span>Also alerts for:</span>${DEPTS.map(d => `<label><input type="checkbox" data-dept="${d.id}" ${(s.depts || []).includes(d.id) ? 'checked' : ''}>${d.label}</label>`).join('')}</div>${accessHtml(s)}</div></div>`).join('');
     S.adminStaff = staff;
+    devSummary();
     filterTeam();
   } catch (e) { toast(esc(e.message)); }
+}
+function devPills(s){
+  const d = S.dev && S.dev[s.id]; if (!s.active || !d) return '';
+  const a = d.phones > 0 ? '<span class="pill ok">Alerts on</span>'
+    : d.alerts === 'blocked' ? '<span class="pill warn">Alerts blocked</span>'
+    : d.alerts === 'needs_install' ? '<span class="pill warn">Needs Home Screen</span>'
+    : d.checked ? '<span class="pill warn">Alerts off</span>' : '<span class="pill">Not opened yet</span>';
+  const i = d.installed ? '<span class="pill ok">App installed</span>' : d.checked ? '<span class="pill">Browser only</span>' : '';
+  return `<div class="devst">${a}${i}</div>`;
+}
+function devSummary(){
+  const box = $('#devSum'); const act = (S.adminStaff || []).filter(x => x.active && S.dev && S.dev[x.id]);
+  if (!act.length) { box.hidden = true; return; }
+  const on = act.filter(x => S.dev[x.id].phones > 0).length, inst = act.filter(x => S.dev[x.id].installed).length;
+  box.hidden = false;
+  box.innerHTML = `<div class="devnums"><div><b>${on}</b><span>${esc(tr('of'))} ${act.length}</span><small>Alerts on</small></div><div><b>${inst}</b><span>${esc(tr('of'))} ${act.length}</span><small>App installed</small></div></div>`
+    + `<button class="btn sm ${S.devMissing ? 'pri' : ''}" id="devMissing">${S.devMissing ? 'Show everyone' : 'Show who is missing alerts'}</button>`;
+  $('#devMissing').onclick = () => { S.devMissing = !S.devMissing; devSummary(); filterTeam(); };
 }
 const hotelShort = id => { const h = (S.hotels || []).find(x => x.id === id); return h ? h.name.replace(/^Developer Inn\s+/i, '') : id; };
 function accessHtml(s){
@@ -2354,7 +2411,7 @@ function filterTeam(){
   rows.forEach(r => {
     const s = (S.adminStaff || []).find(x => x.id === r.dataset.staff) || {};
     const hay = norm([s.first_name, s.last_name, s.username, s.first_name + ' ' + s.last_name].join(' '));
-    const show = !q || q.split(/\s+/).every(w => hay.includes(w));
+    const show = (!q || q.split(/\s+/).every(w => hay.includes(w))) && (!S.devMissing || (s.active && S.dev && S.dev[s.id] && !(S.dev[s.id].phones > 0)));
     r.hidden = !show; if (show) n++;
   });
   $('#teamFound').textContent = q ? (n === 1 ? '1 person' : n + ' people') : '';
@@ -2425,6 +2482,7 @@ const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
 function pushState(){
   const b = $('#pushBanner');
+  if (installState()) { b.hidden = true; return; }
   if (!('serviceWorker' in navigator)) { b.hidden = true; return; }
   if (Date.now() < ls.get('sc.pushLater', 0)) { b.hidden = true; return; }
   if (isIOS && !standalone) { b.hidden = false; $('#pushText').textContent = 'For alerts on iPhone, FrankShift needs to be on the Home Screen.'; $('#pushBtn').hidden = false; $('#pushBtn').textContent = 'Show me how'; return; }
@@ -2442,12 +2500,13 @@ async function enablePush(){
     if (!sub) sub = await reg.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: b64u(VAPID_PUBLIC)});
     const j = sub.toJSON();
     await call('sc_push_sub', {p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth});
-    ls.set('sc.pushOk', true); toast('Alerts are on for this phone'); pushState(); return true;
+    ls.set('sc.pushOk', true); toast('Alerts are on for this phone'); pushState(); reportDevice(); return true;
   } catch (e) { toast('Could not turn on alerts: ' + esc(e.message)); return false; }
 }
 async function resubscribe(){
   try { if (!('serviceWorker' in navigator) || Notification.permission !== 'granted') return;
-    const reg = await navigator.serviceWorker.ready; const sub = await reg.pushManager.getSubscription(); if (!sub) { ls.set('sc.pushOk', false); return; }
+    const reg = await navigator.serviceWorker.ready; let sub = await reg.pushManager.getSubscription();
+    if (!sub) { try { sub = await reg.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: b64u(VAPID_PUBLIC)}); } catch { ls.set('sc.pushOk', false); return; } }
     const j = sub.toJSON(); await call('sc_push_sub', {p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth}); ls.set('sc.pushOk', true);
   } catch {}
 }
@@ -2467,6 +2526,64 @@ if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catc
 
 /* ===== alert setup guide ===== */
 const isAndroid = /android/i.test(navigator.userAgent);
+
+/* ===== install the app, and check alerts every time it opens ===== */
+let installEvt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; pushState(); });
+window.addEventListener('appinstalled', () => { installEvt = null; ls.set('sc.installed', true); pushState(); reportDevice(true); toast('FrankShift is installed. Open it from its icon.', 'new'); });
+function installState(){
+  const b = $('#installBanner'); if (!b) return false;
+  const show = !!S.token && !standalone && !ls.get('sc.installed', false) && (isIOS || isAndroid || !!installEvt) && Date.now() > ls.get('sc.installLater', 0);
+  b.hidden = !show;
+  if (show) {
+    $('#installText').textContent = isIOS ? 'On iPhone, alerts only work when FrankShift is on the Home Screen.' : 'Install FrankShift on this phone. It opens like an app and alerts work better.';
+    $('#installBtn').textContent = isIOS ? 'Show me how' : 'Install';
+  }
+  return show;
+}
+async function installApp(){
+  if (standalone) { toast('FrankShift is already installed on this phone.'); return; }
+  if (installEvt) {
+    const ev = installEvt; installEvt = null;
+    try { await ev.prompt(); const r = await ev.userChoice; if (r && r.outcome === 'accepted') { ls.set('sc.installed', true); reportDevice(true); } } catch {}
+    pushState(); return;
+  }
+  if (isIOS) { openAlertWizard('install'); return; }
+  const samsung = /SamsungBrowser/i.test(navigator.userAgent);
+  const steps = isAndroid ? (samsung
+      ? ['Tap the menu button at the bottom right of the browser.', 'Choose Add page to, then Home screen.', 'Open FrankShift from the new icon on your home screen.']
+      : ['Tap the menu button (three dots) at the top right of Chrome.', 'Choose Install app or Add to Home screen.', 'Open FrankShift from the new icon on your home screen.'])
+    : ['In Chrome or Edge, click the install icon at the right end of the address bar.', 'Choose Install.', 'Open FrankShift from its new icon.'];
+  openModal(`<h2>Install FrankShift</h2><p class="lead">It takes a few seconds and FrankShift then opens like any other app.</p>${wizList(steps)}<div class="btnrow" style="margin-top:14px"><button class="btn pri" data-close>Got it</button></div>`);
+}
+$('#installBtn').onclick = () => installApp();
+$('#installLater').onclick = () => { ls.set('sc.installLater', Date.now() + 3 * 86400e3); pushState(); };
+function devId(){
+  let d = ls.get('sc.dev', '');
+  if (!/^[A-Za-z0-9_-]{8,40}$/.test(d)) { const a = new Uint8Array(16); (window.crypto || {}).getRandomValues ? crypto.getRandomValues(a) : a.forEach((_, i) => { a[i] = Math.random() * 256; });
+    d = Array.from(a, b => 'abcdefghijklmnopqrstuvwxyz0123456789'[b % 36]).join(''); ls.set('sc.dev', d); }
+  return d;
+}
+function alertsCode(){
+  if (isIOS && !standalone) return 'needs_install';
+  if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) return 'unsupported';
+  if (Notification.permission === 'denied') return 'blocked';
+  return alertsOn() ? 'on' : 'off';
+}
+const platform = () => isIOS ? 'iphone' : isAndroid ? 'android' : /Mobi/i.test(navigator.userAgent) ? 'other' : 'computer';
+async function reportDevice(inst){
+  if (!S.token) return;
+  try { await call('sc_device_seen', {p_device: devId(), p_installed: !!(inst || standalone), p_alerts: alertsCode(), p_platform: platform()}); } catch {}
+}
+let alertsCheckedAt = 0;
+async function checkAlerts(force){
+  if (!S.token || (!force && Date.now() - alertsCheckedAt < 20 * 60e3)) return;
+  alertsCheckedAt = Date.now();
+  await resubscribe(); pushState(); await reportDevice();
+}
+window.__fsCheckAlerts = checkAlerts;
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkAlerts(false); });
+function appLabel(){ return standalone ? 'FrankShift is installed and open as an app.' : 'You are using FrankShift in the browser.'; }
 const iosOtherBrowser = isIOS && /CriOS|FxiOS|EdgiOS|OPiOS/i.test(navigator.userAgent);
 function alertRoute(){
   if (isIOS && !standalone) return 'install';
@@ -2627,6 +2744,7 @@ $('#whoBtn').onclick = () => {
   <div><h2 style="margin:0">${esc(S.me.name)}</h2><p class="lead" style="margin:2px 0 8px">${esc(roleOf(S.me.role).label)} · ${esc(S.hotel ? S.hotel.name : '')}${S.me.username ? ` · User <span class="uname">${esc(S.me.username)}</span>` : ''}</p>
   <div class="btnrow"><button class="btn sm gearbtn" id="mSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></button><button class="btn sm gearbtn" id="reloadBtn" title="Refresh the app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg><span>Refresh</span></button></div></div></div>
   <div class="sect" style="margin-top:0;border-top:0;padding-top:0"><h3>Shift</h3><div class="shiftrow"><p class="hint" style="margin:0">${onShift() ? 'On shift: you get the alerts meant for you.' : 'Off shift: you only get urgent alerts.'}</p><button class="btn sm ${onShift() ? '' : 'pri'}" id="mShift">${onShift() ? 'Go off shift' : 'Start shift'}</button></div></div>
+  <div class="sect"><h3>App</h3><p class="hint">${esc(appLabel())}</p>${standalone ? '' : '<button class="btn sm pri" id="mInstall">Install app</button>'}</div>
   <div class="sect"><h3>Alerts</h3>${alertsHtml()}</div>
   <div class="sect"><h3>Sounds</h3><p class="hint">FrankShift has its own tone for new orders and a stronger one for urgent orders.</p>
   <div class="sound-test"><button class="btn sm" id="tNormal">Play new order</button><button class="btn sm" id="tUrgent">Play urgent</button><button class="btn sm" id="tPip">Play chat pip</button></div></div>
@@ -2635,6 +2753,7 @@ $('#whoBtn').onclick = () => {
   $('#soBtn').onclick = () => { closeModal(); signOut(false); };
   $('#mSettings').onclick = () => openSettings();
   $('#reloadBtn').onclick = reloadApp;
+  if ($('#mInstall')) $('#mInstall').onclick = () => { closeModal(); installApp(); };
   $('#mShift').onclick = async () => {
     try { const me = await call('sc_shift', {p_on: !onShift()}); S.me = {...S.me, ...me}; ls.set('sc.me', S.me); render(); closeModal();
       toast(onShift() ? 'Shift started. Alerts are on.' : 'Off shift. Only urgent alerts will reach you.'); }
@@ -2713,7 +2832,7 @@ $('#roomsBtn').onclick = () => { setTab('rooms'); setTimeout(() => { try { $('#r
 function enterApp(){
   $('#login').hidden = true; $('#app').hidden = false;
   $('#sfRole').innerHTML = ROLES.map(r => `<option value="${r.id}">${r.label}</option>`).join('');
-  setSoundIcon(); pushState(); resubscribe(); refresh(); startPolling(); maybeAlertWizard();
+  setSoundIcon(); pushState(); checkAlerts(true); refresh(); startPolling(); maybeAlertWizard();
   if (location.hash === '#orders') setTab('orders');
   if (location.hash === '#passon') setTab('passon');
   if (location.hash === '#team' && S.me && S.me.role === 'mgr') setTab('team');
