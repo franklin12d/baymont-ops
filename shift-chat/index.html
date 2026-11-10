@@ -780,7 +780,6 @@ body{letter-spacing:0;font-feature-settings:normal}
         <div class="kinds" role="group" aria-label="Message type">
           <button type="button" data-kind="chat" aria-pressed="true">Message</button>
           <button type="button" data-kind="note" aria-pressed="false">Guest note</button>
-          <button type="button" data-kind="handoff" aria-pressed="false">Shift handoff</button>
         </div>
         <div class="replybar" id="replyBar" hidden></div>
         <div class="pendphoto" id="pendPhoto" hidden><img id="pendImg" alt="Photo to send"><span class="grow">Photo ready to send</span><button type="button" class="linkbtn" id="pendDel">Remove</button></div>
@@ -1057,6 +1056,7 @@ const ES = {
 "People": "Personas",
 "Choose a person": "Elige una persona",
 "No messages in the last 3 days. Write the first one below: a guest request, a guest note, or your shift handoff.": "No hay mensajes en los últimos 3 días. Escribe el primero abajo: un pedido de huésped, una nota o tu entrega de turno.",
+"No messages in the last 3 days. Write the first one below: a guest request or a guest note.": "No hay mensajes en los últimos 3 días. Escribe el primero abajo: un pedido de huésped o una nota.",
 "Front Desk": "Recepción",
 "Front desk": "Recepción",
 "Housekeeper": "Camarista",
@@ -1458,6 +1458,7 @@ const ES = {
 "Today": "Hoy",
 "Yesterday": "Ayer",
 "No pass-ons in these days. Write the first one above, or send a Shift handoff in the chat.": "No hay entregas en estos días. Escribe la primera arriba, o manda una Entrega de turno en el chat.",
+"No pass-ons in these days. Write the first one above.": "No hay entregas en estos días. Escribe la primera arriba.",
 "Shift pass-on": "Entrega de turno",
 "Comments": "Comentarios",
 "Copied. Paste it anywhere.": "Copiado. Pégalo donde quieras.",
@@ -1863,12 +1864,13 @@ function renderFeed(){
   const feed = $('#feed'); const nearBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 120;
   const byMsg = {}; S.orders.forEach(o => (byMsg[o.message_id] = byMsg[o.message_id] || []).push(o));
   let html = '', last = '';
-  if (!S.messages.length) html = '<div class="empty">No messages in the last 3 days. Write the first one below: a guest request, a guest note, or your shift handoff.</div>';
+  const list = S.messages.filter(m => m.kind !== 'handoff');
+  if (!list.length) html = '<div class="empty">No messages in the last 3 days. Write the first one below: a guest request or a guest note.</div>';
   const shOf = m => dayNY(m.created_at) + shiftOf(m.created_at);
   const grp = (a, b) => !!(a && b && a.staff_id === b.staff_id && a.kind === 'chat' && b.kind === 'chat' && b.created_at - a.created_at < 5 * 60e3 && shOf(a) === shOf(b));
-  S.messages.forEach((m, i) => {
+  list.forEach((m, i) => {
     const sh = shOf(m);
-    const cont = grp(S.messages[i - 1], m), more = grp(m, S.messages[i + 1]);
+    const cont = grp(list[i - 1], m), more = grp(m, list[i + 1]);
     const pop = !S.firstLoad && S.rendered && !S.rendered.has(m.id) ? ' pop' : '';
     if (sh !== last) { html += `<div class="shiftdiv">${esc(fmtDate(m.created_at))} · ${esc(shiftOf(m.created_at))}</div>`; last = sh; }
     const mine = m.staff_id === S.me.id; const tome = mentionsMe(m);
@@ -2086,6 +2088,7 @@ function markMentions(html, m){
 }
 function readBy(r){ r = r || []; if (!r.length) return 'not read yet'; return 'read by ' + (r.length <= 3 ? esc(r.map(n => n.split(' ')[0]).join(', ')) : r.length); }
 function renderPins(){
+  $('#pins').hidden = true; return; // Franklin, Nov 10: the chat stays clean; notes show in the chat, pass-ons in their own tab
   const since = Date.now() - 24*3600e3;
   const pins = S.messages.filter(m => m.kind !== 'chat' && m.created_at > since).sort((a, b) => b.created_at - a.created_at);
   $('#pins').hidden = !pins.length;
@@ -2093,9 +2096,9 @@ function renderPins(){
   $('#pinList').innerHTML = pins.map(p => `<div class="pin ${p.kind}"><div class="meta">${p.kind === 'note' ? 'Guest note' : 'Handoff'} · ${esc(p.author)} · ${fmtTime(p.created_at)} · ${readBy(p.read_by)}</div>${roomLinks(p.body)}</div>`).join('');
 }
 function markRead(){
-  if (S.tab !== 'chat' && window.matchMedia('(max-width:899px)').matches) return;
   if (document.visibilityState !== 'visible') return;
-  const ids = S.messages.filter(m => m.kind !== 'chat' && !(m.read_by || []).includes(S.me.name) && !S.readSent.has(m.id)).map(m => m.id);
+  const chatOn = S.tab === 'chat' || !window.matchMedia('(max-width:899px)').matches, poOn = S.tab === 'passon';
+  const ids = S.messages.filter(m => ((m.kind === 'note' && chatOn) || (m.kind === 'handoff' && poOn)) && !(m.read_by || []).includes(S.me.name) && !S.readSent.has(m.id)).map(m => m.id);
   if (!ids.length) return;
   ids.forEach(id => S.readSent.add(id));
   call('sc_read', {p_ids: ids}).catch(() => ids.forEach(id => S.readSent.delete(id)));
@@ -3270,7 +3273,7 @@ function renderPassons(){
   const today = dayNY(Date.now()), yest = dayNY(Date.now() - 864e5);
   $('#poList').innerHTML = days.length ? days.map(d => `<div class="poday"><h3>${d.k === today ? 'Today' : d.k === yest ? 'Yesterday' : esc(poDay(d.at))}</h3><button type="button" class="btn sm" data-po="copyday" data-day="${esc(d.k)}">Copy day</button></div>`
     + d.items.map(poCard).join('')).join('')
-    : `<div class="card"><div class="small">No pass-ons in these days. Write the first one above, or send a Shift handoff in the chat.</div></div>`;
+    : `<div class="card"><div class="small">No pass-ons in these days. Write the first one above.</div></div>`;
   $('#poMore').hidden = S.poDays >= 60;
 }
 function poText(x, head){
@@ -3405,7 +3408,7 @@ function setTab(t){
   $('#main').hidden = !inMain; $('#main').dataset.tab = t;
   ['passon','lost','rooms','team','map'].forEach(v => $('#view-' + v).hidden = t !== v);
   if (t === 'map') openMap();
-  if (t === 'passon') loadPassons();
+  if (t === 'passon') { loadPassons(); markRead(); }
   if (desktop && t === 'orders') setTab('chat');
   if (t === 'team') loadTeam();
   if (t === 'chat') { $('#feed').scrollTop = $('#feed').scrollHeight; markRead(); }
