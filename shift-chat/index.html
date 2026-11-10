@@ -236,7 +236,48 @@ body{margin:0}
 .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
 .tabs .cnt{display:inline-block;min-width:20px;padding:0 6px;border-radius:999px;background:var(--urgent);color:#fff;font-size:12px;margin-left:4px}
 .tabs .cnt:empty{display:none}
-@media (min-width:900px){ .tabs button[data-tab="orders"]{display:none} }
+/* desktop dashboard (Orders tab on a computer) */
+#view-dash{background:var(--bg)}
+#dashBody{max-width:1440px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.dtop{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.dtop h2{margin:0;font-family:var(--f-display);font-size:22px}.dtop .grow{flex:1}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:5px 10px;font:inherit;font-size:12.5px;font-weight:700;color:var(--ink-3);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+.dsec{margin:6px 0 -4px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.dnote{font-size:13px;color:var(--ink-2);background:var(--surface-2);border-radius:10px;padding:8px 12px}
+.dkpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.dk{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:12px 14px;border-top:3px solid var(--line)}
+.dk.acc{border-top-color:var(--accent)}.dk.ok{border-top-color:var(--ok)}.dk.warn{border-top-color:var(--high)}.dk.bad{border-top-color:var(--urgent)}
+.dk.bad .dkn{color:var(--urgent)}
+.dkn{font-family:var(--f-display);font-size:26px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.dkl{font-size:12.5px;font-weight:700;color:var(--ink-2);margin-top:2px}.dks{font-size:12px;color:var(--ink-3);margin-top:2px}
+.dops .dkpis .dk{box-shadow:none;background:var(--surface-2)}
+.dgrid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.dgrid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:1180px){.dgrid2.dwide{grid-template-columns:minmax(0,1fr)}}
+.dcard{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:14px 16px;min-width:0}
+.dh{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}.dh b{font-size:14.5px}.dh .grow{flex:1}.dico{font-size:18px}
+.drow{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-top:1px solid var(--line);font-size:13.5px}.drow:first-of-type{border-top:0}
+.drow span{color:var(--ink-2)}.drow b{font-variant-numeric:tabular-nums}
+.dli{display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid var(--line);font-size:13.5px}.dli:first-of-type{border-top:0}
+.dli>span:first-child,.dli>button:first-child{flex:1;min-width:0;text-align:left}.dcats{color:var(--ink-3);font-size:12.5px}.dli b{min-width:28px;text-align:right;font-variant-numeric:tabular-nums}
+.dnone{color:var(--ink-3);font-size:13.5px;padding:6px 0}
+.dtwrap{overflow-x:auto}
+.dtable{width:100%;border-collapse:collapse;font-size:13px}
+.dtable th{text-align:left;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.dtable td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.dtable tbody tr[data-oid]{cursor:pointer}.dtable tbody tr[data-oid]:hover,.dtable tbody tr[data-oid]:focus{background:var(--surface-2);outline:none}
+.dtable .dsum{max-width:420px}
+.dnum td:not(:first-child),.dnum th:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+.dnum td:first-child{white-space:nowrap}.dnum tr.dtoday td{font-weight:800;background:var(--accent-soft)}.dnum td.neg{color:var(--urgent);font-weight:800}
+.dchart{width:100%;height:auto;display:block}
+.dchart rect.b1{fill:var(--accent)}.dchart rect.b2{fill:var(--ok)}
+.dchart .grid line{stroke:var(--line);stroke-width:1}.dchart text{font-size:10px;fill:var(--ink-3);font-family:inherit}
+.dleg{font-size:12px;color:var(--ink-3);display:inline-flex;align-items:center;gap:4px}.dleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-left:6px}
+.dleg i.b1{background:var(--accent)}.dleg i.b2{background:var(--ok)}
+.dyest{margin-top:10px;font-size:13.5px;color:var(--ink-2)}.dyest .up{color:var(--ok);font-weight:700}.dyest .down{color:var(--urgent);font-weight:700}
+.dfdrop{display:block;margin-top:12px;border:2px dashed var(--line);border-radius:12px;padding:14px;text-align:center;font-size:13px;color:var(--ink-2);cursor:pointer}
+.dfdrop:hover,.dfdrop.over{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
 .view{flex:1;min-height:0;overflow-y:auto;padding-block:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .view .inner{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
 .view.mapview{padding:0;overflow:hidden;display:flex}.view.mapview[hidden]{display:none}
@@ -850,6 +891,8 @@ body{letter-spacing:0;font-feature-settings:normal}
     </form>
     <div id="roomOut"></div>
   </div></section>
+
+  <section class="view" id="view-dash" data-noi18n hidden aria-label="Dashboard"><div id="dashBody"></div></section>
 
   <section class="view" id="view-team" hidden><div class="inner">
     <div class="card">
@@ -1858,6 +1901,7 @@ function render(){
   $('#whoBtn').classList.toggle('off', !onShift()); $('#whoOff').hidden = onShift();
   $('#teamTab').hidden = S.me.role !== 'mgr';
   renderFeed(); renderPins(); renderOrders(); renderKills(); renderLost(); markRead();
+  if (!$('#view-dash').hidden) dashRender();
 }
 function roomLinks(text){ return esc(text).replace(/\b(\d{3,4})\b/g, (m, r) => (+r >= 100 && +r <= 1999) ? `<button class="roomlink" data-room="${r}">${r}</button>` : m); }
 function renderFeed(){
@@ -2478,7 +2522,7 @@ function moreMenu(id){
 const durTxt = ms => { const m = Math.max(0, Math.round(ms / 60000)); if (m < 60) return m + ' min'; const h = Math.floor(m / 60); if (h < 24) return h + ' h ' + (m % 60) + ' min'; return Math.floor(h / 24) + ' d ' + (h % 24) + ' h'; };
 const fmtFull = ms => (dayNY(ms) === dayNY(Date.now()) ? '' : fmtDate(ms) + ', ') + fmtTime(ms);
 function orderDetail(id, fromCal){
-  const o = S.orders.find(x => x.id === id) || CAL.data.find(x => x.id === id); if (!o) return;
+  const o = S.orders.find(x => x.id === id) || CAL.data.find(x => x.id === id) || DASH.data.find(x => x.id === id); if (!o) return;
   const p = prioOf(o), lt = isLater(o), pl = placeOf(o), open = o.status === 'open' || o.status === 'in_progress';
   const src = o.message_id && S.messages.find(m => m.id === o.message_id);
   const quote = src ? src.body : (o.details && o.details !== o.summary ? o.details : '');
@@ -3404,12 +3448,12 @@ function openMap(o){
 function setTab(t){
   S.tab = t; document.querySelectorAll('#tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === t || (t === 'lost' && b.dataset.tab === 'passon')));
   const desktop = window.matchMedia('(min-width:900px)').matches;
-  const inMain = t === 'chat' || t === 'orders';
-  $('#main').hidden = !inMain; $('#main').dataset.tab = t;
+  const inMain = t === 'chat' || t === 'orders', dash = desktop && t === 'orders';
+  $('#main').hidden = !inMain || dash; $('#main').dataset.tab = t; $('#view-dash').hidden = !dash;
+  if (dash) dashLoad();
   ['passon','lost','rooms','team','map'].forEach(v => $('#view-' + v).hidden = t !== v);
   if (t === 'map') openMap();
   if (t === 'passon') { loadPassons(); markRead(); }
-  if (desktop && t === 'orders') setTab('chat');
   if (t === 'team') loadTeam();
   if (t === 'chat') { $('#feed').scrollTop = $('#feed').scrollHeight; markRead(); }
 }
@@ -3487,6 +3531,275 @@ setInterval(() => { if (S.me) { renderOrders(); } }, 30000);
 /* boot */
 document.querySelectorAll('.langsw button').forEach(btn => { btn.setAttribute('aria-pressed', btn.dataset.lang === LANG); btn.onclick = () => { if (btn.dataset.lang !== LANG) setLang(btn.dataset.lang); }; });
 avStyles();
+/* ===== PMS report reader: Forecast "Next 3 Months" and Statistics "Yesterday" PDFs =====
+   The PMS prints plain text (Td/Tj) in compressed page streams. Its zlib header claims a smaller window than the data
+   uses, so the streams are read as raw deflate (header and checksum left off), which the browser's own inflater handles. */
+async function inflateRaw(b){
+  const r = new Blob([b]).stream().pipeThrough(new DecompressionStream('deflate-raw')).getReader(), parts = []; let n = 0;
+  try { for (;;) { const {done, value} = await r.read(); if (done) break; parts.push(value); n += value.length; } } catch (e) { if (!n) throw e; }
+  const out = new Uint8Array(n); let o = 0; for (const p of parts) { out.set(p, o); o += p.length; } return out;
+}
+async function pdfLines(u8, inflate){
+  let s = ''; for (let i = 0; i < u8.length; i += 8192) s += String.fromCharCode.apply(null, u8.subarray(i, i + 8192));
+  const pages = [], re = /stream\r?\n/g; let m;
+  while ((m = re.exec(s))) {
+    if (s.slice(m.index - 3, m.index) === 'end') continue;
+    const start = m.index + m[0].length, end = s.indexOf('endstream', start); if (end < 0) break;
+    const dict = s.slice(Math.max(0, s.lastIndexOf('<<', m.index)), m.index);
+    re.lastIndex = end + 9;
+    if (!/FlateDecode/.test(dict) || /Length1|Subtype\s*\/Image|FontFile/.test(dict)) continue;
+    // exact length: direct (/Length 123) or through its object (/Length 7 0 R)
+    let len = null; const lm = /\/Length (\d+)(?:\s+(\d+) R)?/.exec(dict);
+    if (lm && !lm[2]) len = +lm[1];
+    else if (lm) { const om = new RegExp('(?:^|[\\r\\n ])' + lm[1] + ' ' + lm[2] + ' obj\\s*(\\d+)\\s*endobj').exec(s); if (om) len = +om[1]; }
+    let stop = len != null && len <= end - start ? start + len : end;
+    if (len == null) while (stop > start && (s[stop - 1] === '\n' || s[stop - 1] === '\r')) stop--;
+    const hdr = (u8[start] & 15) === 8 ? ((u8[start + 1] & 32) ? 6 : 2) : 0;
+    let txt; try { const b = await inflate(u8.subarray(start + hdr, len != null && hdr ? stop - 4 : stop)); txt = ''; for (let i = 0; i < b.length; i += 8192) txt += String.fromCharCode.apply(null, b.subarray(i, i + 8192)); } catch { continue; }
+    if (txt.indexOf(' Td (') < 0) continue;
+    const rows = new Map(), tre = /(-?[\d.]+) (-?[\d.]+) Td \(((?:\\[\s\S]|[^\\)])*)\) ?Tj/g; let t;
+    while ((t = tre.exec(txt))) {
+      const y = Math.round(+t[2] * 2) / 2, x = +t[1];
+      const v = t[3].replace(/\\([0-7]{1,3}|[\s\S])/g, (_, c) => /^[0-7]+$/.test(c) ? String.fromCharCode(parseInt(c, 8)) : ({n: '\n', r: '', t: ' '})[c] ?? c).trim();
+      if (!v) continue;
+      if (!rows.has(y)) rows.set(y, []); rows.get(y).push({x, v});
+    }
+    pages.push([...rows.entries()].sort((a, b) => b[0] - a[0]).map(([, c]) => c.sort((a, b) => a.x - b.x).map(c => c.v)));
+  }
+  return pages;
+}
+const repNum = v => { if (v == null) return null; const n = parseFloat(String(v).replace(/[,%$\s]/g, '')); return isNaN(n) ? null : n; };
+function repParse(pages){
+  const lines = pages.flat(), all = lines.map(l => l.join(' ')).join('\n');
+  const hl = lines.find(l => /^Hotel:/.test(l[0]));
+  const hotel = hl ? hl.join(' ').replace(/^Hotel:\s*/, '').replace(/\s+\d{1,2} \w{3} \d{4} \d{2}:\d{2} UTC.*$/, '').replace(/\s*Currency.*$/, '').trim() : '';
+  const code = (hotel.match(/\((\d{3,8})\)\s*$/) || [])[1] || null;
+  if (/Forecast Report/i.test(all)) {
+    const rows = [];
+    for (const l of lines) {
+      const d = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(l[0]); if (!d || l.length < 16) continue;
+      const n = l.map(repNum);
+      // Date, Total, OOI/OOO, Rentable, Sold, Stay Overs, Check Outs, Arrivals, Day Use, GTD, Non-GTD, Group not picked up, Left to sell, Occ %, Revenue, ADR, Adult/Child
+      rows.push({day: `${d[3]}-${d[1]}-${d[2]}`, rentable: n[3], rooms_sold: n[4], stayovers: n[5], departures: n[6], arrivals: n[7],
+        left_to_sell: n[12], occ: n[13], adr: n[15]});
+    }
+    const good = rows.filter(r => r.rooms_sold === r.stayovers + r.arrivals || r.left_to_sell === r.rentable - r.rooms_sold).length;
+    if (!rows.length || good < rows.length * .8) throw new Error('layout');
+    return {kind: 'forecast', code, hotel, rows: rows.map(({rentable, ...r}) => r)};
+  }
+  if (/Statistics Report/i.test(all)) {
+    const dm = /\((\d{1,2}) (\w{3}) (\d{4})\)/.exec(all); if (!dm) throw new Error('date');
+    const mon = 'JanFebMarAprMayJunJulAugSepOctNovDec'.indexOf(dm[2].slice(0, 3)) / 3; if (mon < 0) throw new Error('date');
+    const day = `${dm[3]}-${String(mon + 1).padStart(2, '0')}-${dm[1].padStart(2, '0')}`;
+    const get = re => { const l = lines.find(l => re.test(l.slice(0, l.length - 6).join(' ')) && l.length >= 7); return l ? l.slice(-6).map(repNum) : null; };
+    const occ = get(/^\(Occ - OOO \+ COMPS\)%$/), adr = get(/^ADR With Comps$/), sold = get(/^Rooms Occupied$/), vac = get(/^Rooms Left Vacant$/);
+    if (!occ || !adr || !sold) throw new Error('layout');
+    return {kind: 'actual', code, hotel, rows: [{day, rooms_sold: sold[0], left_to_sell: vac ? vac[0] : null, occ: occ[0], adr: adr[0], ly_occ: occ[3], ly_adr: adr[3]}]};
+  }
+  throw new Error('kind');
+}
+/* ===== desktop dashboard: the Orders tab on a computer =====
+   Live orders from the sync, plus the last 31 days from the calendar call. Text is written per language here (L2),
+   so the whole view skips the page translator. Forecast and statistics PDFs from the PMS are read in the browser
+   and saved on the server for the hotel; the morning email run loads the same numbers. */
+const DASH = { days: 7, data: [], at: 0, loading: false, seq: 0, partial: false };
+const isDesk = () => window.matchMedia('(min-width:900px)').matches;
+const L2 = (en, es) => LANG === 'es' ? es : en;
+async function dashLoad(force){
+  dashRender(); daysLoad(force);
+  if (DASH.loading || (!force && Date.now() - DASH.at < 60e3)) return;
+  DASH.loading = true; const seq = ++DASH.seq, now = Date.now();
+  let got = null;
+  try { got = await call('sc_order_calendar', {p_from: new Date(now - 31 * 864e5).toISOString(), p_to: new Date(now + 864e5).toISOString()}); } catch { got = null; }
+  if (seq !== DASH.seq) return;
+  DASH.data = (got || []).map(o => ({...o, created_at: T(o.created_at), done_at: T(o.done_at), started_at: T(o.started_at), scheduled_for: T(o.scheduled_for)}));
+  DASH.partial = !got; DASH.at = Date.now(); DASH.loading = false;
+  dashRender();
+}
+const dashNum = n => n == null ? '—' : String(n);
+const dashDur = ms => ms == null ? '—' : durTxt(ms);
+function dashBars(series, keys, labels, opts){
+  // grouped bars as an inline SVG; series = [{cls, vals}]
+  const W = 640, H = 170, pad = 22, n = keys.length, g = series.length;
+  const max = Math.max(1, ...series.flatMap(s => s.vals));
+  const bw = (W - pad) / n, inner = Math.max(2, bw * .78 / g);
+  let bars = '', lab = '';
+  keys.forEach((k, i) => {
+    series.forEach((s, j) => { const v = s.vals[i], h = Math.round((H - pad - 8) * v / max), x = pad + i * bw + bw * .11 + j * inner;
+      bars += `<rect class="${s.cls}" x="${x.toFixed(1)}" y="${H - pad - h}" width="${(inner - 1).toFixed(1)}" height="${Math.max(h, v ? 2 : 0)}" rx="2"><title>${esc(labels[i])}: ${v}</title></rect>`; });
+    if (!opts || !opts.every || i % opts.every === 0) lab += `<text x="${(pad + i * bw + bw / 2).toFixed(1)}" y="${H - 6}" text-anchor="middle">${esc(opts && opts.short ? opts.short(k, i) : labels[i])}</text>`;
+  });
+  const grid = [0, .5, 1].map(f => { const y = H - pad - (H - pad - 8) * f; return `<line x1="${pad}" x2="${W}" y1="${y}" y2="${y}"/><text class="ax" x="${pad - 4}" y="${y + 4}" text-anchor="end">${Math.round(max * f)}</text>`; }).join('');
+  return `<svg class="dchart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opts && opts.aria || '')}"><g class="grid">${grid}</g>${bars}<g class="lab">${lab}</g></svg>`;
+}
+function dashRender(){
+  const el = $('#dashBody'); if (!el || $('#view-dash').hidden || !S.me) return;
+  const byId = new Map(DASH.data.map(o => [o.id, o])); S.orders.forEach(o => byId.set(o.id, o));
+  const all = [...byId.values()], now = Date.now(), today = dayNY(now), since = now - DASH.days * 864e5;
+  const isOpen = o => (o.status === 'open' || o.status === 'in_progress') && !isLater(o);
+  const open = all.filter(isOpen).map(o => ({o, p: prioOf(o)})).sort((a, b) => b.p.score - a.p.score || startAt(a.o) - startAt(b.o));
+  const later = all.filter(isLater);
+  const urgent = open.filter(x => x.p.level === 'urgent');
+  const prog = open.filter(x => x.o.status === 'in_progress');
+  const done = all.filter(o => o.status === 'done' && o.done_at);
+  const doneToday = done.filter(o => dayNY(o.done_at) === today);
+  const avg = list => { const t = list.map(o => o.done_at - startAt(o)).filter(x => x >= 0); return t.length ? t.reduce((a, b) => a + b, 0) / t.length : null; };
+  const oldest = open.length ? Math.min(...open.map(x => startAt(x.o))) : null;
+  const made = all.filter(o => o.created_at >= since), doneR = done.filter(o => o.done_at >= since);
+  const tile = (n, l, cls, sub) => `<div class="dk ${cls || ''}"><div class="dkn">${n}</div><div class="dkl">${l}</div>${sub ? `<div class="dks">${sub}</div>` : ''}</div>`;
+  const kpis = tile(dashNum(open.length), L2('Open now', 'Abiertas ahora'), 'acc')
+    + tile(dashNum(urgent.length), L2('Urgent', 'Urgentes'), urgent.length ? 'bad' : '')
+    + tile(dashNum(prog.length), L2('In progress', 'En proceso'), 'warn')
+    + tile(dashNum(later.length), L2('Scheduled', 'Programadas'))
+    + tile(dashNum(doneToday.length), L2('Completed today', 'Completadas hoy'), 'ok')
+    + tile(dashDur(avg(doneToday)), L2('Avg. time today', 'Tiempo prom. hoy'))
+    + tile(oldest ? durTxt(now - oldest) : '—', L2('Oldest open', 'Abierta más vieja'), oldest && now - oldest > 2 * 3600e3 ? 'bad' : '');
+  const ICON = { housekeeping: '🛏️', maintenance: '🔧', frontdesk: '🛎️' };
+  const CATL = { housekeeping: L2('Housekeeping', 'Housekeeping'), maintenance: L2('Maintenance', 'Mantenimiento'), frontdesk: L2('Front desk', 'Recepción') };
+  const depts = Object.keys(CATS).map(c => {
+    const o = open.filter(x => x.o.category === c), pr = o.filter(x => x.o.status === 'in_progress').length;
+    const dt = doneToday.filter(x => x.category === c), dr = doneR.filter(x => x.category === c), mr = made.filter(x => x.category === c).length;
+    return `<div class="dcard ddept"><div class="dh"><span class="dico">${ICON[c]}</span><b>${esc(CATL[c])}</b></div>
+      <div class="drow"><span>${L2('Open', 'Abiertas')}</span><b>${o.length}</b></div>
+      <div class="drow"><span>${L2('In progress', 'En proceso')}</span><b>${pr}</b></div>
+      <div class="drow"><span>${L2('Completed today', 'Completadas hoy')}</span><b>${dt.length}</b></div>
+      <div class="drow"><span>${L2('Avg. time', 'Tiempo prom.')} · ${DASH.days} ${L2('days', 'días')}</span><b>${dashDur(avg(dr))}</b></div>
+      <div class="drow"><span>${L2('New', 'Nuevas')} · ${DASH.days} ${L2('days', 'días')}</span><b>${mr}</b></div></div>`;
+  }).join('');
+  // per day
+  const keys = [], labels = [];
+  for (let i = DASH.days - 1; i >= 0; i--) { const ms = now - i * 864e5; keys.push(dayNY(ms)); labels.push(fmtDate(ms)); }
+  const cnt = (list, f) => keys.map(k => list.filter(o => dayNY(f(o)) === k).length);
+  const perDay = dashBars([{cls: 'b1', vals: cnt(made, o => o.created_at)}, {cls: 'b2', vals: cnt(doneR, o => o.done_at)}], keys, labels,
+    {every: DASH.days > 10 ? 5 : 1, aria: L2('Orders per day', 'Órdenes por día')});
+  // by hour
+  const hrs = Array.from({length: 24}, (_, h) => h), hv = hrs.map(() => 0);
+  made.forEach(o => { hv[new Date(nyWall(o.created_at)).getUTCHours()]++; });
+  const hl = hrs.map(h => new Date(Date.UTC(2020, 0, 1, h)).toLocaleTimeString(LOC(), {hour: 'numeric', timeZone: 'UTC'}));
+  const byHour = dashBars([{cls: 'b1', vals: hv}], hrs, hl, {every: 3, aria: L2('Busiest hours', 'Horas con más órdenes')});
+  // rooms
+  const rooms = new Map(); made.forEach(o => { const k = o.room || (placeOf(o) ? placeOf(o).label : o.map_zone) || ''; if (!k) return;
+    const r = rooms.get(k) || {k, n: 0, room: !!o.room, cats: {}}; r.n++; r.cats[o.category] = (r.cats[o.category] || 0) + 1; rooms.set(k, r); });
+  const topRooms = [...rooms.values()].sort((a, b) => b.n - a.n).slice(0, 8);
+  const roomsHtml = topRooms.length ? topRooms.map(r => `<div class="dli">${r.room ? `<button class="linkish roomlink" data-room="${esc(r.k)}">${L2('Room', 'Hab.')} ${esc(r.k)}</button>` : `<span>${esc(r.k)}</span>`}
+      <span class="dcats">${Object.entries(r.cats).map(([c, n]) => `${ICON[c] || ''}${n}`).join(' ')}</span><b>${r.n}</b></div>`).join('')
+    : `<div class="dnone">${L2('No orders in these days.', 'No hay órdenes en estos días.')}</div>`;
+  // team
+  const team = new Map(); doneR.forEach(o => { const k = o.done_by || '—'; const t = team.get(k) || {k, n: 0, ms: []}; t.n++; const d = o.done_at - startAt(o); if (d >= 0) t.ms.push(d); team.set(k, t); });
+  const topTeam = [...team.values()].sort((a, b) => b.n - a.n).slice(0, 10);
+  const teamHtml = topTeam.length ? topTeam.map(t => `<div class="dli"><span>${esc(t.k)}</span><span class="dcats">${t.ms.length ? L2('avg.', 'prom.') + ' ' + durTxt(t.ms.reduce((a, b) => a + b, 0) / t.ms.length) : ''}</span><b>${t.n}</b></div>`).join('')
+    : `<div class="dnone">${L2('Nothing completed in these days.', 'Nada completado en estos días.')}</div>`;
+  // open table
+  const st = o => o.status === 'in_progress' ? `<span class="pill prog">${L2('In progress', 'En proceso')}</span>${o.assigned_name ? ' ' + esc(o.assigned_name) : ''}` : `<span class="pill">${L2('Waiting', 'En espera')}</span>`;
+  const rows = open.slice(0, 60).map(({o, p}) => `<tr data-oid="${esc(o.id)}" tabindex="0"><td><span class="prio ${p.level}">${p.level === 'urgent' ? L2('Urgent', 'Urgente') : p.level === 'high' ? L2('High', 'Alta') : L2('Normal', 'Normal')}</span></td>
+      <td><b>${esc(o.ticket)}</b></td><td>${o.room ? esc(o.room) : esc(placeOf(o) ? placeOf(o).label : o.map_zone || '—')}</td><td>${ICON[o.category] || ''} ${esc(CATL[o.category] || '')}</td>
+      <td class="dsum">${esc(o.summary)}</td><td>${durTxt(now - startAt(o))}</td><td>${st(o)}</td></tr>`).join('');
+  const table = open.length ? `<div class="dtwrap"><table class="dtable"><thead><tr><th>${L2('Priority', 'Prioridad')}</th><th>${L2('Ticket', 'Ticket')}</th><th>${L2('Room', 'Hab.')}</th><th>${L2('Department', 'Departamento')}</th><th>${L2('Request', 'Pedido')}</th><th>${L2('Open for', 'Abierta hace')}</th><th>${L2('Status', 'Estado')}</th></tr></thead><tbody>${rows}</tbody></table></div>`
+    : `<div class="dnone">${L2('No open orders right now.', 'No hay órdenes abiertas ahora.')}</div>`;
+  const seg = [7, 30].map(d => `<button type="button" data-ddays="${d}" aria-pressed="${DASH.days === d}">${d} ${L2('days', 'días')}</button>`).join('');
+  el.innerHTML = `<div class="dtop"><div><h2>${L2('Operations dashboard', 'Tablero operativo')}</h2><div class="small">${esc(S.hotel ? S.hotel.name : '')} · ${esc(fmtDate(now))}${DASH.at ? ' · ' + L2('Updated', 'Actualizado') + ' ' + esc(fmtTime(DASH.at)) : ''}${DASH.loading ? ' · ' + L2('Loading…', 'Cargando…') : ''}</div></div>
+      <div class="grow"></div><div class="seg" role="group" aria-label="${L2('Range', 'Rango')}">${seg}</div><button type="button" class="btn sm" data-dref>${L2('Refresh', 'Actualizar')}</button><button type="button" class="btn sm" data-dcal>🗓️ ${L2('Calendar', 'Calendario')}</button><button type="button" class="btn pri sm" data-dnew>+ ${L2('New order', 'Nueva orden')}</button></div>
+    ${dashOps()}
+    <h3 class="dsec">${L2('Orders', 'Órdenes')}</h3>
+    ${DASH.partial ? `<div class="dnote">${L2('Showing open and recent orders only.', 'Mostrando solo órdenes abiertas y recientes.')}</div>` : ''}
+    <div class="dkpis">${kpis}</div>
+    <div class="dgrid3">${depts}</div>
+    <div class="dgrid2">
+      <div class="dcard"><div class="dh"><b>${L2('Orders per day', 'Órdenes por día')}</b><span class="grow"></span><span class="dleg"><i class="b1"></i>${L2('New', 'Nuevas')} <i class="b2"></i>${L2('Completed', 'Completadas')}</span></div>${perDay}</div>
+      <div class="dcard"><div class="dh"><b>${L2('Busiest hours', 'Horas con más órdenes')}</b><span class="grow"></span><span class="small">${DASH.days} ${L2('days', 'días')}</span></div>${byHour}</div>
+    </div>
+    <div class="dcard"><div class="dh"><b>${L2('Open orders', 'Órdenes abiertas')}</b><span class="grow"></span><span class="small">${L2('Tap a row for its detail', 'Toca una fila para ver el detalle')}</span></div>${table}</div>
+    <div class="dgrid2">
+      <div class="dcard"><div class="dh"><b>${L2('Rooms and areas with the most orders', 'Habitaciones y áreas con más órdenes')}</b><span class="grow"></span><span class="small">${DASH.days} ${L2('days', 'días')}</span></div>${roomsHtml}</div>
+      <div class="dcard"><div class="dh"><b>${L2('Completed by', 'Completadas por')}</b><span class="grow"></span><span class="small">${DASH.days} ${L2('days', 'días')}</span></div>${teamHtml}</div>
+    </div>`;
+}
+/* hotel numbers from the PMS reports: check-ins, check-outs, stayovers, left to sell, occupancy, ADR */
+const DAYS = { data: null, at: 0, loading: false, missing: false, busy: false, hotel: '' };
+async function daysLoad(force){
+  const h = S.hotel ? S.hotel.id : '';
+  if (DAYS.missing || DAYS.loading || (!force && DAYS.hotel === h && Date.now() - DAYS.at < 120e3)) return;
+  DAYS.loading = true;
+  try { DAYS.data = await call('sc_days', {}); DAYS.hotel = h; }
+  catch (e) { if (/Could not find the function|PGRST202|sc_days/.test(e.message)) DAYS.missing = true; }
+  DAYS.loading = false; DAYS.at = Date.now(); dashRender();
+}
+const dayMs = d => Date.parse(d + 'T12:00:00Z');
+const dayLbl = (d, o) => new Date(dayMs(d)).toLocaleDateString(LOC(), {timeZone: 'UTC', ...(o || {weekday: 'short', month: 'short', day: 'numeric'})});
+const nfmt = (v, dec) => v == null ? '—' : Number(v).toLocaleString(LOC(), {minimumFractionDigits: dec || 0, maximumFractionDigits: dec || 0});
+const money = v => v == null ? '—' : '$' + nfmt(v, 2);
+const pct = v => v == null ? '—' : nfmt(v, 1) + '%';
+function dashOps(){
+  if (DAYS.missing || !DAYS.data) return '';
+  const D = DAYS.data, today = D.today, fc = new Map(), act = new Map();
+  D.days.forEach(d => (d.kind === 'forecast' ? fc : act).set(d.day, d));
+  const addDay = (d, n) => new Date(dayMs(d) + n * 864e5).toISOString().slice(0, 10);
+  const t = fc.get(today), tm = fc.get(addDay(today, 1)), yd = act.get(addDay(today, -1)) || [...act.values()].pop();
+  const showAdr = D.can_upload;
+  const sub = (v, f) => tm && tm[v] != null ? `${L2('Tomorrow', 'Mañana')}: ${f ? f(tm[v]) : nfmt(tm[v])}` : '';
+  const tile = (n, l, cls, s) => `<div class="dk ${cls || ''}"><div class="dkn">${n}</div><div class="dkl">${l}</div>${s ? `<div class="dks">${s}</div>` : ''}</div>`;
+  const loaded = ['forecast', 'actual'].map(k => { const x = D.loaded && D.loaded[k]; if (!x) return '';
+      const who = x.source === 'email' ? L2('from the email', 'desde el correo') : L2('by', 'por') + ' ' + esc(x.by || '');
+      return `${k === 'forecast' ? 'Forecast' : L2('Statistics', 'Estadísticas')} ${esc(fmtFull(T(x.at)))} ${who}`; }).filter(Boolean).join(' · ');
+  const drop = D.can_upload ? `<label class="dfdrop" data-dpdf><input type="file" hidden data-dpdfin accept="application/pdf,.pdf" multiple>
+      <span>${DAYS.busy ? L2('Reading the report…', 'Leyendo el reporte…') : L2('Drop the Forecast or Statistics PDF here, or click to choose it.', 'Suelta aquí el PDF del Forecast o de Statistics, o haz clic para elegirlo.')}</span></label>` : '';
+  if (!t && !yd) return `<div class="dcard"><div class="dh"><b>${L2('Hotel numbers', 'Números del hotel')}</b></div>
+      <div class="dnone">${L2('No numbers yet. They come in each morning from the report email.', 'Aún no hay números. Llegan cada mañana del correo con los reportes.')}</div>${drop}</div>`;
+  const kpis = t ? tile(nfmt(t.arrivals), L2('Check-ins today', 'Check-ins hoy'), 'acc', sub('arrivals'))
+      + tile(nfmt(t.departures), L2('Check-outs today', 'Check-outs hoy'), '', sub('departures'))
+      + tile(nfmt(t.stayovers), L2('Stayovers', 'Stayovers'), '', sub('stayovers'))
+      + tile(nfmt(t.left_to_sell), L2('Left to sell', 'Por vender'), t.left_to_sell < 0 ? 'bad' : t.left_to_sell <= 5 ? 'warn' : '', t.left_to_sell < 0 ? L2('Overbooked', 'Sobrevendido') : sub('left_to_sell'))
+      + tile(pct(t.occ), L2('Occupancy', 'Ocupación'), 'ok', sub('occ', pct))
+      + (showAdr ? tile(money(t.adr), 'ADR', '', sub('adr', money)) : '')
+    : `<div class="dnone">${L2("Today's forecast isn't loaded yet.", 'El forecast de hoy aún no está cargado.')}</div>`;
+  const vs = (a, b, f) => b == null ? '' : ` <span class="${a >= b ? 'up' : 'down'}">${L2('last year', 'año pasado')} ${f(b)}</span>`;
+  const yline = yd ? `<div class="dyest"><b>${L2('Yesterday', 'Ayer')}</b> · ${esc(dayLbl(yd.day))}: ${L2('occupancy', 'ocupación')} ${pct(yd.occ)}${vs(+yd.occ, yd.ly_occ == null ? null : +yd.ly_occ, pct)}${showAdr ? ` · ADR ${money(yd.adr)}${vs(+yd.adr, yd.ly_adr == null ? null : +yd.ly_adr, money)}` : ''}${yd.rooms_sold != null ? ` · ${nfmt(yd.rooms_sold)} ${L2('rooms occupied', 'habitaciones ocupadas')}` : ''}</div>` : '';
+  const next = []; for (let i = 0; i < 14; i++) { const d = fc.get(addDay(today, i)); if (d) next.push(d); }
+  const table = next.length ? `<div class="dtwrap"><table class="dtable dnum"><thead><tr><th>${L2('Day', 'Día')}</th><th>Check-ins</th><th>Check-outs</th><th>Stayovers</th><th>${L2('Left to sell', 'Por vender')}</th><th>${L2('Occupancy', 'Ocupación')}</th>${showAdr ? '<th>ADR</th>' : ''}</tr></thead><tbody>${next.map(d =>
+      `<tr${d.day === today ? ' class="dtoday"' : ''}><td>${esc(dayLbl(d.day))}</td><td>${nfmt(d.arrivals)}</td><td>${nfmt(d.departures)}</td><td>${nfmt(d.stayovers)}</td><td class="${d.left_to_sell < 0 ? 'neg' : ''}">${nfmt(d.left_to_sell)}</td><td>${pct(d.occ)}</td>${showAdr ? `<td>${money(d.adr)}</td>` : ''}</tr>`).join('')}</tbody></table></div>` : '';
+  const ahead = [...fc.values()].filter(d => d.day >= today).slice(0, 92);
+  const chart = ahead.length > 1 ? dashBars([{cls: 'b1', vals: ahead.map(d => Math.max(0, Math.round(+d.occ || 0)))}], ahead.map(d => d.day), ahead.map(d => dayLbl(d.day) + ' · ' + pct(d.occ)),
+      {every: 7, short: k => dayLbl(k, {month: 'short', day: 'numeric'}), aria: L2('Occupancy forecast', 'Ocupación pronosticada')}) : '';
+  return `<div class="dcard dops"><div class="dh"><b>${L2('Hotel numbers', 'Números del hotel')}</b><span class="grow"></span><span class="small">${loaded}</span></div>
+      <div class="dkpis">${kpis}</div>${yline}</div>
+    ${next.length ? `<div class="dgrid2 dwide"><div class="dcard"><div class="dh"><b>${L2('Next 14 days', 'Próximos 14 días')}</b></div>${table}</div>
+      <div class="dcard"><div class="dh"><b>${L2('Occupancy forecast', 'Ocupación pronosticada')}</b><span class="grow"></span><span class="small">${ahead.length} ${L2('days', 'días')} · %</span></div>${chart}${drop}</div></div>` : drop ? `<div class="dcard">${drop}</div>` : ''}`;
+}
+const PDFERR = { WRONG_HOTEL: ['That report is from another hotel.', 'Ese reporte es de otro hotel.'], NOT_ALLOWED: ['Only managers and front desk can upload reports.', 'Solo gerentes y recepción pueden subir reportes.'],
+  BAD_ROW: ["Some numbers in the report don't look right.", 'Algunos números del reporte no se ven bien.'] };
+async function dashTakePdf(files){
+  const list = [...(files || [])].filter(Boolean); if (!list.length || DAYS.busy) return;
+  DAYS.busy = true; dashRender();
+  for (const f of list) {
+    try {
+      if (f.size > 10e6) throw new Error('size');
+      let rep; try { rep = repParse(await pdfLines(new Uint8Array(await f.arrayBuffer()), inflateRaw)); } catch { throw new Error('read'); }
+      const r = await call('sc_days_put', {p_kind: rep.kind, p_rows: rep.rows, p_code: rep.code});
+      toast(esc(rep.kind === 'forecast' ? L2(`Forecast loaded: ${r.saved} days.`, `Forecast cargado: ${r.saved} días.`) : L2('Statistics loaded.', 'Estadísticas cargadas.')), 'new');
+    } catch (e) {
+      const k = e.message, m = PDFERR[k];
+      toast(esc(m ? L2(m[0], m[1]) : k === 'size' ? L2('That file is too big.', 'Ese archivo es muy grande.')
+        : k === 'read' ? L2("Couldn't read that PDF. Use the Forecast (Next 3 Months) or Statistics (Yesterday) report.", 'No pude leer ese PDF. Usa el reporte Forecast (Next 3 Months) o Statistics (Yesterday).')
+        : L2("Couldn't save the report. Try again.", 'No pude guardar el reporte. Inténtalo de nuevo.')));
+    }
+  }
+  DAYS.busy = false; await daysLoad(true); dashRender();
+}
+$('#view-dash').addEventListener('click', e => {
+  const d = e.target.closest('[data-ddays]'); if (d) { DASH.days = +d.dataset.ddays; ls.set('sc.dashDays', DASH.days); dashRender(); return; }
+  if (e.target.closest('[data-dref]')) { dashLoad(true); refresh(); return; }
+  if (e.target.closest('[data-dcal]')) { openCalendar(); return; }
+  if (e.target.closest('[data-dnew]')) { newOrder(); return; }
+  const r = e.target.closest('.roomlink'); if (r) { roomHistory(r.dataset.room); return; }
+  const tr_ = e.target.closest('tr[data-oid]'); if (tr_) orderDetail(tr_.dataset.oid);
+});
+$('#view-dash').addEventListener('keydown', e => { const tr_ = e.target.closest && e.target.closest('tr[data-oid]'); if (tr_ && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); orderDetail(tr_.dataset.oid); } });
+$('#view-dash').addEventListener('change', e => { const i = e.target.closest('[data-dpdfin]'); if (i) { dashTakePdf(i.files); i.value = ''; } });
+$('#view-dash').addEventListener('dragover', e => { const z = e.target.closest('[data-dpdf]'); if (z) { e.preventDefault(); z.classList.add('over'); } });
+$('#view-dash').addEventListener('dragleave', e => { const z = e.target.closest('[data-dpdf]'); if (z) z.classList.remove('over'); });
+$('#view-dash').addEventListener('drop', e => { const z = e.target.closest('[data-dpdf]'); if (!z) return; e.preventDefault(); z.classList.remove('over'); dashTakePdf(e.dataTransfer && e.dataTransfer.files); });
+window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.tab === 'orders') setTab('orders'); });
+{ const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 if (S.token && S.me) enterApp(); else showLogin();
 })();
 </script>
