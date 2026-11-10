@@ -806,6 +806,13 @@ body{letter-spacing:0;font-feature-settings:normal}
 .wnlist .wv{font-weight:700}.wnlist .wd{color:var(--ink-3);font-size:12.5px;margin-left:6px}
 .wnlist ul{margin:4px 0 0 18px;padding:0}.wnlist ul li{border:0;padding:2px 0}
 button:focus-visible,a:focus-visible,[role="button"]:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #635BFF;outline-offset:2px}
+
+/* v1.2: start codes */
+.codebig{font:700 34px/1.1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.18em;text-align:center;padding:14px 8px;margin:10px 0;border-radius:14px;background:var(--bg-2,rgba(99,91,255,.08));border:1px dashed #635BFF;user-select:all}
+.codelist{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+.codelist td,.codelist th{padding:7px 6px;border-top:1px solid var(--line);text-align:left}
+.codelist td.c{font:700 16px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.08em}
+.codescroll{max-height:52vh;overflow:auto}
 </style>
 </head>
 <body>
@@ -922,7 +929,7 @@ button:focus-visible,a:focus-visible,[role="button"]:focus-visible,select:focus-
     </div>
     <form class="card" id="staffForm">
       <h2>Add staff</h2>
-      <p class="small" style="margin:0 0 10px">They get a user from their name (like FRAL) and sign in with PIN 0000, then pick their own PIN.</p>
+      <p class="small" style="margin:0 0 10px">They get a user from their name (like FRAL) and a one-time start code from you, then pick their own PIN.</p>
       <div class="grid2">
         <div class="field"><label for="sfFirst">First name</label><input id="sfFirst" required maxlength="30"></div>
         <div class="field"><label for="sfLast">Last name</label><input id="sfLast" required maxlength="30"></div>
@@ -931,7 +938,7 @@ button:focus-visible,a:focus-visible,[role="button"]:focus-visible,select:focus-
       <div class="err" id="sfErr"></div>
       <button class="btn pri" type="submit">Add to team</button>
     </form>
-    <div class="card"><h2>Team at <span id="teamHotel"></span></h2><p class="small" style="margin:-4px 0 10px">Each person signs in with their user. New users and PIN resets start with 0000, and the app asks them to pick their own PIN.</p><div class="btnrow" style="margin-bottom:10px"><button class="btn sm" id="usersCsv">Download user list</button></div><div class="devsum" id="devSum" hidden></div><div class="tsearch"><input id="teamSearch" type="search" placeholder="Search name or user" aria-label="Search the team" autocomplete="off"><span class="small" id="teamFound"></span></div><div class="list" id="staffList"></div></div>
+    <div class="card"><h2>Team at <span id="teamHotel"></span></h2><p class="small" style="margin:-4px 0 10px">Each person signs in with their user and PIN. New users and PIN resets get a 6-digit start code from you that works once for 3 days.</p><div class="btnrow" style="margin-bottom:10px"><button class="btn sm pri" id="usersCodes">Start codes for who is not active</button><button class="btn sm" id="usersCsv">Download user list</button></div><div class="devsum" id="devSum" hidden></div><div class="tsearch"><input id="teamSearch" type="search" placeholder="Search name or user" aria-label="Search the team" autocomplete="off"><span class="small" id="teamFound"></span></div><div class="list" id="staffList"></div></div>
   </div></section>
 </div>
 
@@ -944,8 +951,8 @@ button:focus-visible,a:focus-visible,[role="button"]:focus-visible,select:focus-
     <div class="field"><label for="fHotel">Hotel</label><select id="fHotel"></select></div>
     <div class="field"><label for="fUser">User</label><input id="fUser" autocomplete="username" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="FRAL" required></div>
     <div class="namesug" id="nameSug" role="listbox" aria-label="Is this you?" hidden></div>
-    <div class="field"><label for="fPin">PIN</label><input id="fPin" class="pinbox" type="password" inputmode="numeric" pattern="\d{4}" maxlength="4" autocomplete="off" required></div>
-    <p class="small" style="margin:-4px 0 12px">First time? Use the PIN your manager gave you. You'll pick your own right after.</p>
+    <div class="field"><label for="fPin">PIN</label><input id="fPin" class="pinbox" type="password" inputmode="numeric" pattern="\d{4}(\d{2})?" maxlength="6" autocomplete="off" required></div>
+    <p class="small" style="margin:-4px 0 12px">First time? Type the 6-digit start code your manager gave you. You'll pick your own PIN right after.</p>
     <div class="err" id="loginErr"></div>
     <button class="primary" type="submit" id="loginBtn">Enter</button>
     <div style="text-align:center;margin-top:8px"><button type="button" class="linkbtn" id="forgotBtn">Forgot your PIN?</button></div>
@@ -994,8 +1001,13 @@ const DEPTS = [{id:'fd', label:'Front desk'}, {id:'hk', label:'Housekeeping'}, {
 const TZ = 'America/New_York';
 const ERR = {
   NOT_ON_LIST: 'That user is not on the team list for this hotel. Check the letters or ask your manager.',
-  WRONG_PIN: 'Wrong PIN. After 5 tries the account locks for 15 minutes.',
-  LOCKED: 'Too many wrong PINs. Try again in 15 minutes or ask your manager to reset your PIN.',
+  WRONG_PIN: 'Wrong PIN or code. After 5 tries the account locks.',
+  LOCKED: 'Too many wrong tries, so the account is locked for a while. Ask your manager to reset your PIN.',
+  NO_CODE: 'Your account is not active yet, or your start code expired. Ask your manager for a start code.',
+  TRY_LATER: 'Too many wrong tries from this connection. Wait 15 minutes and try again.',
+  LOGIN_FORMAT: 'Type your 4-digit PIN, or the 6-digit start code if it is your first time.',
+  PIN_WEAK: 'That PIN is too easy to guess. Avoid repeated numbers and sequences like 1234.',
+  PIN_ALREADY_SET: 'This person already has a PIN. Reset the PIN first.',
   PIN_FORMAT: 'The PIN must be 4 digits.',
   SESSION_EXPIRED: 'Please sign in again.',
   MANAGER_ONLY: 'Only managers can do that.',
@@ -1058,6 +1070,20 @@ const T = x => x ? Date.parse(x) : null;
 /* ============ language: English / Spanish ============ */
 // The app is written in English; in Spanish every text node and label is swapped from this list as it appears.
 const ES = {
+"First time? Type the 6-digit start code your manager gave you. You'll pick your own PIN right after.": "¿Primera vez? Escribe el código de entrada de 6 números que te dio tu gerente. Después eliges tu propio PIN.",
+"Wrong PIN or code. After 5 tries the account locks.": "PIN o código incorrecto. Después de 5 intentos la cuenta se bloquea.",
+"Too many wrong tries, so the account is locked for a while. Ask your manager to reset your PIN.": "Demasiados intentos equivocados, así que la cuenta está bloqueada por un tiempo. Pídele a tu gerente que reinicie tu PIN.",
+"Your account is not active yet, or your start code expired. Ask your manager for a start code.": "Tu cuenta todavía no está activa, o tu código de entrada venció. Pídele a tu gerente un código de entrada.",
+"Too many wrong tries from this connection. Wait 15 minutes and try again.": "Demasiados intentos equivocados desde esta conexión. Espera 15 minutos y vuelve a intentar.",
+"Type your 4-digit PIN, or the 6-digit start code if it is your first time.": "Escribe tu PIN de 4 números, o el código de entrada de 6 números si es tu primera vez.",
+"That PIN is too easy to guess. Avoid repeated numbers and sequences like 1234.": "Ese PIN es muy fácil de adivinar. Evita números repetidos y secuencias como 1234.",
+"This person already has a PIN. Reset the PIN first.": "Esta persona ya tiene PIN. Primero reinicia el PIN.",
+"They get a user from their name (like FRAL) and a one-time start code from you, then pick their own PIN.": "Reciben un usuario según su nombre (como FRAL) y un código de entrada de un solo uso que les das tú, y luego eligen su propio PIN.",
+"Each person signs in with their user and PIN. New users and PIN resets get a 6-digit start code from you that works once for 3 days.": "Cada persona entra con su usuario y su PIN. Los usuarios nuevos y los PIN reiniciados reciben de ti un código de 6 números que sirve una vez durante 3 días.",
+"Start codes for who is not active": "Códigos para quien no ha activado",
+"Start code": "Código de entrada",
+"Not active yet": "Sin activar",
+"Code until": "Código hasta",
 "Chat": "Chat",
 "Orders": "Órdenes",
 "Lost & Found": "Objetos perdidos",
@@ -1262,12 +1288,12 @@ const ES = {
 "Last 7 days": "Últimos 7 días",
 "Download orders (CSV, 30 days)": "Descargar órdenes (CSV, 30 días)",
 "Add staff": "Agregar personal",
-"They get a user from their name (like FRAL) and sign in with PIN 0000, then pick their own PIN.": "Reciben un usuario según su nombre (como FRAL), entran con el PIN 0000 y luego eligen su propio PIN.",
+"They get a user from their name (like FRAL) and a one-time start code from you, then pick their own PIN.": "Reciben un usuario según su nombre (como FRAL), entran con el PIN 0000 y luego eligen su propio PIN.",
 "First name": "Nombre",
 "Last name": "Apellido",
 "Add to team": "Agregar al equipo",
 "Team at": "Equipo de",
-"Each person signs in with their user. New users and PIN resets start with 0000, and the app asks them to pick their own PIN.": "Cada persona entra con su usuario. Los usuarios nuevos y los PIN reiniciados empiezan con 0000, y la app les pide elegir su propio PIN.",
+"Each person signs in with their user and PIN. New users and PIN resets get a 6-digit start code from you that works once for 3 days.": "Cada persona entra con su usuario. Los usuarios nuevos y los PIN reiniciados empiezan con 0000, y la app les pide elegir su propio PIN.",
 "Download user list": "Descargar lista de usuarios",
 "Search name or user": "Buscar nombre o usuario",
 "Search the team": "Buscar en el equipo",
@@ -1602,7 +1628,7 @@ const ES_RX = [
   [/^\. User$/, ". Usuario"],
   [/^, first PIN 0000\.$/, ", primer PIN 0000."],
   [/^PIN reset\. (.+) signs in as (\w+) with 0000 and picks a new PIN\.$/, "PIN reiniciado. $1 entra como $2 con 0000 y elige un PIN nuevo."],
-  [/^Your manager got a request to reset the PIN for (\w+)\. After the reset, sign in with the PIN your manager gives you\.$/, "Tu gerente recibió el pedido para reiniciar el PIN de $1. Después, entra con el PIN que te dé tu gerente."],
+  [/^Your manager got a request to reset the PIN for (\w+)\. After the reset, sign in with the start code your manager gives you\.$/, "Tu gerente recibió el pedido para reiniciar el PIN de $1. Después, entra con el código de entrada que te dé tu gerente."],
   [/^\((\w+)\)\. Open Manager to reset it\.$/, "($1). Abre Gerente para reiniciarlo."],
   [/^User (\w+)$/, "Usuario $1"],
   [/^(\d+) open$/, "$1 abiertas"],
@@ -2396,8 +2422,12 @@ async function refresh(){
     });
     S.resets = d.resets || [];
     S.resets.forEach(x => {
-      if (!S.firstLoad && !S.knownReset.has(x.id + x.at)) { toast(`<b>PIN reset request</b> ${esc(x.name)} (${esc(x.user)}). Open Manager to reset it.`, 'new'); newSound = newSound || 'normal'; }
-      S.knownReset.add(x.id + x.at);
+      const rk = (x.locked ? 'L' : 'R') + x.id + x.at;
+      if (!S.firstLoad && !S.knownReset.has(rk)) {
+        if (x.locked) toast(`<span data-noi18n><b>${esc(L2('Account locked', 'Cuenta bloqueada'))}</b> ${esc(x.name)} (${esc(x.user)}). ${esc(L2('Too many wrong PINs. If it was not them, nothing to do; if it was, reset the PIN in Manager.', 'Muchos PIN equivocados. Si no fue esa persona, no hay que hacer nada; si fue, reinicia el PIN en Gerente.'))}</span>`, 'new');
+        else toast(`<b>PIN reset request</b> ${esc(x.name)} (${esc(x.user)}). Open Manager to reset it.`, 'new');
+        newSound = newSound || 'normal'; }
+      S.knownReset.add(rk);
     });
     $('#teamCnt').textContent = S.resets.length || '';
     if (newSound) chime(newSound); else if (editSound) chime('edit'); else if (doneSound) fx('done'); else if (startSound) fx('start'); else if (newMsg && pipOn() && onShift()) pip();
@@ -2854,11 +2884,11 @@ async function loadTeam(){
     $('#repTable').innerHTML = '<tr><th>Hotel</th><th>Open now</th><th>New</th><th>Done</th><th>Avg time</th><th>Lost items</th><th>90+ days</th></tr>' +
       rep.map(r => `<tr><td>${esc(r.hotel)}</td><td>${r.open}</td><td>${r.created}</td><td>${r.done}</td><td>${r.avg_minutes == null ? '–' : r.avg_minutes + ' min'}</td><td>${r.lost_held}</td><td>${r.lost_over_90}</td></tr>`).join('');
     $('#staffList').innerHTML = staff.map(s => `<div class="li withav" data-staff="${s.id}"><span class="av${avClass(s.id)}" style="background:${roleColor(s.role)}">${esc(initials(s.first_name + ' ' + s.last_name))}</span><div class="grow">
-        <div class="t1">${esc(s.first_name)} ${esc(s.last_name)} <span class="uname">${esc(s.username || '')}</span> ${S.hotel && s.home && s.home !== S.hotel.id ? `<span class="pill from">${esc(tr('From'))} <span data-noi18n>${esc(hotelShort(s.home))}</span></span>` : ''} ${s.reset_requested && s.active ? '<span class="pill ask">Asked for PIN reset</span>' : ''} ${!s.active ? '<span class="pill">Inactive</span>' : s.locked ? '<span class="pill warn">Locked</span>' : s.pin_set ? '<span class="pill ok">PIN set</span>' : '<span class="pill">PIN 0000</span>'}</div>
+        <div class="t1">${esc(s.first_name)} ${esc(s.last_name)} <span class="uname">${esc(s.username || '')}</span> ${S.hotel && s.home && s.home !== S.hotel.id ? `<span class="pill from">${esc(tr('From'))} <span data-noi18n>${esc(hotelShort(s.home))}</span></span>` : ''} ${s.reset_requested && s.active ? '<span class="pill ask">Asked for PIN reset</span>' : ''} ${!s.active ? '<span class="pill">Inactive</span>' : s.locked ? '<span class="pill warn">Locked</span>' : s.pin_set ? '<span class="pill ok">PIN set</span>' : s.code_until ? `<span class="pill ask">${esc(tr('Code until'))} <span data-noi18n>${esc(fmtDate(T(s.code_until)) + ' ' + fmtTime(T(s.code_until)))}</span></span>` : '<span class="pill warn">Not active yet</span>'}</div>
         <div class="t2">${s.last_seen ? 'Last seen ' + fmtDate(T(s.last_seen)) + ' ' + fmtTime(T(s.last_seen)) : 'Never signed in'}</div>${devPills(s)}${s.phone || s.email ? `<div class="t2" data-noi18n>${esc([s.phone, s.email].filter(Boolean).join(' · '))}</div>` : ''}
         <div class="btnrow" style="margin-top:6px"><select class="btn sm" data-role>${ROLES.map(r => `<option value="${r.id}" ${r.id === s.role ? 'selected' : ''}>${r.label}</option>`).join('')}</select>
         <button class="btn sm" data-save>Save</button>${s.pin_set || s.locked || s.reset_requested ? `<button class="btn sm ${s.reset_requested ? 'pri' : ''}" data-reset>Reset PIN</button>` : ''}
-        ${s.active ? '<button class="btn sm pri" data-share>Share</button>' : ''}<button class="btn sm" data-active="${s.active ? 0 : 1}">${s.active ? 'Deactivate' : 'Reactivate'}</button><button class="btn sm" data-photo>Photo</button></div>
+        ${s.active && !s.pin_set ? '<button class="btn sm pri" data-code>Start code</button>' : s.active ? '<button class="btn sm pri" data-share>Share</button>' : ''}<button class="btn sm" data-active="${s.active ? 0 : 1}">${s.active ? 'Deactivate' : 'Reactivate'}</button><button class="btn sm" data-photo>Photo</button></div>
         <div class="depts"><span>Also alerts for:</span>${DEPTS.map(d => `<label><input type="checkbox" data-dept="${d.id}" ${(s.depts || []).includes(d.id) ? 'checked' : ''}>${d.label}</label>`).join('')}</div>${accessHtml(s)}</div></div>`).join('');
     S.adminStaff = staff;
     devSummary();
@@ -2913,17 +2943,18 @@ function filterTeam(){
   $('#teamFound').textContent = q ? (n === 1 ? '1 person' : n + ' people') : '';
 }
 $('#teamSearch').addEventListener('input', filterTeam);
-function inviteText(s){
+function inviteText(s, code, until){
   const url = location.origin + location.pathname, hotel = S.hotel ? S.hotel.name : 'your hotel', first = s.first_name || '';
-  const fresh = !s.pin_set;
+  const fresh = !!code, uEn = until ? new Date(until).toLocaleString('en-US', {month:'short', day:'numeric', hour:'numeric', minute:'2-digit', timeZone: TZ}) : '',
+    uEs = until ? new Date(until).toLocaleString('es-US', {month:'short', day:'numeric', hour:'numeric', minute:'2-digit', timeZone: TZ}) : '';
   const en = [`FrankShift · ${hotel}`, `Hi ${first}! Here's how to join the team chat:`,
     `1. Open ${url}`,
-    fresh ? `2. Choose ${hotel} and sign in with user ${s.username} and PIN 0000.` : `2. Choose ${hotel} and sign in with user ${s.username} and your own PIN.`,
+    fresh ? `2. Choose ${hotel} and sign in with user ${s.username} and start code ${code}. It works once, until ${uEn}.` : `2. Choose ${hotel} and sign in with user ${s.username} and your own PIN.`,
     fresh ? '3. Pick your own 4-digit PIN.' : '3. Forgot your PIN? Tap "Forgot your PIN?" on the sign-in screen.',
     '4. Add it to your home screen and follow the guide to turn on alerts.'];
   const es = [`¡Hola ${first}! Así entras al chat del equipo:`,
     `1. Abre ${url}`,
-    fresh ? `2. Elige ${hotel} y entra con el usuario ${s.username} y el PIN 0000.` : `2. Elige ${hotel} y entra con el usuario ${s.username} y tu propio PIN.`,
+    fresh ? `2. Elige ${hotel} y entra con el usuario ${s.username} y el código de entrada ${code}. Sirve una sola vez, hasta el ${uEs}.` : `2. Elige ${hotel} y entra con el usuario ${s.username} y tu propio PIN.`,
     fresh ? '3. Crea tu propio PIN de 4 números.' : '3. ¿Olvidaste tu PIN? Toca "¿Olvidaste tu PIN?" en la pantalla de entrada.',
     '4. Agrégala a tu pantalla de inicio y sigue la guía para activar los avisos.'];
   return en.join('\n') + '\n\n' + es.join('\n');
@@ -2941,10 +2972,11 @@ $('#staffList').addEventListener('click', async e => {
   const role = row.querySelector('[data-role]').value; let active = s.active, reset = false;
   if (e.target.matches('[data-photo]')) return pickAvatar(s.id);
   if (e.target.matches('[data-share]')) return shareInvite(s);
+  if (e.target.matches('[data-code]')) return giveCode(s);
   if (e.target.matches('[data-reset]')) reset = true; else if (e.target.matches('[data-active]')) active = e.target.dataset.active === '1'; else if (!e.target.matches('[data-save]')) return;
   const depts = [...row.querySelectorAll('[data-dept]:checked')].map(x => x.dataset.dept);
   try { await call('sc_staff_save', {p_id: s.id, p_first: s.first_name, p_last: s.last_name, p_role: role, p_active: active, p_reset_pin: reset, p_depts: depts});
-    toast(reset ? `PIN reset. ${esc(s.first_name)} signs in as ${esc(s.username)} with 0000 and picks a new PIN.` : 'Saved'); loadTeam(); refresh(); }
+    if (reset) { await loadTeam(); giveCode(s); } else { toast('Saved'); loadTeam(); } refresh(); }
   catch (err) { toast(esc(err.message)); }
 });
 $('#staffForm').addEventListener('submit', async e => {
@@ -2952,13 +2984,13 @@ $('#staffForm').addEventListener('submit', async e => {
   try { await call('sc_staff_save', {p_id: null, p_first: cleanName($('#sfFirst').value), p_last: cleanName($('#sfLast').value), p_role: $('#sfRole').value, p_active: true, p_reset_pin: false});
     const nf = cleanName($('#sfFirst').value), nl = cleanName($('#sfLast').value); $('#sfFirst').value = ''; $('#sfLast').value = ''; await loadTeam();
     const ns = (S.adminStaff || []).find(x => x.first_name === nf && x.last_name === nl);
-    toast('Added ' + esc((nf + ' ' + nl).trim()) + (ns ? `. User <b>${esc(ns.username)}</b>, first PIN 0000.` : '')); }
+    if (ns) giveCode(ns); else toast('Added ' + esc((nf + ' ' + nl).trim())); }
   catch (err) { $('#sfErr').textContent = err.message; }
 });
 $('#usersCsv').onclick = () => {
   const rows = (S.adminStaff || []).filter(x => x.active);
   const q = v => { v = v == null ? '' : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
-  const csv = ['User,First name,Last name,Department,PIN'].concat(rows.map(x => [x.username, x.first_name, x.last_name, roleOf(x.role).label, x.pin_set ? 'Own PIN' : '0000 (must change)'].map(q).join(','))).join('\n');
+  const csv = ['User,First name,Last name,Department,PIN'].concat(rows.map(x => [x.username, x.first_name, x.last_name, roleOf(x.role).label, x.pin_set ? 'Own PIN' : 'Not active yet'].map(q).join(','))).join('\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], {type: 'text/csv'}));
   a.download = `fa-hotel-users-${S.hotel ? S.hotel.id : ''}.csv`; document.body.appendChild(a); a.click(); a.remove();
 };
@@ -3194,7 +3226,7 @@ $('#loginForm').addEventListener('submit', async e => {
   e.preventDefault(); $('#loginErr').textContent = ''; $('#nameSug').hidden = true;
   const user = userOf($('#fUser').value), pin = $('#fPin').value.trim(), hotel = $('#fHotel').value;
   if (user.length < 2) { $('#loginErr').textContent = 'Type your user, like FRAL.'; return; }
-  if (!/^\d{4}$/.test(pin)) { $('#loginErr').textContent = ERR.PIN_FORMAT; return; }
+  if (!/^\d{4}(\d{2})?$/.test(pin)) { $('#loginErr').textContent = ERR.LOGIN_FORMAT; return; }
   $('#loginBtn').disabled = true;
   try {
     const r = await rpc('sc_login_user', {p_hotel: hotel, p_user: user, p_pin: pin});
@@ -3227,7 +3259,7 @@ $('#forgotBtn').onclick = async () => {
   if (user.length < 2) { $('#loginErr').textContent = 'Type your user first, like FRAL. Then tap Forgot your PIN.'; $('#fUser').focus(); return; }
   try { await rpc('sc_pin_reset_request', {p_hotel: hotel, p_user: user});
     fetch(API + '/functions/v1/notify', { method:'POST', headers:{'Content-Type':'application/json', apikey: KEY}, body: JSON.stringify({reset: {hotel, user}}) }).catch(() => {});
-    $('#loginErr').textContent = ''; toast(`Your manager got a request to reset the PIN for ${esc(user)}. After the reset, sign in with the PIN your manager gives you.`, 'new'); }
+    $('#loginErr').textContent = ''; toast(`Your manager got a request to reset the PIN for ${esc(user)}. After the reset, sign in with the start code your manager gives you.`, 'new'); }
   catch (err) { $('#loginErr').textContent = err.message; }
 };
 function signOut(expired){
@@ -3866,8 +3898,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 const CHANGES = [
+  {v: '1.2.0', d: '2026-11-10', en: ['First sign-in uses a one-time 6-digit start code from the manager instead of 0000', 'Managers make start codes one by one or for everyone not active yet, to send or print', 'Locks get longer after repeated wrong PINs, and managers get an alert', 'Too many wrong tries from one connection pause sign-in for 15 minutes', 'PINs that are easy to guess, like 1234 or 1111, are not allowed', 'The sign-in list shows only the first letter of the last name'],
+    es: ['La primera entrada usa un código de 6 números que da el gerente, en vez de 0000', 'Los gerentes crean códigos uno por uno o para todos los que no han activado, para enviar o imprimir', 'Los bloqueos duran más si se repiten los PIN equivocados, y el gerente recibe un aviso', 'Muchos intentos fallidos desde una misma conexión pausan la entrada 15 minutos', 'No se permiten PIN fáciles de adivinar, como 1234 o 1111', 'La lista de entrada muestra solo la inicial del apellido']},
   {v: '1.1.0', d: '2026-11-10', en: ['Version number and What\'s new in Settings', 'A banner offers the new version as soon as it is published', 'A red banner when the phone loses connection; the app catches up when it\'s back', 'Lighter on data: the screen only redraws when something changed, and an idle screen checks every 8 seconds', 'Keyboard focus is easier to see on computers'],
     es: ['Número de versión y Novedades en Ajustes', 'Un aviso ofrece la versión nueva apenas se publica', 'Un aviso rojo cuando el teléfono pierde conexión; la app se pone al día al volver', 'Gasta menos datos: la pantalla solo se redibuja si algo cambió, y una pantalla sin uso revisa cada 8 segundos', 'En computadora se ve mejor dónde está el foco del teclado']},
   {v: '1.0.0', d: '2026-11-10', en: ['Edit chat messages and pass-ons', 'Pass-ons in their own tab', 'Desktop dashboard in Orders with the hotel numbers from the PMS reports', 'White chat background', '"Clean vacant / put in the system" becomes one Front Desk order for SynXis'],
@@ -3923,6 +3957,60 @@ window.addEventListener('online', () => { netState(); if (S.token) refresh(); })
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkVersion(); });
 setInterval(() => { if (document.visibilityState === 'visible') checkVersion(); }, 15 * 60e3);
 netState(); setTimeout(checkVersion, 3000);
+
+/* ===== v1.2: one-time start codes ===== */
+const untilTxt = u => new Date(u).toLocaleString(LANG === 'es' ? 'es-US' : 'en-US', {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit', timeZone: TZ});
+async function giveCode(s){
+  let r;
+  try { r = await call('sc_start_code', {p_staff: s.id}); }
+  catch (err) { toast(esc(err.message)); return; }
+  const who = {first_name: r.first_name, username: r.user};
+  openModal(`<div data-noi18n><h2 style="margin:0 0 4px">${esc(L2('Start code', 'Código de entrada'))}</h2>
+    <p class="lead" style="margin:0">${esc(r.first_name + ' ' + (r.last_name || ''))} · ${esc(L2('User', 'Usuario'))} <span class="uname">${esc(r.user)}</span></p>
+    <div class="codebig">${esc(r.code)}</div>
+    <p class="small" style="margin:0 0 6px">${esc(L2(`Works once, until ${untilTxt(r.until)}. Then they pick their own PIN. Making a new code cancels this one.`, `Sirve una sola vez, hasta el ${untilTxt(r.until)}. Después la persona elige su propio PIN. Si haces otro código, este deja de servir.`))}</p>
+    <div class="btnrow" style="margin-top:12px"><button class="btn pri" data-cshare>${esc(L2('Send to them', 'Enviárselo'))}</button><button class="btn" data-ccopy>${esc(L2('Copy', 'Copiar'))}</button><button class="btn" data-close>${esc(L2('Close', 'Cerrar'))}</button></div></div>`);
+  const txt = inviteText(who, r.code, r.until);
+  $('#modalBody').querySelector('[data-cshare]').onclick = async () => {
+    if (navigator.share) { try { await navigator.share({title: 'FrankShift', text: txt}); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+    copyText(txt);
+  };
+  $('#modalBody').querySelector('[data-ccopy]').onclick = () => copyText(txt);
+  loadTeam();
+}
+async function giveCodes(){
+  const left = (S.adminStaff || []).filter(x => x.active && !x.pin_set);
+  if (!left.length) { toast(esc(L2('Everyone here already has their own PIN.', 'Aquí todos ya tienen su propio PIN.'))); return; }
+  openModal(`<div data-noi18n><h2 style="margin:0 0 6px">${esc(L2('Start codes', 'Códigos de entrada'))}</h2>
+    <p class="lead">${esc(L2(`Makes a new code for the ${left.length} people at this hotel who have not picked a PIN yet. Codes you gave before stop working.`, `Crea un código nuevo para las ${left.length} personas de este hotel que todavía no eligen su PIN. Los códigos que diste antes dejan de servir.`))}</p>
+    <div class="btnrow" style="margin-top:12px"><button class="btn pri" data-go>${esc(L2('Make codes', 'Crear códigos'))}</button><button class="btn" data-close>${esc(L2('Cancel', 'Cancelar'))}</button></div></div>`);
+  $('#modalBody').querySelector('[data-go]').onclick = async () => {
+    let list;
+    try { list = await call('sc_start_codes', {}); } catch (err) { toast(esc(err.message)); return; }
+    const hotel = S.hotel ? S.hotel.name : '', url = location.origin + location.pathname, until = list.length ? untilTxt(list[0].until) : '';
+    const plain = [`FrankShift · ${hotel}`, url, L2(`Start codes, one use each, until ${until}`, `Códigos de entrada, de un solo uso, hasta el ${until}`), '']
+      .concat(list.map(x => `${x.first_name} ${x.last_name || ''} · ${x.user} · ${x.code}`)).join('\n');
+    openModal(`<div data-noi18n><h2 style="margin:0 0 4px">${esc(L2('Start codes', 'Códigos de entrada'))}</h2>
+      <p class="small" style="margin:0">${esc(L2(`Give each person their own code, in person or by private message. They work once, until ${until}.`, `Dale a cada persona su propio código, en persona o por mensaje privado. Sirven una sola vez, hasta el ${until}.`))}</p>
+      <div class="codescroll"><table class="codelist"><tr><th>${esc(L2('Name', 'Nombre'))}</th><th>${esc(L2('User', 'Usuario'))}</th><th>${esc(L2('Code', 'Código'))}</th><th></th></tr>
+      ${list.map((x, i) => `<tr><td>${esc(x.first_name + ' ' + (x.last_name || ''))}</td><td class="uname">${esc(x.user)}</td><td class="c">${esc(x.code)}</td><td><button class="btn sm" data-one="${i}">${esc(L2('Send', 'Enviar'))}</button></td></tr>`).join('')}</table></div>
+      <div class="btnrow" style="margin-top:12px"><button class="btn" data-print>${esc(L2('Print', 'Imprimir'))}</button><button class="btn" data-all>${esc(L2('Copy all', 'Copiar todo'))}</button><button class="btn" data-close>${esc(L2('Close', 'Cerrar'))}</button></div></div>`);
+    const body = $('#modalBody');
+    body.querySelector('[data-all]').onclick = () => copyText(plain);
+    body.querySelector('[data-print]').onclick = () => {
+      const w = window.open('', '_blank'); if (!w) { copyText(plain); return; }
+      w.document.write(`<!doctype html><meta charset="utf-8"><title>FrankShift</title><style>body{font:14px system-ui,sans-serif;margin:24px}td,th{padding:6px 10px;border-bottom:1px solid #ccc;text-align:left}td.c{font:700 16px monospace}</style><h2>FrankShift · ${esc(hotel)}</h2><p>${esc(url)}<br>${esc(L2(`One use each, until ${until}. Then each person picks their own PIN.`, `Un solo uso cada uno, hasta el ${until}. Después cada persona elige su propio PIN.`))}</p><table><tr><th>${esc(L2('Name', 'Nombre'))}</th><th>${esc(L2('User', 'Usuario'))}</th><th>${esc(L2('Code', 'Código'))}</th></tr>${list.map(x => `<tr><td>${esc(x.first_name + ' ' + (x.last_name || ''))}</td><td>${esc(x.user)}</td><td class="c">${esc(x.code)}</td></tr>`).join('')}</table>`);
+      w.document.close(); setTimeout(() => { try { w.print(); } catch {} }, 300);
+    };
+    body.querySelectorAll('[data-one]').forEach(b => b.onclick = async () => {
+      const x = list[+b.dataset.one], txt = inviteText({first_name: x.first_name, username: x.user}, x.code, x.until);
+      if (navigator.share) { try { await navigator.share({title: 'FrankShift', text: txt}); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+      copyText(txt);
+    });
+    loadTeam();
+  };
+}
+$('#usersCodes').onclick = giveCodes;
 if (S.token && S.me) enterApp(); else showLogin();
 })();
 </script>
