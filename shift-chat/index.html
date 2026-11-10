@@ -473,6 +473,8 @@ html[data-theme="dark"] body[data-hotel="HWY"]{--hotel:#60A5FA;--hotel-soft:#142
 .msg.mine .rxpick{margin-left:auto}
 .rxpick button{border:0;background:none;font-size:20px;width:36px;height:36px;border-radius:10px}
 .rxpick button:hover,.rxpick button.on{background:var(--accent-soft)}
+.rxpick button[data-rx]{transition:transform .12s ease}
+.rxpick button.hot{transform:scale(1.45) translateY(-6px);background:var(--accent-soft)}
 .rxpick .rxcopy{display:grid;place-items:center;color:var(--ink-2);border-left:1px solid var(--line)!important;border-radius:0 10px 10px 0}
 .rxpick .rxcopy svg{width:18px;height:18px}
 .msg .bub{-webkit-tap-highlight-color:transparent}
@@ -1764,9 +1766,22 @@ function setReply(id){
 (() => {
   let sw = null, swiped = 0, lp = null, lpEat = 0;
   const feed = $('#feed');
-  const lpStop = () => { if (!lp) return; clearTimeout(lp.t); if (lp.el) lp.el.classList.remove('holding'); lp = null; };
-  const openRx = mid => {
-    S.rxOpen = S.rxOpen === mid ? null : mid; renderFeed();
+  const lpStop = () => { if (!lp) return; clearTimeout(lp.t); if (lp.el) lp.el.classList.remove('holding'); lp = null; rxHot(null); };
+  // hold, then slide the finger to an emoji and let go to pick it
+  let hot = null;
+  const rxHot = b => { if (hot === b) return; if (hot) hot.classList.remove('hot'); hot = b; if (b) { b.classList.add('hot'); if (navigator.vibrate) navigator.vibrate(6); } };
+  const rxAt = (x, y) => { const t = document.elementFromPoint ? document.elementFromPoint(x, y) : null; const b = t && t.closest && t.closest('.rxpick [data-rx]'); return b || null; };
+  const dragTo = (x, y) => { if (lp && lp.fired) rxHot(rxAt(x, y)); };
+  const dropAt = (x, y) => {
+    if (!lp || !lp.fired || lp.done) return false;
+    lp.done = true;
+    const b = (x != null ? rxAt(x, y) : null) || hot; rxHot(null);
+    if (b) { lpEat = Date.now(); react(b.dataset.rx, b.dataset.e); return true; }
+    return false;
+  };
+  window.__fsRxDrag = {dragTo, dropAt};
+  const openRx = (mid, keep) => {
+    S.rxOpen = keep || S.rxOpen !== mid ? mid : null; renderFeed();
     if (navigator.vibrate) navigator.vibrate(18);
     const el = [...feed.querySelectorAll('.msg[data-mid]')].find(x => x.dataset.mid === mid);
     const pk = el && el.querySelector('.rxpick');
@@ -1781,11 +1796,12 @@ function setReply(id){
     if (el.dataset.mid && !e.target.closest('.rx, .rquote, .readby')) {
       lp = {el, x: e.clientX, y: e.clientY, id: e.pointerId, fired: false};
       el.classList.add('holding');
-      lp.t = setTimeout(() => { if (!lp) return; lp.fired = true; lp.el.classList.remove('holding'); sw = null; openRx(lp.el.dataset.mid); }, 450);
+      lp.t = setTimeout(() => { if (!lp) return; lp.fired = true; lp.el.classList.remove('holding'); sw = null; openRx(lp.el.dataset.mid, true); }, 450);
     }
   });
   feed.addEventListener('pointermove', e => {
     if (lp && !lp.fired && e.pointerId === lp.id && Math.hypot(e.clientX - lp.x, e.clientY - lp.y) > 10) lpStop();
+    if (lp && lp.fired) { dragTo(e.clientX, e.clientY); return; }
     if (!sw || e.pointerId !== sw.id) return;
     const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
     if (!sw.on) {
@@ -1800,7 +1816,7 @@ function setReply(id){
     if (sw.dx >= 60 && !sw.buzz) { sw.buzz = true; if (navigator.vibrate) navigator.vibrate(10); }
   });
   const end = e => {
-    if (lp) { if (lp.fired) lpEat = Date.now(); lpStop(); }
+    if (lp) { if (lp.fired && e.type === 'pointercancel') { /* the finger is still down: touchend picks the emoji */ } else { if (lp.fired) { lpEat = Date.now(); dropAt(e.clientX, e.clientY); } lpStop(); } }
     if (!sw || (e.pointerId !== undefined && e.pointerId !== sw.id)) return;
     const s0 = sw; sw = null;
     if (!s0.on) return;
@@ -1825,7 +1841,19 @@ function setReply(id){
     if (lp && lp.fired) return;
     lpStop(); sw = null; openRx(el.dataset.mid);
   });
-  feed.addEventListener('scroll', lpStop, {passive: true});
+  feed.addEventListener('scroll', () => { if (lp && !lp.fired) lpStop(); }, {passive: true});
+  // phones: once the menu is open, the finger slides over the emojis instead of scrolling the chat
+  feed.addEventListener('touchmove', e => {
+    if (!lp || !lp.fired) return;
+    if (e.cancelable) e.preventDefault();
+    const t = e.touches[0]; if (t) dragTo(t.clientX, t.clientY);
+  }, {passive: false});
+  feed.addEventListener('touchend', e => {
+    if (!lp || !lp.fired) return;
+    const t = e.changedTouches[0];
+    if (t) dropAt(t.clientX, t.clientY);
+    lpEat = Date.now(); lpStop();
+  });
   // a tap anywhere else closes the picker
   document.addEventListener('click', e => {
     if (!S.rxOpen || e.target.closest('.rxpick, [data-rxadd]')) return;
