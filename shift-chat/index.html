@@ -473,6 +473,15 @@ html[data-theme="dark"] body[data-hotel="HWY"]{--hotel:#60A5FA;--hotel-soft:#142
 .msg.mine .rxpick{margin-left:auto}
 .rxpick button{border:0;background:none;font-size:20px;width:36px;height:36px;border-radius:10px}
 .rxpick button:hover,.rxpick button.on{background:var(--accent-soft)}
+.rxpick .rxcopy{display:grid;place-items:center;color:var(--ink-2);border-left:1px solid var(--line)!important;border-radius:0 10px 10px 0}
+.rxpick .rxcopy svg{width:18px;height:18px}
+.msg .bub{-webkit-tap-highlight-color:transparent}
+@media (hover:none){.msg .bub{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}}
+.msg .bub>.body,.msg .bub>.mphoto{transition:transform .18s ease}
+.msg.holding .bub>.body,.msg.holding .bub>.mphoto{transform:scale(.96);transition:transform .35s ease .1s}
+.msg .bub>.rxpick{animation:rxin .18s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes rxin{from{opacity:0;transform:translateY(-4px) scale(.96)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.msg.holding .bub>.body,.msg.holding .bub>.mphoto{transform:none}.msg .bub>.rxpick{animation:none}}
 .bigphoto{display:block;max-width:100%;max-height:70vh;margin:0 auto 12px;border-radius:12px}
 .pfrow .av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:22px;flex:none}
 .li .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px;flex:none}
@@ -1688,7 +1697,7 @@ function renderFeed(){
       <span class="swipeic" aria-hidden="true">${REPLY_IC}</span>
       <div class="av${avClass(m.staff_id)}" style="background:${roleColor(m.role)}">${esc(initials(m.author))}</div>
       <div class="bub"><div class="head"><span class="name">${esc(m.author)}</span><span class="rolechip" style="background:${roleColor(m.role)}">${esc(roleOf(m.role).label)}</span>${tag}<span class="time">${fmtTime(m.created_at)}</span></div>
-      ${rq}${m.body ? `<div class="body">${markMentions(roomLinks(m.body), m)}</div>` : ''}${m.has_photo ? photoHtml(m) : ''}${chips ? `<div class="extracted">${chips}</div>` : ''}${rb}</div></div>`;
+      ${rq}${m.body ? `<div class="body">${markMentions(roomLinks(m.body), m)}</div>` : ''}${m.has_photo ? photoHtml(m) : textRx(m)}${chips ? `<div class="extracted">${chips}</div>` : ''}${rb}</div></div>`;
   });
   feed.innerHTML = html;
   S.rendered = new Set(S.messages.map(m => m.id));
@@ -1699,13 +1708,24 @@ function renderFeed(){
 const REACTS = ['\u{1FAE1}','\u{1F44C}','\u{1F44D}','\u{1F44E}','\u{1F44F}','\u2714','\u26A0','\u2620','\u{1F4DD}','\u2757','\u203C','\u2049','\u{1F4AF}','\u2705','\u274E','\u2611'];
 const rxShow = e => (/^[\u2000-\u27ff]$/.test(e) && !['\u2705','\u274E','\u2757'].includes(e)) ? e + '\uFE0F' : e;
 const MPH = new Map(); let mphBusy = false;
+const COPY_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+function rxChips(m){
+  return (m.reactions || []).map(x => `<button class="rx ${x.mine ? 'mine' : ''}" data-rx="${esc(m.id)}" data-e="${esc(x.e)}" title="${esc((x.names || []).join(', '))}">${rxShow(esc(x.e))}<b>${x.n}</b></button>`).join('');
+}
+function rxPick(m){
+  if (S.rxOpen !== m.id) return '';
+  const cp = m.body ? `<button class="rxcopy" data-rxcopy="${esc(m.id)}" aria-label="Copy" title="Copy">${COPY_IC}</button>` : '';
+  return `<div class="rxpick" role="group" aria-label="Pick a reaction">${REACTS.map(e => `<button data-rx="${esc(m.id)}" data-e="${e}" class="${(m.reactions || []).some(x => x.e === e && x.mine) ? 'on' : ''}">${rxShow(e)}</button>`).join('')}${cp}</div>`;
+}
+function textRx(m){
+  const rx = rxChips(m);
+  return (rx ? `<div class="rxrow">${rx}</div>` : '') + rxPick(m);
+}
 function photoHtml(m){
   const d = MPH.get(m.id);
   const img = d ? `<img src="${esc(d)}" alt="Photo from ${esc(m.author)}">` : '<span class="ld">Loading photo…</span>';
-  const rx = (m.reactions || []).map(x => `<button class="rx ${x.mine ? 'mine' : ''}" data-rx="${esc(m.id)}" data-e="${esc(x.e)}" title="${esc((x.names || []).join(', '))}">${rxShow(esc(x.e))}<b>${x.n}</b></button>`).join('');
-  const pick = S.rxOpen === m.id ? `<div class="rxpick" role="group" aria-label="Pick a reaction">${REACTS.map(e => `<button data-rx="${esc(m.id)}" data-e="${e}" class="${(m.reactions || []).some(x => x.e === e && x.mine) ? 'on' : ''}">${rxShow(e)}</button>`).join('')}</div>` : '';
   return `<button class="mphoto" data-mphoto="${esc(m.id)}" aria-label="Open photo">${img}</button>
-    <div class="rxrow">${rx}<button class="rx add" data-rxadd="${esc(m.id)}" aria-label="Add a reaction">${S.rxOpen === m.id ? '×' : '+'}</button></div>${pick}`;
+    <div class="rxrow">${rxChips(m)}<button class="rx add" data-rxadd="${esc(m.id)}" aria-label="Add a reaction">${S.rxOpen === m.id ? '×' : '+'}</button></div>${rxPick(m)}`;
 }
 async function loadMsgPhotos(){
   if (mphBusy || !S.token) return;
@@ -1742,14 +1762,30 @@ function setReply(id){
   $('#input').focus();
 }
 (() => {
-  let sw = null, swiped = 0;
+  let sw = null, swiped = 0, lp = null, lpEat = 0;
   const feed = $('#feed');
+  const lpStop = () => { if (!lp) return; clearTimeout(lp.t); if (lp.el) lp.el.classList.remove('holding'); lp = null; };
+  const openRx = mid => {
+    S.rxOpen = S.rxOpen === mid ? null : mid; renderFeed();
+    if (navigator.vibrate) navigator.vibrate(18);
+    const el = [...feed.querySelectorAll('.msg[data-mid]')].find(x => x.dataset.mid === mid);
+    const pk = el && el.querySelector('.rxpick');
+    if (pk) { const r = pk.getBoundingClientRect(), f = feed.getBoundingClientRect(); if (r.bottom > f.bottom) feed.scrollTop += r.bottom - f.bottom + 8; }
+  };
+  window.__fsOpenRx = openRx;
   feed.addEventListener('pointerdown', e => {
     if (e.button > 0) return;
     const el = e.target.closest('.msg'); if (!el || e.target.closest('.rxpick, textarea, input')) return;
     sw = {el, x: e.clientX, y: e.clientY, dx: 0, on: false, id: e.pointerId};
+    lpStop();
+    if (el.dataset.mid && !e.target.closest('.rx, .rquote, .readby')) {
+      lp = {el, x: e.clientX, y: e.clientY, id: e.pointerId, fired: false};
+      el.classList.add('holding');
+      lp.t = setTimeout(() => { if (!lp) return; lp.fired = true; lp.el.classList.remove('holding'); sw = null; openRx(lp.el.dataset.mid); }, 450);
+    }
   });
   feed.addEventListener('pointermove', e => {
+    if (lp && !lp.fired && e.pointerId === lp.id && Math.hypot(e.clientX - lp.x, e.clientY - lp.y) > 10) lpStop();
     if (!sw || e.pointerId !== sw.id) return;
     const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
     if (!sw.on) {
@@ -1764,6 +1800,7 @@ function setReply(id){
     if (sw.dx >= 60 && !sw.buzz) { sw.buzz = true; if (navigator.vibrate) navigator.vibrate(10); }
   });
   const end = e => {
+    if (lp) { if (lp.fired) lpEat = Date.now(); lpStop(); }
     if (!sw || (e.pointerId !== undefined && e.pointerId !== sw.id)) return;
     const s0 = sw; sw = null;
     if (!s0.on) return;
@@ -1775,9 +1812,26 @@ function setReply(id){
   };
   feed.addEventListener('pointerup', end); feed.addEventListener('pointercancel', end);
   // a swipe is not a tap on a photo or button
-  feed.addEventListener('click', e => { if (Date.now() - swiped < 350) { e.stopPropagation(); e.preventDefault(); } }, true);
+  feed.addEventListener('click', e => {
+    const eat = lpEat && Date.now() - lpEat < 800 && !e.target.closest('.rxpick'); lpEat = 0;
+    if (Date.now() - swiped < 350 || eat) { e.stopPropagation(); e.preventDefault(); }
+  }, true);
   // desktop: double-click a message to reply
   feed.addEventListener('dblclick', e => { const el = e.target.closest('.msg'); if (el && !e.target.closest('button')) setReply(el.dataset.mid); });
+  // long-press menu on phones; right-click on a computer
+  feed.addEventListener('contextmenu', e => {
+    const el = e.target.closest('.msg[data-mid]'); if (!el || e.target.closest('textarea, input')) return;
+    e.preventDefault();
+    if (lp && lp.fired) return;
+    lpStop(); sw = null; openRx(el.dataset.mid);
+  });
+  feed.addEventListener('scroll', lpStop, {passive: true});
+  // a tap anywhere else closes the picker
+  document.addEventListener('click', e => {
+    if (!S.rxOpen || e.target.closest('.rxpick, [data-rxadd]')) return;
+    S.rxOpen = null; renderFeed();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.rxOpen) { S.rxOpen = null; renderFeed(); } });
 })();
 $('#feed').addEventListener('click', e => {
   const jq = e.target.closest('[data-jump]'); if (jq) {
@@ -1788,6 +1842,7 @@ $('#feed').addEventListener('click', e => {
   }
   const a = e.target.closest('[data-rxadd]'); if (a) { S.rxOpen = S.rxOpen === a.dataset.rxadd ? null : a.dataset.rxadd; renderFeed(); return; }
   const x = e.target.closest('[data-rx]'); if (x) { react(x.dataset.rx, x.dataset.e); return; }
+  const cp = e.target.closest('[data-rxcopy]'); if (cp) { const m = S.messages.find(y => y.id === cp.dataset.rxcopy); S.rxOpen = null; renderFeed(); if (m && m.body) copyText(m.body); return; }
   const ph = e.target.closest('[data-mphoto]'); if (ph) { const d = MPH.get(ph.dataset.mphoto); const m = S.messages.find(y => y.id === ph.dataset.mphoto);
     if (d) openModal(`<img class="bigphoto" src="${esc(d)}" alt="Photo"><p class="small">${esc(m ? m.author + ' · ' + fmtTime(m.created_at) : '')}</p><div class="btnrow"><button class="btn" data-close>Close</button></div>`); }
 });
