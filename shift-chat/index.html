@@ -408,7 +408,9 @@ html[data-theme="dark"] body[data-hotel="MGT"]{--hotel:#F87171;--hotel-soft:#3B1
 html[data-theme="dark"] body[data-hotel="FDT"]{--hotel:#4ADE80;--hotel-soft:#12301D}
 html[data-theme="dark"] body[data-hotel="HWY"]{--hotel:#60A5FA;--hotel-soft:#142847}
 .brand small#hotelName{display:inline-flex!important;align-items:center;gap:5px;color:var(--hotel);font-weight:700}
-.brand small#hotelName::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--hotel);flex:none}
+.brand small#hotelName::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--hotel);flex:none;animation:hpulse 1.8s ease-out infinite}
+@keyframes hpulse{0%{box-shadow:0 0 0 0 var(--hotel);opacity:1}55%{opacity:.55}70%{box-shadow:0 0 0 6px transparent}100%{box-shadow:0 0 0 0 transparent;opacity:1}}
+@media (prefers-reduced-motion:reduce){.brand small#hotelName::before{animation:none}}
 .brand small#hotelName.multi{background:var(--hotel-soft);border-radius:999px;padding:2px 9px 2px 7px;margin-top:2px}
 .brand small#hotelName.multi::after{content:'';width:6px;height:6px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translate(-1px,-2px);margin-left:3px}
 .tabs button{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-top:8px!important;padding-bottom:8px!important;line-height:1.1}
