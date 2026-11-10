@@ -13,6 +13,8 @@ async function lang(){
 const VIBE = { order: [150, 100, 150], urgent: [300, 100, 300, 100, 300, 100, 300, 100, 700], alarm: [900, 250, 900, 250, 1200],
   mention: [80, 60, 80], start: [80, 60, 160], done: [60, 50, 60, 50, 220], test: [200, 100, 200],
   // engineering: three quick knocks and a long buzz (like a hammer), twice when urgent
+  // an order was edited: a light triple tap
+  edit: [60, 50, 60, 50, 60],
   eng: [90, 70, 90, 70, 90, 220, 650], engUrgent: [90, 70, 90, 70, 90, 220, 650, 300, 90, 70, 90, 70, 90, 220, 900] };
 
 self.addEventListener('push', e => {

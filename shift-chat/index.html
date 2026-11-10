@@ -269,6 +269,32 @@ body{margin:0}
 .roomlink{background:none;border:0;padding:0;color:inherit;font:inherit;text-decoration:underline dotted;cursor:pointer}
 .readby{font-size:11.5px;color:var(--ink-3);margin-top:3px;background:none;border:0;padding:0;text-align:left}
 .newbtn{margin-left:auto}
+.calbtn{margin-left:auto;font-size:17px;padding-inline:10px}.calbtn + .newbtn{margin-left:0}
+.calhead{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.calhead h2{flex:1;text-align:center;margin:0;text-transform:capitalize}
+.calf{margin:4px 0 8px;display:flex;gap:6px;flex-wrap:wrap}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin:6px 0 10px}
+.calgrid .wd{font-size:11px;font-weight:700;text-align:center;color:var(--ink-3);text-transform:uppercase}
+.cd{min-height:50px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:4px 1px;display:flex;flex-direction:column;align-items:center;gap:2px;font:inherit;color:inherit;cursor:pointer}
+.cd.out{visibility:hidden}
+.cd.past .dn{color:var(--ink-3)}
+.cd.today{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.cd.sel{background:var(--accent);color:#fff;border-color:var(--accent)}
+.cd.sel .dn{color:#fff}
+.cd .dn{font-weight:700;font-size:14px}
+.cd .bd{display:flex;gap:2px;flex-wrap:wrap;justify-content:center}
+.cd i{font-style:normal;font-size:10.5px;font-weight:700;min-width:15px;padding:0 3px;border-radius:6px;line-height:15px;text-align:center}
+.cd i.w{background:color-mix(in srgb,#F59E0B 28%,transparent)}
+.cd i.g{background:color-mix(in srgb,#3B82F6 24%,transparent)}
+.cd.sel i{background:rgba(255,255,255,.28);color:#fff}
+.calday h3{margin:4px 0 2px;font-size:15px;text-transform:capitalize}
+.calsec{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2);margin:10px 0 4px}
+.callist{display:flex;flex-direction:column;gap:6px}
+.calrow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--surface);font:inherit;color:inherit;cursor:pointer;width:100%}
+.calrow .ct{font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink-2);white-space:nowrap}
+.calrow .cm b{display:block;font-size:12.5px;color:var(--ink-2)}
+.calrow .cm .s{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calnote{font-size:12px;color:var(--ink-3);margin:6px 0 0}
 .banner{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--accent-soft);border-radius:12px;padding:10px 12px;font-size:13px;margin:10px 16px 0}
 .banner .grow{flex:1;min-width:160px}
 table.rep{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
@@ -767,6 +793,7 @@ body{letter-spacing:0;font-feature-settings:normal}
       <div class="qhead">
         <div><h2>Now serving</h2><div class="sub">Open orders, highest priority first</div></div>
         <div class="big" id="qCount">0</div>
+        <button class="btn sm calbtn" id="calBtn" aria-label="Calendar" title="Calendar">🗓️</button>
         <button class="btn pri sm newbtn" id="newOrderBtn">+ New</button>
       </div>
       <div class="filters" id="filters" role="group" aria-label="Filter orders">
@@ -1043,6 +1070,36 @@ const ES = {
 "All": "Todas",
 "Mine": "Mías",
 "Completed today": "Completadas hoy",
+"✏️ Edit": "✏️ Editar",
+"Edit order": "Editar orden",
+"Whoever has it and its department get an alert when you save.": "Al guardar, le llega un aviso a quien la tiene y a su departamento.",
+"Save changes": "Guardar cambios",
+"Changes saved. The team was alerted.": "Cambios guardados. Se avisó al equipo.",
+"Nothing changed.": "No hubo cambios.",
+"Write what needs to be done.": "Escribe qué hay que hacer.",
+"Only open orders can be edited.": "Solo se pueden editar órdenes abiertas.",
+"Order changed": "Orden cambiada",
+"Last change": "Último cambio",
+"📅 Schedule": "📅 Programar fecha",
+"Schedule": "Programar fecha",
+"Change date": "Cambiar fecha",
+"The order waits as Scheduled and alerts its department at that time.": "La orden espera como Programada y avisa a su departamento a esa hora.",
+"Time": "Hora",
+"Save date": "Guardar fecha",
+"Make it for now": "Pasarla a ahora",
+"Back in open orders now.": "Ya está otra vez en órdenes abiertas.",
+"Pick a day in the next 90 days.": "Elige un día dentro de los próximos 90 días.",
+"Only open orders can be scheduled.": "Solo se pueden programar órdenes abiertas.",
+"Calendar": "Calendario",
+"Calendar filter": "Filtro del calendario",
+"Previous month": "Mes anterior",
+"Next month": "Mes siguiente",
+"🔧 Work orders": "🔧 Órdenes de trabajo",
+"🛎️ Guest requests": "🛎️ Pedidos de huéspedes",
+"Nothing on this day.": "Nada para este día.",
+"+ New order for this day": "+ Nueva orden para este día",
+"‹ Calendar": "‹ Calendario",
+"Showing open and recent orders only.": "Solo se ven las órdenes abiertas y recientes.",
 "Minimize completed orders": "Minimizar las completadas",
 "Show completed orders": "Mostrar las completadas",
 "In progress": "En proceso",
@@ -1774,7 +1831,7 @@ const msgUrgent = m => S.orders.some(o => o.message_id === m.id && prioOf(o).lev
 
 /* state */
 const S = { token: ls.get('sc.token', null), me: ls.get('sc.me', null), hotel: null, messages: [], orders: [], lost: [], staff: [],
-  kind:'chat', filter:'all', tab:'chat', sound: ls.get('sc.sound', true), known: new Map(), knownAsg: new Map(), knownLater: new Set(), knownMsg: new Set(), firstLoad: true, readSent: new Set(), picked: [],
+  kind:'chat', filter:'all', tab:'chat', sound: ls.get('sc.sound', true), known: new Map(), knownAsg: new Map(), knownLater: new Set(), knownEdit: new Map(), knownMsg: new Set(), firstLoad: true, readSent: new Set(), picked: [],
   resets: [], knownReset: new Set(), pendingPhoto: null, rxOpen: null };
 
 /* ===== render ===== */
@@ -2108,6 +2165,10 @@ function chime(kind, force){
     reps.forEach(o => { [0, .11, .22].forEach(d => note(c, t + o + d, 392, .09, .24, 'square'));
       note(c, t + o + .4, 784, .55, .2, 'triangle'); note(c, t + o + .4, 1175, .5, .08); });
     if (navigator.vibrate) navigator.vibrate(kind === 'engUrgent' ? [90, 70, 90, 70, 90, 220, 650, 300, 90, 70, 90, 70, 90, 220, 900] : [90, 70, 90, 70, 90, 220, 650]);
+  } else if (kind === 'edit') {
+    // an order changed: two quick rising pings, a light double tap
+    [[988, 0], [1319, .12], [988, .34], [1319, .46]].forEach(([f, d]) => note(c, t + d, f, .16, .14, 'triangle'));
+    if (navigator.vibrate) navigator.vibrate([60, 50, 60, 50, 60]);
   } else if (kind === 'urgent') {
     [0, .16, .32, .62, .78, .94].forEach((d, i) => note(c, t + d, i % 2 ? 1175 : 1568, .14, .22, 'triangle'));
     if (navigator.vibrate) navigator.vibrate([200, 90, 200, 90, 400]);
@@ -2181,7 +2242,7 @@ async function refresh(){
     S.messages = d.messages.map(m => ({...m, created_at: T(m.created_at)}));
     S.orders = d.orders.map(o => ({...o, created_at: T(o.created_at), done_at: T(o.done_at), started_at: T(o.started_at), scheduled_for: T(o.scheduled_for)}));
     S.lost = d.lost.map(l => ({...l, created_at: T(l.created_at), resolved_at: T(l.resolved_at)}));
-    let newSound = null, doneSound = false, startSound = false, newMsg = false;
+    let newSound = null, doneSound = false, startSound = false, newMsg = false, editSound = false;
     S.orders.forEach(o => {
       const prev = S.known.get(o.id);
       if (!S.firstLoad) {
@@ -2200,6 +2261,10 @@ async function refresh(){
           toast(`<b>${esc(o.done_by || 'Someone')}: not a task</b> ${esc(o.ticket)} · ${esc(o.summary)}`); }
         if ((prev === 'open' || prev === 'in_progress') && o.status === 'done' && o.done_by_id !== S.me.id) { toast(killLine(o).replace('<span class="k-ico">✓</span>', '✓ ')); if (o.created_by === S.me.id) doneSound = true; }
       }
+      if (!S.firstLoad && prev !== undefined && o.edited_at && S.knownEdit.get(o.id) !== o.edited_at && o.edited_by !== S.me.name
+          && (o.status === 'open' || o.status === 'in_progress') && !isLater(o)) { const u = prioOf(o).level === 'urgent';
+        if (orderForMe(o, u) || o.created_by === S.me.id) { toast(`<b>✏️ <span>Order changed</span> · ${esc(o.ticket)}</b> <span>${esc(o.edited_by || '')}</span> · <span>${esc(o.summary)}</span>`, 'new'); editSound = true; } }
+      S.knownEdit.set(o.id, o.edited_at || null);
       S.known.set(o.id, o.status); S.knownAsg.set(o.id, o.assigned_to || null); if (isLater(o)) S.knownLater.add(o.id); else S.knownLater.delete(o.id);
     });
     S.messages.forEach(m => {
@@ -2216,7 +2281,7 @@ async function refresh(){
       S.knownReset.add(x.id + x.at);
     });
     $('#teamCnt').textContent = S.resets.length || '';
-    if (newSound) chime(newSound); else if (doneSound) fx('done'); else if (startSound) fx('start'); else if (newMsg && pipOn() && onShift()) pip();
+    if (newSound) chime(newSound); else if (editSound) chime('edit'); else if (doneSound) fx('done'); else if (startSound) fx('start'); else if (newMsg && pipOn() && onShift()) pip();
     syncAvatars();
     render(); S.firstLoad = false; failCount = 0;
     renderAlarmBar(); pollAlarms(); if (S.tab === 'passon' && Date.now() - S.poAt > 20000) loadPassons();
@@ -2372,8 +2437,8 @@ async function orderAction(id, act, assignee){
 }
 
 /* modal */
-function openModal(html){ $('#modalBody').classList.remove('odet'); $('#modalBody').innerHTML = html; $('#modal').hidden = false; }
-function closeModal(){ $('#modal').hidden = true; $('#modalBody').innerHTML = ''; $('#modalBody').classList.remove('odet'); }
+function openModal(html){ $('#modalBody').classList.remove('odet', 'calm'); $('#modalBody').innerHTML = html; $('#modal').hidden = false; }
+function closeModal(){ $('#modal').hidden = true; $('#modalBody').innerHTML = ''; $('#modalBody').classList.remove('odet', 'calm'); }
 $('#modal').addEventListener('click', e => { if (e.target.id === 'modal' || e.target.closest('[data-close]')) closeModal(); });
 
 function moreMenu(id){
@@ -2381,22 +2446,23 @@ function moreMenu(id){
   const opts = S.staff.map(s => `<option value="${s.id}" ${s.id === o.assigned_to ? 'selected' : ''}>${esc(s.name)} · ${esc(roleOf(s.role).label)}</option>`).join('');
   openModal(`<h2>${esc(o.ticket)}${o.room ? ' · Room ' + esc(o.room) : ''}</h2><p class="lead">${esc(o.summary)}</p>
     <div class="field"><label for="asg">Assign to</label><select id="asg"><option value="">Choose a person</option>${opts}</select></div>
-    <div class="btnrow" style="margin-bottom:14px"><button class="btn pri" id="asgBtn">Assign</button><button class="btn" id="photoBtn">Add photo</button>${o.photos ? `<button class="btn" data-photos="${o.id}">See photos</button>` : ''}</div>
+    <div class="btnrow" style="margin-bottom:14px"><button class="btn pri" id="asgBtn">Assign</button><button class="btn" id="photoBtn">Add photo</button>${o.photos ? `<button class="btn" data-photos="${o.id}">See photos</button>` : ''}<button class="btn" id="editBtn">✏️ Edit</button>${o.status === 'open' ? '<button class="btn" id="schedBtn">📅 Schedule</button>' : ''}</div>
     <div class="btnrow"><button class="btn" id="dismissBtn">Not a task</button><button class="btn" data-close>Close</button></div>`);
   $('#asgBtn').onclick = () => { const v = $('#asg').value; if (!v) return; closeModal(); orderAction(id, 'assign', v); };
   $('#dismissBtn').onclick = () => { closeModal(); orderAction(id, 'dismiss'); };
+  if ($('#schedBtn')) $('#schedBtn').onclick = () => scheduleOrder(id);
+  $('#editBtn').onclick = () => editOrder(id);
   $('#photoBtn').onclick = () => { photoFor = id; $('#photoInput').value = ''; $('#photoInput').click(); };
 }
 // full order detail, easier to read; open and finished orders alike
 const durTxt = ms => { const m = Math.max(0, Math.round(ms / 60000)); if (m < 60) return m + ' min'; const h = Math.floor(m / 60); if (h < 24) return h + ' h ' + (m % 60) + ' min'; return Math.floor(h / 24) + ' d ' + (h % 24) + ' h'; };
 const fmtFull = ms => (dayNY(ms) === dayNY(Date.now()) ? '' : fmtDate(ms) + ', ') + fmtTime(ms);
-function orderDetail(id){
-  const o = S.orders.find(x => x.id === id); if (!o) return;
+function orderDetail(id, fromCal){
+  const o = S.orders.find(x => x.id === id) || CAL.data.find(x => x.id === id); if (!o) return;
   const p = prioOf(o), lt = isLater(o), pl = placeOf(o), open = o.status === 'open' || o.status === 'in_progress';
   const src = o.message_id && S.messages.find(m => m.id === o.message_id);
   const quote = src ? src.body : (o.details && o.details !== o.summary ? o.details : '');
-  const SL = LANG === 'es' ? {done: 'Completada', dismissed: 'No es tarea', prog: 'En proceso', later: 'Programada', open: 'Abierta'} : {done: 'Completed', dismissed: 'Not a task', prog: 'In progress', later: 'Scheduled', open: 'Open'};
-  const stTxt = SL[o.status === 'done' ? 'done' : o.status === 'dismissed' ? 'dismissed' : o.status === 'in_progress' ? 'prog' : lt ? 'later' : 'open'];
+  const stTxt = stLabel(o);
   const stCls = o.status === 'done' ? 'ok' : o.status === 'in_progress' ? 'prog' : lt ? 'later' : '';
   const row = (k, v, raw) => v ? `<dt>${k}</dt><dd${raw ? ' data-noi18n' : ''}>${v}</dd>` : '';
   const what = o.items && o.items.length ? o.items.map(i => i.issue || String(i.label)).join(', ') : '';
@@ -2409,6 +2475,7 @@ function orderDetail(id){
       ${row('Requested by', `${esc(o.author)} · <span>${esc(roleOf(o.role).label)}</span>`)}
       ${row('Created', fmtFull(o.created_at))}
       ${o.scheduled_for ? row('Scheduled for', fmtFull(o.scheduled_for)) : ''}
+      ${o.edited_at ? row('Last change', `${esc(o.edited_by || '')} · ${fmtFull(T(o.edited_at))}`) : ''}
       ${row('Assigned to', esc(o.assigned_name || ''), true)}
       ${o.started_at ? row('Started', fmtFull(o.started_at)) : ''}
       ${o.status === 'done' ? row('Completed by', `${esc(o.done_by || '')}${o.done_role ? ' · <span>' + esc(roleOf(o.done_role).label) + '</span>' : ''}`) : ''}
@@ -2417,10 +2484,143 @@ function orderDetail(id){
       ${open ? (lt ? '' : row('Open for', durTxt(Date.now() - startAt(o)))) : o.done_at ? row('Total time', durTxt(o.done_at - startAt(o))) : ''}
     </dl>
     <div class="btnrow" style="margin-bottom:10px">${open && o.status === 'open' && !lt ? '<button class="btn pri" data-oact="start">I\'m on it</button>' : ''}${open ? '<button class="btn okb" data-oact="done">Done</button>' : ''}${o.photos ? `<button class="btn" data-photos="${o.id}">See photos</button>` : ''}</div>
-    <div class="btnrow">${open ? '<button class="btn" data-oact="more">More actions</button>' : ''}<button class="btn" data-close>Close</button></div>`);
+    <div class="btnrow">${fromCal ? '<button class="btn" data-calback>‹ Calendar</button>' : ''}${open ? '<button class="btn" data-oact="edit">✏️ Edit</button><button class="btn" data-oact="more">More actions</button>' : ''}<button class="btn" data-close>Close</button></div>`);
   $('#modalBody').classList.add('odet');
-  $('#modalBody').querySelectorAll('[data-oact]').forEach(b => b.onclick = () => { const a = b.dataset.oact; if (a === 'more') return moreMenu(id); closeModal(); orderAction(id, a); });
+  $('#modalBody').querySelectorAll('[data-oact]').forEach(b => b.onclick = () => { const a = b.dataset.oact; if (a === 'more') return moreMenu(id); if (a === 'edit') return editOrder(id); closeModal(); orderAction(id, a); });
+  const cb = $('#modalBody [data-calback]'); if (cb) cb.onclick = () => calRender();
 }
+// a day and time for an order that is already open; the calendar opens right away where the phone allows it
+const nyTime = (d, t) => { const g = Date.parse(d + 'T' + t + ':00Z'); let ms = g - (nyWall(g) - g); ms = g - (nyWall(ms) - ms); return ms; };
+function scheduleOrder(id){
+  const o = S.orders.find(x => x.id === id); if (!o) return;
+  const cur = o.scheduled_for && o.scheduled_for > Date.now() ? o.scheduled_for : null;
+  openModal(`<h2><span>${cur ? 'Change date' : 'Schedule'}</span> · ${esc(o.ticket)}</h2><p class="lead">The order waits as Scheduled and alerts its department at that time.</p>
+    <div class="grid2"><div class="field"><label for="scDate">Day</label><input type="date" id="scDate"></div>
+    <div class="field"><label for="scTime">Time</label><input type="time" id="scTime"></div></div>
+    <div class="err" id="scErr"></div>
+    <div class="btnrow"><button class="btn pri" id="scSave">Save date</button>${cur ? '<button class="btn" id="scNow">Make it for now</button>' : ''}<button class="btn" data-close>Cancel</button></div>`);
+  $('#scDate').min = ymdOf(Date.now()); $('#scDate').max = ymdOf(Date.now() + 89 * 864e5);
+  $('#scDate').value = ymdOf(cur || Date.now() + 864e5); $('#scTime').value = cur ? new Date(nyWall(cur)).toISOString().slice(11, 16) : '07:00';
+  try { $('#scDate').focus(); $('#scDate').showPicker && $('#scDate').showPicker(); } catch {}
+  const save = async ms => {
+    try { const r = await call('sc_order_schedule', {p_order: id, p_when: ms ? new Date(ms).toISOString() : null});
+      closeModal();
+      if (r.scheduled_for) { S.knownLater.add(id); toast(`<b>${esc(o.ticket)}</b> <span>Scheduled for ${esc(fmtWhen(T(r.scheduled_for)))}</span>`); }
+      else { S.knownLater.delete(id); notify([id]); toast(`<b>${esc(o.ticket)}</b> <span>Back in open orders now.</span>`); }
+      refresh();
+    } catch (e) { $('#scErr').textContent = tr(e.message === 'BAD_DATE' ? 'Pick a day in the next 90 days.' : e.message === 'NOT_FOUND' ? 'Only open orders can be scheduled.' : e.message); }
+  };
+  $('#scSave').onclick = () => {
+    const d = $('#scDate').value, t = $('#scTime').value || '07:00';
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) { $('#scErr').textContent = tr('Pick a day.'); return; }
+    const ms = nyTime(d, t);
+    if (!(ms > Date.now() + 60000)) { $('#scErr').textContent = tr('Pick a day and time later than now.'); return; }
+    save(ms);
+  };
+  if ($('#scNow')) $('#scNow').onclick = () => save(null);
+}
+// edit an open order; everyone who follows it hears the change
+function editOrder(id){
+  const o = S.orders.find(x => x.id === id); if (!o) return;
+  const opt = (v, l) => `<option value="${v}" ${o.category === v ? 'selected' : ''}>${l}</option>`;
+  openModal(`<h2><span>Edit order</span> · ${esc(o.ticket)}</h2><p class="lead">Whoever has it and its department get an alert when you save.</p>
+    <div class="grid2"><div class="field"><label for="edCat">Department</label><select id="edCat">${opt('housekeeping', 'Housekeeping')}${opt('maintenance', 'Maintenance')}${opt('frontdesk', 'Front desk')}</select></div>
+    <div class="field"><label for="edRoom">Room</label><input id="edRoom" inputmode="numeric" maxlength="6"></div></div>
+    <div class="field"><label for="edDet">What needs to be done</label><textarea id="edDet" maxlength="500" rows="4"></textarea></div>
+    <label style="display:flex;gap:8px;align-items:center;margin-bottom:12px;font-weight:600"><input type="checkbox" id="edUrg"> Urgent</label>
+    <div class="err" id="edErr"></div>
+    <div class="btnrow"><button class="btn pri" id="edSave">Save changes</button><button class="btn" data-close>Cancel</button></div>`);
+  $('#edRoom').value = o.room || ''; $('#edDet').value = o.details || o.summary || ''; $('#edUrg').checked = o.base_priority >= 4;
+  $('#edSave').onclick = async () => {
+    const b = $('#edSave'); b.disabled = true;
+    try {
+      const r = await call('sc_order_edit', {p_order: id, p_category: $('#edCat').value, p_room: $('#edRoom').value, p_details: $('#edDet').value, p_urgent: $('#edUrg').checked});
+      closeModal();
+      if (r.changed) {
+        fetch(API + '/functions/v1/notify', { method: 'POST', headers: {'Content-Type': 'application/json', apikey: KEY}, body: JSON.stringify({token: S.token, edited_order: id}) }).catch(() => {});
+        toast(`<b>✏️ ${esc(o.ticket)}</b> <span>Changes saved. The team was alerted.</span>`);
+      } else toast(`<b>${esc(o.ticket)}</b> <span>Nothing changed.</span>`);
+      refresh();
+    } catch (e) {
+      b.disabled = false;
+      $('#edErr').textContent = tr(e.message === 'DETAILS_REQUIRED' ? 'Write what needs to be done.' : e.message === 'NOT_FOUND' ? 'Only open orders can be edited.' : e.message);
+    }
+  };
+}
+const stLabel = o => {
+  const k = o.status === 'done' ? 'done' : o.status === 'dismissed' ? 'dismissed' : o.status === 'in_progress' ? 'prog' : isLater(o) ? 'later' : 'open';
+  return (LANG === 'es' ? {done: 'Completada', dismissed: 'No es tarea', prog: 'En proceso', later: 'Programada', open: 'Abierta'} : {done: 'Completed', dismissed: 'Not a task', prog: 'In progress', later: 'Scheduled', open: 'Open'})[k];
+};
+const stClass = o => o.status === 'done' ? 'ok' : o.status === 'in_progress' ? 'prog' : isLater(o) ? 'later' : '';
+
+/* calendar: work orders (maintenance) and guest requests (housekeeping, front desk) by hotel day */
+const CAL = { y: 0, m: 0, sel: '', kind: 'all', data: [], loading: false, partial: false, seq: 0 };
+const nyWall = ms => { const p = new Intl.DateTimeFormat('en-US', {timeZone: TZ, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'}).formatToParts(ms).reduce((a, x) => (a[x.type] = x.value, a), {});
+  return Date.UTC(+p.year, p.month - 1, +p.day, +p.hour % 24, +p.minute); };
+const nyAt = (y, m, d) => { const g = Date.UTC(y, m, d); let ms = g - (nyWall(g) - g); ms = g - (nyWall(ms) - ms); return ms; };
+const ymdOf = ms => new Date(nyWall(ms)).toISOString().slice(0, 10);
+const calDay = o => ymdOf(o.scheduled_for || o.created_at);
+const isWork = o => o.category === 'maintenance';
+const LOC = () => LANG === 'es' ? 'es-US' : 'en-US';
+function openCalendar(){
+  const t = new Date(nyWall(Date.now()));
+  CAL.y = t.getUTCFullYear(); CAL.m = t.getUTCMonth(); CAL.sel = ymdOf(Date.now());
+  calRender(); calLoad();
+}
+async function calLoad(){
+  const seq = ++CAL.seq, from = nyAt(CAL.y, CAL.m, 1), to = nyAt(CAL.y, CAL.m + 1, 1);
+  CAL.loading = true; CAL.partial = false; CAL.data = []; calRender();
+  let got = null;
+  try { got = await call('sc_order_calendar', {p_from: new Date(from).toISOString(), p_to: new Date(to).toISOString()}); } catch { got = null; }
+  if (seq !== CAL.seq) return;
+  const byId = new Map();
+  (got || []).forEach(o => byId.set(o.id, {...o, created_at: T(o.created_at), done_at: T(o.done_at), started_at: T(o.started_at), scheduled_for: T(o.scheduled_for)}));
+  S.orders.forEach(o => { const d = o.scheduled_for || o.created_at; if (d >= from && d < to) byId.set(o.id, o); });
+  CAL.data = [...byId.values()]; CAL.partial = !got; CAL.loading = false;
+  if ($('#modalBody').classList.contains('calm')) calRender();
+}
+function calRender(){
+  const y = CAL.y, m = CAL.m, today = ymdOf(Date.now());
+  const pick = o => CAL.kind === 'all' || (CAL.kind === 'work') === isWork(o);
+  const days = {};
+  CAL.data.filter(pick).forEach(o => { const k = calDay(o); (days[k] = days[k] || {w: 0, g: 0})[isWork(o) ? 'w' : 'g']++; });
+  const first = new Date(Date.UTC(y, m, 1)).getUTCDay(), n = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+  const wd = [...Array(7)].map((_, i) => new Intl.DateTimeFormat(LOC(), {weekday: 'short', timeZone: 'UTC'}).format(Date.UTC(2026, 10, 1 + i)).replace('.', ''));
+  let cells = wd.map(w => `<div class="wd">${esc(w)}</div>`).join('') + '<div class="cd out"></div>'.repeat(first);
+  for (let d = 1; d <= n; d++) {
+    const k = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`, c = days[k];
+    cells += `<button type="button" class="cd${k === today ? ' today' : ''}${k === CAL.sel ? ' sel' : ''}${k < today ? ' past' : ''}" data-day="${k}" aria-label="${k}"><span class="dn">${d}</span><span class="bd">${c && c.w ? `<i class="w">🔧${c.w}</i>` : ''}${c && c.g ? `<i class="g">🛎️${c.g}</i>` : ''}</span></button>`;
+  }
+  const title = new Intl.DateTimeFormat(LOC(), {month: 'long', year: 'numeric', timeZone: 'UTC'}).format(Date.UTC(y, m, 15));
+  const [sy, sm, sd] = CAL.sel.split('-').map(Number);
+  const dayTitle = new Intl.DateTimeFormat(LOC(), {weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC'}).format(Date.UTC(sy, sm - 1, sd));
+  const list = CAL.data.filter(o => pick(o) && calDay(o) === CAL.sel).sort((a, b) => (a.scheduled_for || a.created_at) - (b.scheduled_for || b.created_at));
+  const row = o => `<button type="button" class="calrow" data-oid="${o.id}"><span class="ct">${fmtTime(o.scheduled_for || o.created_at)}</span><span class="cm"><b>${isWork(o) ? '🔧' : '🛎️'} ${esc(o.ticket)}${o.room ? ` · <span>Room</span> ${esc(o.room)}` : ''}</b><span class="s">${esc(o.summary)}</span></span><span class="pill ${stClass(o)}" data-noi18n>${stLabel(o)}</span></button>`;
+  const sec = (label, arr) => arr.length ? `<div class="calsec">${label}</div><div class="callist">${arr.map(row).join('')}</div>` : '';
+  const body = CAL.loading && !list.length ? '<p class="small">Loading…</p>'
+    : !list.length ? '<p class="small">Nothing on this day.</p>'
+    : CAL.kind === 'all' ? sec('🔧 Work orders', list.filter(isWork)) + sec('🛎️ Guest requests', list.filter(o => !isWork(o)))
+    : `<div class="callist">${list.map(row).join('')}</div>`;
+  openModal(`<div class="calhead"><button type="button" class="btn sm" data-cal="prev" aria-label="Previous month">‹</button><h2 data-noi18n>${esc(title)}</h2><button type="button" class="btn sm" data-cal="next" aria-label="Next month">›</button></div>
+    <div class="calf filters" role="group" aria-label="Calendar filter"><button type="button" data-ck="all" aria-pressed="${CAL.kind === 'all'}">All</button><button type="button" data-ck="work" aria-pressed="${CAL.kind === 'work'}">🔧 Work orders</button><button type="button" data-ck="guest" aria-pressed="${CAL.kind === 'guest'}">🛎️ Guest requests</button></div>
+    <div class="calgrid">${cells}</div>
+    <div class="calday"><h3 data-noi18n>${esc(dayTitle)}</h3>${body}
+    ${CAL.partial ? '<p class="calnote">Showing open and recent orders only.</p>' : ''}</div>
+    <div class="btnrow" style="margin-top:14px">${CAL.sel >= today ? '<button type="button" class="btn pri" data-cal="new">+ New order for this day</button>' : ''}<button type="button" class="btn" data-close>Close</button></div>`);
+  $('#modalBody').classList.add('odet', 'calm');
+}
+$('#modalBody').addEventListener('click', e => {
+  if (!$('#modalBody').classList.contains('calm')) return;
+  const d = e.target.closest('[data-day]'); if (d) { CAL.sel = d.dataset.day; calRender(); return; }
+  const k = e.target.closest('[data-ck]'); if (k) { CAL.kind = k.dataset.ck; calRender(); return; }
+  const r = e.target.closest('[data-oid]'); if (r) { orderDetail(r.dataset.oid, true); return; }
+  const c = e.target.closest('[data-cal]'); if (!c) return;
+  if (c.dataset.cal === 'new') { const day = CAL.sel; closeModal(); newOrder(day); return; }
+  const step = c.dataset.cal === 'next' ? 1 : -1, t = new Date(Date.UTC(CAL.y, CAL.m + step, 1));
+  CAL.y = t.getUTCFullYear(); CAL.m = t.getUTCMonth();
+  const today = ymdOf(Date.now()); CAL.sel = today.slice(0, 7) === `${CAL.y}-${String(CAL.m + 1).padStart(2, '0')}` ? today : `${CAL.y}-${String(CAL.m + 1).padStart(2, '0')}-01`;
+  calLoad();
+});
 $('#kills').addEventListener('click', e => { const k = e.target.closest('.kill'); if (k) orderDetail(k.dataset.id); });
 $('#kills').addEventListener('keydown', e => { const k = e.target.closest('.kill'); if (k && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); orderDetail(k.dataset.id); } });
 // "Completed today" folds away: drag its handle down to minimize, up to open, or tap the handle or the title
@@ -2464,7 +2664,7 @@ async function showPhotos(id){
     openModal(`<h2>Photos</h2><div class="photos">${p.map(x => `<figure style="margin:0"><img src="${esc(x.data)}" alt="Order photo"><figcaption class="small">${esc(x.added_by)} · ${fmtTime(T(x.created_at))}</figcaption></figure>`).join('')}</div><div class="btnrow" style="margin-top:12px"><button class="btn" data-close>Close</button></div>`);
   } catch (e) { openModal(`<h2>Photos</h2><p class="err">${esc(e.message)}</p><button class="btn" data-close>Close</button>`); }
 }
-function newOrder(){
+function newOrder(day){
   openModal(`<h2>New order</h2><p class="lead">For anything the chat didn't pick up.</p>
     <div class="grid2"><div class="field"><label for="noCat">Department</label><select id="noCat"><option value="housekeeping">Housekeeping</option><option value="maintenance">Maintenance</option><option value="frontdesk">Front desk</option></select></div>
     <div class="field"><label for="noRoom">Room</label><input id="noRoom" inputmode="numeric" maxlength="6"></div></div>
@@ -2487,6 +2687,7 @@ function newOrder(){
     document.querySelectorAll('.nowhen button').forEach(x => x.setAttribute('aria-pressed', x === b));
     $('#noLater').hidden = $('#noLaterHint').hidden = when !== 'later';
     if (when === 'later' && !$('#noDate').value) $('#noDate').value = ymd(Date.now() + 864e5); });
+  if (day && day > ymd(Date.now())) { $('.nowhen [data-when="later"]').click(); $('#noDate').value = day; }
   $('#noSave').onclick = async () => {
     let at = null;
     if (when === 'later') {
@@ -3206,7 +3407,8 @@ document.querySelector('#view-lost').addEventListener('click', async e => {
   try { await call('sc_lf_update', {p_id: b.dataset.id, p_status: b.dataset.lf}); refresh(); } catch (err) { toast(esc(err.message)); }
 });
 $('#roomForm').addEventListener('submit', e => { e.preventDefault(); const r = $('#roomInput').value.trim(); if (r) roomHistory(r); });
-$('#newOrderBtn').onclick = newOrder;
+$('#newOrderBtn').onclick = () => newOrder();
+$('#calBtn').onclick = () => openCalendar();
 $('#composer').addEventListener('submit', e => { e.preventDefault(); send(); });
 const autosize = () => { const t = $('#input'); t.style.height = 'auto'; t.style.height = Math.min(140, t.scrollHeight) + 'px'; };
 function livePreview(){
@@ -3236,7 +3438,7 @@ async function reloadApp(){
   const b = $('#reloadBtn'); if (b) b.classList.add('spin');
   try {
     if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) (await navigator.serviceWorker.getRegistrations()).forEach(g => g.update().catch(() => {}));
-    await Promise.race([fetch(location.href.split('#')[0], {cache: 'reload'}).catch(() => {}), new Promise(z => setTimeout(z, 4000))]);
+    await Promise.race([Promise.all([location.href.split('#')[0], new URL('mapa.html', location.href).href].map(u => fetch(u, {cache: 'reload'}).catch(() => {}))), new Promise(z => setTimeout(z, 4000))]);
   } catch {}
   location.reload();
 }
