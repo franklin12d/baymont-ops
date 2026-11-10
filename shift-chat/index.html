@@ -1410,7 +1410,7 @@ const ES = {
 "urgent": "urgente",
 "low": "baja",
 "Settings": "Ajustes",
-"ROOM": "HAB"
+"ROOM": "HAB", "ROOMS": "HABS", "clean/vacant in SynXis": "limpia/vacante en SynXis"
 ,
 "Send test alert": "Enviar alerta de prueba",
 "Test alert in 8 seconds. Lock the phone or leave the app now.": "La alerta de prueba llega en 8 segundos. Bloquea el teléfono o sal de la app ahora.",
@@ -1536,6 +1536,8 @@ const ES = {
 "Pass-on posted": "Entrega publicada"
 };
 const ES_RX = [
+  [/^((?:[A-Z]+-\d+ · )?)(.+?): set rooms? (.+) to clean\/vacant in SynXis$/, (m, tk, who, rs) => `${tk}${who}: poner hab. ${rs.replace(/ and /, ' y ')} en limpia/vacante en SynXis`],
+  [/^Rooms (\d.*)$/, 'Hab. $1'],
   [/^Scheduled for (.+)$/, 'Programada para $1'],
   [/^Assigned to (.+)$/, 'Asignada a $1'],
   [/^URGENT · Scheduled order due · (.+)$/, 'URGENTE · Ya toca la orden programada · $1'],
@@ -1729,17 +1731,20 @@ const RX = {
 };
 const NUMWORDS = {un:1,una:1,uno:1,one:1,a:1,an:1,dos:2,two:2,tres:3,three:3,cuatro:4,four:4,cinco:5,five:5,seis:6,six:6,par:2,couple:2,'2x':2};
 
+// "159clean" reads as room 159 and the word clean
+const unglue = t => t.replace(/(\d{3,4})(?=[a-z]{3,})/g, '$1 ');
 function findRooms(t){
+  t = unglue(t);
   const rooms = []; const seen = new Set();
   const push = (r, idx) => { r = r.toUpperCase(); if (!seen.has(r)) { seen.add(r); rooms.push({room:r, idx}); } };
-  const reTagged = /(?:\broom|\brm|\bhab(?:itacion)?|\bcuarto|\bsuite|#)\s*\.?\s*#?\s*(\d{3,4}[a-z]?)\b/g;
+  const reTagged = /(?:\brooms?|\brms?|\bhab(?:itacion(?:es)?|s)?|\bcuartos?|\bsuites?|#)\s*\.?\s*#?\s*(\d{3,4}[a-z]?)\b/g;
   const reArticle = /\b(?:la|el|en|para|in|to|for|del|al)\s+(\d{3,4})\b(?!\s*(?:am|pm|dolares|dollars|usd|minutes|minutos|\$|:))/g;
   let m;
   while ((m = reTagged.exec(t))) push(m[1], m.index);
   if (!rooms.length) while ((m = reArticle.exec(t))) push(m[1], m.index);
   if (rooms.length) { const reMore = /(?:,|\by\b|\band\b|&|\/)\s*(\d{3,4})\b/g; while ((m = reMore.exec(t))) push(m[1], m.index); }
   if (!rooms.length) {
-    const reBare = /(?<![\d$:.,])\b(\d{3,4})\b(?![\d:.,]|\s*(?:am|pm|\$|dolares|dollars|usd))/g;
+    const reBare = /(?<![\d$:.]|\d,)\b(\d{3,4})\b(?![\d:.]|,\d|\s*(?:am|pm|\$|dolares|dollars|usd))/g;
     while ((m = reBare.exec(t))) { const n = +m[1]; if (n >= 100 && n <= 1999) push(m[1], m.index); }
   }
   return rooms;
@@ -1756,8 +1761,34 @@ function qtyBefore(t, idx){
   return null;
 }
 
+// housekeeping telling the desk a room is clean/vacant: one Front Desk order to change the status in SynXis
+const ST_CV = /\b(clean ?(and |y |& )?vacan\w*|vacan\w* ?(and |y |& )?clean\w*|limpi\w* ?(y |and |& )?vacan\w*|vacan\w* ?(y |and |& )?limpi\w*|vc)\b/;
+const ST_CLEAN = /\b(clean\w*|limpi\w*|ready|list[ao]s?|vacan\w*|vc)\b/;
+const ST_SYS = /\b(sistema|system|synx\w*|sinx\w*|pms)\b|\b(cambi\w*|change|update|actualiz\w*|correct\w*|corrig\w*|correg\w*|poner|pon|set) (el |la |the )?(e?status|estado)\b|\b(e?status|estado) (to |a )?(clean|limpi\w*|vacan\w*|vc)\b/;
+const isStatusMsg = t => ST_CV.test(t) || (ST_CLEAN.test(t) && ST_SYS.test(t));
 function parse(text){
-  let t = ' ' + norm(text) + ' ';
+  const full = ' ' + unglue(norm(text)) + ' ';
+  const rooms = findRooms(full);
+  if (!rooms.length || !isStatusMsg(full)) return parseCore(text);
+  // a status list can sit next to a real request on its own line: that line still makes its own order
+  const segs = String(text).split(/\n+|;|\.(?=\s)/).map(x => x.trim()).filter(Boolean);
+  const st = [], out = [];
+  const add = r => { if (!st.includes(r)) st.push(r); };
+  for (const seg of segs) {
+    const t = ' ' + unglue(norm(seg)) + ' ';
+    const rs = findRooms(t).map(r => r.room);
+    if (isStatusMsg(t) || !rs.length) { rs.forEach(add); continue; }
+    const o = parseCore(seg).filter(x => !(x.category === 'housekeeping' && x.items.every(i => i.k === 'clean' || i.k === 'check')));
+    if (o.length) out.push(...o); else rs.forEach(add);
+  }
+  if (!st.length) rooms.forEach(r => add(r.room));
+  const urgent = RX.urgent.test(full);
+  out.unshift({category:'frontdesk', room: st.length === 1 ? st[0] : null, place:null,
+    items:[{k:'status', label:'clean/vacant in SynXis', issue:null, qty:null, rooms: st.slice(0, 40)}], base_priority: urgent ? 3 : 0});
+  return out.slice(0, 10);
+}
+function parseCore(text){
+  let t = ' ' + unglue(norm(text)) + ' ';
   const rooms = findRooms(t);
   // blank out room numbers so they aren't read as quantities
   let work = t;
@@ -1821,8 +1852,12 @@ function labelFor(it, qty){
   if (qty && qty > 1) return qty + ' ' + (it.many || it.one + 's');
   return (/^[aeiou]/.test(it.one) ? 'an ' : 'a ') + it.one;
 }
+const stRooms = o => { const i = o && o.items && o.items.find(x => x.k === 'status'); return i && i.rooms && i.rooms.length ? i.rooms : null; };
 const joinList = a => a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
 function summaryFor(o, firstName){
+  const stI = o.items && o.items.find(i => i.k === 'status');
+  if (stI) { const rs = stI.rooms && stI.rooms.length ? stI.rooms : o.room ? [o.room] : [];
+    return `${firstName}: set room${rs.length > 1 ? 's' : ''} ${joinList(rs)} to clean/vacant in SynXis`; }
   const pl = o.place && PLACES.find(x => x.k === o.place);
   const room = o.room ? (o.category === 'frontdesk' ? ' for room ' : ' in room ') + o.room : pl ? ' ' + pl.at : '';
   if (o.category === 'maintenance' && o.items.some(i => i.issue)) return `${firstName} reports ${joinList(o.items.map(i => i.label))}${room}`;
@@ -1922,7 +1957,7 @@ function renderFeed(){
     if (sh !== last) { html += `<div class="shiftdiv">${esc(fmtDate(m.created_at))} · ${esc(shiftOf(m.created_at))}</div>`; last = sh; }
     const mine = m.staff_id === S.me.id; const tome = mentionsMe(m);
     const tag = m.kind === 'note' ? '<span class="kindtag">Guest note</span>' : m.kind === 'handoff' ? '<span class="kindtag">Shift handoff</span>' : '';
-    const chips = (byMsg[m.id] || []).map(o => `<span class="xchip ${o.status === 'done' || o.status === 'dismissed' ? 'done' : ''}"><b>${esc(o.ticket)}</b>${esc(o.room ? 'Room ' + o.room : placeOf(o) ? placeOf(o).label : 'No room')} · ${esc(o.status === 'in_progress' ? 'in progress' : o.status === 'open' ? CATS[o.category] : o.status)}</span>`).join('');
+    const chips = (byMsg[m.id] || []).map(o => `<span class="xchip ${o.status === 'done' || o.status === 'dismissed' ? 'done' : ''}"><b>${esc(o.ticket)}</b>${esc(o.room ? 'Room ' + o.room : stRooms(o) ? 'Rooms ' + stRooms(o).join(', ') : placeOf(o) ? placeOf(o).label : 'No room')} · ${esc(o.status === 'in_progress' ? 'in progress' : o.status === 'open' ? CATS[o.category] : o.status)}</span>`).join('');
     const rb = m.read_by ? `<button class="readby" data-readby="${esc(m.id)}">Read by ${m.read_by.length}</button>` : '';
     const rq = m.reply ? `<button class="rquote" data-jump="${esc(m.reply.id)}"><b>${esc(m.reply.staff_id === S.me.id ? 'You' : m.reply.author)}</b>${m.reply.body ? `<span class="rq">${esc(m.reply.body)}</span>` : `<span class="rqp">${m.reply.has_photo ? 'Photo' : ''}</span>`}</button>` : '';
     html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''} ${tome ? 'tome' : ''} ${cont ? 'cont' : 'first'} ${more ? 'more' : 'last'}${pop}" data-mid="${esc(m.id)}">
@@ -2162,7 +2197,7 @@ function orderCard(o, p){
   acts.push(`<button class="done" data-act="done" data-id="${o.id}">Done</button>`);
   acts.push(`<button data-act="more" data-id="${o.id}" aria-label="More actions">•••</button>`);
   return `<div class="order p-${p.level}" data-id="${o.id}">
-    ${(pl => pl && !o.room ? `<button class="fob place" style="border:0"><small>AREA</small>${esc(pl.label)}</button>` : `<button class="fob ${o.room ? '' : 'none'}" ${o.room ? `data-room="${esc(o.room)}"` : ''} style="border:0"><small>ROOM</small>${esc(o.room || 'n/a')}</button>`)(placeOf(o))}
+    ${(pl => !o.room && stRooms(o) ? `<button class="fob" style="border:0" title="${esc(stRooms(o).join(', '))}"><small>ROOMS</small>${stRooms(o).length}</button>` : pl && !o.room ? `<button class="fob place" style="border:0"><small>AREA</small>${esc(pl.label)}</button>` : `<button class="fob ${o.room ? '' : 'none'}" ${o.room ? `data-room="${esc(o.room)}"` : ''} style="border:0"><small>ROOM</small>${esc(o.room || 'n/a')}</button>`)(placeOf(o))}
     <div style="min-width:0">
       <div class="ohead"><span class="ticket">${esc(o.ticket)}</span><span class="prio ${p.level}">${p.level}</span>${st}<span class="cat">${esc(CATS[o.category])}</span><span class="age">${lt ? '' : ago(startAt(o))}</span></div>
       <div class="osum">${sum}</div>
@@ -2537,7 +2572,7 @@ function orderDetail(id, fromCal){
     <h2 class="odsum">${esc(o.summary)}</h2>
     ${quote ? `<p class="odq" data-noi18n>${src ? '“' + esc(quote) + '”' : esc(quote)}</p>` : ''}
     <dl>
-      ${o.room ? row('Room', `<button class="linkish roomlink" data-room="${esc(o.room)}">${esc(o.room)}</button>`) : pl ? row('Area', esc(pl.label)) : o.map_zone ? row('Area', esc(o.map_zone), true) : ''}
+      ${o.room ? row('Room', `<button class="linkish roomlink" data-room="${esc(o.room)}">${esc(o.room)}</button>`) : stRooms(o) ? row('Rooms', esc(stRooms(o).join(', '))) : pl ? row('Area', esc(pl.label)) : o.map_zone ? row('Area', esc(o.map_zone), true) : ''}
       ${what && what !== o.summary ? row('Details', esc(what)) : ''}
       ${row('Requested by', `${esc(o.author)} · <span>${esc(roleOf(o.role).label)}</span>`)}
       ${row('Created', fmtFull(o.created_at))}
@@ -3695,7 +3730,7 @@ function dashRender(){
   // open table
   const st = o => o.status === 'in_progress' ? `<span class="pill prog">${L2('In progress', 'En proceso')}</span>${o.assigned_name ? ' ' + esc(o.assigned_name) : ''}` : `<span class="pill">${L2('Waiting', 'En espera')}</span>`;
   const rows = open.slice(0, 60).map(({o, p}) => `<tr data-oid="${esc(o.id)}" tabindex="0"><td><span class="prio ${p.level}">${p.level === 'urgent' ? L2('Urgent', 'Urgente') : p.level === 'high' ? L2('High', 'Alta') : L2('Normal', 'Normal')}</span></td>
-      <td><b>${esc(o.ticket)}</b></td><td>${o.room ? esc(o.room) : esc(placeOf(o) ? placeOf(o).label : o.map_zone || '—')}</td><td>${ICON[o.category] || ''} ${esc(CATL[o.category] || '')}</td>
+      <td><b>${esc(o.ticket)}</b></td><td>${o.room ? esc(o.room) : stRooms(o) ? esc(stRooms(o).join(', ')) : esc(placeOf(o) ? placeOf(o).label : o.map_zone || '—')}</td><td>${ICON[o.category] || ''} ${esc(CATL[o.category] || '')}</td>
       <td class="dsum">${esc(o.summary)}</td><td>${durTxt(now - startAt(o))}</td><td>${st(o)}</td></tr>`).join('');
   const table = open.length ? `<div class="dtwrap"><table class="dtable"><thead><tr><th>${L2('Priority', 'Prioridad')}</th><th>${L2('Ticket', 'Ticket')}</th><th>${L2('Room', 'Hab.')}</th><th>${L2('Department', 'Departamento')}</th><th>${L2('Request', 'Pedido')}</th><th>${L2('Open for', 'Abierta hace')}</th><th>${L2('Status', 'Estado')}</th></tr></thead><tbody>${rows}</tbody></table></div>`
     : `<div class="dnone">${L2('No open orders right now.', 'No hay órdenes abiertas ahora.')}</div>`;
