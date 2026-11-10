@@ -395,6 +395,15 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
 .attach svg{width:20px;height:20px}
 .pendphoto{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2)}
 .pendphoto[hidden]{display:none}
+.brand .bt{position:relative}
+.brand small.multi{display:inline-flex!important;align-items:center;gap:3px;color:var(--accent);font-weight:600}
+.brand small.multi::after{content:'';width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translate(-1px,-2px);margin-left:3px}
+#hotelSel{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;appearance:none;-webkit-appearance:none;border:0}
+#hotelSel[hidden]{display:none}
+.acc{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--ink-2);margin-top:6px}
+.acc label{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:3px 9px;background:var(--surface)}
+.acc label.home{opacity:.7}
+.pill.from{background:var(--accent-soft);color:var(--accent)}
 .tsearch{display:flex;align-items:center;gap:10px;margin-bottom:10px;position:sticky;top:0;z-index:2;background:var(--surface);padding:4px 0}
 .tsearch input{flex:1;min-width:0;font:inherit;font-size:16px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink)}
 .tsearch .small{white-space:nowrap}
@@ -631,7 +640,7 @@ body{letter-spacing:0;font-feature-settings:normal}
 <body>
 <div class="app" id="app" hidden>
   <header class="top">
-    <div class="brand"><svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="fsG1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#635BFF"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#fsG1)"/><g fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="3.4" stroke-linecap="round"><path d="M10.39 24.13A23 23 0 0 1 49.09 16.61"/><path d="M53.61 39.87A23 23 0 0 1 14.91 47.39"/></g><g fill="#fff" fill-opacity=".9"><path d="M51.17 19.94L46.10 18.92L51.65 14.08Z"/><path d="M12.83 44.06L17.90 45.08L12.35 49.92Z"/></g><path d="M24 19h16a5 5 0 0 1 5 5v11a5 5 0 0 1-5 5H30l-6 5v-5a5 5 0 0 1-5-5V24a5 5 0 0 1 5-5z" fill="#fff"/><g fill="#5B5CF6"><circle cx="32" cy="25.2" r="1.5"/><path d="M25 33.6a7 7 0 0 1 14 0z"/><rect x="23.3" y="34.3" width="17.4" height="2.3" rx="1.15"/></g></svg><div class="bt">FrankShift<small id="hotelName">—</small></div></div>
+    <div class="brand"><svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="fsG1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#635BFF"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#fsG1)"/><g fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="3.4" stroke-linecap="round"><path d="M10.39 24.13A23 23 0 0 1 49.09 16.61"/><path d="M53.61 39.87A23 23 0 0 1 14.91 47.39"/></g><g fill="#fff" fill-opacity=".9"><path d="M51.17 19.94L46.10 18.92L51.65 14.08Z"/><path d="M12.83 44.06L17.90 45.08L12.35 49.92Z"/></g><path d="M24 19h16a5 5 0 0 1 5 5v11a5 5 0 0 1-5 5H30l-6 5v-5a5 5 0 0 1-5-5V24a5 5 0 0 1 5-5z" fill="#fff"/><g fill="#5B5CF6"><circle cx="32" cy="25.2" r="1.5"/><path d="M25 33.6a7 7 0 0 1 14 0z"/><rect x="23.3" y="34.3" width="17.4" height="2.3" rx="1.15"/></g></svg><div class="bt">FrankShift<small id="hotelName" data-noi18n>—</small><select id="hotelSel" aria-label="Switch hotel" hidden></select></div></div>
     <div class="spacer"></div>
     <button class="who" id="whoBtn" aria-label="Your account"><span class="av" id="whoAv"></span><span id="whoName"></span><span class="offtag" id="whoOff" hidden>Off shift</span></button>
     <button class="iconbtn" id="reloadBtn" aria-label="Refresh" title="Refresh the app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button>
@@ -1026,6 +1035,9 @@ const ES = {
 "Never signed in": "Nunca ha entrado",
 "Edit": "Editar",
 "Also alerts for:": "También avisos de:",
+"Switch hotel": "Cambiar de hotel",
+"Can use:": "Puede usar:",
+"From": "De",
 "Hotel": "Hotel",
 "Open now": "Abiertas",
 "New": "Nuevas",
@@ -1260,6 +1272,9 @@ const ES = {
 "Pass-on posted": "Entrega publicada"
 };
 const ES_RX = [
+  [/^Switching to (.+)…$/, 'Cambiando a $1…'],
+  [/^(.+) can now use (.+)$/, '$1 ahora puede usar $2'],
+  [/^(.+) can only use (.+)$/, '$1 solo puede usar $2'],
   [/^(\d+) people$/, '$1 personas'],
   [/^Replying to (.+)$/, 'Respondiendo a $1'],
   [/^(.+) is on it$/, "$1 lo está atendiendo"],
@@ -1608,6 +1623,7 @@ const S = { token: ls.get('sc.token', null), me: ls.get('sc.me', null), hotel: n
 function render(){
   if (!S.me) return;
   $('#hotelName').textContent = S.hotel ? S.hotel.name : '';
+  renderHotelMenu();
   $('#whoName').textContent = S.me.name;
   $('#whoAv').textContent = initials(S.me.name); $('#whoAv').style.background = roleColor(S.me.role); $('#whoAv').className = 'av' + avClass(S.me.id);
   $('#whoBtn').classList.toggle('off', !onShift()); $('#whoOff').hidden = onShift();
@@ -1875,13 +1891,37 @@ function fx(kind){
 }
 function setSoundIcon(){ $('#soundWave').style.display = S.sound ? '' : 'none'; $('#soundBtn').setAttribute('aria-label', S.sound ? 'Sound on' : 'Sound off'); }
 
+/* ===== hotel switch: only for people who can work in more than one hotel ===== */
+function reloadPage(){ if (typeof window.__fsReload === "function") return window.__fsReload(); location.reload(); }
+function renderHotelMenu(){
+  const sel = $('#hotelSel'), name = $('#hotelName'), hs = S.hotels || [];
+  const multi = hs.length > 1 && !!S.hotel;
+  name.classList.toggle('multi', multi); sel.hidden = !multi;
+  if (!multi) return;
+  const key = hs.map(h => h.id).join() + '|' + S.hotel.id;
+  if (sel.dataset.key !== key) {
+    sel.innerHTML = hs.map(h => `<option value="${esc(h.id)}" ${h.id === S.hotel.id ? 'selected' : ''}>${esc(h.name)}</option>`).join('');
+    sel.dataset.key = key;
+  }
+  sel.value = S.hotel.id;
+}
+$('#hotelSel').addEventListener('change', async e => {
+  const id = e.target.value; if (!S.hotel || id === S.hotel.id) return;
+  const h = (S.hotels || []).find(x => x.id === id);
+  try {
+    await call('sc_switch_hotel', {p_hotel: id});
+    toast(`Switching to ${esc(h ? h.name : id)}…`);
+    setTimeout(() => reloadPage(), 250);
+  } catch (err) { e.target.value = S.hotel.id; toast(esc(err.message)); }
+});
+
 /* ===== sync ===== */
 let busy = false, timer = null, failCount = 0;
 async function refresh(){
   if (!S.token || busy) return; busy = true;
   try {
     const d = await call('sc_sync', {});
-    S.me = d.me; ls.set('sc.me', S.me); S.hotel = d.hotel; S.staff = d.staff;
+    S.me = d.me; ls.set('sc.me', S.me); S.hotel = d.hotel; S.staff = d.staff; S.hotels = d.hotels || (d.hotel ? [d.hotel] : []);
     S.messages = d.messages.map(m => ({...m, created_at: T(m.created_at)}));
     S.orders = d.orders.map(o => ({...o, created_at: T(o.created_at), done_at: T(o.done_at), started_at: T(o.started_at)}));
     S.lost = d.lost.map(l => ({...l, created_at: T(l.created_at), resolved_at: T(l.resolved_at)}));
@@ -2149,16 +2189,33 @@ async function loadTeam(){
     $('#repTable').innerHTML = '<tr><th>Hotel</th><th>Open now</th><th>New</th><th>Done</th><th>Avg time</th><th>Lost items</th><th>90+ days</th></tr>' +
       rep.map(r => `<tr><td>${esc(r.hotel)}</td><td>${r.open}</td><td>${r.created}</td><td>${r.done}</td><td>${r.avg_minutes == null ? '–' : r.avg_minutes + ' min'}</td><td>${r.lost_held}</td><td>${r.lost_over_90}</td></tr>`).join('');
     $('#staffList').innerHTML = staff.map(s => `<div class="li withav" data-staff="${s.id}"><span class="av${avClass(s.id)}" style="background:${roleColor(s.role)}">${esc(initials(s.first_name + ' ' + s.last_name))}</span><div class="grow">
-        <div class="t1">${esc(s.first_name)} ${esc(s.last_name)} <span class="uname">${esc(s.username || '')}</span> ${s.reset_requested && s.active ? '<span class="pill ask">Asked for PIN reset</span>' : ''} ${!s.active ? '<span class="pill">Inactive</span>' : s.locked ? '<span class="pill warn">Locked</span>' : s.pin_set ? '<span class="pill ok">PIN set</span>' : '<span class="pill">PIN 0000</span>'}</div>
+        <div class="t1">${esc(s.first_name)} ${esc(s.last_name)} <span class="uname">${esc(s.username || '')}</span> ${S.hotel && s.home && s.home !== S.hotel.id ? `<span class="pill from">${esc(tr('From'))} <span data-noi18n>${esc(hotelShort(s.home))}</span></span>` : ''} ${s.reset_requested && s.active ? '<span class="pill ask">Asked for PIN reset</span>' : ''} ${!s.active ? '<span class="pill">Inactive</span>' : s.locked ? '<span class="pill warn">Locked</span>' : s.pin_set ? '<span class="pill ok">PIN set</span>' : '<span class="pill">PIN 0000</span>'}</div>
         <div class="t2">${s.last_seen ? 'Last seen ' + fmtDate(T(s.last_seen)) + ' ' + fmtTime(T(s.last_seen)) : 'Never signed in'}</div>${s.phone || s.email ? `<div class="t2" data-noi18n>${esc([s.phone, s.email].filter(Boolean).join(' · '))}</div>` : ''}
         <div class="btnrow" style="margin-top:6px"><select class="btn sm" data-role>${ROLES.map(r => `<option value="${r.id}" ${r.id === s.role ? 'selected' : ''}>${r.label}</option>`).join('')}</select>
         <button class="btn sm" data-save>Save</button>${s.pin_set || s.locked || s.reset_requested ? `<button class="btn sm ${s.reset_requested ? 'pri' : ''}" data-reset>Reset PIN</button>` : ''}
         ${s.active ? '<button class="btn sm pri" data-share>Share</button>' : ''}<button class="btn sm" data-active="${s.active ? 0 : 1}">${s.active ? 'Deactivate' : 'Reactivate'}</button><button class="btn sm" data-photo>Photo</button></div>
-        <div class="depts"><span>Also alerts for:</span>${DEPTS.map(d => `<label><input type="checkbox" data-dept="${d.id}" ${(s.depts || []).includes(d.id) ? 'checked' : ''}>${d.label}</label>`).join('')}</div></div></div>`).join('');
+        <div class="depts"><span>Also alerts for:</span>${DEPTS.map(d => `<label><input type="checkbox" data-dept="${d.id}" ${(s.depts || []).includes(d.id) ? 'checked' : ''}>${d.label}</label>`).join('')}</div>${accessHtml(s)}</div></div>`).join('');
     S.adminStaff = staff;
     filterTeam();
   } catch (e) { toast(esc(e.message)); }
 }
+const hotelShort = id => { const h = (S.hotels || []).find(x => x.id === id); return h ? h.name.replace(/^Developer Inn\s+/i, '') : id; };
+function accessHtml(s){
+  if (!S.me.all_hotels || (S.hotels || []).length < 2 || s.all_hotels || !s.active) return '';
+  return `<div class="acc"><span>Can use:</span>${S.hotels.map(h => h.id === s.home
+      ? `<label class="home"><input type="checkbox" checked disabled><span data-noi18n>${esc(hotelShort(h.id))}</span></label>`
+      : `<label><input type="checkbox" data-acc="${esc(h.id)}" ${(s.hotels || []).includes(h.id) ? 'checked' : ''}><span data-noi18n>${esc(hotelShort(h.id))}</span></label>`).join('')}</div>`;
+}
+$('#staffList').addEventListener('change', async e => {
+  if (!e.target.matches('[data-acc]')) return;
+  const row = e.target.closest('[data-staff]'); const s = (S.adminStaff || []).find(x => x.id === row.dataset.staff); if (!s) return;
+  const list = [...row.querySelectorAll('[data-acc]:checked')].map(x => x.dataset.acc);
+  try {
+    const got = await call('sc_staff_access', {p_staff: s.id, p_hotels: list});
+    s.hotels = got;
+    toast(list.length ? `${esc(s.first_name)} can now use ${esc([hotelShort(s.home)].concat(list.map(hotelShort)).join(', '))}` : `${esc(s.first_name)} can only use ${esc(hotelShort(s.home))}`);
+  } catch (err) { e.target.checked = !e.target.checked; toast(esc(err.message)); }
+});
 function filterTeam(){
   const q = norm(($('#teamSearch').value || '').trim());
   const rows = [...$('#staffList').querySelectorAll('[data-staff]')];
