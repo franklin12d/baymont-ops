@@ -217,6 +217,12 @@ body{margin:0}
 @media (min-width:900px){ .tabs button[data-tab="orders"]{display:none} }
 .view{flex:1;min-height:0;overflow-y:auto;padding-block:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .view .inner{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.view.mapview{padding:0;overflow:hidden;display:flex}.view.mapview[hidden]{display:none}
+#mapFrame{flex:1;width:100%;min-height:0;border:0;display:block;background:var(--surface)}
+.lfopen{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;font-weight:700;color:inherit;cursor:pointer}.lfopen svg{width:22px;height:22px;flex:none;color:var(--brand,#635BFF)}.lfopen .grow{flex:1}.lfopen .chev{font-size:22px;opacity:.5}
+.lfdot{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--brand,#635BFF);color:#fff;font:700 11px/20px system-ui,sans-serif;text-align:center}.lfdot[hidden]{display:none}
+.pill.later{background:color-mix(in srgb,#3B82F6 16%,transparent);color:inherit}
+.nowhen{display:flex;gap:6px;margin-bottom:10px}.nowhen button{flex:1}.nowhen button[aria-pressed=true]{background:var(--brand,#635BFF);color:#fff;border-color:transparent}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
 .card h2{margin:0 0 10px;font-family:var(--f-display);font-size:17px}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
@@ -704,7 +710,7 @@ body{letter-spacing:0;font-feature-settings:normal}
     <button role="tab" data-tab="chat" aria-selected="true"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span class="tl">Chat</span></button>
     <button role="tab" data-tab="passon" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"/></svg><span class="cnt" id="poCnt"></span></span><span class="tl">Pass-on</span></button>
     <button role="tab" data-tab="orders" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8M13 12h8M13 18h8"/></svg><span class="cnt" id="tabCnt"></span></span><span class="tl">Orders</span></button>
-    <button role="tab" data-tab="lost" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg></span><span class="tl">Lost &amp; Found</span></button>
+    <button role="tab" data-tab="map" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.1 6.1 9.9 3.9a2 2 0 0 0-1.8 0L3.6 6.2A1 1 0 0 0 3 7.1v12.3a1 1 0 0 0 1.4.9l3.7-1.9a2 2 0 0 1 1.8 0l4.2 2.2a2 2 0 0 0 1.8 0l4.5-2.3a1 1 0 0 0 .6-.9V5.1a1 1 0 0 0-1.4-.9l-3.7 1.9a2 2 0 0 1-1.8 0Z"/><path d="M9 3.6v15M15 5.6v15"/></svg><span class="cnt" id="mapCnt"></span></span><span class="tl">Map</span></button>
     <button role="tab" data-tab="team" aria-selected="false" id="teamTab" hidden><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="cnt" id="teamCnt"></span></span><span class="tl">Manager</span></button>
   </nav>
   <div class="banner" id="pushBanner" hidden><span class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span><span class="grow" id="pushText"></span><button class="btn sm pri" id="pushBtn">Turn on</button><button class="linkbtn" id="pushLater">Not now</button></div>
@@ -747,6 +753,7 @@ body{letter-spacing:0;font-feature-settings:normal}
         <button data-f="housekeeping" aria-pressed="false">Housekeeping</button>
         <button data-f="maintenance" aria-pressed="false">Maintenance</button>
         <button data-f="frontdesk" aria-pressed="false">Front desk</button>
+        <button data-f="later" aria-pressed="false">📅 Scheduled<span id="laterCnt" data-noi18n></span></button>
       </div>
       <div class="orders" id="orders"></div>
       <div class="killfeed"><h3>Completed today</h3><div id="kills"></div></div>
@@ -754,6 +761,7 @@ body{letter-spacing:0;font-feature-settings:normal}
   </div>
 
   <section class="view" id="view-passon" hidden><div class="inner">
+    <button type="button" class="card lfopen" id="lfBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg><span class="grow">Lost &amp; Found</span><span class="lfdot" id="lfDot" hidden></span><span class="chev" aria-hidden="true">›</span></button>
     <form class="card" id="poForm">
       <h2>New pass-on</h2>
       <p class="hint">One point per line. Anyone can comment on a point or set an alarm on it.</p>
@@ -766,6 +774,7 @@ body{letter-spacing:0;font-feature-settings:normal}
   </div></section>
 
   <section class="view" id="view-lost" hidden><div class="inner">
+    <div><button type="button" class="btn sm" id="lfBack">‹ Pass-on</button></div>
     <form class="card" id="lfForm">
       <h2>Log a found item</h2>
       <div class="field"><label for="lfItem">What was found</label><input id="lfItem" required maxlength="200" placeholder="Black iPhone charger"></div>
@@ -779,6 +788,8 @@ body{letter-spacing:0;font-feature-settings:normal}
     <div class="card"><h2>Holding (<span id="lfCount">0</span>)</h2><div class="list" id="lfList"></div></div>
     <div class="card"><h2>Returned or discarded, last 7 days</h2><div class="list" id="lfDone"></div></div>
   </div></section>
+
+  <section class="view mapview" id="view-map" hidden><iframe id="mapFrame" title="Map"></iframe></section>
 
   <section class="view" id="view-rooms" hidden><div class="inner">
     <form class="card" id="roomForm">
@@ -936,6 +947,20 @@ const ES = {
 "Chat": "Chat",
 "Orders": "Órdenes",
 "Lost & Found": "Objetos perdidos",
+"Map": "Mapa",
+"‹ Pass-on": "‹ Entregas",
+"Scheduled": "Programadas",
+"📅 Scheduled": "📅 Programadas",
+"When": "Cuándo",
+"Now": "Ahora",
+"Another day": "Otro día",
+"Day": "Día",
+"Time (optional)": "Hora (opcional)",
+"If you leave the time empty, it goes out at 7 AM. The department gets the alert then.": "Si no pones hora, sale a las 7 AM. El departamento recibe la alerta en ese momento.",
+"Pick a day.": "Elige un día.",
+"Pick a day and time later than now.": "Elige un día y una hora después de ahora.",
+"The department gets the alert then.": "El departamento recibe la alerta en ese momento.",
+"Orders scheduled for another day wait here until their time comes.": "Las órdenes para otro día esperan aquí hasta que llegue su hora.",
 "Rooms": "Habitaciones",
 "Manager": "Gerente",
 "Your account": "Tu cuenta",
@@ -1355,6 +1380,9 @@ const ES = {
 "Pass-on posted": "Entrega publicada"
 };
 const ES_RX = [
+  [/^Scheduled for (.+)$/, 'Programada para $1'],
+  [/^URGENT · Scheduled order due · (.+)$/, 'URGENTE · Ya toca la orden programada · $1'],
+  [/^Scheduled order due · (.+)$/, 'Ya toca la orden programada · $1'],
   [/^Switching to (.+)…$/, 'Cambiando a $1…'],
   [/^(.+) can now use (.+)$/, '$1 ahora puede usar $2'],
   [/^(.+) can only use (.+)$/, '$1 solo puede usar $2'],
@@ -1642,8 +1670,12 @@ function summaryFor(o, firstName){
   if (o.category === 'maintenance' && o.items.some(i => i.issue)) return `${firstName} reports ${joinList(o.items.map(i => i.label))}${room}`;
   return `${firstName} needs ${joinList(o.items.map(i => i.label))}${room}`;
 }
+// an order scheduled for later waits out of the queue; its age and priority count from when it comes due
+const isLater = o => !!(o.scheduled_for && o.scheduled_for > Date.now() && o.status === 'open');
+const startAt = o => Math.max(o.created_at || 0, o.scheduled_for || 0);
+const fmtWhen = ms => fmtDate(ms) + ' ' + fmtTime(ms);
 function prioOf(o){
-  const ageMin = (Date.now() - o.created_at) / 60000;
+  const ageMin = Math.max(0, (Date.now() - startAt(o)) / 60000);
   const score = o.base_priority + Math.floor(ageMin / 15);
   return {score, level: score >= 4 ? 'urgent' : score >= 2 ? 'high' : 'normal'};
 }
@@ -1699,7 +1731,7 @@ const msgUrgent = m => S.orders.some(o => o.message_id === m.id && prioOf(o).lev
 
 /* state */
 const S = { token: ls.get('sc.token', null), me: ls.get('sc.me', null), hotel: null, messages: [], orders: [], lost: [], staff: [],
-  kind:'chat', filter:'all', tab:'chat', sound: ls.get('sc.sound', true), known: new Map(), knownAsg: new Map(), knownMsg: new Set(), firstLoad: true, readSent: new Set(), picked: [],
+  kind:'chat', filter:'all', tab:'chat', sound: ls.get('sc.sound', true), known: new Map(), knownAsg: new Map(), knownLater: new Set(), knownMsg: new Set(), firstLoad: true, readSent: new Set(), picked: [],
   resets: [], knownReset: new Set(), pendingPhoto: null, rxOpen: null };
 
 /* ===== render ===== */
@@ -1956,15 +1988,16 @@ function orderCard(o, p){
   const sum = esc(o.summary).replace(esc(first), `<em>${esc(first)}</em>`);
   const src = o.message_id && S.messages.find(m => m.id === o.message_id);
   const quote = src ? `“${esc(src.body)}”` : (o.details ? esc(o.details) : '');
-  const st = o.status === 'in_progress' ? '<span class="pill prog">In progress</span>' : '';
+  const lt = isLater(o);
+  const st = o.status === 'in_progress' ? '<span class="pill prog">In progress</span>' : lt ? `<span class="pill later">📅 ${esc(fmtWhen(o.scheduled_for))}</span>` : '';
   const acts = [];
-  if (o.status === 'open') acts.push(`<button class="start" data-act="start" data-id="${o.id}">I'm on it</button>`);
+  if (o.status === 'open' && !lt) acts.push(`<button class="start" data-act="start" data-id="${o.id}">I'm on it</button>`);
   acts.push(`<button class="done" data-act="done" data-id="${o.id}">Done</button>`);
   acts.push(`<button data-act="more" data-id="${o.id}" aria-label="More actions">•••</button>`);
   return `<div class="order p-${p.level}">
     ${(pl => pl && !o.room ? `<button class="fob place" style="border:0"><small>AREA</small>${esc(pl.label)}</button>` : `<button class="fob ${o.room ? '' : 'none'}" ${o.room ? `data-room="${esc(o.room)}"` : ''} style="border:0"><small>ROOM</small>${esc(o.room || 'n/a')}</button>`)(placeOf(o))}
     <div style="min-width:0">
-      <div class="ohead"><span class="ticket">${esc(o.ticket)}</span><span class="prio ${p.level}">${p.level}</span>${st}<span class="cat">${esc(CATS[o.category])}</span><span class="age">${ago(o.created_at)}</span></div>
+      <div class="ohead"><span class="ticket">${esc(o.ticket)}</span><span class="prio ${p.level}">${p.level}</span>${st}<span class="cat">${esc(CATS[o.category])}</span><span class="age">${lt ? '' : ago(startAt(o))}</span></div>
       <div class="osum">${sum}</div>
       ${quote ? `<div class="oquote">${quote}</div>` : ''}
       ${o.assigned_name ? `<div class="assigned">Assigned to ${esc(o.assigned_name)}</div>` : ''}
@@ -1973,12 +2006,14 @@ function orderCard(o, p){
     </div></div>`;
 }
 function renderOrders(){
-  const open = S.orders.filter(o => o.status === 'open' || o.status === 'in_progress').map(o => ({o, p: prioOf(o)}))
-    .sort((a, b) => b.p.score - a.p.score || a.o.created_at - b.o.created_at);
-  const shown = open.filter(x => S.filter === 'all' || (S.filter === 'mine' ? x.o.assigned_to === S.me.id : x.o.category === S.filter));
+  const open = S.orders.filter(o => (o.status === 'open' || o.status === 'in_progress') && !isLater(o)).map(o => ({o, p: prioOf(o)}))
+    .sort((a, b) => b.p.score - a.p.score || startAt(a.o) - startAt(b.o));
+  const later = S.orders.filter(isLater).sort((a, b) => a.scheduled_for - b.scheduled_for).map(o => ({o, p: prioOf(o)}));
+  $('#laterCnt').textContent = later.length ? ' ' + later.length : '';
+  const shown = S.filter === 'later' ? later : open.filter(x => S.filter === 'all' || (S.filter === 'mine' ? x.o.assigned_to === S.me.id : x.o.category === S.filter));
   $('#qCount').textContent = open.length; $('#tabCnt').textContent = open.length || '';
   $('#orders').innerHTML = shown.length ? shown.map(x => orderCard(x.o, x.p)).join('')
-    : `<div class="qempty">${open.length ? 'Nothing here for this filter.' : 'All clear. New requests from the chat land here.'}</div>`;
+    : `<div class="qempty">${S.filter === 'later' ? 'Orders scheduled for another day wait here until their time comes.' : open.length ? 'Nothing here for this filter.' : 'All clear. New requests from the chat land here.'}</div>`;
 }
 function killLine(o){
   const who = `<span class="who2" style="color:${roleColor(o.done_role)}">${esc(o.done_by)}</span> (${esc(roleOf(o.done_role).label)})`;
@@ -1993,7 +2028,7 @@ function renderKills(){
 }
 function renderLost(){
   const held = S.lost.filter(l => l.status === 'held');
-  $('#lfCount').textContent = held.length;
+  $('#lfCount').textContent = held.length; $('#lfDot').textContent = held.length || ''; $('#lfDot').hidden = !held.length;
   $('#lfList').innerHTML = held.length ? held.map(l => {
     const d = daysOld(l.created_at);
     return `<div class="li"><div class="grow"><div class="t1">${esc(l.item)} ${d >= 90 ? '<span class="pill warn">90+ days</span>' : ''}</div>
@@ -2091,16 +2126,19 @@ async function refresh(){
     const d = await call('sc_sync', {});
     S.me = d.me; ls.set('sc.me', S.me); S.hotel = d.hotel; S.staff = d.staff; S.hotels = d.hotels || (d.hotel ? [d.hotel] : []);
     S.messages = d.messages.map(m => ({...m, created_at: T(m.created_at)}));
-    S.orders = d.orders.map(o => ({...o, created_at: T(o.created_at), done_at: T(o.done_at), started_at: T(o.started_at)}));
+    S.orders = d.orders.map(o => ({...o, created_at: T(o.created_at), done_at: T(o.done_at), started_at: T(o.started_at), scheduled_for: T(o.scheduled_for)}));
     S.lost = d.lost.map(l => ({...l, created_at: T(l.created_at), resolved_at: T(l.resolved_at)}));
     let newSound = null, doneSound = false, startSound = false, newMsg = false;
     S.orders.forEach(o => {
       const prev = S.known.get(o.id);
       if (!S.firstLoad) {
-        if (prev === undefined && o.status === 'open' && o.created_by !== S.me.id) { const u = prioOf(o).level === 'urgent';
+        const lt = isLater(o);
+        if (S.knownLater.has(o.id) && !lt && o.status === 'open') { const u = prioOf(o).level === 'urgent';
+          if (orderForMe(o, u) || o.created_by === S.me.id) { toast(`<b>${u ? 'URGENT · ' : ''}Scheduled order due · ${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); } }
+        if (prev === undefined && o.status === 'open' && !lt && o.created_by !== S.me.id) { const u = prioOf(o).level === 'urgent';
           if (orderForMe(o, u)) { toast(`<b>${u ? 'URGENT · ' : ''}${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); } }
         const pa = S.knownAsg.get(o.id);
-        if (prev !== undefined && prev === o.status && pa !== S.me.id && o.assigned_to === S.me.id && (o.status === 'open' || o.status === 'in_progress')) {
+        if (prev !== undefined && prev === o.status && pa !== S.me.id && o.assigned_to === S.me.id && (o.status === 'open' || o.status === 'in_progress') && !isLater(o)) {
           const u = prioOf(o).level === 'urgent';
           if (onShift() || u) { toast(`<b>Assigned to you · ${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = u ? 'urgent' : (newSound || 'normal'); } }
         if (prev === 'open' && o.status === 'in_progress' && o.created_by === S.me.id && o.assigned_to !== S.me.id) {
@@ -2109,7 +2147,7 @@ async function refresh(){
           toast(`<b>${esc(o.done_by || 'Someone')}: not a task</b> ${esc(o.ticket)} · ${esc(o.summary)}`); }
         if ((prev === 'open' || prev === 'in_progress') && o.status === 'done' && o.done_by_id !== S.me.id) { toast(killLine(o).replace('<span class="k-ico">✓</span>', '✓ ')); if (o.created_by === S.me.id) doneSound = true; }
       }
-      S.known.set(o.id, o.status); S.knownAsg.set(o.id, o.assigned_to || null);
+      S.known.set(o.id, o.status); S.knownAsg.set(o.id, o.assigned_to || null); if (isLater(o)) S.knownLater.add(o.id); else S.knownLater.delete(o.id);
     });
     S.messages.forEach(m => {
       if (!S.firstLoad && !S.knownMsg.has(m.id) && m.staff_id !== S.me.id) newMsg = true;
@@ -2326,12 +2364,38 @@ function newOrder(){
     <div class="grid2"><div class="field"><label for="noCat">Department</label><select id="noCat"><option value="housekeeping">Housekeeping</option><option value="maintenance">Maintenance</option><option value="frontdesk">Front desk</option></select></div>
     <div class="field"><label for="noRoom">Room</label><input id="noRoom" inputmode="numeric" maxlength="6"></div></div>
     <div class="field"><label for="noDet">What needs to be done</label><textarea id="noDet" maxlength="500"></textarea></div>
+    <div class="field"><label>When</label><div class="nowhen" role="group" aria-label="When"><button type="button" class="btn sm" data-when="now" aria-pressed="true">Now</button><button type="button" class="btn sm" data-when="later" aria-pressed="false">Another day</button></div>
+      <div class="grid2" id="noLater" hidden><div class="field"><label for="noDate">Day</label><input type="date" id="noDate"></div>
+      <div class="field"><label for="noTime">Time (optional)</label><input type="time" id="noTime"></div></div>
+      <div class="small" id="noLaterHint" hidden>If you leave the time empty, it goes out at 7 AM. The department gets the alert then.</div></div>
     <label style="display:flex;gap:8px;align-items:center;margin-bottom:12px;font-weight:600"><input type="checkbox" id="noUrg"> Urgent</label>
     <div class="err" id="noErr"></div>
     <div class="btnrow"><button class="btn pri" id="noSave">Create order</button><button class="btn" data-close>Cancel</button></div>`);
+  // day and time are the hotel's (New York), whatever clock the phone has
+  const parts = ms => new Intl.DateTimeFormat('en-US', {timeZone: TZ, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'}).formatToParts(ms).reduce((a, x) => (a[x.type] = x.value, a), {});
+  const ymd = ms => { const p = parts(ms); return p.year + '-' + p.month + '-' + p.day; };
+  const wall = ms => { const p = parts(ms); return Date.UTC(+p.year, p.month - 1, +p.day, +p.hour % 24, +p.minute); };
+  const hotelTime = (d, t) => { const g = Date.parse(d + 'T' + t + ':00Z'); let ms = g - (wall(g) - g); ms = g - (wall(ms) - ms); return ms; };
+  $('#noDate').min = ymd(Date.now()); $('#noDate').max = ymd(Date.now() + 89 * 864e5);
+  let when = 'now';
+  document.querySelectorAll('.nowhen button').forEach(b => b.onclick = () => { when = b.dataset.when;
+    document.querySelectorAll('.nowhen button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    $('#noLater').hidden = $('#noLaterHint').hidden = when !== 'later';
+    if (when === 'later' && !$('#noDate').value) $('#noDate').value = ymd(Date.now() + 864e5); });
   $('#noSave').onclick = async () => {
-    try { const r = await call('sc_order_new', {p_category: $('#noCat').value, p_room: $('#noRoom').value, p_details: $('#noDet').value, p_urgent: $('#noUrg').checked});
-      closeModal(); S.known.set(r.order_id, 'open'); notify([r.order_id]); refresh(); }
+    let at = null;
+    if (when === 'later') {
+      const d = $('#noDate').value, t = $('#noTime').value || '07:00';
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) { $('#noErr').textContent = tr('Pick a day.'); return; }
+      const ms = hotelTime(d, t);
+      if (!(ms > Date.now() + 60000)) { $('#noErr').textContent = tr('Pick a day and time later than now.'); return; }
+      at = new Date(ms).toISOString();
+    }
+    try { const r = await call('sc_order_new', Object.assign({p_category: $('#noCat').value, p_room: $('#noRoom').value, p_details: $('#noDet').value, p_urgent: $('#noUrg').checked}, at ? {p_when: at} : {}));
+      closeModal(); S.known.set(r.order_id, 'open');
+      if (r.scheduled_for) { S.knownLater.add(r.order_id); toast(`<b>Scheduled for ${esc(fmtWhen(T(r.scheduled_for)))}</b> The department gets the alert then.`); }
+      else notify([r.order_id]);
+      refresh(); }
     catch (e) { $('#noErr').textContent = e.message; }
   };
 }
@@ -2735,7 +2799,7 @@ $('#forgotBtn').onclick = async () => {
   catch (err) { $('#loginErr').textContent = err.message; }
 };
 function signOut(expired){
-  const t = S.token; S.token = null; S.me = null; ls.del('sc.token'); ls.del('sc.me'); clearInterval(timer);
+  const t = S.token; S.token = null; S.me = null; ls.del('sc.token'); ls.del('sc.me'); clearInterval(timer); S.knownLater.clear(); try { const f = $('#mapFrame'); f.removeAttribute('src'); f.dataset.h = ''; } catch {}
   if (t && !expired) rpc('sc_logout', {p_token: t}).catch(() => {});
   S.known.clear(); S.firstLoad = true; showLogin(expired ? ERR.SESSION_EXPIRED : '');
 }
@@ -2828,6 +2892,8 @@ function openSettings(){
     btn.parentElement.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === btn));
   });
 }
+$('#lfBtn').onclick = () => setTab('lost');
+$('#lfBack').onclick = () => setTab('passon');
 $('#roomsBtn').onclick = () => { setTab('rooms'); setTimeout(() => { try { $('#roomInput').focus(); } catch {} }, 50); };
 function enterApp(){
   $('#login').hidden = true; $('#app').hidden = false;
@@ -2835,6 +2901,8 @@ function enterApp(){
   setSoundIcon(); pushState(); checkAlerts(true); refresh(); startPolling(); maybeAlertWizard();
   if (location.hash === '#orders') setTab('orders');
   if (location.hash === '#passon') setTab('passon');
+  if (location.hash === '#lost') setTab('lost');
+  if (location.hash === '#map') setTab('map');
   if (location.hash === '#team' && S.me && S.me.role === 'mgr') setTab('team');
 }
 
@@ -2982,12 +3050,19 @@ $('#poForm').addEventListener('submit', async e => {
 });
 
 /* tabs & wiring */
+// the map is its own page, shown inside the app; it loads the first time the tab opens and again after a hotel switch
+function openMap(o){
+  const f = $('#mapFrame'), h = (S.hotel && S.hotel.id) || '';
+  if (o) { f.dataset.h = h; f.src = 'mapa.html#o=' + encodeURIComponent(o); return; }
+  if (f.dataset.h !== h || !f.getAttribute('src')) { f.dataset.h = h; f.src = 'mapa.html'; }
+}
 function setTab(t){
-  S.tab = t; document.querySelectorAll('#tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === t));
+  S.tab = t; document.querySelectorAll('#tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === t || (t === 'lost' && b.dataset.tab === 'passon')));
   const desktop = window.matchMedia('(min-width:900px)').matches;
   const inMain = t === 'chat' || t === 'orders';
   $('#main').hidden = !inMain; $('#main').dataset.tab = t;
-  ['passon','lost','rooms','team'].forEach(v => $('#view-' + v).hidden = t !== v);
+  ['passon','lost','rooms','team','map'].forEach(v => $('#view-' + v).hidden = t !== v);
+  if (t === 'map') openMap();
   if (t === 'passon') loadPassons();
   if (desktop && t === 'orders') setTab('chat');
   if (t === 'team') loadTeam();
