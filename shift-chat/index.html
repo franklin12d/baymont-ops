@@ -3491,6 +3491,7 @@ function enterApp(){
   if (location.hash === '#passon') setTab('passon');
   if (location.hash === '#lost') setTab('lost');
   if (location.hash === '#map') setTab('map');
+  if (location.hash === '#laundry') setTab('laundry');
   if (location.hash === '#team' && S.me && S.me.role === 'mgr') setTab('team');
 }
 
@@ -4022,8 +4023,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.3.1';
 const CHANGES = [
+  {v: '1.3.1', d: '2026-11-11', en: ['Laundry alerts on your phone, even with the app closed: when your load finishes, or if someone else stops it', 'Tapping a laundry alert opens Laundry'],
+    es: ['Avisos de Laundry en el teléfono, aunque la app esté cerrada: cuando tu tanda termina, o si otra persona la detiene', 'Al tocar el aviso se abre Laundry']},
   {v: '1.3.0', d: '2026-11-11', en: ['New Laundry in the Menu: Washer A and B, Dryer A and B, each with play, cycle time, a live countdown and who started it', 'Washers keep whether soap and bleach went in, with the time the load started', 'When a load ends the machine shows Ready, and whoever started it hears a bell'],
     es: ['Nuevo Laundry en el Menú: Lavadora A y B, Secadora A y B, cada una con play, tiempo del ciclo, cuenta regresiva y quién la puso', 'Las lavadoras guardan si llevó jabón y bleach, con la hora en que se puso la tanda', 'Cuando una tanda termina la máquina dice Lista, y quien la puso escucha una campana']},
   {v: '1.2.4', d: '2026-11-11', en: ['Switching hotel opens the app\'s own window with each hotel and its color, instead of the phone\'s list'],

@@ -15,6 +15,8 @@ const VIBE = { order: [150, 100, 150], urgent: [300, 100, 300, 100, 300, 100, 30
   // engineering: three quick knocks and a long buzz (like a hammer), twice when urgent
   // an order was edited: a light triple tap
   edit: [60, 50, 60, 50, 60],
+  // laundry: a load finished or was stopped, three long buzzes like a dryer
+  laundry: [500, 200, 500, 200, 500],
   eng: [90, 70, 90, 70, 90, 220, 650], engUrgent: [90, 70, 90, 70, 90, 220, 650, 300, 90, 70, 90, 70, 90, 220, 900] };
 
 self.addEventListener('push', e => {
@@ -35,7 +37,7 @@ self.addEventListener('push', e => {
       icon: 'icon-192.png',
       badge: 'icon-192.png',
       timestamp: Date.now(),
-      data: { url: self.registration.scope + (d.hash === '#team' || d.hash === '#passon' ? d.hash : '#orders') },
+      data: { url: self.registration.scope + (d.hash === '#team' || d.hash === '#passon' || d.hash === '#laundry' ? d.hash : '#orders') },
     });
   }));
 });
