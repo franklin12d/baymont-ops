@@ -864,10 +864,29 @@ header.top .brand{align-self:center;gap:0}
 header.top .brand .bt{flex-direction:row!important;align-items:center;height:40px;box-sizing:border-box;padding:0 16px!important;line-height:1}
 header.top .brand .bt small#hotelName{display:inline-flex!important;align-items:center;gap:8px;font:600 14px var(--f-body)!important;color:var(--hotel)}
 header.top .brand .bt small#hotelName::before{width:9px;height:9px}
+
+/* v1.2.4: the app's own hotel picker */
+#hotelSel{display:none!important}
+header.top .brand .bt.hpkon{cursor:pointer}
+.hpkscrim{position:fixed;inset:0;z-index:84;background:rgba(15,23,42,.22)}
+.hpkscrim[hidden],.hpk[hidden]{display:none}
+.hpk{position:fixed;z-index:85;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 66px);width:min(320px,calc(100vw - 24px));background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 50px rgba(15,23,42,.22);padding:8px;animation:hpkIn .16s ease-out}
+@keyframes hpkIn{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion:reduce){.hpk{animation:none}}
+.hpk h3{margin:0;padding:6px 12px 8px;font:600 12px var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.hpk button{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:6px 12px;border:0;border-radius:14px;background:none;color:var(--ink);font:500 16px var(--f-body);text-align:left;cursor:pointer}
+.hpk button[aria-checked="true"]{background:var(--hotel-soft)}
+.hpk .hd{width:12px;height:12px;border-radius:50%;flex:none;background:#635BFF}
+.hpk .hd[data-h="MGT"]{background:#DC2626}.hpk .hd[data-h="FDT"]{background:#16A34A}.hpk .hd[data-h="HWY"]{background:#2563EB}
+.hpk .hn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hpk .hk{width:20px;height:20px;flex:none;color:var(--hotel)}
+.hpk button[aria-checked="false"] .hk{visibility:hidden}
 </style>
 </head>
 <body>
 <div class="app" id="app" hidden>
+  <div class="hpkscrim" id="hpkScrim" hidden></div>
+  <div class="hpk" id="hpk" role="dialog" aria-modal="true" aria-labelledby="hpkTitle" hidden></div>
   <div class="menuscrim" id="menuScrim" hidden></div>
   <header class="top">
     <button class="menubtn fbtn" id="menuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="tabs" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h9"/></svg><span class="mcnt" id="menuCnt" data-noi18n></span></button>
@@ -3952,8 +3971,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.2.3';
+const APP_VERSION = '1.2.4';
 const CHANGES = [
+  {v: '1.2.4', d: '2026-11-11', en: ['Switching hotel opens the app\'s own window with each hotel and its color, instead of the phone\'s list'],
+    es: ['Cambiar de hotel abre una ventana de la app con cada hotel y su color, en vez de la lista del teléfono']},
   {v: '1.2.3', d: '2026-11-11', en: ['The top bar has just 3 things: Menu, a slim hotel button with its blinking dot, and your photo'],
     es: ['La barra de arriba tiene solo 3 cosas: Menú, un botón delgado con el hotel y su punto titilando, y tu foto']},
   {v: '1.2.2', d: '2026-11-11', en: ['New top bar with three round buttons: Menu on the left, FrankShift in the middle, your profile on the right', 'The Menu opens Chat, Pass-on, Orders, Map and Manager, plus room search and sound', 'Under the logo you see where you are and your hotel; the Menu shows a red count when something waits'],
@@ -4076,6 +4097,41 @@ $('#menuScrim').onclick = () => menuOpen(false);
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#app').classList.contains('menu-open')) { menuOpen(false); $('#menuBtn').focus(); } });
 new MutationObserver(menuSync).observe($('#tabs'), {subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['hidden', 'aria-selected']});
 menuSync();
+
+/* ===== v1.2.4: the app's own hotel picker ===== */
+function hpkOpen(on){
+  const box = $('#hpk'), hs = S.hotels || [];
+  if (on && !(hs.length > 1 && S.hotel)) return;
+  if (on) {
+    box.innerHTML = `<h3 id="hpkTitle" data-noi18n>${esc(L2('Choose hotel', 'Elige el hotel'))}</h3><div role="radiogroup" aria-labelledby="hpkTitle">${hs.map(h => `<button type="button" role="radio" data-hid="${esc(h.id)}" aria-checked="${h.id === S.hotel.id}"><span class="hd" data-h="${esc(h.id)}"></span><span class="hn" data-noi18n>${esc(h.name)}</span><svg class="hk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></button>`).join('')}</div>`;
+    menuOpen(false);
+  }
+  box.hidden = !on; $('#hpkScrim').hidden = !on;
+  const bt = document.querySelector('header.top .brand .bt'); if (bt) bt.setAttribute('aria-expanded', on ? 'true' : 'false');
+  if (on) { const c = box.querySelector('[aria-checked="true"]'); if (c) c.focus(); }
+}
+function hpkSync(){
+  const bt = document.querySelector('header.top .brand .bt'); if (!bt) return;
+  const multi = (S.hotels || []).length > 1 && !!S.hotel;
+  bt.classList.toggle('hpkon', multi);
+  if (multi) { bt.setAttribute('role', 'button'); bt.tabIndex = 0; bt.setAttribute('aria-haspopup', 'dialog'); bt.setAttribute('aria-label', L2('Switch hotel', 'Cambiar de hotel') + ': ' + (S.hotel.name || '')); }
+  else { bt.removeAttribute('role'); bt.removeAttribute('tabindex'); bt.removeAttribute('aria-haspopup'); bt.removeAttribute('aria-label'); }
+}
+(function(){
+  const bt = document.querySelector('header.top .brand .bt'); if (!bt) return;
+  bt.addEventListener('click', () => { if (bt.classList.contains('hpkon')) hpkOpen($('#hpk').hidden); });
+  bt.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && bt.classList.contains('hpkon')) { e.preventDefault(); hpkOpen(true); } });
+  $('#hpkScrim').onclick = () => hpkOpen(false);
+  $('#hpk').addEventListener('click', e => {
+    const b = e.target.closest('[data-hid]'); if (!b) return;
+    const id = b.dataset.hid; hpkOpen(false);
+    if (!S.hotel || id === S.hotel.id) return;
+    const sel = $('#hotelSel'); sel.value = id; sel.dispatchEvent(new Event('change', {bubbles: true}));
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#hpk').hidden) { hpkOpen(false); bt.focus(); } });
+  new MutationObserver(hpkSync).observe($('#hotelName'), {attributes: true, attributeFilter: ['class'], childList: true, characterData: true, subtree: true});
+  hpkSync();
+})();
 
 /* ===== v1.2: one-time start codes ===== */
 const untilTxt = u => new Date(u).toLocaleString(LANG === 'es' ? 'es-US' : 'en-US', {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit', timeZone: TZ});
