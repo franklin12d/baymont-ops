@@ -923,6 +923,45 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .lnchk input{width:22px;height:22px}
 .lnhist .lnrow{display:flex;flex-direction:column;gap:2px;padding:10px 0;border-top:1px solid var(--line)}
 .lnhist .lnrow:first-child{border-top:0}
+/* v1.4.0 Engineer */
+.enghead{display:flex;align-items:flex-end;gap:12px}
+.enghead .grow{flex:1;min-width:0}
+.enghead h2{margin:0;font-family:var(--f-display);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.enghead .sub{font-size:12px;color:var(--ink-3)}
+.enghead .big{font-family:var(--f-display);font-weight:800;font-size:34px;line-height:1;letter-spacing:-.02em}
+#view-eng .filters{padding:0}
+#engSeg button{font-size:13px;padding:6px 14px}
+#engTools:empty{display:none}
+#engList{display:flex;flex-direction:column;gap:10px}
+.engfind input{width:100%;border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:16px;margin-bottom:8px}
+.engfind input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.engcats{max-height:96px;overflow-y:auto}
+.engsum{font-size:13px;color:var(--ink-2);font-weight:600}
+.engday{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-top:4px}
+.engrow{cursor:pointer;align-items:center}
+.engrow .engst{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;flex:none;background:var(--surface);color:var(--ink-3)}
+.engrow .engst.ok{background:#16a34a;color:#fff}
+.engrow .engst.prog{background:#f59e0b;color:#fff}
+.engrow .engst.open{background:var(--accent);color:var(--accent-ink)}
+.engwhere{font-weight:800}
+.engwhat{font-size:13.5px;color:var(--ink-2);overflow-wrap:anywhere}
+.engtk{font-variant-numeric:tabular-nums}
+.engbars{display:flex;flex-direction:column;gap:6px}
+.engbar{display:grid;grid-template-columns:1fr auto;gap:2px 10px;text-align:left;border:0;background:var(--surface-2);border-radius:12px;padding:8px 10px;color:inherit;font:inherit}
+.engbar .engbl{font-weight:700;min-width:0}
+.engbar .engbn{font-weight:800;font-variant-numeric:tabular-nums}
+.engbar .engbt{grid-column:1 / -1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.engbar .engbt i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.engbar .t2{grid-column:1 / -1;font-size:12px;color:var(--ink-3)}
+.engroom{text-align:left;width:100%;color:inherit;font:inherit;cursor:pointer;align-items:center}
+.engrn{min-width:52px;height:40px;padding:0 8px;border-radius:10px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:16px;flex:none}
+.encats{padding:0}
+.encats button{font-size:13px;padding:6px 10px}
+.enwhere{display:flex;gap:6px}
+.enwhere button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.enrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.enchk{display:flex;gap:8px;align-items:center;font-weight:600}
+.enph{cursor:pointer}
 .lnhist .lnrow b{font-size:14px;color:var(--ink)}
 .lnhist .lnrow span{font-size:13px;color:var(--ink-2)}
 </style>
@@ -945,6 +984,7 @@ header.top .brand .bt.hpkon{cursor:pointer}
     <button role="tab" data-tab="chat" aria-selected="true"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span class="tl">Chat</span></button>
     <button role="tab" data-tab="passon" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"/></svg><span class="cnt" id="poCnt"></span></span><span class="tl">Pass-on</span></button>
     <button role="tab" data-tab="orders" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8M13 12h8M13 18h8"/></svg><span class="cnt" id="tabCnt"></span></span><span class="tl">Orders</span></button>
+    <button role="tab" data-tab="eng" aria-selected="false" id="engTab"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span class="cnt" id="engCnt"></span></span><span class="tl" data-noi18n>Engineer</span></button>
     <button role="tab" data-tab="map" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.1 6.1 9.9 3.9a2 2 0 0 0-1.8 0L3.6 6.2A1 1 0 0 0 3 7.1v12.3a1 1 0 0 0 1.4.9l3.7-1.9a2 2 0 0 1 1.8 0l4.2 2.2a2 2 0 0 0 1.8 0l4.5-2.3a1 1 0 0 0 .6-.9V5.1a1 1 0 0 0-1.4-.9l-3.7 1.9a2 2 0 0 1-1.8 0Z"/><path d="M9 3.6v15M15 5.6v15"/></svg><span class="cnt" id="mapCnt"></span></span><span class="tl">Map</span></button>
     <button role="tab" data-tab="laundry" aria-selected="false" id="lnTab"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h.01M11 6h.01"/><circle cx="12" cy="13.5" r="5"/><path class="drum" d="M9.3 14c.9-.8 1.8-.8 2.7 0s1.8.8 2.7 0"/></svg></span><span class="tl">Laundry</span><span class="lnst" id="lnSt" data-noi18n></span></button>
     <button role="tab" data-tab="team" aria-selected="false" id="teamTab" hidden><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="cnt" id="teamCnt"></span></span><span class="tl">Manager</span></button>
@@ -987,7 +1027,6 @@ header.top .brand .bt.hpkon{cursor:pointer}
         <button data-f="all" aria-pressed="true">All</button>
         <button data-f="mine" aria-pressed="false">Mine</button>
         <button data-f="housekeeping" aria-pressed="false">Housekeeping</button>
-        <button data-f="maintenance" aria-pressed="false">Maintenance</button>
         <button data-f="frontdesk" aria-pressed="false">Front desk</button>
         <button data-f="later" aria-pressed="false">📅 Scheduled<span id="laterCnt" data-noi18n></span></button>
       </div>
@@ -1041,6 +1080,13 @@ header.top .brand .bt.hpkon{cursor:pointer}
   <section class="view" id="view-laundry" hidden data-noi18n aria-label="Laundry"><div class="inner">
     <div class="lngrid" id="lnGrid"><div class="small">…</div></div>
     <div class="card lnhist"><h2 id="lnHistH">Last loads</h2><div id="lnHist"></div></div>
+  </div></section>
+
+  <section class="view" id="view-eng" hidden aria-label="Engineer"><div class="inner">
+    <div class="enghead" data-noi18n><div class="grow"><h2>Engineer</h2><div class="sub" id="engSub"></div></div><div class="big" id="engCount">0</div><button class="btn pri sm" id="engNew">+ New</button></div>
+    <div class="filters" id="engSeg" role="group" aria-label="Engineer" data-noi18n></div>
+    <div id="engTools" data-noi18n></div>
+    <div id="engList"></div>
   </div></section>
 
   <section class="view" id="view-team" hidden><div class="inner">
@@ -2103,7 +2149,7 @@ function render(){
   $('#whoAv').textContent = initials(S.me.name); $('#whoAv').style.background = roleColor(S.me.role); $('#whoAv').className = 'av' + avClass(S.me.id);
   $('#whoBtn').classList.toggle('off', !onShift()); $('#whoOff').hidden = onShift();
   $('#teamTab').hidden = S.me.role !== 'mgr';
-  renderFeed(); renderPins(); renderOrders(); renderKills(); renderLost(); markRead();
+  renderFeed(); renderPins(); renderOrders(); renderKills(); renderLost(); markRead(); try { renderEng(); } catch {}
   if (!$('#view-dash').hidden) dashRender();
 }
 function roomLinks(text){ return esc(text).replace(/\b(\d{3,4})\b/g, (m, r) => (+r >= 100 && +r <= 1999) ? `<button class="roomlink" data-room="${r}">${r}</button>` : m); }
@@ -2350,7 +2396,7 @@ function markRead(){
   ids.forEach(id => S.readSent.add(id));
   call('sc_read', {p_ids: ids}).catch(() => ids.forEach(id => S.readSent.delete(id)));
 }
-function orderCard(o, p){
+function orderCard(o, p, x){
   const first = o.author.split(' ')[0];
   const sum = esc(o.summary).replace(esc(first), `<em>${esc(first)}</em>`);
   const src = o.message_id && S.messages.find(m => m.id === o.message_id);
@@ -2360,11 +2406,12 @@ function orderCard(o, p){
   const acts = [];
   if (o.status === 'open' && !lt) acts.push(`<button class="start" data-act="start" data-id="${o.id}">I'm on it</button>`);
   acts.push(`<button class="done" data-act="done" data-id="${o.id}">Done</button>`);
+  if (x && x.map) acts.push(`<button data-engmap="${o.id}" data-noi18n>🗺 ${esc(L2('Map', 'Mapa'))}</button>`);
   acts.push(`<button data-act="more" data-id="${o.id}" aria-label="More actions">•••</button>`);
   return `<div class="order p-${p.level}" data-id="${o.id}">
-    ${(pl => !o.room && stRooms(o) ? `<button class="fob" style="border:0" title="${esc(stRooms(o).join(', '))}"><small>ROOMS</small>${stRooms(o).length}</button>` : pl && !o.room ? `<button class="fob place" style="border:0"><small>AREA</small>${esc(pl.label)}</button>` : `<button class="fob ${o.room ? '' : 'none'}" ${o.room ? `data-room="${esc(o.room)}"` : ''} style="border:0"><small>ROOM</small>${esc(o.room || 'n/a')}</button>`)(placeOf(o))}
+    ${(pl => !o.room && stRooms(o) ? `<button class="fob" style="border:0" title="${esc(stRooms(o).join(', '))}"><small>ROOMS</small>${stRooms(o).length}</button>` : pl && !o.room ? `<button class="fob place" style="border:0"><small>AREA</small>${esc(pl.label)}</button>` : `<button class="fob ${o.room ? '' : 'none'}" ${o.room ? `data-room="${esc(o.room)}"` : ''} style="border:0"><small>ROOM</small>${esc(o.room || 'n/a')}</button>`)(placeOf(o) || (!o.room && o.map_zone ? {label: o.map_zone} : null))}
     <div style="min-width:0">
-      <div class="ohead"><span class="ticket">${esc(o.ticket)}</span><span class="prio ${p.level}">${p.level}</span>${st}<span class="cat">${esc(CATS[o.category])}</span><span class="age">${lt ? '' : ago(startAt(o))}</span></div>
+      <div class="ohead"><span class="ticket">${esc(o.ticket)}</span><span class="prio ${p.level}">${p.level}</span>${st}${x && x.cat ? `<span class="cat" data-noi18n>${esc(x.cat)}</span>` : `<span class="cat">${esc(CATS[o.category])}</span>`}<span class="age">${lt ? '' : ago(startAt(o))}</span></div>
       <div class="osum">${sum}</div>
       ${quote ? `<div class="oquote">${quote}</div>` : ''}
       ${o.assigned_name ? `<div class="assigned">Assigned to ${esc(o.assigned_name)}</div>` : ''}
@@ -2373,9 +2420,10 @@ function orderCard(o, p){
     </div></div>`;
 }
 function renderOrders(){
-  const open = S.orders.filter(o => (o.status === 'open' || o.status === 'in_progress') && !isLater(o)).map(o => ({o, p: prioOf(o)}))
+  // maintenance has its own place now: Engineer
+  const open = S.orders.filter(o => o.category !== 'maintenance' && (o.status === 'open' || o.status === 'in_progress') && !isLater(o)).map(o => ({o, p: prioOf(o)}))
     .sort((a, b) => b.p.score - a.p.score || startAt(a.o) - startAt(b.o));
-  const later = S.orders.filter(isLater).sort((a, b) => a.scheduled_for - b.scheduled_for).map(o => ({o, p: prioOf(o)}));
+  const later = S.orders.filter(o => o.category !== 'maintenance' && isLater(o)).sort((a, b) => a.scheduled_for - b.scheduled_for).map(o => ({o, p: prioOf(o)}));
   $('#laterCnt').textContent = later.length ? ' ' + later.length : '';
   const shown = S.filter === 'later' ? later : open.filter(x => S.filter === 'all' || (S.filter === 'mine' ? x.o.assigned_to === S.me.id : x.o.category === S.filter));
   $('#qCount').textContent = open.length; $('#tabCnt').textContent = open.length || '';
@@ -2390,7 +2438,7 @@ function killLine(o){
 }
 function renderKills(){
   const today = dayNY(Date.now());
-  const done = S.orders.filter(o => (o.status === 'done' || o.status === 'dismissed') && o.done_at && dayNY(o.done_at) === today).sort((a, b) => b.done_at - a.done_at);
+  const done = S.orders.filter(o => o.category !== 'maintenance' && (o.status === 'done' || o.status === 'dismissed') && o.done_at && dayNY(o.done_at) === today).sort((a, b) => b.done_at - a.done_at);
   $('#kCnt').textContent = done.length ? '(' + done.length + ')' : '';
   $('#kills').innerHTML = done.length ? done.map(o => `<div class="kill" role="button" tabindex="0" data-id="${o.id}">${killLine(o)}<span class="t">${fmtTime(o.done_at)}</span></div>`).join('') : '<div class="small">Finished orders show up here.</div>';
 }
@@ -2569,7 +2617,7 @@ function startPolling(){ clearInterval(timer); timer = setInterval(() => {
   if (document.visibilityState !== 'visible' || navigator.onLine === false) return;
   if (Date.now() - lastAct < 180e3 || ++idleTick % 2 === 0) refresh(); }, 4000); }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { S.alarmAt = 0; refresh(); } });
-if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', () => refresh());
+if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', e => { refresh(); const g = e.data && e.data.go; if (typeof g === 'string') setTimeout(() => goHash(g)); });
 
 /* ===== profile photos ===== */
 let avBusy = false;
@@ -2736,7 +2784,7 @@ function moreMenu(id){
 const durTxt = ms => { const m = Math.max(0, Math.round(ms / 60000)); if (m < 60) return m + ' min'; const h = Math.floor(m / 60); if (h < 24) return h + ' h ' + (m % 60) + ' min'; return Math.floor(h / 24) + ' d ' + (h % 24) + ' h'; };
 const fmtFull = ms => (dayNY(ms) === dayNY(Date.now()) ? '' : fmtDate(ms) + ', ') + fmtTime(ms);
 function orderDetail(id, fromCal){
-  const o = S.orders.find(x => x.id === id) || CAL.data.find(x => x.id === id) || DASH.data.find(x => x.id === id); if (!o) return;
+  const o = S.orders.find(x => x.id === id) || CAL.data.find(x => x.id === id) || DASH.data.find(x => x.id === id) || ENG.pool.get(id); if (!o) return;
   const p = prioOf(o), lt = isLater(o), pl = placeOf(o), open = o.status === 'open' || o.status === 'in_progress';
   const src = o.message_id && S.messages.find(m => m.id === o.message_id);
   const quote = src ? src.body : (o.details && o.details !== o.summary ? o.details : '');
@@ -3493,6 +3541,7 @@ function enterApp(){
   if (location.hash === '#map') setTab('map');
   if (location.hash === '#laundry') setTab('laundry');
   if (location.hash === '#team' && S.me && S.me.role === 'mgr') setTab('team');
+  setTimeout(() => { if (location.hash === '#eng' || ((!location.hash || location.hash === '#orders') && engIsMe())) setTab('eng'); });
 }
 
 /* ===== pass-on log: comments and alarms on a pass-on or one of its points ===== */
@@ -3661,7 +3710,7 @@ $('#poForm').addEventListener('submit', async e => {
 // the map is its own page, shown inside the app; it loads the first time the tab opens and again after a hotel switch
 function openMap(o){
   const f = $('#mapFrame'), h = (S.hotel && S.hotel.id) || '';
-  if (o) { f.dataset.h = h; f.src = 'mapa.html#o=' + encodeURIComponent(o); return; }
+  if (o) { f.dataset.h = h; f.src = 'mapa.html?t=' + Date.now() + '#o=' + encodeURIComponent(o); return; }
   if (f.dataset.h !== h || !f.getAttribute('src')) { f.dataset.h = h; f.src = 'mapa.html'; }
 }
 function setTab(t){
@@ -3670,8 +3719,9 @@ function setTab(t){
   const inMain = t === 'chat' || t === 'orders', dash = desktop && t === 'orders';
   $('#main').hidden = !inMain || dash; $('#main').dataset.tab = t; $('#view-dash').hidden = !dash;
   if (dash) dashLoad();
-  ['passon','lost','rooms','team','map','laundry'].forEach(v => $('#view-' + v).hidden = t !== v);
+  ['passon','lost','rooms','team','map','laundry','eng'].forEach(v => $('#view-' + v).hidden = t !== v);
   if (t === 'laundry') setTimeout(() => { lnRender(); lnLoad(); });
+  if (t === 'eng') setTimeout(engShow);
   if (t === 'map') openMap();
   if (t === 'passon') { loadPassons(); markRead(); }
   if (t === 'team') loadTeam();
@@ -3747,7 +3797,7 @@ async function reloadApp(){
   location.reload();
 }
 $('#soundBtn').onclick = () => { S.sound = !S.sound; ls.set('sc.sound', S.sound); setSoundIcon(); if (S.sound) chime('normal'); };
-setInterval(() => { if (S.me) { renderOrders(); } }, 30000);
+setInterval(() => { if (S.me) { renderOrders(); try { renderEng(); } catch {} } }, 30000);
 
 /* boot */
 document.querySelectorAll('.langsw button').forEach(btn => { btn.setAttribute('aria-pressed', btn.dataset.lang === LANG); btn.onclick = () => { if (btn.dataset.lang !== LANG) setLang(btn.dataset.lang); }; });
@@ -4023,8 +4073,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.3.1';
+const APP_VERSION = '1.4.0';
 const CHANGES = [
+  {v: '1.4.0', d: '2026-11-11', en: ['New Engineer in the Menu: open maintenance orders, a new order form with room or area, problem type, urgent, who takes it and a photo', 'History of finished maintenance orders with who did them, when, and how long they took', 'Search by room number, words or problem type, and Frequent: the problems and rooms that repeat most in 30 or 90 days', 'Maintenance orders from the chat go straight to Engineer, and so do their alerts. Maintenance staff open the app on Engineer', 'Each maintenance order has a Map button that opens it on the map'],
+    es: ['Nuevo Engineer en el Menú: órdenes de mantenimiento abiertas, y para crear una: habitación o área, tipo de problema, urgente, quién la toma y foto', 'Historial de órdenes de mantenimiento terminadas, con quién las hizo, cuándo y cuánto tardó', 'Búsqueda por número de habitación, palabras o tipo de problema, y Frecuentes: los problemas y habitaciones que más se repiten en 30 o 90 días', 'Las órdenes de mantenimiento del chat van directo a Engineer, y sus avisos también. El personal de mantenimiento abre la app en Engineer', 'Cada orden de mantenimiento tiene un botón Mapa que la abre en el mapa']},
   {v: '1.3.1', d: '2026-11-11', en: ['Laundry alerts on your phone, even with the app closed: when your load finishes, or if someone else stops it', 'Tapping a laundry alert opens Laundry'],
     es: ['Avisos de Laundry en el teléfono, aunque la app esté cerrada: cuando tu tanda termina, o si otra persona la detiene', 'Al tocar el aviso se abre Laundry']},
   {v: '1.3.0', d: '2026-11-11', en: ['New Laundry in the Menu: Washer A and B, Dryer A and B, each with play, cycle time, a live countdown and who started it', 'Washers keep whether soap and bleach went in, with the time the load started', 'When a load ends the machine shows Ready, and whoever started it hears a bell'],
@@ -4379,6 +4431,202 @@ async function giveCodes(){
   };
 }
 $('#usersCodes').onclick = giveCodes;
+/* ===== v1.4.0: Engineer, maintenance orders in their own place: open, new, history, search, frequent ===== */
+const ENG_CATS = [
+  ['Plomería', 'Plumbing', '🚿'], ['Eléctrico', 'Electrical', '💡'], ['A/C (PTAC)', 'A/C (PTAC)', '❄️'], ['Puerta / cerradura', 'Door / lock', '🚪'],
+  ['Mueble / equipo', 'Furniture / equipment', '🪑'], ['Pared, piso o techo', 'Wall, floor or ceiling', '🧱'], ['TV / Wi‑Fi', 'TV / Wi‑Fi', '📺'],
+  ['Plagas', 'Pest control', '🐜'], ['Limpieza profunda', 'Deep cleaning', '🧽'], ['Seguridad', 'Security', '🛡️'], ['Otro', 'Other', '🔧']];
+// what the chat picked up, as the map's problem types (same list the server uses)
+const ENG_KEY = {leak: 'Plomería', hotwater: 'Plomería', shower: 'Plomería', toilet: 'Plomería', sink: 'Plomería', ac: 'A/C (PTAC)', tv: 'TV / Wi‑Fi',
+  lockout: 'Puerta / cerradura', lights: 'Eléctrico', outlet: 'Eléctrico', smoke: 'Seguridad', pests: 'Plagas', fridge: 'Mueble / equipo', window: 'Mueble / equipo'};
+const ENG_AREAS = [['Lobby', 'Lobby'], ['Pool', 'Piscina'], ['Parking', 'Parqueo'], ['Breakfast area', 'Área de desayuno'], ['Public restrooms', 'Baños públicos'],
+  ['Laundry room', 'Lavandería'], ['Elevator', 'Elevador'], ['Hallway', 'Pasillo'], ['Gym', 'Gimnasio'], ['Outside', 'Exterior']];
+const engCatOf = o => o.eng_cat || (o.map_cat && String(o.map_cat).trim()) || (Array.isArray(o.items) ? o.items.map(i => i && ENG_KEY[i.k]).find(Boolean) : null) || 'Otro';
+const engCatName = c => { const x = ENG_CATS.find(z => z[0] === c); return x ? L2(x[1], x[0]) : c; };
+const engCatLabel = c => { const x = ENG_CATS.find(z => z[0] === c); return (x ? x[2] : '🔧') + ' ' + engCatName(c); };
+const engIsMe = () => !!(S.me && S.me.role === 'eng');
+const ENG = { seg: ls.get('sc.engSeg', 'open'), f: 'all', pool: new Map(), hist: null, histDays: 7, histAt: 0, histSeq: 0,
+  q: '', cat: '', res: null, resSeq: 0, top: null, topDays: 30, topAt: 0, topSeq: 0, timer: null };
+const engFix = o => ({...o, created_at: T(o.created_at), done_at: T(o.done_at), started_at: T(o.started_at), scheduled_for: T(o.scheduled_for)});
+const engKeep = list => list.map(engFix).map(o => { ENG.pool.set(o.id, o); return o; });
+const engOpen = () => S.orders.filter(o => o.category === 'maintenance' && (o.status === 'open' || o.status === 'in_progress') && !isLater(o))
+  .map(o => ({o, p: prioOf(o)})).sort((a, b) => b.p.score - a.p.score || startAt(a.o) - startAt(b.o));
+const engLater = () => S.orders.filter(o => o.category === 'maintenance' && isLater(o)).sort((a, b) => a.scheduled_for - b.scheduled_for);
+const engWhere = o => o.room ? L2('Room ', 'Hab. ') + o.room : (o.map_zone || (placeOf(o) || {}).label || L2('No room', 'Sin habitación'));
+const engCard = o => orderCard(o, prioOf(o), {cat: engCatLabel(engCatOf(o)), map: !!(o.room || o.map_loc)});
+// one finished (or found) order in a list: where, what, who and how long
+function engRow(o){
+  const st = o.status === 'done' ? ['ok', '✓', L2('Done', 'Lista')] : o.status === 'dismissed' ? ['x', '✕', L2('Not a task', 'No es tarea')]
+    : o.status === 'in_progress' ? ['prog', '●', L2('In progress', 'En proceso')] : ['open', '○', isLater(o) ? L2('Scheduled', 'Programada') : L2('Open', 'Abierta')];
+  const mins = o.status === 'done' && o.done_at ? Math.max(0, Math.round((o.done_at - o.created_at) / 60000)) : null;
+  const who = o.status === 'done' || o.status === 'dismissed' ? (o.done_by || '') : (o.assigned_name || '');
+  const when = o.done_at || o.created_at;
+  const what = o.details || String(o.summary || '').replace(/^[^:]{1,40}:\s*/, '');
+  return `<div class="li engrow" data-noi18n role="button" tabindex="0" data-id="${o.id}"><span class="engst ${st[0]}" aria-hidden="true">${st[1]}</span><div class="grow">
+    <div class="t1"><span class="engwhere">${esc(engWhere(o))}</span> · ${esc(engCatLabel(engCatOf(o)))}</div>
+    ${what ? `<div class="engwhat">${esc(what)}</div>` : ''}
+    <div class="t2">${esc(st[2])}${who ? ' · ' + esc(who) : ''} · ${esc(fmtDate(when))} ${esc(fmtTime(when))}${mins != null ? ' · ' + esc(L2('took ', 'tardó ') + durTxt(mins * 60000)) : ''} · <span class="engtk">${esc(o.ticket)}</span></div>
+  </div></div>`;
+}
+const engChips = (attr, list, cur) => list.map(([v, t]) => `<button type="button" ${attr}="${esc(v)}" aria-pressed="${v === cur}">${esc(t)}</button>`).join('');
+function engSegs(){
+  const open = engOpen().length;
+  $('#engSeg').innerHTML = engChips('data-eseg', [['open', L2('Open', 'Abiertas') + (open ? ' ' + open : '')], ['hist', L2('History', 'Historial')], ['find', L2('Search', 'Buscar')], ['top', L2('Frequent', 'Frecuentes')]], ENG.seg);
+}
+function renderEng(){
+  const open = engOpen();
+  $('#engCnt').textContent = open.length || '';
+  if (S.tab !== 'eng') return;
+  $('#engCount').textContent = open.length;
+  $('#engSub').textContent = L2('Maintenance orders', 'Órdenes de mantenimiento') + (S.hotel ? ' · ' + S.hotel.name : '');
+  $('#engNew').textContent = L2('+ New', '+ Nueva');
+  engSegs();
+  const tools = $('#engTools'), list = $('#engList');
+  if (ENG.seg === 'open') {
+    const later = engLater(), mine = open.filter(x => x.o.assigned_to === S.me.id);
+    tools.innerHTML = `<div class="filters engf">${engChips('data-ef', [['all', L2('All', 'Todas')], ['mine', L2('Mine', 'Mías') + (mine.length ? ' ' + mine.length : '')], ['later', '📅 ' + L2('Scheduled', 'Programadas') + (later.length ? ' ' + later.length : '')]], ENG.f)}</div>`;
+    const shown = ENG.f === 'later' ? later.map(o => ({o})) : ENG.f === 'mine' ? mine : open;
+    list.innerHTML = shown.length ? shown.map(x => engCard(x.o)).join('')
+      : `<div class="qempty" data-noi18n>${esc(ENG.f === 'later' ? L2('Maintenance orders scheduled for another day wait here.', 'Las órdenes de mantenimiento para otro día esperan aquí.')
+        : ENG.f === 'mine' ? L2('Nothing assigned to you right now.', 'Nada asignado a ti ahora.') : L2('All clear. Maintenance orders from the chat land here.', 'Todo al día. Las órdenes de mantenimiento del chat llegan aquí.'))}</div>`;
+    return;
+  }
+  if (ENG.seg === 'hist') {
+    tools.innerHTML = `<div class="filters engf">${engChips('data-ehd', [['1', L2('Today', 'Hoy')], ['7', L2('7 days', '7 días')], ['30', L2('30 days', '30 días')], ['90', L2('90 days', '90 días')]], String(ENG.histDays))}</div>`;
+    if (!ENG.hist) { list.innerHTML = `<div class="small" data-noi18n>${esc(L2('Loading…', 'Cargando…'))}</div>`; return; }
+    const today = dayNY(Date.now()), items = ENG.hist.filter(o => ENG.histDays !== 1 || dayNY(o.done_at || o.created_at) === today);
+    const done = items.filter(o => o.status === 'done' && o.done_at), avg = done.length ? done.reduce((s, o) => s + (o.done_at - o.created_at), 0) / done.length : null;
+    const days = []; items.forEach(o => { const k = dayNY(o.done_at || o.created_at); let d = days.find(z => z.k === k); if (!d) days.push(d = {k, at: o.done_at || o.created_at, items: []}); d.items.push(o); });
+    list.innerHTML = `<div class="engsum" data-noi18n>${esc(done.length + ' ' + L2(done.length === 1 ? 'finished' : 'finished', done.length === 1 ? 'terminada' : 'terminadas'))}${avg != null ? ' · ' + esc(L2('average ', 'promedio ') + durTxt(avg)) : ''}</div>`
+      + (days.length ? days.map(d => `<div class="engday" data-noi18n>${esc(d.k === today ? L2('Today', 'Hoy') : fmtDate(d.at))}</div>${d.items.map(engRow).join('')}`).join('')
+        : `<div class="qempty" data-noi18n>${esc(L2('No finished maintenance orders in these days.', 'No hay órdenes de mantenimiento terminadas en estos días.'))}</div>`);
+    return;
+  }
+  if (ENG.seg === 'find') {
+    if (!$('#engQ')) {
+      tools.innerHTML = `<div class="engfind"><input id="engQ" type="search" enterkeyhint="search" maxlength="40" autocomplete="off" aria-label="${esc(L2('Room number or words', 'Número de habitación o palabras'))}" placeholder="${esc(L2('Room # or words (e.g. 214, leak)', '# de hab. o palabras (ej. 214, fuga)'))}"></div>
+        <div class="filters engf engcats">${engChips('data-ecat', [['', L2('All problems', 'Todos los problemas')]].concat(ENG_CATS.map(c => [c[0], c[2] + ' ' + engCatName(c[0])])), ENG.cat)}</div>`;
+      $('#engQ').value = ENG.q;
+      $('#engQ').addEventListener('input', () => { ENG.q = $('#engQ').value; clearTimeout(ENG.timer); ENG.timer = setTimeout(engSearch, 350); });
+    } else tools.querySelectorAll('[data-ecat]').forEach(b => b.setAttribute('aria-pressed', b.dataset.ecat === ENG.cat));
+    if (!ENG.q.trim() && !ENG.cat) { list.innerHTML = `<div class="qempty" data-noi18n>${esc(L2('Type a room number, or pick a problem, to see every maintenance order for it in the last 6 months.', 'Escribe un número de habitación, o elige un problema, para ver todas sus órdenes de mantenimiento de los últimos 6 meses.'))}</div>`; return; }
+    if (!ENG.res) { list.innerHTML = `<div class="small" data-noi18n>${esc(L2('Searching…', 'Buscando…'))}</div>`; return; }
+    const room = /^\d{1,6}$/.test(ENG.q.trim()) ? ENG.q.trim() : '';
+    const op = ENG.res.filter(o => o.status === 'open' || o.status === 'in_progress').length;
+    list.innerHTML = `<div class="engsum" data-noi18n>${esc(ENG.res.length + ' ' + L2(ENG.res.length === 1 ? 'order' : 'orders', ENG.res.length === 1 ? 'orden' : 'órdenes'))}${op ? ' · ' + esc(op + ' ' + L2('open', op === 1 ? 'abierta' : 'abiertas')) : ''}${room ? ` · <button class="linkish" data-eroom="${esc(room)}">${esc(L2('Everything about room ', 'Todo de la hab. ') + room)}</button>` : ''}</div>`
+      + (ENG.res.length ? ENG.res.map(engRow).join('') : `<div class="qempty" data-noi18n>${esc(L2('Nothing found.', 'No se encontró nada.'))}</div>`);
+    return;
+  }
+  // frequent
+  tools.innerHTML = `<div class="filters engf">${engChips('data-etd', [['30', L2('30 days', '30 días')], ['90', L2('90 days', '90 días')]], String(ENG.topDays))}</div>`;
+  if (!ENG.top) { list.innerHTML = `<div class="small" data-noi18n>${esc(L2('Loading…', 'Cargando…'))}</div>`; return; }
+  const t = ENG.top, max = Math.max(1, ...t.cats.map(c => c.n));
+  const cats = t.cats.map(c => `<button class="engbar" data-ecat2="${esc(c.cat)}"><span class="engbl">${esc(engCatLabel(c.cat))}</span><span class="engbn">${c.n}</span>
+      <span class="engbt"><i style="width:${Math.round(100 * c.n / max)}%"></i></span>
+      <span class="t2">${c.avg_min != null ? esc(L2('avg ', 'promedio ') + durTxt(c.avg_min * 60000)) : ''}${c.open ? (c.avg_min != null ? ' · ' : '') + esc(c.open + ' ' + L2('open', c.open === 1 ? 'abierta' : 'abiertas')) : ''}</span></button>`).join('');
+  const rooms = t.rooms.map(r => `<button class="li engroom" data-eroom2="${esc(r.room)}"><span class="engrn">${esc(r.room)}</span><div class="grow">
+      <div class="t1">${esc(r.n + ' ' + L2('orders', 'órdenes'))}</div><div class="t2">${esc((r.cats || []).slice(0, 3).map(engCatName).join(', '))} · ${esc(L2('last ', 'última ') + fmtDate(T(r.last_at)))}</div></div></button>`).join('');
+  list.innerHTML = `<div class="engsum" data-noi18n>${esc(t.total + ' ' + L2('maintenance orders in ', 'órdenes de mantenimiento en ') + t.days + L2(' days', ' días'))}</div>
+    <div class="card" data-noi18n><h2>${esc(L2('Most common problems', 'Problemas más comunes'))}</h2><div class="engbars">${cats || `<div class="small" data-noi18n>${esc(L2('No orders yet.', 'Aún no hay órdenes.'))}</div>`}</div></div>
+    <div class="card" data-noi18n><h2>${esc(L2('Rooms that repeat', 'Habitaciones que se repiten'))}</h2><div class="list">${rooms || `<div class="small" data-noi18n>${esc(L2('No room had more than one order in these days.', 'Ninguna habitación tuvo más de una orden en estos días.'))}</div>`}</div></div>`;
+}
+async function engLoad(force){
+  if (ENG.seg === 'hist' && (force || !ENG.hist || Date.now() - ENG.histAt > 60e3)) {
+    const seq = ++ENG.histSeq;
+    try { const r = await call('sc_eng_list', {p_closed: true, p_days: ENG.histDays === 1 ? 1 : ENG.histDays}); if (seq !== ENG.histSeq) return; ENG.hist = engKeep(r || []); ENG.histAt = Date.now(); }
+    catch (e) { if (seq === ENG.histSeq) { ENG.hist = []; toast(esc(e.message)); } }
+  }
+  if (ENG.seg === 'top' && (force || !ENG.top || Date.now() - ENG.topAt > 120e3)) {
+    const seq = ++ENG.topSeq;
+    try { const r = await call('sc_eng_top', {p_days: ENG.topDays}); if (seq !== ENG.topSeq) return; ENG.top = r; ENG.topAt = Date.now(); }
+    catch (e) { if (seq === ENG.topSeq) { ENG.top = {days: ENG.topDays, total: 0, rooms: [], cats: []}; toast(esc(e.message)); } }
+  }
+  if (ENG.seg === 'find' && force) await engSearch();
+  renderEng();
+}
+async function engSearch(){
+  const q = ENG.q.trim(), seq = ++ENG.resSeq;
+  if (!q && !ENG.cat) { ENG.res = null; renderEng(); return; }
+  ENG.res = null; renderEng();
+  const room = /^\d{1,6}$/.test(q);
+  try { const r = await call('sc_eng_list', {p_room: room ? q : null, p_text: room ? null : (q || null), p_cat: ENG.cat || null, p_closed: false, p_days: 180});
+    if (seq !== ENG.resSeq) return; ENG.res = engKeep(r || []); }
+  catch (e) { if (seq !== ENG.resSeq) return; ENG.res = []; toast(esc(e.message)); }
+  renderEng();
+}
+function engShow(){ renderEng(); engLoad(); }
+function engGo(seg){ ENG.seg = seg; ls.set('sc.engSeg', seg); $('#engTools').innerHTML = ''; renderEng(); engLoad(); }
+function engMap(id){ setTab('map'); openMap(id); }
+$('#engSeg').addEventListener('click', e => { const b = e.target.closest('[data-eseg]'); if (b) engGo(b.dataset.eseg); });
+$('#engTools').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.ef) { ENG.f = b.dataset.ef; renderEng(); }
+  else if (b.dataset.ehd) { ENG.histDays = +b.dataset.ehd; ENG.hist = null; renderEng(); engLoad(true); }
+  else if (b.dataset.etd) { ENG.topDays = +b.dataset.etd; ENG.top = null; renderEng(); engLoad(true); }
+  else if (b.dataset.ecat !== undefined) { ENG.cat = b.dataset.ecat; engSearch(); }
+});
+$('#engList').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b) { const c = e.target.closest('.order, .engrow'); if (c && !String(getSelection && getSelection()).trim()) orderDetail(c.dataset.id); return; }
+  if (b.dataset.engmap) return engMap(b.dataset.engmap);
+  if (b.dataset.eroom) return roomHistory(b.dataset.eroom);
+  if (b.dataset.eroom2) { ENG.q = b.dataset.eroom2; ENG.cat = ''; ENG.seg = 'find'; ls.set('sc.engSeg', 'find'); $('#engTools').innerHTML = ''; return engSearch(); }
+  if (b.dataset.ecat2) { ENG.q = ''; ENG.cat = b.dataset.ecat2; ENG.seg = 'find'; ls.set('sc.engSeg', 'find'); $('#engTools').innerHTML = ''; return engSearch(); }
+  if (b.dataset.room) return roomHistory(b.dataset.room);
+  if (b.dataset.photos) return showPhotos(b.dataset.photos);
+  if (b.dataset.act === 'more') return moreMenu(b.dataset.id);
+  if (b.dataset.act) { b.disabled = true; orderAction(b.dataset.id, b.dataset.act); }
+});
+$('#engList').addEventListener('keydown', e => { const c = e.target.closest('.engrow'); if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); orderDetail(c.dataset.id); } });
+// a new maintenance order: room or area, the problem, urgent or not, who takes it, a photo
+function engNew(){
+  const eng = S.staff.filter(s => inGroup(s, 'eng')), rest = S.staff.filter(s => !inGroup(s, 'eng'));
+  const opt = s => `<option value="${s.id}">${esc(s.name)}</option>`;
+  openModal(`<div data-noi18n><h2>${esc(L2('New maintenance order', 'Nueva orden de mantenimiento'))}</h2>
+    <div class="field"><label>${esc(L2('Where', 'Dónde'))}</label><div class="seg enwhere" role="group"><button type="button" class="btn sm" data-ew="room" aria-pressed="true">${esc(L2('Room', 'Habitación'))}</button><button type="button" class="btn sm" data-ew="area" aria-pressed="false">${esc(L2('Area', 'Área'))}</button></div></div>
+    <div class="field" id="enRoomF"><label for="enRoom">${esc(L2('Room number', 'Número de habitación'))}</label><input id="enRoom" inputmode="numeric" maxlength="6" autocomplete="off"></div>
+    <div class="field" id="enAreaF" hidden><label for="enArea">${esc(L2('Area', 'Área'))}</label><input id="enArea" list="enAreas" maxlength="60" autocomplete="off"><datalist id="enAreas">${ENG_AREAS.map(a => `<option value="${esc(L2(a[0], a[1]))}">`).join('')}</datalist></div>
+    <div class="field"><label>${esc(L2('Problem', 'Problema'))}</label><div class="filters encats" role="group">${ENG_CATS.map(c => `<button type="button" data-ec="${esc(c[0])}" aria-pressed="false">${esc(c[2] + ' ' + engCatName(c[0]))}</button>`).join('')}</div></div>
+    <div class="field"><label for="enDet">${esc(L2('What is wrong (optional)', 'Qué pasa (opcional)'))}</label><textarea id="enDet" maxlength="500"></textarea></div>
+    <div class="field"><label for="enAsg">${esc(L2('Assign to (optional)', 'Asignar a (opcional)'))}</label><select id="enAsg"><option value="">${esc(L2('Nobody yet: alert the team', 'Nadie todavía: avisar al equipo'))}</option>${eng.length ? `<optgroup label="${esc(L2('Maintenance', 'Mantenimiento'))}">${eng.map(opt).join('')}</optgroup>` : ''}${rest.length ? `<optgroup label="${esc(L2('Others', 'Otros'))}">${rest.map(opt).join('')}</optgroup>` : ''}</select></div>
+    <div class="enrow"><label class="enchk"><input type="checkbox" id="enUrg"> ${esc(L2('Urgent', 'Urgente'))}</label><label class="btn sm enph">📷 <span id="enPhT">${esc(L2('Photo', 'Foto'))}</span><input type="file" id="enPhoto" accept="image/*" capture="environment" hidden></label></div>
+    <div class="err" id="enErr"></div>
+    <div class="btnrow"><button class="btn pri" id="enSave">${esc(L2('Create order', 'Crear orden'))}</button><button class="btn" data-close>${esc(L2('Cancel', 'Cancelar'))}</button></div></div>`);
+  let where = 'room', cat = '';
+  document.querySelectorAll('.enwhere button').forEach(b => b.onclick = () => { where = b.dataset.ew;
+    document.querySelectorAll('.enwhere button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    $('#enRoomF').hidden = where !== 'room'; $('#enAreaF').hidden = where !== 'area'; });
+  document.querySelectorAll('.encats button').forEach(b => b.onclick = () => { cat = b.dataset.ec;
+    document.querySelectorAll('.encats button').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+  $('#enPhoto').onchange = () => { const f = $('#enPhoto').files[0]; $('#enPhT').textContent = f ? L2('Photo ✓', 'Foto ✓') : L2('Photo', 'Foto'); };
+  $('#enSave').onclick = async () => {
+    const room = $('#enRoom').value.trim(), area = $('#enArea').value.trim(), det = $('#enDet').value.trim(), err = $('#enErr');
+    if (where === 'room' && !/^[A-Za-z0-9-]{1,6}$/.test(room)) { err.textContent = L2('Write the room number.', 'Escribe el número de habitación.'); return; }
+    if (where === 'area' && !area) { err.textContent = L2('Write or pick the area.', 'Escribe o elige el área.'); return; }
+    if (!cat) { err.textContent = L2('Pick the problem.', 'Elige el problema.'); return; }
+    if (cat === 'Otro' && !det) { err.textContent = L2('Say what is wrong.', 'Di qué pasa.'); return; }
+    const btn = $('#enSave'); btn.disabled = true; err.textContent = '';
+    try {
+      const r = await call('sc_eng_new', {p_room: where === 'room' ? room : null, p_place: where === 'area' ? area : null, p_cat: cat, p_details: det, p_urgent: $('#enUrg').checked, p_assignee: $('#enAsg').value || null});
+      const f = $('#enPhoto').files[0];
+      if (f) { try { await call('sc_photo_add', {p_order: r.order_id, p_data: await shrink(f, 1100, .72)}); } catch (e) { toast(esc(L2('Photo not saved: ', 'La foto no se guardó: ') + e.message)); } }
+      S.known.set(r.order_id, 'open'); closeModal(); notify([r.order_id]);
+      toast(`<span data-noi18n><b>${esc(r.ticket)}</b> ${esc(L2('Order created. Maintenance gets the alert.', 'Orden creada. Mantenimiento recibe el aviso.'))}</span>`, 'new');
+      ENG.f = 'all'; if (ENG.seg !== 'open') engGo('open'); await refresh();
+    } catch (e) { btn.disabled = false; err.textContent = e.message; }
+  };
+}
+$('#engNew').onclick = () => engNew();
+setInterval(() => { if (S.me && S.tab === 'eng' && ENG.seg !== 'open' && ENG.seg !== 'find') engLoad(); }, 60000);
+// where an alert or a link sends you; maintenance staff land on Engineer
+function goHash(h){
+  if (!S.me) return;
+  if (h === '#eng' || (h === '#orders' && engIsMe())) setTab('eng');
+  else if (h === '#orders') setTab('orders');
+  else if (h === '#passon' || h === '#lost' || h === '#map' || h === '#laundry') setTab(h.slice(1));
+  else if (h === '#team' && S.me.role === 'mgr') setTab('team');
+}
+
 if (S.token && S.me) enterApp(); else showLogin();
 })();
 </script>

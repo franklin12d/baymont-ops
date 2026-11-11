@@ -37,7 +37,8 @@ self.addEventListener('push', e => {
       icon: 'icon-192.png',
       badge: 'icon-192.png',
       timestamp: Date.now(),
-      data: { url: self.registration.scope + (d.hash === '#team' || d.hash === '#passon' || d.hash === '#laundry' ? d.hash : '#orders') },
+      // maintenance alerts open Engineer
+      data: { url: self.registration.scope + (d.kind === 'eng' ? '#eng' : d.hash === '#team' || d.hash === '#passon' || d.hash === '#laundry' ? d.hash : '#orders') },
     });
   }));
 });
@@ -46,7 +47,8 @@ self.addEventListener('notificationclick', e => {
   e.notification.close();
   const url = (e.notification.data && e.notification.data.url) || self.registration.scope;
   e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
-    for (const c of list) { if (c.url.startsWith(self.registration.scope)) { c.focus(); c.postMessage('refresh'); return; } }
+    // the app is open: bring it up on the screen the alert is about
+    for (const c of list) { if (c.url.startsWith(self.registration.scope)) { c.focus(); c.postMessage({ t: 'refresh', go: new URL(url).hash }); return; } }
     return self.clients.openWindow(url);
   }));
 });
