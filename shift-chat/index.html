@@ -796,6 +796,9 @@ body{letter-spacing:0;font-feature-settings:normal}
 .sysbar[hidden]{display:none}
 .sysbar.upd{background:#635BFF;color:#fff}
 .sysbar.off{background:#B42318;color:#fff;padding-right:14px}
+.sysbar.move{background:#0F5E5A;color:#fff;top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 84px);max-width:calc(100vw - 24px)}
+.sysbar.move button{color:#0F5E5A}
+.movesteps{margin:8px 0 0;padding-left:20px;line-height:1.55}
 .sysbar button{border:0;border-radius:8px;padding:6px 12px;font:inherit;font-weight:700;background:#fff;color:#3F37C9;cursor:pointer}
 .sysbar button.x{background:transparent;color:#fff;padding:6px 8px}
 .verrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -3898,8 +3901,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.2.0';
+const APP_VERSION = '1.2.1';
 const CHANGES = [
+  {v: '1.2.1', d: '2026-11-11', en: ['FrankShift has its own address: frankshift.app', 'The old link shows a notice with steps to move to frankshift.app'],
+    es: ['FrankShift tiene su propia dirección: frankshift.app', 'El link viejo muestra un aviso con los pasos para pasar a frankshift.app']},
   {v: '1.2.0', d: '2026-11-10', en: ['First sign-in uses a one-time 6-digit start code from the manager instead of 0000', 'Managers make start codes one by one or for everyone not active yet, to send or print', 'Locks get longer after repeated wrong PINs, and managers get an alert', 'Too many wrong tries from one connection pause sign-in for 15 minutes', 'PINs that are easy to guess, like 1234 or 1111, are not allowed', 'The sign-in list shows only the first letter of the last name'],
     es: ['La primera entrada usa un código de 6 números que da el gerente, en vez de 0000', 'Los gerentes crean códigos uno por uno o para todos los que no han activado, para enviar o imprimir', 'Los bloqueos duran más si se repiten los PIN equivocados, y el gerente recibe un aviso', 'Muchos intentos fallidos desde una misma conexión pausan la entrada 15 minutos', 'No se permiten PIN fáciles de adivinar, como 1234 o 1111', 'La lista de entrada muestra solo la inicial del apellido']},
   {v: '1.1.0', d: '2026-11-10', en: ['Version number and What\'s new in Settings', 'A banner offers the new version as soon as it is published', 'A red banner when the phone loses connection; the app catches up when it\'s back', 'Lighter on data: the screen only redraws when something changed, and an idle screen checks every 8 seconds', 'Keyboard focus is easier to see on computers'],
@@ -3957,6 +3962,28 @@ window.addEventListener('online', () => { netState(); if (S.token) refresh(); })
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkVersion(); });
 setInterval(() => { if (document.visibilityState === 'visible') checkVersion(); }, 15 * 60e3);
 netState(); setTimeout(checkVersion, 3000);
+
+/* ===== v1.2.1: the old link points staff to frankshift.app ===== */
+const NEW_HOME = 'https://frankshift.app/';
+function moveSteps(){
+  const es = LANG === 'es';
+  openModal(`<h2>${es ? 'FrankShift se mudó a frankshift.app' : 'FrankShift moved to frankshift.app'}</h2>
+  <p>${es ? 'Este link sigue funcionando por ahora, pero la app nueva está en frankshift.app.' : 'This link still works for now, but the app now lives at frankshift.app.'}</p>
+  <ol class="movesteps">${(es ? ['Abre frankshift.app.', 'Instala la app desde ahí (Agregar a pantalla de inicio).', 'Entra con tu usuario y tu PIN de siempre.', 'En Ajustes vuelve a activar las alertas.', 'Borra la app vieja de tu teléfono.']
+    : ['Open frankshift.app.', 'Install the app from there (Add to Home screen).', 'Sign in with your usual user and PIN.', 'In Settings, turn alerts back on.', 'Delete the old app from your phone.']).map(x => `<li>${esc(x)}</li>`).join('')}</ol>
+  <div class="btnrow" style="margin-top:12px"><a class="btn pri" href="${NEW_HOME}" target="_blank" rel="noopener">${es ? 'Abrir frankshift.app' : 'Open frankshift.app'}</a><button class="btn" data-close>${es ? 'Cerrar' : 'Close'}</button></div>`);
+}
+let moveHidden = false;
+function moveNotice(){
+  if (!/\.github\.io$/i.test(location.hostname) || moveHidden) return;
+  const b = sysBar('moveBar', 'move'), es = LANG === 'es';
+  b.innerHTML = `<span>${es ? 'FrankShift se mudó a frankshift.app' : 'FrankShift moved to frankshift.app'}</span><button type="button" data-mv>${es ? 'Cómo pasar' : 'How to move'}</button><button type="button" class="x" data-mvx aria-label="${es ? 'Ocultar' : 'Hide'}">✕</button>`;
+  b.querySelector('[data-mv]').onclick = moveSteps;
+  b.querySelector('[data-mvx]').onclick = () => { moveHidden = true; b.hidden = true; };
+  b.hidden = false;
+}
+moveNotice();
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') moveNotice(); });
 
 /* ===== v1.2: one-time start codes ===== */
 const untilTxt = u => new Date(u).toLocaleString(LANG === 'es' ? 'es-US' : 'en-US', {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit', timeZone: TZ});
