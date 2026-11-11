@@ -855,6 +855,15 @@ header.top > .iconbtn{display:none}
 .app.menu-open .tabs .tic .cnt{position:absolute!important;right:14px;top:50%!important;transform:translateY(-50%);font-size:12px;line-height:20px;min-width:22px;text-align:center}
 .tabs .mtools{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line);margin-top:6px;padding-top:6px}
 .tabs .mtools button.iconbtn{width:100%!important;height:auto!important;box-shadow:none!important;border:0!important}
+
+/* v1.2.3: only 3 things on top: Menu, slim hotel button, photo */
+header.top{align-items:center!important;padding-top:10px!important;padding-bottom:8px!important}
+header.top .ctr,header.top #menuCur,header.top .mdot{display:none!important}
+header.top .menubtn,header.top .who{margin-top:0!important}
+header.top .brand{align-self:center;gap:0}
+header.top .brand .bt{flex-direction:row!important;align-items:center;height:40px;box-sizing:border-box;padding:0 16px!important;line-height:1}
+header.top .brand .bt small#hotelName{display:inline-flex!important;align-items:center;gap:8px;font:600 14px var(--f-body)!important;color:var(--hotel)}
+header.top .brand .bt small#hotelName::before{width:9px;height:9px}
 </style>
 </head>
 <body>
@@ -3943,8 +3952,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.2.2';
+const APP_VERSION = '1.2.3';
 const CHANGES = [
+  {v: '1.2.3', d: '2026-11-11', en: ['The top bar has just 3 things: Menu, a slim hotel button with its blinking dot, and your photo'],
+    es: ['La barra de arriba tiene solo 3 cosas: Menú, un botón delgado con el hotel y su punto titilando, y tu foto']},
   {v: '1.2.2', d: '2026-11-11', en: ['New top bar with three round buttons: Menu on the left, FrankShift in the middle, your profile on the right', 'The Menu opens Chat, Pass-on, Orders, Map and Manager, plus room search and sound', 'Under the logo you see where you are and your hotel; the Menu shows a red count when something waits'],
     es: ['Barra de arriba nueva con tres botones redondos: Menú a la izquierda, FrankShift al centro y tu perfil a la derecha', 'El Menú abre Chat, Pass-on, Órdenes, Mapa y Gerente, más buscar habitación y el sonido', 'Debajo del logo ves dónde estás y tu hotel; el Menú muestra un número rojo cuando algo espera']},
   {v: '1.2.1', d: '2026-11-11', en: ['FrankShift has its own address: frankshift.app', 'The old link shows a notice with steps to move to frankshift.app'],
