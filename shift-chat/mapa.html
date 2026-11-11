@@ -53,7 +53,8 @@ var D={
 'Tu sesión venció. Entra otra vez en FrankShift y vuelve al mapa.':'Your session expired. Sign in to FrankShift again and come back to the map.','Urgente':'Urgent',
 'Ventana / PTAC':'Window / PTAC','¿Eliminar esta orden y todo su historial?':'Delete this order and its entire history?','Área común':'Common area','Área de cama':'Bed area',
 'Órdenes de trabajo':'Work orders','Ingeniería':'Engineering','Gerencia':'Management','Mantenimiento':'Maintenance','Cargando tu usuario, intenta en un momento.':'Loading your profile, please try again in a moment.',
-'Mapa de ingeniería · FrankShift':'Engineering map · FrankShift','Foto de':'Photo of','Lista':'List','Mapa':'Map','Guardar':'Save','Eliminar':'Delete','Nota':'Note'
+'Mapa de ingeniería · FrankShift':'Engineering map · FrankShift','Foto de':'Photo of','Lista':'List','Mapa':'Map','Guardar':'Save','Eliminar':'Delete','Nota':'Note',
+'Acercar':'Zoom in','Alejar':'Zoom out','Cómo usar el mapa':'How to use the map','Computadora y teléfono':'Computer and phone','Con el ratón':'With a mouse','En el teléfono':'On a phone','Arrastrar':'Drag','Mover el mapa':'Move the map','Rueda':'Scroll wheel','Acercar o alejar donde está el cursor':'Zoom in or out where the pointer is','Doble clic':'Double-click','Acercar y centrar en ese punto':'Zoom in and center on that spot','Ctrl o ⌘ + arrastrar':'Ctrl or ⌘ + drag','Girar e inclinar la vista 3D':'Turn and tilt the 3D view','Clic':'Click','Abrir la habitación o el área con sus órdenes':'Open the room or area with its orders','Clic derecho':'Right-click','Crear orden aquí, qué hay cerca, medir, marcador':'Create an order here, what\'s nearby, measure, marker','+ y −':'+ and −','Botones para acercar y alejar':'Buttons to zoom in and out','Un dedo':'One finger','Pellizcar':'Pinch','Acercar o alejar':'Zoom in or out','Dos dedos y girar':'Two fingers and twist','Girar la vista':'Turn the view','Dos dedos arriba o abajo':'Two fingers up or down','Inclinar la vista':'Tilt the view','Doble toque':'Double-tap','Acercar y centrar':'Zoom in and center','Tocar':'Tap','Abrir la habitación o el área':'Open the room or area','Mantener presionado':'Press and hold','Abrir el menú de opciones':'Open the options menu','Lo más cerca':'Closest','Crear orden aquí':'Create order here','Ver información':'See details','Qué hay cerca':'What\'s nearby','Medir distancia desde aquí':'Measure distance from here','Centrar aquí':'Center here','Agregar marcador':'Add marker','Quitar este marcador':'Remove this marker','Quitar todos los marcadores':'Remove all markers','Marcadores quitados.':'Markers removed.','Marcador quitado.':'Marker removed.','Marcador agregado. Solo se ve en este equipo.':'Marker added. Only this device shows it.','Llegaste al máximo de 30 marcadores.':'You reached the limit of 30 markers.','A 25 m del punto que marcaste':'Within 25 m of the spot you picked','No hay habitaciones ni áreas cerca de ese punto.':'No rooms or areas near that spot.','Toca otro punto para medir':'Tap another spot to measure','Distancia':'Distance','Terminar medición':'End measuring','Opciones del mapa':'Map options'
 };
 function T(s){if(s in D)return D[s];var c=s.charAt(0).toUpperCase()+s.slice(1);if(c in D){var r=D[c];return r.charAt(0).toLowerCase()+r.slice(1);}return null;}
 var R=[
@@ -166,6 +167,27 @@ button,input,select,textarea{font:inherit;color:inherit}
 .tool{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 11px;min-height:38px;font-weight:600;cursor:pointer}
 .tool[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
 .compass{width:42px;height:42px;padding:0;display:grid;place-items:center;border-radius:50%}
+.zoom{position:fixed;right:12px;bottom:calc(var(--dockh,96px) + 12px);z-index:4;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.zoom button{width:44px;height:44px;border:0;background:transparent;font:500 24px/1 "Rubik",sans-serif;color:var(--ink);cursor:pointer;padding:0}
+.zoom button+button{border-top:1px solid var(--line)}
+.cmenu{position:fixed;z-index:25;min-width:220px;max-width:280px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.3);padding:6px;display:flex;flex-direction:column}
+.cmenu[hidden]{display:none}
+.cmh{padding:6px 10px 8px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.cmh b{display:block;font-weight:600}.cmh span{display:block;font-size:12.5px;color:var(--muted)}
+.cmenu button{border:0;background:transparent;text-align:left;padding:10px;min-height:42px;border-radius:8px;font:500 14.5px "Rubik",sans-serif;color:var(--ink);cursor:pointer}
+.cmenu button:hover,.cmenu button:focus-visible{background:var(--bg);outline:none}
+.cmenu button.pri{color:var(--accent);font-weight:600}
+.cmenu button.dim{color:var(--muted)}
+.mchip{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 76px);transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:8px;background:var(--ink);color:var(--surface);border-radius:999px;padding:6px 6px 6px 14px;font-weight:600;font-size:14px;box-shadow:0 4px 14px rgba(0,0,0,.25);white-space:nowrap}
+.mchip[hidden]{display:none}
+.mchip button{border:0;background:rgba(127,127,127,.35);color:inherit;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;padding:0}
+.ndist{font-size:13px;color:var(--muted);white-space:nowrap}
+.hh{margin:16px 0 4px;font-size:13px;font-weight:600;color:var(--muted)}
+.help{list-style:none;margin:0;padding:0}
+.help li{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.help li b{flex:none;width:150px;font-weight:600}
+.help li span{color:var(--muted)}
+.qbtn{font:700 18px "Rubik",sans-serif}
 
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:5;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px);
   background:var(--surface);border-top:1px solid var(--line)}
@@ -183,9 +205,8 @@ button,input,select,textarea{font:inherit;color:inherit}
   padding:8px 16px calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateY(105%);transition:transform .24s ease}
 .sheet.open{transform:none}
 @media (min-width:820px){
-  .sheet{left:auto;top:0;width:410px;max-height:none;border-radius:0;transform:translateX(105%);padding-top:calc(env(safe-area-inset-top,0px) + 14px);border-left:1px solid var(--line)}
+  .sheet{right:auto;top:0;width:410px;max-height:none;border-radius:0;transform:translateX(-105%);padding-top:calc(env(safe-area-inset-top,0px) + 14px);border-right:1px solid var(--line)}
   .sheet.open{transform:none}
-  .ctrls.shift{right:424px}
 }
 @media (prefers-reduced-motion:reduce){.sheet{transition:none}}
 .grab{width:38px;height:4px;border-radius:2px;background:var(--line);margin:2px auto 10px}
@@ -312,6 +333,7 @@ summary{cursor:pointer;color:var(--muted);font-weight:500}
   </div>
   <button class="tool" id="btnExplode" aria-pressed="false">Separar pisos</button>
   <button class="tool" id="btnTop" aria-pressed="false">Vista de planta</button>
+  <button class="tool compass qbtn" id="btnHelp" aria-label="Cómo usar el mapa">?</button>
   <button class="tool compass" id="btnNorth" aria-label="Orientar como el mapa y centrar">
     <svg id="needle" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l5 11h-10z" fill="var(--accent)"/><path d="M12 22l-5-9h10z" fill="var(--muted)"/></svg>
   </button>
@@ -326,6 +348,9 @@ summary{cursor:pointer;color:var(--muted);font-weight:500}
   </div>
 </footer>
 
+<div class="zoom" role="group" aria-label="Zoom"><button type="button" id="zIn" aria-label="Acercar">+</button><button type="button" id="zOut" aria-label="Alejar">−</button></div>
+<div class="cmenu" id="cmenu" role="menu" aria-label="Opciones del mapa" hidden></div>
+<div class="mchip" id="measure" role="status" hidden><span id="mText" data-raw></span><button type="button" id="mClose" aria-label="Terminar medición">✕</button></div>
 <section class="sheet" id="sheet" aria-live="polite"></section>
 <div class="toast" id="toast" role="status"></div>
 <div class="lb" id="lb" hidden><img id="lbimg" alt="Foto ampliada"></div>
@@ -624,18 +649,25 @@ function worldOf(t){
   const v=new V(t.c.x,y+(t.parent===floorG[1]?floorG[1].position.y:0),t.c.z);return site.localToWorld(v);
 }
 
-const pts=new Map();let down=null,moved=0,pinch=null;
+const pts=new Map();let down=null,moved=0,pinch=null,lpTimer=null,tapTimer=null,lastTap=null;
 function pan(dx,dy){const k=orbit.r*0.0016;
-  orbit.target.addScaledVector(new V(Math.cos(orbit.theta),0,-Math.sin(orbit.theta)),-dx*k).addScaledVector(new V(-Math.sin(orbit.theta),0,-Math.cos(orbit.theta)),dy*k);}
+  orbit.target.addScaledVector(new V(Math.cos(orbit.theta),0,-Math.sin(orbit.theta)),-dx*k).addScaledVector(new V(-Math.sin(orbit.theta),0,-Math.cos(orbit.theta)),dy*k);keepIn();}
+function keepIn(){orbit.target.x=Math.max(-160,Math.min(160,orbit.target.x));orbit.target.z=Math.max(-160,Math.min(160,orbit.target.z));}
 function pinchInfo(){const a=[...pts.values()];return{d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),ang:Math.atan2(a[1].y-a[0].y,a[1].x-a[0].x),mx:(a[0].x+a[1].x)/2,my:(a[0].y+a[1].y)/2};}
+// mouse: drag moves; Ctrl/Cmd (or right button, or Shift) + drag turns and tilts. Touch: one finger moves, two fingers zoom, turn and tilt.
+const turnKey=e=>e.button===2||e.shiftKey||e.ctrlKey||e.metaKey;
 canvas.addEventListener('pointerdown',e=>{
+  hideMenu();
   canvas.setPointerCapture(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(anim){cancelAnimationFrame(anim);anim=null;}
-  if(pts.size===1){down={t:performance.now(),rot:e.button===2||e.shiftKey};moved=0;}else{moved=999;if(pts.size===2)pinch=pinchInfo();}
+  clearTimeout(lpTimer);
+  if(pts.size===1){down={t:performance.now(),rot:turnKey(e),btn:e.button,mod:e.ctrlKey||e.metaKey,touch:e.pointerType!=='mouse',x:e.clientX,y:e.clientY,long:false};moved=0;
+    if(down.touch)lpTimer=setTimeout(()=>{if(down&&moved<8&&pts.size===1){down.long=true;openMenu(down.x,down.y);}},550);}
+  else{moved=999;if(pts.size===2)pinch=pinchInfo();}
 });
 canvas.addEventListener('pointermove',e=>{
   const p=pts.get(e.pointerId);if(!p)return;const dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
-  if(pts.size===1){moved+=Math.abs(dx)+Math.abs(dy);if(moved<6)return;
+  if(pts.size===1){moved+=Math.abs(dx)+Math.abs(dy);if(moved<6)return;clearTimeout(lpTimer);if(down&&down.long)return;
     if(down&&down.rot){orbit.theta-=dx*0.008;orbit.phi=Math.min(1.45,Math.max(0.04,orbit.phi-dy*0.006));}else pan(dx,dy);updateCam();}
   else if(pts.size===2&&pinch){
     const n=pinchInfo();const ratio=pinch.d/Math.max(n.d,1);
@@ -646,13 +678,43 @@ canvas.addEventListener('pointermove',e=>{
     pinch=n;updateCam();}
 });
 function endPtr(e){
+  clearTimeout(lpTimer);
   const had=pts.has(e.pointerId);pts.delete(e.pointerId);pinch=pts.size===2?pinchInfo():null;
-  if(had&&pts.size===0&&down&&moved<6&&performance.now()-down.t<600&&e.type==='pointerup')tap(e.clientX,e.clientY);
+  if(had&&pts.size===0&&down&&!down.long&&moved<6&&e.type==='pointerup'){
+    if(!down.touch&&(down.btn===2||down.mod))openMenu(e.clientX,e.clientY);
+    else if(performance.now()-down.t<600)clickAt(e.clientX,e.clientY);
+  }
   if(pts.size===0)down=null;
 }
 canvas.addEventListener('pointerup',endPtr);canvas.addEventListener('pointercancel',endPtr);
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
-canvas.addEventListener('wheel',e=>{e.preventDefault();orbit.r=Math.min(420,Math.max(10,orbit.r*(1+e.deltaY*0.0012)));updateCam();},{passive:false});
+// one click opens the room; two quick clicks (or taps) zoom in and center there
+function clickAt(x,y){
+  if(measure){measureTo(x,y);return;}
+  const now=performance.now();
+  if(lastTap&&now-lastTap.t<320&&Math.hypot(x-lastTap.x,y-lastTap.y)<28){clearTimeout(tapTimer);lastTap=null;dblZoom(x,y);return;}
+  lastTap={t:now,x,y};clearTimeout(tapTimer);tapTimer=setTimeout(()=>{lastTap=null;tap(x,y);},270);
+}
+const ground=new THREE.Plane(new V(0,1,0),0);
+function pickAt(x,y){
+  cam.updateMatrixWorld();ndc.set(x/window.innerWidth*2-1,-(y/window.innerHeight)*2+1);ray.setFromCamera(ndc,cam);
+  const hit=ray.intersectObjects(targets.filter(t=>shown(t.mesh)).map(t=>t.mesh),false);
+  if(hit.length)return{t:hit[0].object.userData.t,p:hit[0].point.clone()};
+  const p=new V();return ray.ray.intersectPlane(ground,p)?{t:null,p}:null;
+}
+const clampR=r=>Math.min(420,Math.max(10,r));
+function dblZoom(x,y){hideMenu();const k=pickAt(x,y);if(!k)return;flyTo(new V(k.p.x,orbit.target.y,k.p.z),clampR(orbit.r*0.5));}
+function zoomBy(f){hideMenu();flyTo(null,clampR(orbit.r*f));}
+// the wheel zooms toward the pointer, so what is under it stays under it
+canvas.addEventListener('wheel',e=>{e.preventDefault();hideMenu();
+  const nr=clampR(orbit.r*(1+e.deltaY*0.0012));const k=pickAt(e.clientX,e.clientY);
+  if(k&&nr!==orbit.r){const f=1-nr/orbit.r;orbit.target.x+=(k.p.x-orbit.target.x)*f;orbit.target.z+=(k.p.z-orbit.target.z)*f;keepIn();}
+  orbit.r=nr;updateCam();},{passive:false});
+$('#zIn').addEventListener('click',()=>zoomBy(0.6));
+$('#zOut').addEventListener('click',()=>zoomBy(1/0.6));
+(function(){const d=$('.dock');if(!d)return;const s=()=>document.documentElement.style.setProperty('--dockh',d.offsetHeight+'px');s();
+  if(window.ResizeObserver)new ResizeObserver(s).observe(d);else window.addEventListener('resize',s);})();
+
 
 const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();
 const shown=o=>{while(o){if(!o.visible)return false;o=o.parent;}return true;};
@@ -894,7 +956,7 @@ function goBack(){
   closeSheet();
 }
 function renderSheet(){
-  if(view==='list')return renderList();if(view==='ticket')return renderTicket();if(view==='team')return renderTeam();
+  if(view==='list')return renderList();if(view==='ticket')return renderTicket();if(view==='team')return renderTeam();if(view==='near')return renderNear();if(view==='help')return renderHelp();
   renderTargetView();
 }
 const head=(title,sub,back,cls)=>'<div class="grab"></div><header class="sh-head">'+(back?'<button class="x" data-act="back" aria-label="Volver">‹</button>':'')+
@@ -1055,6 +1117,7 @@ sheet.addEventListener('click',async e=>{
   const t=e.target.closest('[data-act]');if(!t)return;const a=t.dataset.act;
   if(a==='close')closeSheet();
   else if(a==='back')goBack();
+  else if(a==='goto'){const g=byKey[t.dataset.key];if(g)selectTarget(g,true,null);}
   else if(a==='new'){mode='form';if(sel.kind==='room')draft=null;formPri='Media';renderSheet();updateDraftPin();}
   else if(a==='cancel'){mode='view';if(sel.kind==='room')draft=null;renderSheet();updateDraftPin();}
   else if(a==='pri'){formPri=t.dataset.p;sheet.querySelectorAll('[data-act="pri"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.p===formPri)));}
@@ -1107,12 +1170,129 @@ function refresh(){
   if(sheet.classList.contains('open')){
     if(view==='list')renderList();
     else if(view==='ticket'){if(issues[curTicket])renderTicketTop();else{toast('Esta orden fue eliminada.');openList();}}
-    else if(view==='team'){}
+    else if(view==='team'||view==='help'){}
+    else if(view==='near')renderNear();
     else if(mode==='form')renderPlan();else renderTargetView();
   }
   requestRender();
 }
 setInterval(()=>{if(view==='ticket'&&sheet.classList.contains('open'))renderTicketTop();},60000);
+
+/* ===== Right-click (or long press) menu ===== */
+const cmenu=$('#cmenu');let ctx=null;
+const nameOf=t=>t.kind==='room'?'Hab. '+t.num:t.name;
+const subOf=t=>t.kind==='room'?'Piso '+t.floor+', '+String(t.block||'').toLowerCase():(t.sub||'');
+const localOf=p=>site.worldToLocal(p.clone());
+const centerW=t=>site.localToWorld(new V(t.c.x,0,t.c.z));
+const distXZ=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+function nearestTo(p){let best=null,bd=1e9;targets.forEach(t=>{if(!shown(t.mesh))return;const d=distXZ(centerW(t),p);if(d<bd){bd=d;best=t;}});return best&&bd<40?best:null;}
+const ftOf=m=>Math.round(m*3.28084);
+const distTxt=m=>(m<10?m.toFixed(1):String(Math.round(m)))+' m · '+ftOf(m)+' ft';
+function hideMenu(){if(!cmenu.hidden){cmenu.hidden=true;ctx=null;}}
+function openMenu(x,y){
+  clearTimeout(tapTimer);lastTap=null;
+  const k=pickAt(x,y);if(!k){hideMenu();return;}
+  const t=k.t||nearestTo(k.p);const mk=markNear(k.p);
+  ctx={x,y,p:k.p,t,direct:!!k.t,mk};
+  const it=(act,label,cls)=>'<button type="button" role="menuitem" data-cm="'+act+'"'+(cls?' class="'+cls+'"':'')+'>'+esc(label)+'</button>';
+  let h='';
+  if(t)h+='<div class="cmh"><b>'+esc(nameOf(t))+'</b><span>'+esc(k.t?subOf(t):'Lo más cerca')+'</span></div>';
+  if(t&&!readOnly)h+=it('new','Crear orden aquí','pri');
+  if(t)h+=it('info','Ver información');
+  h+=it('near','Qué hay cerca');
+  h+=it('measure','Medir distancia desde aquí');
+  h+=it('center','Centrar aquí');
+  h+=mk?it('unmark','Quitar este marcador'):it('mark','Agregar marcador');
+  if(marks.length)h+=it('clear','Quitar todos los marcadores','dim');
+  cmenu.innerHTML=h;cmenu.hidden=false;
+  const w=cmenu.offsetWidth||230,hh=cmenu.offsetHeight||300;
+  cmenu.style.left=Math.max(8,Math.min(x,window.innerWidth-w-8))+'px';
+  cmenu.style.top=Math.max(8,Math.min(y,window.innerHeight-hh-8))+'px';
+  const f=cmenu.querySelector('button');if(f&&!('ontouchstart' in window))f.focus({preventScroll:true});
+}
+cmenu.addEventListener('click',e=>{
+  const b=e.target.closest('[data-cm]');if(!b||!ctx)return;const a=b.dataset.cm,c=ctx;hideMenu();
+  if(a==='new')newOrderAt(c);
+  else if(a==='info')selectTarget(c.t,true,null);
+  else if(a==='near')openNear(c.p);
+  else if(a==='measure')startMeasure(c.p);
+  else if(a==='center')flyTo(new V(c.p.x,orbit.target.y,c.p.z),null);
+  else if(a==='mark')addMark(c.p);
+  else if(a==='unmark')delMark(c.mk);
+  else if(a==='clear'){marks=[];saveMarks();drawMarks();toast('Marcadores quitados.');}
+});
+document.addEventListener('pointerdown',e=>{if(!cmenu.hidden&&!cmenu.contains(e.target)&&e.target!==canvas)hideMenu();},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!cmenu.hidden){hideMenu();e.stopImmediatePropagation();}else if(measure){endMeasure();e.stopImmediatePropagation();}}},true);
+window.addEventListener('resize',hideMenu);
+function newOrderAt(c){
+  const t=c.t;if(!t||readOnly)return;let d=null;
+  if(c.direct){const l=localOf(c.p);
+    if(t.kind==='room'){const right=t.front.clone().negate().cross(UP),rel=new V(l.x-t.c.x,0,l.z-t.c.z);
+      const u=(rel.dot(right)/Math.max(.5,t.sAl/2-.4)+1)/2,v=(1-rel.dot(t.front)/Math.max(.5,t.sAc/2-.4))/2;
+      d={u:Math.min(.97,Math.max(.03,u)),v:Math.min(.97,Math.max(.03,v))};}
+    else{if(t.parent===floorG[1])l.y-=floorG[1].position.y;d={x:l.x,y:l.y,z:l.z};}}
+  selectTarget(t,true,d);mode='form';formPri='Media';renderSheet();updateDraftPin();
+}
+
+/* ===== What's nearby ===== */
+let nearAt=null;
+function openNear(p){stopEvents();nearAt=p.clone();view='near';sel=null;curTicket=null;mode='view';draft=null;placeSel();paint();rebuildPins();updateDraftPin();renderNear();openSheet();requestRender();}
+function renderNear(){
+  if(!nearAt)return;
+  const list=targets.filter(t=>shown(t.mesh)).map(t=>({t,d:worldOf(t).distanceTo(nearAt)})).filter(o=>o.d<=25).sort((a,b)=>a.d-b.d).slice(0,14);
+  let h=head('Qué hay cerca','A 25 m del punto que marcaste',false,'area');
+  h+=list.length?'<div class="tlist">'+list.map(({t,d})=>{const n=openOf(t.key).length;
+    return'<button class="trow" data-act="goto" data-key="'+esc(t.key)+'"><i class="dot" style="margin-top:4px;background:var('+(STATES[t.state].v||t.baseVar)+')"></i><span class="tr-main"><b>'+esc(nameOf(t))+'</b><span>'+
+      esc(n?(n===1?'1 orden abierta':n+' órdenes abiertas'):'Sin órdenes abiertas')+'</span></span><span class="tr-side"><span class="ndist" data-raw>'+esc(distTxt(d))+'</span></span></button>';}).join('')+'</div>'
+    :'<p class="hint">No hay habitaciones ni áreas cerca de ese punto.</p>';
+  sheet.innerHTML=h;
+}
+
+/* ===== Measure ===== */
+let measure=null;
+const mLineMat=new THREE.LineBasicMaterial({color:0xffffff,depthTest:false,transparent:true});
+function startMeasure(p){endMeasure();measure={a:localOf(p),b:null,line:null,dots:[]};measure.dots.push(mDot(measure.a));
+  $('#measure').hidden=false;$('#mText').textContent=L('Toca otro punto para medir');requestRender();}
+function mDot(l){const m=new THREE.Mesh(new THREE.SphereGeometry(.35,12,10),new THREE.MeshBasicMaterial({color:0xffffff,depthTest:false}));m.position.set(l.x,.4,l.z);m.renderOrder=12;site.add(m);return m;}
+function measureTo(x,y){
+  const k=pickAt(x,y);if(!k)return;const b=localOf(k.p);
+  if(measure.line){site.remove(measure.line);measure.line.geometry.dispose();}
+  if(measure.dots[1]){site.remove(measure.dots[1]);measure.dots[1].geometry.dispose();measure.dots.pop();}
+  measure.b=b;measure.dots.push(mDot(b));
+  const g=new THREE.BufferGeometry().setFromPoints([new V(measure.a.x,.4,measure.a.z),new V(b.x,.4,b.z)]);
+  measure.line=new THREE.Line(g,mLineMat);measure.line.renderOrder=11;site.add(measure.line);
+  const m=distXZ(measure.a,b);$('#mText').textContent=L('Distancia')+': '+distTxt(m);requestRender();
+}
+function endMeasure(){if(!measure)return;measure.dots.forEach(d=>{site.remove(d);d.geometry.dispose();d.material.dispose();});
+  if(measure.line){site.remove(measure.line);measure.line.geometry.dispose();}measure=null;$('#measure').hidden=true;requestRender();}
+$('#mClose').addEventListener('click',endMeasure);
+
+/* ===== My markers (saved on this device) ===== */
+const MKEY='fs.map.marks.'+HOTEL;let marks=[],markPins=[];
+try{const v=JSON.parse(localStorage.getItem(MKEY)||'[]');if(Array.isArray(v))marks=v.filter(m=>m&&isFinite(m.x)&&isFinite(m.z)).slice(0,30);}catch(e){}
+function saveMarks(){try{localStorage.setItem(MKEY,JSON.stringify(marks));}catch(e){}}
+function drawMarks(){markPins.forEach(p=>{site.remove(p);p.children[0].material.dispose();});markPins=[];
+  marks.forEach(m=>{const p=makePin(css('--low'),false);p.scale.setScalar(.95);p.position.set(m.x,m.y||0,m.z);site.add(p);markPins.push(p);});requestRender();}
+function markNear(p){const l=localOf(p);let best=null,bd=3;marks.forEach(m=>{const d=distXZ(m,l);if(d<bd){bd=d;best=m;}});return best;}
+function addMark(p){if(marks.length>=30){toast('Llegaste al máximo de 30 marcadores.');return;}const l=localOf(p);
+  marks.push({x:+l.x.toFixed(2),y:Math.max(0,+l.y.toFixed(2)),z:+l.z.toFixed(2)});saveMarks();drawMarks();toast('Marcador agregado. Solo se ve en este equipo.');}
+function delMark(m){marks=marks.filter(x=>x!==m);saveMarks();drawMarks();toast('Marcador quitado.');}
+drawMarks();
+
+/* ===== How to use the map ===== */
+function openHelp(){stopEvents();view='help';renderHelp();openSheet();}
+function renderHelp(){
+  const row=(k,v)=>'<li><b>'+esc(k)+'</b><span>'+esc(v)+'</span></li>';
+  sheet.innerHTML=head('Cómo usar el mapa','Computadora y teléfono',false,'area')+
+    '<h3 class="hh">Con el ratón</h3><ul class="help">'+
+    row('Arrastrar','Mover el mapa')+row('Rueda','Acercar o alejar donde está el cursor')+row('Doble clic','Acercar y centrar en ese punto')+
+    row('Ctrl o ⌘ + arrastrar','Girar e inclinar la vista 3D')+row('Clic','Abrir la habitación o el área con sus órdenes')+
+    row('Clic derecho','Crear orden aquí, qué hay cerca, medir, marcador')+row('+ y −','Botones para acercar y alejar')+'</ul>'+
+    '<h3 class="hh">En el teléfono</h3><ul class="help">'+
+    row('Un dedo','Mover el mapa')+row('Pellizcar','Acercar o alejar')+row('Dos dedos y girar','Girar la vista')+row('Dos dedos arriba o abajo','Inclinar la vista')+
+    row('Doble toque','Acercar y centrar')+row('Tocar','Abrir la habitación o el área')+row('Mantener presionado','Abrir el menú de opciones')+'</ul>';
+}
+$('#btnHelp').addEventListener('click',()=>{hideMenu();if(view==='help'&&sheet.classList.contains('open'))closeSheet();else openHelp();});
 
 /* ===== Tema ===== */
 function applyTheme(){
