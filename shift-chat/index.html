@@ -897,6 +897,42 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .lnhist .lnrow{display:flex;flex-direction:column;gap:2px;padding:10px 0;border-top:1px solid var(--line)}
 .lnhist .lnrow:first-child{border-top:0}
 #view-srep .inner{padding-bottom:90px}
+#view-punch .inner{padding-bottom:90px}
+.mpform{margin-top:12px}
+.mpday{font-size:12.5px;color:var(--ink-3);text-transform:capitalize}
+.mplab{font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.mpkinds{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mpkinds button{min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink-2);font:600 14px var(--f-body);cursor:pointer;padding:8px}
+.mpkinds button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.mpgo{width:100%;margin-top:4px}
+.mplist{margin-top:12px}
+.mpteam{margin-top:12px}
+.mpseg{display:flex;gap:8px;margin-bottom:10px}
+.mpseg button{flex:1;min-height:40px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);color:var(--ink-2);font:600 13.5px var(--f-body);cursor:pointer}
+.mpseg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.mpseg i{font-style:normal;margin-left:4px;opacity:.8}
+.mpcard{border:1px solid var(--line);border-left:4px solid var(--high);border-radius:12px;padding:10px 12px;margin-top:8px;display:flex;flex-direction:column;gap:4px;background:var(--surface)}
+.mpcard.fixed{border-left-color:var(--ok)}
+.mptop{display:flex;align-items:center;gap:8px}
+.mptop b{flex:1;min-width:0;font-size:15px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mpline{font-size:14px;color:var(--ink-2)}
+.mpline:first-letter{text-transform:uppercase}
+.mpline b{color:var(--ink)}
+.mpwhy{font-size:14px;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.mpmeta{font-size:12px;color:var(--ink-3)}
+.mpcard .btn{margin-top:6px;align-self:flex-start;min-height:40px}
+.mpst{flex:none;font:600 12px var(--f-body);border-radius:999px;padding:4px 10px;border:0}
+.mpst.ok{background:var(--ok-soft);color:var(--ok)}
+.mpst.wait{background:var(--high-soft);color:var(--high)}
+.mpsums{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.mpsum{display:flex;gap:12px;padding:10px 12px;border-top:1px solid var(--line)}
+.mpsum:first-child{border-top:0}
+.mpsum span{flex:none;width:118px;font-size:13px;color:var(--ink-3)}
+.mpsum b{flex:1;min-width:0;font-size:14.5px;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.mpdone{text-align:center}
+.mpdone .mpic{width:56px;height:56px;border-radius:50%;margin:4px auto 10px;display:grid;place-items:center;font:800 26px var(--f-body);color:#fff}
+.mpdone .mpic.ok{background:var(--ok)}
+.mpdone .mpic.no{background:var(--high)}
 .srshifts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .srs{--sc:#1a56a0;border:1px solid var(--line);border-top:3px solid var(--sc);border-radius:14px;background:var(--surface);color:var(--ink-2);padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font:inherit;cursor:pointer}
 .srs .ic{font-size:18px}.srs b{font-size:13px;font-weight:600}.srs small{font-size:10.5px;opacity:.8}
@@ -1085,6 +1121,7 @@ body{background:var(--bg)}
     <button role="tab" data-tab="eng" aria-selected="false" id="engTab"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span class="cnt" id="engCnt"></span></span><span class="tl" data-noi18n>Engineer</span></button>
     <button role="tab" data-tab="map" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.1 6.1 9.9 3.9a2 2 0 0 0-1.8 0L3.6 6.2A1 1 0 0 0 3 7.1v12.3a1 1 0 0 0 1.4.9l3.7-1.9a2 2 0 0 1 1.8 0l4.2 2.2a2 2 0 0 0 1.8 0l4.5-2.3a1 1 0 0 0 .6-.9V5.1a1 1 0 0 0-1.4-.9l-3.7 1.9a2 2 0 0 1-1.8 0Z"/><path d="M9 3.6v15M15 5.6v15"/></svg><span class="cnt" id="mapCnt"></span></span><span class="tl">Map</span></button>
     <button role="tab" data-tab="laundry" aria-selected="false" id="lnTab"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h.01M11 6h.01"/><circle cx="12" cy="13.5" r="5"/><path class="drum" d="M9.3 14c.9-.8 1.8-.8 2.7 0s1.8.8 2.7 0"/></svg></span><span class="tl">Laundry</span><span class="lnst" id="lnSt" data-noi18n></span></button>
+    <button role="tab" data-tab="punch" aria-selected="false" id="mpTab"><span class="tic"><span class="cnt" id="mpCnt" hidden></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4"/><path d="M12 16.5h.01"/><path d="M9 2h6"/></svg></span><span class="tl" data-noi18n>Missing Punch</span></button>
     <button role="tab" data-tab="team" aria-selected="false" id="teamTab" hidden><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="cnt" id="teamCnt"></span></span><span class="tl">Manager</span></button>
   </nav>
   <div class="banner" id="pushBanner" hidden><span class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span><span class="grow" id="pushText"></span><button class="btn sm pri" id="pushBtn">Turn on</button><button class="linkbtn" id="pushLater">Not now</button></div>
@@ -1147,6 +1184,7 @@ body{background:var(--bg)}
   </div></section>
 
   <section class="view" id="view-srep" hidden data-noi18n aria-label="Shift Report"><div class="inner" id="srBody"></div></section>
+  <section class="view" id="view-punch" hidden data-noi18n aria-label="Missing Punch"><div class="inner" id="mpBody"></div></section>
 
   <section class="view" id="view-lost" hidden><div class="inner">
     <div><button type="button" class="btn sm" id="lfBack">‹ Pass-on</button></div>
@@ -3828,8 +3866,9 @@ function setTab(t){
   const inMain = t === 'chat' || t === 'orders', dash = desktop && t === 'orders';
   $('#main').hidden = !inMain || dash; $('#main').dataset.tab = t; $('#view-dash').hidden = !dash;
   if (dash) dashLoad();
-  ['passon','lost','rooms','team','map','laundry','eng','srep'].forEach(v => $('#view-' + v).hidden = t !== v);
+  ['passon','lost','rooms','team','map','laundry','eng','srep','punch'].forEach(v => $('#view-' + v).hidden = t !== v);
   if (t === 'srep') setTimeout(srShow);
+  if (t === 'punch') setTimeout(mpShow);
   if (t === 'laundry') setTimeout(() => { lnRender(); lnLoad(); });
   if (t === 'eng') setTimeout(engShow);
   if (t === 'map') openMap();
@@ -4183,8 +4222,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.6.0';
 const CHANGES = [
+  {v: '1.6.0', d: '2026-11-11', en: ['New Missing Punch in the Menu: ask a manager to fix a punch you missed (name, date, which punch, time and reason)', 'You check everything before sending. Only you and the managers see it', 'Managers see the pending ones (with a count on the Menu) and tap Mark fixed when the punch is corrected; you see Pending or Fixed in My requests'],
+    es: ['Nuevo Missing Punch en el Menú: pídele a un manager que corrija un ponche que te faltó (nombre, fecha, qué ponche, hora y razón)', 'Revisas todo antes de enviar. Solo tú y los managers lo ven', 'Los managers ven los pendientes (con el número en el Menú) y tocan Marcar arreglado cuando corrigen el ponche; tú ves Pendiente o Arreglado en Mis solicitudes']},
   {v: '1.5.0', d: '2026-11-11', en: ['New Shift Report in the Menu, right under Pass-on: the front desk report with shift, general info, incidents and transactions, metrics and night audit no-shows', 'It saves as you type on this phone; Send puts it in Pass-on in the same format, where anyone can comment or set an alarm on a line', 'Pass-ons can be longer now (up to 4000 characters)', 'Fundamental map, like Maingate: every room in buildings 1 to 4, stairs, ice machines, pool and front desk', 'One look in the whole app: chat, top bar, menus and panels always use the same colors, with easier-to-read gray text. In Settings pick Light, Dark or Auto (follows your phone)', 'New computer layout: section icons on the left, open orders with search and filters in the middle, and the chat on the right with its own header. Phones stay the same'],
     es: ['Nuevo Reporte de turno en el Menú, debajo de Entregas: el reporte de front desk con turno, información general, incidentes y transacciones, métricas y no-shows de la auditoría nocturna', 'Se guarda mientras escribes en este teléfono; Enviar lo pone en Entregas con el mismo formato, donde cualquiera puede comentar o poner una alarma en una línea', 'Las entregas ahora pueden ser más largas (hasta 4000 caracteres)', 'Mapa de Fundamental, igual que el de Maingate: todas las habitaciones de los edificios 1 al 4, escaleras, máquinas de hielo, piscina y recepción', 'Un solo estilo en toda la app: el chat, la barra de arriba, los menús y los paneles siempre usan los mismos colores, con el texto gris más fácil de leer. En Ajustes elige Claro, Oscuro o Automático (sigue a tu teléfono)', 'Nueva vista en computadora: íconos de las secciones a la izquierda, órdenes abiertas con búsqueda y filtros en el medio, y el chat a la derecha con su propio encabezado. El teléfono queda igual']},
   {v: '1.4.0', d: '2026-11-11', en: ['New Engineer in the Menu: open maintenance orders, a new order form with room or area, problem type, urgent, who takes it and a photo', 'History of finished maintenance orders with who did them, when, and how long they took', 'Search by room number, words or problem type, and Frequent: the problems and rooms that repeat most in 30 or 90 days', 'Maintenance orders from the chat go straight to Engineer, and so do their alerts. Maintenance staff open the app on Engineer', 'Each maintenance order has a Map button that opens it on the map'],
@@ -4735,7 +4776,7 @@ function goHash(h){
   if (!S.me) return;
   if (h === '#eng' || (h === '#orders' && engIsMe())) setTab('eng');
   else if (h === '#orders') setTab('orders');
-  else if (h === '#passon' || h === '#lost' || h === '#map' || h === '#laundry' || h === '#srep') setTab(h.slice(1));
+  else if (h === '#passon' || h === '#lost' || h === '#map' || h === '#laundry' || h === '#srep' || h === '#punch') setTab(h.slice(1));
   else if (h === '#team' && S.me.role === 'mgr') setTab('team');
 }
 
@@ -5008,6 +5049,137 @@ function deskSync(){
   dh.setAttribute('aria-label', multi ? L2('Switch hotel', 'Cambiar de hotel') + ': ' + (h.name || '') : (h.name || ''));
   if (multi) dh.removeAttribute('tabindex'); else dh.tabIndex = -1;
 }
+
+/* Missing Punch: ask a manager to fix a punch you missed. Stays in the app: only you and the hotel's managers see it;
+   a manager marks it Fixed once the punch is corrected. */
+const MP_KINDS = [['in', 'Clock in', 'Entrada'], ['out', 'Clock out', 'Salida'], ['break_out', 'Out to break', 'Salida a break'], ['break_in', 'Back from break', 'Regreso de break']];
+const mpKind = k => { const x = MP_KINDS.find(z => z[0] === k); return x ? L2(x[1], x[2]) : k; };
+const mpToday = () => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+const mpMinDay = () => { const d = new Date(mpToday() + 'T12:00:00'); d.setDate(d.getDate() - 31); return d.toISOString().slice(0, 10); };
+const mpDay = d => d ? new Date(d + 'T12:00:00').toLocaleDateString(LANG === 'es' ? 'es-US' : 'en-US', {weekday: 'long', month: 'long', day: 'numeric'}) : '';
+const mpTime = t => { if (!/^\d\d:\d\d$/.test(t || '')) return t || ''; const [h, m] = t.split(':').map(Number); return new Date(2000, 0, 1, h, m).toLocaleTimeString(LANG === 'es' ? 'es-US' : 'en-US', {hour: 'numeric', minute: '2-digit'}); };
+const mpWhen = x => x ? new Date(x).toLocaleString(LANG === 'es' ? 'es-US' : 'en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: TZ}) : '';
+const mpMgr = () => !!(S.me && S.me.role === 'mgr');
+let MP = null, MPK = '', MPD = null, MPV = 'open', MPBusy = false;
+const mpBlank = () => ({name: (S.me && S.me.name) || '', date: mpToday(), punch: '', time: '', reason: ''});
+function mpLoad(){ const k = ((S.me && S.me.id) || '') + '.' + ((S.hotel && S.hotel.id) || ''); if (MP && MPK === k) return; MPK = k; MP = mpBlank(); MPD = null; }
+function mpCard(r, mgr){
+  const fixed = r.status === 'fixed';
+  return `<div class="mpcard${fixed ? ' fixed' : ''}"><div class="mptop"><b>${esc(r.name)}</b>
+      <span class="mpst ${fixed ? 'ok' : 'wait'}">${fixed ? L2('Fixed', 'Arreglado') : L2('Pending', 'Pendiente')}</span></div>
+    <div class="mpline">${esc(mpDay(r.work_date))} · <b>${esc(mpKind(r.punch))} ${esc(mpTime(r.punch_time))}</b></div>
+    <div class="mpwhy">${esc(r.reason)}</div>
+    <div class="mpmeta">${mgr && r.sent_by && r.sent_by !== r.name ? esc(L2('Sent by ', 'Enviado por ') + r.sent_by) + ' · ' : ''}${esc(L2('Sent ', 'Enviado ') + mpWhen(r.created_at))}${fixed ? ' · ' + esc(L2('Fixed by ', 'Arreglado por ') + (r.fixed_by || '') + ', ' + mpWhen(r.fixed_at)) : ''}</div>
+    ${mgr ? (fixed ? `<button type="button" class="btn mpback" data-mpfix="${r.id}" data-v="0">${L2('Mark as pending', 'Volver a pendiente')}</button>`
+      : `<button type="button" class="btn pri mpfix" data-mpfix="${r.id}" data-v="1">${L2('Mark fixed', 'Marcar arreglado')}</button>`) : ''}</div>`;
+}
+function mpTeamHtml(){
+  if (!MPD) return `<p class="hint">${L2('Loading…', 'Cargando…')}</p>`;
+  const list = MPV === 'open' ? (MPD.open || []) : (MPD.fixed || []);
+  const seg = `<div class="mpseg" role="group"><button type="button" data-mpv="open" aria-pressed="${MPV === 'open'}">${L2('Pending', 'Pendientes')} <i>${(MPD.open || []).length}</i></button>
+    <button type="button" data-mpv="fixed" aria-pressed="${MPV === 'fixed'}">${L2('Fixed (30 days)', 'Arreglados (30 días)')}</button></div>`;
+  return seg + (list.length ? list.map(r => mpCard(r, true)).join('')
+    : `<p class="hint">${MPV === 'open' ? L2('Nothing pending. All punches are fixed.', 'Nada pendiente. Todos los ponches están arreglados.') : L2('Nothing fixed in the last 30 days.', 'Nada arreglado en los últimos 30 días.')}</p>`);
+}
+function mpMineHtml(){
+  if (!MPD) return `<p class="hint">${L2('Loading…', 'Cargando…')}</p>`;
+  if (!MPD.mine.length) return `<p class="hint">${L2('You haven’t sent any requests yet.', 'Todavía no has enviado solicitudes.')}</p>`;
+  return MPD.mine.map(r => mpCard(r, false)).join('');
+}
+function mpRender(){
+  mpLoad();
+  const box = $('#mpBody'); if (!box) return;
+  const mgr = mpMgr();
+  box.innerHTML = `<div class="enghead"><div class="grow"><h2>Missing Punch</h2>
+      <div class="sub">${L2('Forgot to punch, or the clock failed? Ask for the fix here. Only you and the managers see it.', '¿Se te olvidó ponchar o falló el reloj? Pide la corrección aquí. Solo tú y los managers lo ven.')}</div></div></div>
+    ${mgr ? `<div class="card mpteam"><h3 class="srh">${L2('Team requests', 'Solicitudes del equipo')}</h3><div id="mpTeam">${mpTeamHtml()}</div></div>` : ''}
+    <div class="card mpform">${mgr ? `<h3 class="srh">${L2('New request', 'Nueva solicitud')}</h3>` : ''}
+      <div class="field"><label for="mpName">${L2('Name', 'Nombre')}</label><input id="mpName" maxlength="80" autocomplete="off" value="${esc(MP.name)}"></div>
+      <div class="field"><label for="mpDate">${L2('Date', 'Fecha')}</label><input id="mpDate" type="date" value="${esc(MP.date)}" max="${mpToday()}" min="${mpMinDay()}"><div class="mpday" id="mpDayL">${esc(mpDay(MP.date))}</div></div>
+      <div class="field"><span class="mplab">${L2('Which punch was missed', 'Qué ponche faltó')}</span><div class="mpkinds" role="group" aria-label="${esc(L2('Which punch was missed', 'Qué ponche faltó'))}">${MP_KINDS.map(([k]) =>
+        `<button type="button" data-mpk="${k}" aria-pressed="${MP.punch === k}">${esc(mpKind(k))}</button>`).join('')}</div></div>
+      <div class="field"><label for="mpTime">${L2('Time to correct', 'Hora a corregir')}</label><input id="mpTime" type="time" value="${esc(MP.time)}"></div>
+      <div class="field"><label for="mpReason">${L2('Why it wasn’t punched', 'Por qué no se ponchó')}</label><textarea id="mpReason" rows="3" maxlength="500" placeholder="${esc(L2('Example: the clock was frozen when I arrived', 'Ejemplo: el reloj estaba congelado cuando llegué'))}">${esc(MP.reason)}</textarea></div>
+      <button type="button" class="btn pri mpgo" id="mpReview">${L2('Review and send', 'Revisar y enviar')}</button>
+    </div>
+    <div class="card mplist"><h3 class="srh">${L2('My requests', 'Mis solicitudes')}</h3><div id="mpMine">${mpMineHtml()}</div></div>`;
+}
+function mpCount(){
+  const c = $('#mpCnt'); if (!c) return;
+  const n = mpMgr() && MPD && MPD.open ? MPD.open.length : 0;
+  c.textContent = n ? String(n) : ''; c.hidden = !n;
+}
+function mpSet(d){
+  if (!d) return; MPD = d; mpCount();
+  if (S.tab === 'punch') { const t = $('#mpTeam'), m = $('#mpMine'); if (t) t.innerHTML = mpTeamHtml(); if (m) m.innerHTML = mpMineHtml(); }
+}
+async function mpFetch(quiet){
+  if (!S.token || !S.me || MPBusy) return; MPBusy = true;
+  try { mpSet(await call('sc_punch', {})); } catch (e) { if (!quiet) toast(esc(e.message)); } finally { MPBusy = false; }
+}
+function mpCheck(){
+  const bad = (msg, el) => { toast(msg); const x = $(el); if (x) x.focus(); return false; };
+  if (MP.name.trim().length < 2) return bad(L2('Write the name.', 'Escribe el nombre.'), '#mpName');
+  if (!MP.date || MP.date > mpToday() || MP.date < mpMinDay()) return bad(L2('Pick a date from the last 31 days.', 'Elige una fecha de los últimos 31 días.'), '#mpDate');
+  if (!MP.punch) return bad(L2('Pick which punch was missed.', 'Elige qué ponche faltó.'), '.mpkinds button');
+  if (!/^\d\d:\d\d$/.test(MP.time)) return bad(L2('Write the time to correct.', 'Escribe la hora a corregir.'), '#mpTime');
+  if (MP.reason.trim().length < 3) return bad(L2('Write why it wasn’t punched.', 'Escribe por qué no se ponchó.'), '#mpReason');
+  return true;
+}
+function mpReview(){
+  if (!mpCheck()) return;
+  const row = (k, v) => `<div class="mpsum"><span>${esc(k)}</span><b>${esc(v)}</b></div>`;
+  openModal(`<div data-noi18n><h2>${L2('Check before sending', 'Revisa antes de enviar')}</h2>
+    <p class="hint">${L2('Only you and the managers will see it.', 'Solo tú y los managers lo verán.')}</p>
+    <div class="mpsums">${row(L2('Name', 'Nombre'), MP.name.trim())}${row(L2('Date', 'Fecha'), mpDay(MP.date))}${row(L2('Missed punch', 'Ponche que faltó'), mpKind(MP.punch))}${row(L2('Time to correct', 'Hora a corregir'), mpTime(MP.time))}${row(L2('Reason', 'Razón'), MP.reason.trim())}</div>
+    <div class="btnrow" style="margin-top:12px"><button class="btn pri" type="button" id="mpSend">${L2('Send', 'Enviar')}</button><button class="btn" type="button" data-close>${L2('Edit', 'Corregir')}</button></div></div>`);
+  $('#mpSend').onclick = async () => {
+    const b = $('#mpSend'); b.disabled = true; b.textContent = L2('Sending…', 'Enviando…');
+    let d;
+    try { d = await call('sc_punch_new', {p_name: MP.name.trim(), p_date: MP.date, p_punch: MP.punch, p_time: MP.time, p_reason: MP.reason.trim()}); }
+    catch (err) {
+      b.disabled = false; b.textContent = L2('Send', 'Enviar');
+      return toast(/TOO_MANY/.test(err.message) ? L2('You already sent 10 requests today. Talk to your manager.', 'Ya enviaste 10 solicitudes hoy. Habla con tu gerente.') : esc(err.message));
+    }
+    closeModal();
+    const name = MP.name; MP = {...mpBlank(), name}; MPD = d; mpRender(); mpCount();
+    toast(L2('Request sent to the managers', 'Solicitud enviada a los managers'), 'new');
+    const m = $('#mpMine'); if (m && m.scrollIntoView) m.scrollIntoView({block: 'start'});
+  };
+}
+function mpShow(){ mpLoad(); mpRender(); mpFetch(); }
+$('#view-punch').addEventListener('input', e => {
+  const t = e.target; if (!MP) return;
+  if (t.id === 'mpName') MP.name = t.value;
+  else if (t.id === 'mpTime') MP.time = t.value;
+  else if (t.id === 'mpReason') MP.reason = t.value;
+  else if (t.id === 'mpDate') { MP.date = t.value; $('#mpDayL').textContent = mpDay(t.value); }
+});
+$('#view-punch').addEventListener('change', e => {
+  const t = e.target; if (!MP) return;
+  if (t.id === 'mpDate') { MP.date = t.value; $('#mpDayL').textContent = mpDay(t.value); }
+  if (t.id === 'mpTime') MP.time = t.value;
+});
+$('#view-punch').addEventListener('click', async e => {
+  const k = e.target.closest('[data-mpk]');
+  if (k) { MP.punch = k.dataset.mpk; document.querySelectorAll('#mpBody [data-mpk]').forEach(x => x.setAttribute('aria-pressed', x.dataset.mpk === MP.punch)); return; }
+  if (e.target.closest('#mpReview')) return mpReview();
+  const v = e.target.closest('[data-mpv]');
+  if (v) { MPV = v.dataset.mpv; const t = $('#mpTeam'); if (t) t.innerHTML = mpTeamHtml(); return; }
+  const f = e.target.closest('[data-mpfix]');
+  if (f) { f.disabled = true; const fixed = f.dataset.v === '1';
+    try { mpSet(await call('sc_punch_status', {p_id: f.dataset.mpfix, p_fixed: fixed}));
+      toast(fixed ? L2('Marked fixed', 'Marcado como arreglado') : L2('Back to pending', 'Volvió a pendiente'), 'new'); }
+    catch (err) { f.disabled = false; toast(esc(err.message)); } }
+});
+// managers see how many are pending on the Menu: checked every minute, every 15 s on this screen
+let MPN = 0;
+setInterval(() => {
+  if (!S.token || !S.me || document.visibilityState !== 'visible' || navigator.onLine === false) return;
+  MPN++; if (S.tab === 'punch' || (mpMgr() && MPN % 4 === 0)) mpFetch(true);
+}, 15000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.token && S.me && mpMgr()) mpFetch(true); });
+if (S.token && S.me) setTimeout(() => { if (mpMgr()) mpFetch(true); }, 2000);
 
 if (S.token && S.me) enterApp(); else showLogin();
 })();
