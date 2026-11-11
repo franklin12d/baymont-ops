@@ -881,6 +881,50 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .hpk .hn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hpk .hk{width:20px;height:20px;flex:none;color:var(--hotel)}
 .hpk button[aria-checked="false"] .hk{visibility:hidden}
+
+/* v1.3.0: Laundry */
+.tabs .lnst{font:600 11.5px var(--f-body);padding:2px 8px;border-radius:999px;white-space:nowrap;flex:none}
+.tabs .lnst:empty{display:none}
+.tabs .lnst.run{background:var(--ok-soft);color:var(--ok)}
+.tabs .lnst.ready{background:var(--high-soft);color:var(--high)}
+.lngrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:900px){.lngrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.lncard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0;border-top:4px solid var(--line)}
+.lncard[data-st="run"]{border-top-color:var(--ok)}
+.lncard[data-st="ready"]{border-top-color:var(--high);background:color-mix(in srgb,var(--high-soft) 55%,var(--surface))}
+.lnhead{display:flex;align-items:center;gap:10px;min-width:0}
+.lnico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--surface-2);color:var(--ink-2);flex:none}
+.lnico svg{width:24px;height:24px}
+.lncard[data-st="run"] .lnico{color:var(--ok)}
+.lncard[data-st="ready"] .lnico{color:var(--high)}
+.lncard[data-st="run"] .lnico .drum{transform-origin:12px 13.5px;animation:lnSpin 1.6s linear infinite}
+@keyframes lnSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.lncard .lnico .drum{animation:none!important}}
+.lnhead b{display:block;font-size:15px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lnhead .lnstate{display:block;font-size:12.5px;font-weight:600;color:var(--ink-3)}
+.lncard[data-st="run"] .lnstate{color:var(--ok)}
+.lncard[data-st="ready"] .lnstate{color:var(--high)}
+.lntime{font:700 30px/1.1 var(--f-body);font-variant-numeric:tabular-nums;color:var(--ink);letter-spacing:-.01em}
+.lncard[data-st="idle"] .lntime{color:var(--ink-3)}
+.lncard[data-st="ready"] .lntime{font-size:16px;line-height:1.3;color:var(--ink-2)}
+.lnbar{height:6px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.lnbar i{display:block;height:100%;width:0;background:var(--ok);border-radius:inherit;transition:width .9s linear}
+.lncard[data-st="ready"] .lnbar i{background:var(--high)}
+.lnmeta{font-size:12.5px;color:var(--ink-2);line-height:1.35}
+.lntags{display:flex;gap:6px;flex-wrap:wrap}
+.lntag{font:600 11.5px var(--f-body);padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.lnact{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+.lnact .btn{flex:1;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.lnact .btn svg{width:16px;height:16px}
+.lnmins{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.lnmins button{min-width:56px;min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font:700 15px var(--f-body);color:var(--ink)}
+.lnmins button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.lnchk{display:flex;align-items:center;gap:10px;min-height:44px;font-size:15px;font-weight:600;color:var(--ink)}
+.lnchk input{width:22px;height:22px}
+.lnhist .lnrow{display:flex;flex-direction:column;gap:2px;padding:10px 0;border-top:1px solid var(--line)}
+.lnhist .lnrow:first-child{border-top:0}
+.lnhist .lnrow b{font-size:14px;color:var(--ink)}
+.lnhist .lnrow span{font-size:13px;color:var(--ink-2)}
 </style>
 </head>
 <body>
@@ -902,6 +946,7 @@ header.top .brand .bt.hpkon{cursor:pointer}
     <button role="tab" data-tab="passon" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"/></svg><span class="cnt" id="poCnt"></span></span><span class="tl">Pass-on</span></button>
     <button role="tab" data-tab="orders" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8M13 12h8M13 18h8"/></svg><span class="cnt" id="tabCnt"></span></span><span class="tl">Orders</span></button>
     <button role="tab" data-tab="map" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.1 6.1 9.9 3.9a2 2 0 0 0-1.8 0L3.6 6.2A1 1 0 0 0 3 7.1v12.3a1 1 0 0 0 1.4.9l3.7-1.9a2 2 0 0 1 1.8 0l4.2 2.2a2 2 0 0 0 1.8 0l4.5-2.3a1 1 0 0 0 .6-.9V5.1a1 1 0 0 0-1.4-.9l-3.7 1.9a2 2 0 0 1-1.8 0Z"/><path d="M9 3.6v15M15 5.6v15"/></svg><span class="cnt" id="mapCnt"></span></span><span class="tl">Map</span></button>
+    <button role="tab" data-tab="laundry" aria-selected="false" id="lnTab"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h.01M11 6h.01"/><circle cx="12" cy="13.5" r="5"/><path class="drum" d="M9.3 14c.9-.8 1.8-.8 2.7 0s1.8.8 2.7 0"/></svg></span><span class="tl">Laundry</span><span class="lnst" id="lnSt" data-noi18n></span></button>
     <button role="tab" data-tab="team" aria-selected="false" id="teamTab" hidden><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="cnt" id="teamCnt"></span></span><span class="tl">Manager</span></button>
   </nav>
   <div class="banner" id="pushBanner" hidden><span class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span><span class="grow" id="pushText"></span><button class="btn sm pri" id="pushBtn">Turn on</button><button class="linkbtn" id="pushLater">Not now</button></div>
@@ -992,6 +1037,11 @@ header.top .brand .bt.hpkon{cursor:pointer}
   </div></section>
 
   <section class="view" id="view-dash" data-noi18n hidden aria-label="Dashboard"><div id="dashBody"></div></section>
+
+  <section class="view" id="view-laundry" hidden data-noi18n aria-label="Laundry"><div class="inner">
+    <div class="lngrid" id="lnGrid"><div class="small">…</div></div>
+    <div class="card lnhist"><h2 id="lnHistH">Last loads</h2><div id="lnHist"></div></div>
+  </div></section>
 
   <section class="view" id="view-team" hidden><div class="inner">
     <div class="card">
@@ -3619,7 +3669,8 @@ function setTab(t){
   const inMain = t === 'chat' || t === 'orders', dash = desktop && t === 'orders';
   $('#main').hidden = !inMain || dash; $('#main').dataset.tab = t; $('#view-dash').hidden = !dash;
   if (dash) dashLoad();
-  ['passon','lost','rooms','team','map'].forEach(v => $('#view-' + v).hidden = t !== v);
+  ['passon','lost','rooms','team','map','laundry'].forEach(v => $('#view-' + v).hidden = t !== v);
+  if (t === 'laundry') setTimeout(() => { lnRender(); lnLoad(); });
   if (t === 'map') openMap();
   if (t === 'passon') { loadPassons(); markRead(); }
   if (t === 'team') loadTeam();
@@ -3971,8 +4022,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.2.4';
+const APP_VERSION = '1.3.0';
 const CHANGES = [
+  {v: '1.3.0', d: '2026-11-11', en: ['New Laundry in the Menu: Washer A and B, Dryer A and B, each with play, cycle time, a live countdown and who started it', 'Washers keep whether soap and bleach went in, with the time the load started', 'When a load ends the machine shows Ready, and whoever started it hears a bell'],
+    es: ['Nuevo Laundry en el Menú: Lavadora A y B, Secadora A y B, cada una con play, tiempo del ciclo, cuenta regresiva y quién la puso', 'Las lavadoras guardan si llevó jabón y bleach, con la hora en que se puso la tanda', 'Cuando una tanda termina la máquina dice Lista, y quien la puso escucha una campana']},
   {v: '1.2.4', d: '2026-11-11', en: ['Switching hotel opens the app\'s own window with each hotel and its color, instead of the phone\'s list'],
     es: ['Cambiar de hotel abre una ventana de la app con cada hotel y su color, en vez de la lista del teléfono']},
   {v: '1.2.3', d: '2026-11-11', en: ['The top bar has just 3 things: Menu, a slim hotel button with its blinking dot, and your photo'],
@@ -4132,6 +4185,143 @@ function hpkSync(){
   new MutationObserver(hpkSync).observe($('#hotelName'), {attributes: true, attributeFilter: ['class'], childList: true, characterData: true, subtree: true});
   hpkSync();
 })();
+
+/* ===== v1.3.0: Laundry: Washer A and B, Dryer A and B ===== */
+const LN = {data: null, skew: 0, prev: {}, busy: false, n: 0};
+const LN_M = [['WA', 'Washer A', 'Lavadora A'], ['WB', 'Washer B', 'Lavadora B'], ['DA', 'Dryer A', 'Secadora A'], ['DB', 'Dryer B', 'Secadora B']];
+const LN_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg>';
+const LN_ICON = $('#lnTab .tic svg').outerHTML;
+const lnName = m => { const x = LN_M.find(r => r[0] === m); return x ? L2(x[1], x[2]) : m; };
+const lnWash = m => m[0] === 'W';
+const lnNow = () => Date.now() + LN.skew;
+const lnT = v => new Date(v).getTime();
+const lnShort = n => { const p = String(n || '').trim().split(/\s+/); return p.length > 1 ? p[0] + ' ' + p[p.length - 1][0] + '.' : p[0] || ''; };
+function lnLeft(ms){ const s = Math.max(0, Math.ceil(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
+  return h ? h + ':' + String(m).padStart(2, '0') + ':' + String(x).padStart(2, '0') : m + ':' + String(x).padStart(2, '0'); }
+const lnState = l => !l ? 'idle' : lnT(l.ends_at) > lnNow() ? 'run' : 'ready';
+const lnCur = () => Object.fromEntries(((LN.data && LN.data.current) || []).map(l => [l.machine, l]));
+const lnWhen = ms => { const today = new Date(ms).toLocaleDateString('en-US', {timeZone: TZ}) === new Date().toLocaleDateString('en-US', {timeZone: TZ}); return (today ? '' : fmtDate(ms) + ', ') + fmtTime(ms); };
+function lnTags(l){ if (!lnWash(l.machine)) return ''; return '<div class="lntags">' + (l.soap ? `<span class="lntag">${esc(L2('Soap', 'Jabón'))}</span>` : '') + (l.bleach ? '<span class="lntag">Bleach</span>' : '') + (!l.soap && !l.bleach ? `<span class="lntag">${esc(L2('No soap or bleach', 'Sin jabón ni bleach'))}</span>` : '') + '</div>'; }
+async function lnLoad(quiet){
+  if (!S.token || !S.me || LN.busy) return; LN.busy = true;
+  try { lnSet(await call('sc_laundry')); } catch (e) { if (!quiet) toast(esc(e.message)); } finally { LN.busy = false; }
+}
+function lnSet(d){
+  if (!d) return; LN.data = d; LN.skew = lnT(d.now) - Date.now();
+  const seen = {}; (d.current || []).forEach(l => { seen[l.id] = LN.prev[l.id] || lnState(l); }); LN.prev = seen;
+  lnRender();
+}
+function lnRender(){
+  lnMenu();
+  const g = $('#lnGrid'); if (!g || $('#view-laundry').hidden) return;
+  if (!LN.data) { g.innerHTML = `<div class="small">${esc(L2('Loading…', 'Cargando…'))}</div>`; return; }
+  const cur = lnCur(), now = lnNow();
+  g.innerHTML = LN_M.map(([m]) => {
+    const l = cur[m], st = lnState(l), wash = lnWash(m);
+    const stTxt = st === 'idle' ? L2('Free', 'Libre') : st === 'run' ? (wash ? L2('Washing', 'Lavando') : L2('Drying', 'Secando')) : L2('Ready to unload', 'Lista para sacar');
+    let body = '';
+    if (st === 'idle') body = `<div class="lntime">—</div><div class="lnbar"><i></i></div><div class="lnmeta">${esc(L2('Nothing inside', 'Sin tanda'))}</div>`;
+    else {
+      const st0 = lnT(l.started_at), end = lnT(l.ends_at), pct = Math.min(100, Math.max(0, (now - st0) / Math.max(1, end - st0) * 100));
+      body = (st === 'run' ? `<div class="lntime" data-lnends="${end}" role="timer" aria-label="${esc(L2('Time left', 'Tiempo restante'))}">${lnLeft(end - now)}</div>`
+                           : `<div class="lntime">${esc(L2('Done at ', 'Terminó a las ') + fmtTime(end))}</div>`)
+        + `<div class="lnbar"><i data-lnfrom="${st0}" data-lnto="${end}" style="width:${pct.toFixed(1)}%"></i></div>`
+        + `<div class="lnmeta">${esc(L2('Started by ', 'La puso ') + lnShort(l.by))}<br>${esc(lnWhen(st0) + ' · ' + l.minutes + ' min')}</div>` + lnTags(l);
+    }
+    const act = st === 'idle' ? `<button type="button" class="btn pri" data-lnplay="${m}">${LN_PLAY}${esc(L2('Start', 'Iniciar'))}</button>`
+      : st === 'run' ? `<button type="button" class="btn" data-lnstop="${esc(l.id)}">${esc(L2('Stop', 'Detener'))}</button>`
+      : `<button type="button" class="btn pri" data-lnend="${esc(l.id)}">${esc(L2('Unload', 'Sacar ropa'))}</button><button type="button" class="btn" data-lnplay="${m}" aria-label="${esc(L2('New load in ', 'Nueva tanda en ') + lnName(m))}">${LN_PLAY}${esc(L2('New', 'Nueva'))}</button>`;
+    return `<div class="lncard" data-m="${m}" data-st="${st}"><div class="lnhead"><span class="lnico">${LN_ICON}</span><div style="min-width:0"><b>${esc(lnName(m))}</b><span class="lnstate">${esc(stTxt)}</span></div></div>${body}<div class="lnact">${act}</div></div>`;
+  }).join('');
+  $('#lnHistH').textContent = L2('Last loads', 'Últimas tandas');
+  const h = LN.data.history || [];
+  $('#lnHist').innerHTML = h.length ? h.map(l => {
+    const end = l.ended_at ? (l.ended_how === 'stopped' ? L2('Stopped ', 'Detenida ') : L2('Unloaded ', 'Sacada ')) + fmtTime(lnT(l.ended_at)) + (l.ended_name ? L2(' by ', ' por ') + lnShort(l.ended_name) : '')
+      : lnT(l.ends_at) > now ? L2('Running, ends ', 'Corriendo, termina ') + fmtTime(lnT(l.ends_at)) : L2('Ready since ', 'Lista desde ') + fmtTime(lnT(l.ends_at));
+    const tags = lnWash(l.machine) ? ' · ' + ([l.soap ? L2('soap', 'jabón') : '', l.bleach ? 'bleach' : ''].filter(Boolean).join(L2(' and ', ' y ')) || L2('no soap or bleach', 'sin jabón ni bleach')) : '';
+    return `<div class="lnrow"><b>${esc(lnName(l.machine) + ' · ' + lnWhen(lnT(l.started_at)))}</b><span>${esc(l.minutes + ' min · ' + L2('started by ', 'la puso ') + lnShort(l.by) + tags)}</span><span>${esc(end)}</span></div>`;
+  }).join('') : `<div class="small">${esc(L2('No loads in the last day and a half.', 'No hay tandas en el último día y medio.'))}</div>`;
+}
+function lnMenu(){
+  const el = $('#lnSt'); if (!el) return;
+  const cur = Object.values(lnCur()), run = cur.filter(l => lnState(l) === 'run').length, ready = cur.filter(l => lnState(l) === 'ready').length;
+  const t = ready ? (ready + ' ' + L2(ready > 1 ? 'ready' : 'ready', ready > 1 ? 'listas' : 'lista')) : run ? (run + ' ' + L2('running', run > 1 ? 'corriendo' : 'corriendo')) : '';
+  if (el.textContent !== t) el.textContent = t;
+  el.className = 'lnst' + (ready ? ' ready' : run ? ' run' : '');
+}
+// every second: countdowns, bars, and the bell when a load ends
+function lnTick(){
+  if (!LN.data) return;
+  const now = lnNow(); let flip = false;
+  (LN.data.current || []).forEach(l => {
+    const st = lnState(l);
+    if (LN.prev[l.id] === 'run' && st === 'ready') {
+      flip = true;
+      const mine = S.me && l.by_id === S.me.id;
+      if (mine || S.tab === 'laundry') {
+        chime('normal', mine);
+        toast(`<b>${esc(lnName(l.machine))}</b> <span>${esc(L2('finished. Ready to unload.', 'terminó. Lista para sacar.'))}</span>`);
+      }
+    }
+    LN.prev[l.id] = st;
+  });
+  if (flip) { lnRender(); return; }
+  if ($('#view-laundry').hidden) return;
+  document.querySelectorAll('#lnGrid [data-lnends]').forEach(e => { const t = lnLeft(+e.dataset.lnends - now); if (e.textContent !== t) e.textContent = t; });
+  document.querySelectorAll('#lnGrid [data-lnfrom]').forEach(e => { const a = +e.dataset.lnfrom, b = +e.dataset.lnto; e.style.width = Math.min(100, Math.max(0, (now - a) / Math.max(1, b - a) * 100)).toFixed(1) + '%'; });
+}
+setInterval(lnTick, 1000);
+// fresh data: every 10 s on the Laundry screen, every minute otherwise
+setInterval(() => {
+  if (!S.token || !S.me || document.visibilityState !== 'visible' || navigator.onLine === false) return;
+  LN.n++; if (S.tab === 'laundry' || !LN.data || LN.n % 6 === 0) lnLoad(true);
+}, 10000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.token && S.me) lnLoad(true); });
+function lnPlay(m){
+  const wash = lnWash(m), mins = ls.get('sc.lnMin', {}), last = ls.get('sc.lnAdd', {soap: true, bleach: false});
+  const def = mins[m] || (wash ? 30 : 45), opts = wash ? [25, 30, 35, 40, 45] : [30, 40, 45, 50, 60];
+  openModal(`<div data-noi18n><h2>${esc(lnName(m))}</h2><p class="lead">${esc(L2('How long is the cycle?', '¿Cuánto dura el ciclo?'))}</p>
+    <div class="lnmins" role="group" aria-label="${esc(L2('Minutes', 'Minutos'))}">${opts.map(n => `<button type="button" data-lnmin="${n}" aria-pressed="${n === def}">${n}</button>`).join('')}</div>
+    <div class="field"><label for="lnMin">${esc(L2('Minutes', 'Minutos'))}</label><input id="lnMin" type="number" inputmode="numeric" min="1" max="240" value="${def}"></div>
+    ${wash ? `<label class="lnchk"><input type="checkbox" id="lnSoap"${last.soap ? ' checked' : ''}> ${esc(L2('Soap', 'Jabón'))}</label><label class="lnchk"><input type="checkbox" id="lnBleach"${last.bleach ? ' checked' : ''}> Bleach</label>` : ''}
+    <div class="err" id="lnErr"></div>
+    <div class="btnrow"><button class="btn pri" id="lnGo">${LN_PLAY} ${esc(L2('Start', 'Iniciar'))}</button><button class="btn" data-close>${esc(L2('Cancel', 'Cancelar'))}</button></div></div>`);
+  const sync = () => { const v = +$('#lnMin').value; document.querySelectorAll('[data-lnmin]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.lnmin === v)); };
+  document.querySelectorAll('[data-lnmin]').forEach(b => b.onclick = () => { $('#lnMin').value = b.dataset.lnmin; sync(); });
+  $('#lnMin').addEventListener('input', sync);
+  $('#lnGo').onclick = async () => {
+    const n = Math.round(+$('#lnMin').value);
+    if (!(n >= 1 && n <= 240)) { $('#lnErr').textContent = L2('Pick from 1 to 240 minutes.', 'Elige de 1 a 240 minutos.'); return; }
+    const soap = wash && $('#lnSoap').checked, bleach = wash && $('#lnBleach').checked;
+    $('#lnGo').disabled = true;
+    try {
+      const d = await call('sc_laundry_start', {p_machine: m, p_minutes: n, p_soap: soap, p_bleach: bleach});
+      mins[m] = n; ls.set('sc.lnMin', mins); if (wash) ls.set('sc.lnAdd', {soap, bleach});
+      closeModal(); fx('start'); lnSet(d);
+      toast(`<b>${esc(lnName(m))}</b> <span>${esc(L2('started, ' + n + ' min.', 'en marcha, ' + n + ' min.'))}</span>`);
+    } catch (e) {
+      $('#lnGo').disabled = false;
+      $('#lnErr').textContent = /MACHINE_BUSY/.test(e.message) ? L2('That machine is still running. Stop it first.', 'Esa máquina todavía está corriendo. Detenla primero.') : e.message;
+      lnLoad(true);
+    }
+  };
+}
+async function lnEnd(id, stop){
+  try { lnSet(await call('sc_laundry_end', {p_id: id})); if (!stop) fx('done'); }
+  catch (e) { toast(esc(e.message)); lnLoad(true); }
+}
+$('#view-laundry').addEventListener('click', e => {
+  const p = e.target.closest('[data-lnplay]'), en = e.target.closest('[data-lnend]'), sp = e.target.closest('[data-lnstop]');
+  if (p) lnPlay(p.dataset.lnplay);
+  else if (en) lnEnd(en.dataset.lnend, false);
+  else if (sp) {
+    const l = Object.values(lnCur()).find(x => x.id === sp.dataset.lnstop); if (!l) return;
+    openModal(`<div data-noi18n><h2>${esc(L2('Stop ', 'Detener ') + lnName(l.machine) + '?')}</h2><p class="lead">${esc(L2('It still has ', 'Le quedan ') + lnLeft(lnT(l.ends_at) - lnNow()) + L2(' left. The load stays in the list as stopped.', '. La tanda queda en la lista como detenida.'))}</p>
+      <div class="btnrow"><button class="btn pri" id="lnStopGo">${esc(L2('Stop it', 'Detenerla'))}</button><button class="btn" data-close>${esc(L2('Cancel', 'Cancelar'))}</button></div></div>`);
+    $('#lnStopGo').onclick = () => { closeModal(); lnEnd(l.id, true); };
+  }
+});
+if (S.token && S.me) setTimeout(() => lnLoad(true), 1500);
 
 /* ===== v1.2: one-time start codes ===== */
 const untilTxt = u => new Date(u).toLocaleString(LANG === 'es' ? 'es-US' : 'en-US', {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit', timeZone: TZ});
