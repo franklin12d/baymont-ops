@@ -4222,8 +4222,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.7.0';
+const APP_VERSION = '1.8.0';
 const CHANGES = [
+  {v: '1.8.0', d: '2026-11-11', en: ['New 3D map for Highway: the east wing and the north wing with all 3 floors (106 to 338), front desk, pool, elevator, stairs and ice machine', 'Same controls as the other maps; P3 shows the third floor and Separate floors spreads all three'],
+    es: ['Nuevo mapa 3D de Highway: el ala este y el ala norte con los 3 pisos (106 a 338), recepción, piscina, elevador, escaleras y máquina de hielo', 'Los mismos controles de los otros mapas; P3 muestra el tercer piso y Separar pisos abre los tres']},
   {v: '1.7.0', d: '2026-11-11', en: ['Maps move like Google Maps: drag to move, scroll or double-click to zoom where you point, + and − buttons at the bottom right, Ctrl or Cmd + drag to turn and tilt', 'Click a room or area to open its panel (on the left on a computer) with its orders and history', 'Right-click (press and hold on a phone) for a menu: create an order right there, what is nearby, measure a distance, center, or add a marker saved on your device', 'The ? button explains every move for mouse and phone'],
     es: ['Los mapas se mueven como Google Maps: arrastra para moverte, rueda o doble clic para acercar donde apuntas, botones + y − abajo a la derecha, Ctrl o Cmd + arrastrar para girar e inclinar', 'Clic en una habitación o área abre su panel (a la izquierda en computadora) con sus órdenes e historial', 'Clic derecho (mantener presionado en el teléfono) abre un menú: crear una orden ahí mismo, qué hay cerca, medir una distancia, centrar o agregar un marcador que se guarda en tu equipo', 'El botón ? explica cada movimiento con ratón y en el teléfono']},
   {v: '1.6.0', d: '2026-11-11', en: ['New Missing Punch in the Menu: ask a manager to fix a punch you missed (name, date, which punch, time and reason)', 'You check everything before sending. Only you and the managers see it', 'Managers see the pending ones (with a count on the Menu) and tap Mark fixed when the punch is corrected; you see Pending or Fixed in My requests'],
