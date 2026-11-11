@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FFFFFF">
+<script>(function(){var t="auto";try{t=JSON.parse(localStorage.getItem("sc.theme")||"\"auto\"")}catch(e){}var d=t==="dark"||(t!=="light"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.setAttribute("data-theme",d?"dark":"light");})();</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="FrankShift">
 <link rel="manifest" href="manifest.webmanifest">
@@ -30,15 +30,6 @@
   --shadow:0 1px 2px rgba(14,23,38,.05),0 6px 20px rgba(14,23,38,.06);
   --shadow-lift:0 2px 4px rgba(14,23,38,.05),0 14px 36px rgba(14,23,38,.12);
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0B0F15; --surface:#121822; --surface-2:#18202C; --line:#232D3B;
-  --ink:#EEF2F7; --ink-2:#AAB4C3; --ink-3:#768296;
-  --accent:#7C9CFF; --accent-ink:#0B0F15; --accent-soft:#1A2445;
-  --urgent:#FF6B6F; --urgent-soft:#3A1719; --high:#F5A524; --high-soft:#35260C; --ok:#4CD38A; --ok-soft:#12301F;
-  --note:#2C2614; --note-line:#5E5021; --handoff:#221E3D; --handoff-line:#463D86;
-  --r-fd:#7C9CFF; --r-hk:#3FD0BC; --r-hm:#9BD35A; --r-eng:#FFA04D; --r-mgr:#A993FF;
-  --shadow:0 1px 2px rgba(0,0,0,.35),0 6px 20px rgba(0,0,0,.28);
-  --shadow-lift:0 2px 4px rgba(0,0,0,.35),0 14px 36px rgba(0,0,0,.45); color-scheme:dark}}
 
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.4;overflow:hidden}
@@ -494,11 +485,6 @@ header.top{padding-block:12px;border-bottom:0;box-shadow:0 1px 0 var(--line)}
 body[data-hotel="MGT"]{--hotel:#DC2626;--hotel-soft:#FEE2E2}
 body[data-hotel="FDT"]{--hotel:#16A34A;--hotel-soft:#DCFCE7}
 body[data-hotel="HWY"]{--hotel:#2563EB;--hotel-soft:#DBEAFE}
-@media (prefers-color-scheme:dark){
-  html:not([data-theme="light"]) body[data-hotel="MGT"]{--hotel:#F87171;--hotel-soft:#3B1517}
-  html:not([data-theme="light"]) body[data-hotel="FDT"]{--hotel:#4ADE80;--hotel-soft:#12301D}
-  html:not([data-theme="light"]) body[data-hotel="HWY"]{--hotel:#60A5FA;--hotel-soft:#142847}
-}
 html[data-theme="dark"] body[data-hotel="MGT"]{--hotel:#F87171;--hotel-soft:#3B1517}
 html[data-theme="dark"] body[data-hotel="FDT"]{--hotel:#4ADE80;--hotel-soft:#12301D}
 html[data-theme="dark"] body[data-hotel="HWY"]{--hotel:#60A5FA;--hotel-soft:#142847}
@@ -596,7 +582,6 @@ html[data-theme="dark"] body[data-hotel="HWY"]{--hotel:#60A5FA;--hotel-soft:#142
 
 /* ===== FrankShift theme v6: modern messenger look ===== */
 :root{--bub:#EEF0F4;--bub-ink:#0E1726;--grad:linear-gradient(135deg,#3D6BFF 0%,#6A4DFF 100%);--feedbg:#FFFFFF}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bub:#222A36;--bub-ink:#EEF2F7;--feedbg:#0E131B}}
 :root[data-theme="dark"]{--bub:#222A36;--bub-ink:#EEF2F7;--feedbg:#0E131B}
 header.top{background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:saturate(1.6) blur(14px);-webkit-backdrop-filter:saturate(1.6) blur(14px);position:relative;z-index:5}
 .who{border:0;background:var(--surface-2);border-radius:999px;padding:4px 14px 4px 4px}
@@ -707,15 +692,6 @@ table.rep th,table.rep td{padding:6px 6px}
   --f-display:"Outfit",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-body:"Outfit",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F172A; --surface:#141E33; --surface-2:#1B2640; --line:#26324D;
-  --ink:#F1F5F9; --ink-2:#AEB8CB; --ink-3:#7D88A1;
-  --accent:#7D76FF; --accent-ink:#FFFFFF; --accent-soft:#252457;
-  --urgent:#FF6B6F; --urgent-soft:#3A1719; --high:#F5A524; --high-soft:#35260C; --ok:#34D399; --ok-soft:#0F2F27;
-  --note:#2C2614; --note-line:#5E5021; --handoff:#221E3D; --handoff-line:#463D86;
-  --r-fd:#60A5FA; --r-hk:#2DD4BF; --r-hm:#A3E635; --r-eng:#FB923C; --r-mgr:#A78BFA;
-  --bub:#1E2A44; --bub-ink:#EEF2F7; --feedbg:#0F172A;
-  --shadow:0 1px 2px rgba(0,0,0,.35),0 6px 20px rgba(0,0,0,.28);
-  --shadow-lift:0 2px 4px rgba(0,0,0,.35),0 14px 36px rgba(0,0,0,.45); color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#0F172A; --surface:#141E33; --surface-2:#1B2640; --line:#26324D;
   --ink:#F1F5F9; --ink-2:#AEB8CB; --ink-3:#7D88A1;
   --accent:#7D76FF; --accent-ink:#FFFFFF; --accent-soft:#252457;
@@ -737,7 +713,6 @@ body{letter-spacing:0;font-feature-settings:normal}
 .seg button{border:0;background:none;border-radius:999px;padding:7px 14px;font-weight:600;font-size:13.5px;color:var(--ink-2)}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(15,23,42,.08),0 2px 8px rgba(15,23,42,.08)}
 :root[data-theme="dark"] .seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{background:var(--accent);color:#fff}}
 .langsw{margin-left:auto;align-self:flex-start}
 .langsw button{padding:5px 10px;font-size:12px}
 .setsect h3{display:flex;align-items:center;gap:8px}
@@ -786,9 +761,7 @@ body{letter-spacing:0;font-feature-settings:normal}
   .kinds{gap:6px}
   .kinds button{font-size:13px;padding:6px 13px;line-height:19px}
 }
-/* messages always on white, also in dark mode (Franklin, Nov 10): the feed keeps the light colors */
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .feed{--feedbg:#FFFFFF;--bub:#EEF0F4;--bub-ink:#0E1726;--surface:#FFFFFF;--surface-2:#F2F3F9;--line:#E3E6EF;--ink:#0F172A;--ink-2:#475569;--ink-3:#8A94A6;--accent:#635BFF;--accent-ink:#FFFFFF;--accent-soft:#EEEDFF;--urgent:#E0383E;--urgent-soft:#FDECEC;--high:#D97706;--high-soft:#FEF3E2;--ok:#059669;--ok-soft:#E3F7EF;--note:#FFF8E1;--note-line:#F1DE9A;--handoff:#F1EEFF;--handoff-line:#D3CBFB;--r-fd:#3B82F6;--r-hk:#0E9F8E;--r-hm:#5C9A12;--r-eng:#E5730F;--r-mgr:#635BFF;--shadow:0 1px 2px rgba(14,23,38,.05),0 6px 20px rgba(14,23,38,.06);color-scheme:light;color:var(--ink)}}
-:root[data-theme="dark"] .feed{--feedbg:#FFFFFF;--bub:#EEF0F4;--bub-ink:#0E1726;--surface:#FFFFFF;--surface-2:#F2F3F9;--line:#E3E6EF;--ink:#0F172A;--ink-2:#475569;--ink-3:#8A94A6;--accent:#635BFF;--accent-ink:#FFFFFF;--accent-soft:#EEEDFF;--urgent:#E0383E;--urgent-soft:#FDECEC;--high:#D97706;--high-soft:#FEF3E2;--ok:#059669;--ok-soft:#E3F7EF;--note:#FFF8E1;--note-line:#F1DE9A;--handoff:#F1EEFF;--handoff-line:#D3CBFB;--r-fd:#3B82F6;--r-hk:#0E9F8E;--r-hm:#5C9A12;--r-eng:#E5730F;--r-mgr:#635BFF;--shadow:0 1px 2px rgba(14,23,38,.05),0 6px 20px rgba(14,23,38,.06);color-scheme:light;color:var(--ink)}
+/* one look everywhere: Light, Dark or Auto (follows the phone); the chat follows the same choice as the rest of the app */
 
 /* v1.1: version, update banner, offline banner, keyboard focus */
 .sysbar{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 8px);z-index:90;display:flex;align-items:center;gap:10px;
@@ -923,6 +896,45 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .lnchk input{width:22px;height:22px}
 .lnhist .lnrow{display:flex;flex-direction:column;gap:2px;padding:10px 0;border-top:1px solid var(--line)}
 .lnhist .lnrow:first-child{border-top:0}
+#view-srep .inner{padding-bottom:90px}
+.srshifts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.srs{--sc:#1a56a0;border:1px solid var(--line);border-top:3px solid var(--sc);border-radius:14px;background:var(--surface);color:var(--ink-2);padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font:inherit;cursor:pointer}
+.srs .ic{font-size:18px}.srs b{font-size:13px;font-weight:600}.srs small{font-size:10.5px;opacity:.8}
+.srs-afternoon{--sc:#1e6b45}.srs-night{--sc:#b4530f}
+.srs[aria-pressed="true"]{background:var(--sc);border-color:var(--sc);color:#fff;box-shadow:0 4px 14px color-mix(in srgb,var(--sc) 30%,transparent)}
+.srh{margin:0 0 10px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.srday{font-size:12px;color:var(--accent);font-weight:600;margin-top:3px;min-height:16px;text-transform:capitalize}
+.srblk{padding:10px 0;border-top:1px solid var(--line)}.srblk:first-of-type{border-top:0;padding-top:0}
+.srbh{display:flex;align-items:center;justify-content:space-between;font-weight:600;font-size:13.5px;margin-bottom:6px}
+.srcnt{font-size:11px;min-width:22px;text-align:center;padding:1px 7px;border-radius:20px;background:var(--surface-2);color:var(--ink-3)}
+.srcnt.on{background:var(--accent-soft);color:var(--accent)}
+.srlist{display:flex;flex-direction:column;gap:8px}.srlist:not(:empty){margin-bottom:8px}
+.srent{position:relative;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 34px 10px 10px}
+.srnum{font-size:10px;font-weight:700;letter-spacing:.05em;color:var(--ink-3);margin-bottom:6px;text-transform:uppercase}
+.srgrid{display:grid;gap:8px}.srgrid.g1{grid-template-columns:1fr}.srgrid.g2{grid-template-columns:1fr 1fr}.srgrid.g3{grid-template-columns:1fr 1fr 1fr}
+.srgrid label,.srmet label{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--ink-3);min-width:0}
+.srgrid input,.srmet input{width:100%;min-width:0;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;font-size:13.5px}
+.srdel{position:absolute;top:4px;right:4px;width:28px;height:28px;border:0;background:none;color:var(--ink-3);font-size:20px;line-height:1;cursor:pointer;border-radius:8px}
+.srdel:hover{color:var(--urgent);background:var(--urgent-soft)}
+.sradd{border:1px dashed var(--line);background:none;color:var(--ink-2);border-radius:8px;padding:6px 12px;font:inherit;font-size:12.5px;cursor:pointer}
+.sradd:hover{border-style:solid;border-color:var(--accent);color:var(--accent)}
+.srmet{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.srmet label>span:first-child{font-size:12px;color:var(--ink-2)}
+.srin{position:relative;display:block}.srin i{position:absolute;top:50%;transform:translateY(-50%);font-style:normal;font-size:12px;color:var(--ink-3);pointer-events:none}
+.srin.ud i{left:9px}.srin.ud input{padding-left:20px}.srin.up i{right:9px}.srin.up input{padding-right:22px}
+.srna{border-left:3px solid #b4530f}
+.srbar{position:sticky;bottom:10px;display:flex;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;box-shadow:var(--shadow);z-index:5}
+.srbar .btn.pri{flex:1}
+.srpre{white-space:pre-wrap;font:12.5px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px;max-height:55vh;overflow:auto;margin:0}
+.srpo{display:flex;flex-direction:column;gap:3px;margin-top:6px;font-size:13.5px}
+.srphd{font-size:13px}.srphd span{color:var(--ink-3)}
+.srph{margin:10px 0 2px;font-size:11px;letter-spacing:.08em;color:var(--ink-3);font-weight:700;border-bottom:1px solid var(--line);padding-bottom:3px}
+.srpb{font-weight:600;margin-top:4px}
+.srpl .ptxt{white-space:pre-wrap}
+.srpm{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px 12px}
+.srpm div{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;border-bottom:1px dotted var(--line);padding:2px 0}
+.srpm span{color:var(--ink-3)}
+@media (max-width:560px){.srmet{grid-template-columns:1fr 1fr}.srgrid.g3{grid-template-columns:1fr 1fr}}
 /* v1.4.0 Engineer */
 .enghead{display:flex;align-items:flex-end;gap:12px}
 .enghead .grow{flex:1;min-width:0}
@@ -964,6 +976,91 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .enph{cursor:pointer}
 .lnhist .lnrow b{font-size:14px;color:var(--ink)}
 .lnhist .lnrow span{font-size:13px;color:var(--ink-2)}
+
+/* ===== FrankShift theme v9 (1.5.0): one look in every part of the app ===== */
+:root[data-theme="light"],:root:not([data-theme]){
+  --bg:#F3F5FA; --surface:#FFFFFF; --surface-2:#F1F4F9; --line:#E2E7EF;
+  --ink:#0F172A; --ink-2:#3E4A5E; --ink-3:#66728A;
+  --accent:#635BFF; --accent-ink:#FFFFFF; --accent-soft:#EEEDFF;
+  --urgent:#DC2F36; --urgent-soft:#FDECEC; --high:#B45309; --high-soft:#FEF3E2; --ok:#059669; --ok-soft:#E3F7EF;
+  --note:#FFF8E1; --note-line:#EED58A; --handoff:#F1EEFF; --handoff-line:#D3CBFB;
+  --bub:#EEF1F6; --bub-ink:#0F172A; --feedbg:#FFFFFF; color-scheme:light}
+:root[data-theme="dark"]{
+  --bg:#0F172A; --surface:#141E33; --surface-2:#1B2640; --line:#26324D;
+  --ink:#F1F5F9; --ink-2:#B4BED0; --ink-3:#8590A8;
+  --bub:#22304D; --bub-ink:#F1F5F9; --feedbg:#141E33}
+body{background:var(--bg)}
+.kinds button{--kc:var(--accent)}
+
+/* ===== v1.5.0 desktop: icon rail on the left, orders list in the middle, chat on the right (phones unchanged) ===== */
+.deskonly{display:none}
+@media (min-width:900px){
+  .app{padding-left:76px}
+  header.top,.ticker{display:none!important}
+  .deskonly{display:flex}
+  /* rail */
+  .app .tabs,.app.menu-open .tabs{display:flex!important;position:fixed!important;left:0!important;top:0!important;bottom:0!important;width:76px!important;max-height:none!important;z-index:30;flex-direction:column;align-items:center;gap:4px!important;
+    padding:12px 0 12px!important;background:var(--surface)!important;border:0!important;border-right:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;overflow-y:auto;overflow-x:hidden}
+  .app.menu-open .tabs::before{display:none}
+  .menuscrim{display:none!important}
+  .tabs .raillogo{width:40px;height:40px;margin:2px 0 10px;flex:none;display:grid;place-items:center}
+  .tabs .raillogo svg{width:36px;height:36px;display:block!important}
+  .app .tabs button,.app.menu-open .tabs button{position:relative;flex:none!important;width:52px!important;height:52px!important;min-height:0!important;padding:0!important;margin:0!important;border:0!important;border-radius:16px!important;background:none!important;
+    display:grid!important;place-items:center!important;color:var(--ink-2)!important;cursor:pointer;box-shadow:none!important}
+  .app .tabs button[hidden]{display:none!important}
+  .app .tabs button::after{display:none!important}
+  .app .tabs button:hover{background:var(--surface-2)!important;color:var(--ink)!important}
+  .app .tabs button[aria-selected="true"]{background:var(--hotel-soft,var(--accent-soft))!important;color:var(--hotel,var(--accent))!important}
+  .app .tabs .tic,.app.menu-open .tabs .tic{position:static!important;width:auto!important;height:auto!important;background:none!important;color:inherit!important;display:grid;place-items:center}
+  .app .tabs .tic svg{width:24px!important;height:24px!important}
+  .app .tabs .tl{display:none!important}
+  .app .tabs .tic .cnt,.app.menu-open .tabs .tic .cnt{position:absolute!important;top:5px!important;right:4px!important;left:auto!important;transform:none!important;min-width:18px;height:18px;line-height:18px!important;padding:0 5px!important;font-size:10.5px!important;border-radius:999px;box-shadow:0 0 0 2px var(--surface)}
+  .tabs .mtools{margin-top:auto!important;border-top:1px solid var(--line);padding-top:8px!important;align-items:center;width:100%}
+  .tabs .mtools button.iconbtn{width:52px!important;height:52px!important}
+  .app .tabs,.app.menu-open .tabs{padding-bottom:76px!important}
+  .app > .railme{position:fixed;left:12px;bottom:12px;z-index:31;width:52px;height:52px;border-radius:50%;border:0;padding:0;background:none;display:grid!important;place-items:center;cursor:pointer}
+  .app > .railme:hover{background:var(--surface-2)}
+  .app > .railme .av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;background-size:cover;background-position:center}
+  .railtip{position:fixed;z-index:95;left:82px;padding:6px 10px;border-radius:8px;background:var(--ink);color:var(--surface);font:600 13px var(--f-body);white-space:nowrap;pointer-events:none;box-shadow:var(--shadow)}
+  .railtip[hidden]{display:none}
+  /* list (orders) left of the chat */
+  .main{grid-template-columns:minmax(330px,400px) minmax(0,1fr)!important}
+  .main .panel{order:-1;border-right:1px solid var(--line);background:var(--surface)!important}
+  .main .chatcol{border-left:0}
+  .qhead{border-bottom:0!important;padding:16px 16px 6px!important;min-height:64px;align-items:center!important}
+  .qhead h2{font:700 20px var(--f-display)!important;letter-spacing:-.01em!important;text-transform:none!important;color:var(--ink)!important}
+  .qhead .sub{display:none}
+  .qhead .big{font-size:15px!important;font-weight:700!important;min-width:26px;height:26px;padding:0 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin-right:auto}
+  .dsearch{margin:6px 16px 4px;position:relative}
+  .dsearch input{width:100%;height:40px;border-radius:999px;border:1px solid transparent;background:var(--surface-2);padding:0 14px 0 40px;font-size:14.5px;color:var(--ink)}
+  .dsearch input:focus{outline:none;border-color:var(--accent);background:var(--surface)}
+  .dsearch svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--ink-3);pointer-events:none}
+  .filters{padding:8px 16px 8px!important;gap:8px!important}
+  .filters button{padding:6px 13px!important;font-size:13px!important;border-radius:999px!important;background:var(--surface-2)!important;border:1px solid transparent!important;color:var(--ink-2)!important}
+  .filters button[aria-pressed="true"]{background:var(--accent-soft)!important;color:var(--accent)!important;border-color:color-mix(in srgb,var(--accent) 35%,transparent)!important}
+  .orders .dsnone{padding:24px 16px;text-align:center;color:var(--ink-3);font-size:14px}
+  .order.dshide{display:none!important}
+  /* chat header and a soft pattern behind the messages */
+  .chathead{align-items:center;gap:12px;min-height:64px;padding:8px 16px;background:var(--surface);border-bottom:1px solid var(--line);flex:none}
+  .chathead .hav{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--hotel,var(--accent));color:#fff;font:700 13px var(--f-body);letter-spacing:.03em}
+  .chathead .hti{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+  .chathead .hti b{font:600 16px var(--f-body);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chathead .hti span{font-size:12.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chathead button{width:40px;height:40px;border-radius:50%;border:0;background:none;color:var(--ink-2);display:grid;place-items:center;cursor:pointer}
+  .chathead button:hover{background:var(--surface-2);color:var(--ink)}
+  .chathead button svg{width:20px;height:20px}
+  .chathead .hsw{width:auto;border-radius:999px;padding:0 12px 0 10px;gap:6px;display:flex;align-items:center;font:600 13px var(--f-body);background:var(--surface-2)}
+  .chathead .hsw[hidden]{display:none}
+  .feed{background-color:var(--feedbg);background-image:radial-gradient(color-mix(in srgb,var(--ink) 7%,transparent) 1px,transparent 1.2px);background-size:22px 22px}
+  .composer{margin:6px 16px 14px!important}
+  /* title bar for the other sections */
+  .desktitle{align-items:center;gap:12px;min-height:64px;padding:8px 24px;background:var(--surface);border-bottom:1px solid var(--line);flex:none}
+  .desktitle[hidden]{display:none}
+  .desktitle b{font:700 20px var(--f-display);color:var(--ink);letter-spacing:-.01em}
+  .desktitle .dth{margin-left:auto;display:flex;align-items:center;gap:8px;font:600 13px var(--f-body);color:var(--hotel,var(--ink-2));border:0;background:var(--surface-2);border-radius:999px;padding:7px 12px;cursor:default}
+  .desktitle .dth.sw{cursor:pointer}
+  .desktitle .dth i,.chathead .hsw i{width:8px;height:8px;border-radius:50%;background:var(--hotel,var(--accent));display:inline-block}
+}
 </style>
 </head>
 <body>
@@ -983,6 +1080,7 @@ header.top .brand .bt.hpkon{cursor:pointer}
   <nav class="tabs" role="tablist" id="tabs" data-title="Menu">
     <button role="tab" data-tab="chat" aria-selected="true"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span class="tl">Chat</span></button>
     <button role="tab" data-tab="passon" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"/></svg><span class="cnt" id="poCnt"></span></span><span class="tl">Pass-on</span></button>
+    <button role="tab" data-tab="srep" aria-selected="false" id="srTab"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></span><span class="tl">Shift Report</span></button>
     <button role="tab" data-tab="orders" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8M13 12h8M13 18h8"/></svg><span class="cnt" id="tabCnt"></span></span><span class="tl">Orders</span></button>
     <button role="tab" data-tab="eng" aria-selected="false" id="engTab"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span class="cnt" id="engCnt"></span></span><span class="tl" data-noi18n>Engineer</span></button>
     <button role="tab" data-tab="map" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.1 6.1 9.9 3.9a2 2 0 0 0-1.8 0L3.6 6.2A1 1 0 0 0 3 7.1v12.3a1 1 0 0 0 1.4.9l3.7-1.9a2 2 0 0 1 1.8 0l4.2 2.2a2 2 0 0 0 1.8 0l4.5-2.3a1 1 0 0 0 .6-.9V5.1a1 1 0 0 0-1.4-.9l-3.7 1.9a2 2 0 0 1-1.8 0Z"/><path d="M9 3.6v15M15 5.6v15"/></svg><span class="cnt" id="mapCnt"></span></span><span class="tl">Map</span></button>
@@ -1047,6 +1145,8 @@ header.top .brand .bt.hpkon{cursor:pointer}
     <div id="poList"><div class="small">Loading…</div></div>
     <div class="btnrow" style="justify-content:center"><button class="btn" type="button" id="poMore">Show 2 more weeks</button></div>
   </div></section>
+
+  <section class="view" id="view-srep" hidden data-noi18n aria-label="Shift Report"><div class="inner" id="srBody"></div></section>
 
   <section class="view" id="view-lost" hidden><div class="inner">
     <div><button type="button" class="btn sm" id="lfBack">‹ Pass-on</button></div>
@@ -1206,13 +1306,16 @@ const ls = {
 const roleOf = id => ROLES.find(r => r.id === id) || ROLES[0];
 let LANG = (() => { const v = ls.get('sc.lang', null); return v === 'en' || v === 'es' ? v : (/^es\b/i.test(navigator.language || '') ? 'es' : 'en'); })();
 let THEME = (() => { const v = ls.get('sc.theme', 'auto'); return ['auto', 'light', 'dark'].includes(v) ? v : 'auto'; })();
+const THEME_MQ = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+const themeNow = () => THEME === 'auto' ? (THEME_MQ && THEME_MQ.matches ? 'dark' : 'light') : THEME;
 function applyTheme(){
   const root = document.documentElement;
-  if (THEME === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', THEME);
-  const dark = THEME === 'dark' || (THEME === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute('content', THEME === 'auto' ? (/dark/.test(m.media) ? '#0F172A' : '#FFFFFF') : (dark ? '#0F172A' : '#FFFFFF')));
+  const t = themeNow(); root.setAttribute('data-theme', t);
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute('content', t === 'dark' ? '#141E33' : '#FFFFFF'));
+  const f = document.getElementById('mapFrame'); try { if (f && f.contentWindow && f.contentWindow.fsTheme) f.contentWindow.fsTheme(t); } catch {}
 }
 applyTheme(); document.documentElement.lang = LANG;
+try { THEME_MQ && THEME_MQ.addEventListener('change', () => { if (THEME === 'auto') applyTheme(); }); } catch {}
 try { if (window.caches) caches.open('fs-pref').then(c => c.put('fs-lang', new Response(LANG))).catch(() => {}); } catch {}
 const roleColor = id => `var(${roleOf(id).color})`;
 const initials = n => String(n||'').split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0]).join('').toUpperCase();
@@ -1559,6 +1662,7 @@ const ES = {
 "Auto": "Automático",
 "Light": "Claro",
 "Dark": "Oscuro",
+"Auto follows your phone: light by day, dark if your phone is in dark mode. The whole app, chat included, uses the same colors.": "Automático sigue a tu teléfono: claro, u oscuro si tu teléfono está en modo oscuro. Toda la app, chat incluido, usa los mismos colores.",
 "Security": "Seguridad",
 "Only you and your managers can see your phone and email.": "Solo tú y tus gerentes pueden ver tu teléfono y email.",
 "Your user stays the same when you change your name.": "Tu usuario no cambia aunque cambies tu nombre.",
@@ -1744,7 +1848,8 @@ const ES = {
 "Only who set the alarm or a manager can cancel it.": "Solo quien puso la alarma o un gerente puede cancelarla.",
 "That pass-on is no longer here.": "Esa entrega ya no está.",
 "Write the pass-on first.": "Escribe la entrega primero.",
-"Pass-on posted": "Entrega publicada"
+"Pass-on posted": "Entrega publicada",
+"Shift Report": "Reporte de turno"
 };
 const ES_RX = [
   [/^((?:[A-Z]+-\d+ · )?)(.+?): set rooms? (.+) to clean\/vacant in SynXis$/, (m, tk, who, rs) => `${tk}${who}: poner hab. ${rs.replace(/ and /, ' y ')} en limpia/vacante en SynXis`],
@@ -3500,7 +3605,7 @@ function openSettings(){
   <div class="sect setsect"><h3>Security</h3><p class="hint">Change your PIN any time. Other phones signed in as you are signed out.</p><button class="btn sm" id="sPin">Change PIN</button></div>
   <div class="sect setsect"><h3>Chat pip</h3><p class="hint">A soft pip for each new chat message. Alerts meant for you keep their own tone.</p>${segHtml('pip', pipOn() ? 'on' : 'off', [['on', 'On'], ['off', 'Off']])}</div>
   <div class="sect setsect"><h3>Language</h3>${segHtml('lang', LANG, [['en', 'English'], ['es', 'Español']])}</div>
-  <div class="sect setsect"><h3>Appearance</h3>${segHtml('theme', THEME, [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']])}</div>
+  <div class="sect setsect"><h3>Appearance</h3><p class="hint">Auto follows your phone: light by day, dark if your phone is in dark mode. The whole app, chat included, uses the same colors.</p>${segHtml('theme', THEME, [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']])}</div>
   <div class="sect setsect"><h3>About</h3><div class="verrow"><span>FrankShift <span class="vtag" data-noi18n>v${APP_VERSION}</span></span><button class="btn sm" id="sNew">What's new</button></div></div>
   <div class="btnrow" style="margin-top:16px"><button class="btn" data-close>Close</button></div>`);
   call('sc_profile_get', {}).then(pf => {
@@ -3575,7 +3680,7 @@ function poCard(x){
   return `<div class="card po" data-pid="${x.id}">
     <div class="pohead"><span class="who">${esc(x.author)}</span><span class="small">${esc(fmtTime(x.created_at))}</span><span class="grow"></span>
       ${edTag(x)}${canEditMsg(x) ? `<button type="button" class="btn sm" data-po="edit" data-id="${x.id}">Edit</button>` : ''}<button type="button" class="btn sm" data-po="copy" data-id="${x.id}">Copy</button>${acts(null)}</div>
-    <ol class="popts">${pts.map((t, i) => `<li><div class="poline"><div class="ptxt">${roomLinks(t)}</div>${acts(i)}</div>${extra(i)}</li>`).join('')}</ol>
+    ${srIsReport(x.body) ? srPoBody(x, acts, extra) : `<ol class="popts">${pts.map((t, i) => `<li><div class="poline"><div class="ptxt">${roomLinks(t)}</div>${acts(i)}</div>${extra(i)}</li>`).join('')}</ol>`}
     ${gen ? `<div class="pogen">${gen}</div>` : ''}</div>`;
 }
 function renderPassons(){
@@ -3590,6 +3695,10 @@ function renderPassons(){
 }
 function poText(x, head){
   const pts = poPoints(x.body), L = [];
+  if (srIsReport(x.body)) { const pl = poPoints(x.body); L.push(String(x.body).trim());
+    const cm = x.comments.map(c => `- ${c.author}${c.point != null && pl[c.point] ? ' (' + pl[c.point] + ')' : ''}: ${c.body}`);
+    if (cm.length) { L.push(''); L.push(tr('Comments') + ':'); cm.forEach(z => L.push(z)); }
+    return L.join('\n'); }
   if (head !== false) L.push(`${tr('Shift pass-on')}${S.hotel ? ' · ' + S.hotel.name : ''}`);
   L.push(`${poDay(x.created_at)}, ${fmtTime(x.created_at)} · ${x.author}`);
   const more = pt => { x.comments.filter(c => (c.point ?? null) === pt).forEach(c => L.push(`${pt === null ? '' : '   '}- ${c.author}: ${c.body}`));
@@ -3611,7 +3720,7 @@ const MEDERR = { NOT_ALLOWED: 'Only who wrote it or a manager can edit it.', BOD
 function editMessage(m){
   const po = m.kind === 'handoff';
   openModal(`<h2>${po ? 'Edit pass-on' : 'Edit message'}</h2>${po ? '<p class="hint">One point per line.</p>' : ''}
-    <form id="meForm"><div class="field"><textarea id="meText" rows="${po ? 6 : 4}" maxlength="1000" aria-label="Message"></textarea></div>
+    <form id="meForm"><div class="field"><textarea id="meText" rows="${po ? (srIsReport(m.body) ? 14 : 6) : 4}" maxlength="${po ? 4000 : 1000}" aria-label="Message"></textarea></div>
     <div class="err" id="meErr" role="alert"></div>
     <div class="btnrow" style="margin-top:10px"><button class="btn pri" type="submit" id="meSave">Save changes</button><button class="btn" type="button" data-close>Close</button></div></form>`);
   $('#meText').value = m.body || ''; $('#meText').focus();
@@ -3710,8 +3819,8 @@ $('#poForm').addEventListener('submit', async e => {
 // the map is its own page, shown inside the app; it loads the first time the tab opens and again after a hotel switch
 function openMap(o){
   const f = $('#mapFrame'), h = (S.hotel && S.hotel.id) || '';
-  if (o) { f.dataset.h = h; f.src = 'mapa.html?t=' + Date.now() + '#o=' + encodeURIComponent(o); return; }
-  if (f.dataset.h !== h || !f.getAttribute('src')) { f.dataset.h = h; f.src = 'mapa.html'; }
+  if (o) { f.dataset.h = h; f.src = 'mapa.html?h=' + encodeURIComponent(h) + '&t=' + Date.now() + '#o=' + encodeURIComponent(o); return; }
+  if (f.dataset.h !== h || !f.getAttribute('src')) { f.dataset.h = h; f.src = 'mapa.html?h=' + encodeURIComponent(h); }
 }
 function setTab(t){
   S.tab = t; document.querySelectorAll('#tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === t || (t === 'lost' && b.dataset.tab === 'passon')));
@@ -3719,7 +3828,8 @@ function setTab(t){
   const inMain = t === 'chat' || t === 'orders', dash = desktop && t === 'orders';
   $('#main').hidden = !inMain || dash; $('#main').dataset.tab = t; $('#view-dash').hidden = !dash;
   if (dash) dashLoad();
-  ['passon','lost','rooms','team','map','laundry','eng'].forEach(v => $('#view-' + v).hidden = t !== v);
+  ['passon','lost','rooms','team','map','laundry','eng','srep'].forEach(v => $('#view-' + v).hidden = t !== v);
+  if (t === 'srep') setTimeout(srShow);
   if (t === 'laundry') setTimeout(() => { lnRender(); lnLoad(); });
   if (t === 'eng') setTimeout(engShow);
   if (t === 'map') openMap();
@@ -4073,8 +4183,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.4.0';
+const APP_VERSION = '1.5.0';
 const CHANGES = [
+  {v: '1.5.0', d: '2026-11-11', en: ['New Shift Report in the Menu, right under Pass-on: the front desk report with shift, general info, incidents and transactions, metrics and night audit no-shows', 'It saves as you type on this phone; Send puts it in Pass-on in the same format, where anyone can comment or set an alarm on a line', 'Pass-ons can be longer now (up to 4000 characters)', 'Fundamental map, like Maingate: every room in buildings 1 to 4, stairs, ice machines, pool and front desk', 'One look in the whole app: chat, top bar, menus and panels always use the same colors, with easier-to-read gray text. In Settings pick Light, Dark or Auto (follows your phone)', 'New computer layout: section icons on the left, open orders with search and filters in the middle, and the chat on the right with its own header. Phones stay the same'],
+    es: ['Nuevo Reporte de turno en el Menú, debajo de Entregas: el reporte de front desk con turno, información general, incidentes y transacciones, métricas y no-shows de la auditoría nocturna', 'Se guarda mientras escribes en este teléfono; Enviar lo pone en Entregas con el mismo formato, donde cualquiera puede comentar o poner una alarma en una línea', 'Las entregas ahora pueden ser más largas (hasta 4000 caracteres)', 'Mapa de Fundamental, igual que el de Maingate: todas las habitaciones de los edificios 1 al 4, escaleras, máquinas de hielo, piscina y recepción', 'Un solo estilo en toda la app: el chat, la barra de arriba, los menús y los paneles siempre usan los mismos colores, con el texto gris más fácil de leer. En Ajustes elige Claro, Oscuro o Automático (sigue a tu teléfono)', 'Nueva vista en computadora: íconos de las secciones a la izquierda, órdenes abiertas con búsqueda y filtros en el medio, y el chat a la derecha con su propio encabezado. El teléfono queda igual']},
   {v: '1.4.0', d: '2026-11-11', en: ['New Engineer in the Menu: open maintenance orders, a new order form with room or area, problem type, urgent, who takes it and a photo', 'History of finished maintenance orders with who did them, when, and how long they took', 'Search by room number, words or problem type, and Frequent: the problems and rooms that repeat most in 30 or 90 days', 'Maintenance orders from the chat go straight to Engineer, and so do their alerts. Maintenance staff open the app on Engineer', 'Each maintenance order has a Map button that opens it on the map'],
     es: ['Nuevo Engineer en el Menú: órdenes de mantenimiento abiertas, y para crear una: habitación o área, tipo de problema, urgente, quién la toma y foto', 'Historial de órdenes de mantenimiento terminadas, con quién las hizo, cuándo y cuánto tardó', 'Búsqueda por número de habitación, palabras o tipo de problema, y Frecuentes: los problemas y habitaciones que más se repiten en 30 o 90 días', 'Las órdenes de mantenimiento del chat van directo a Engineer, y sus avisos también. El personal de mantenimiento abre la app en Engineer', 'Cada orden de mantenimiento tiene un botón Mapa que la abre en el mapa']},
   {v: '1.3.1', d: '2026-11-11', en: ['Laundry alerts on your phone, even with the app closed: when your load finishes, or if someone else stops it', 'Tapping a laundry alert opens Laundry'],
@@ -4623,8 +4735,278 @@ function goHash(h){
   if (!S.me) return;
   if (h === '#eng' || (h === '#orders' && engIsMe())) setTab('eng');
   else if (h === '#orders') setTab('orders');
-  else if (h === '#passon' || h === '#lost' || h === '#map' || h === '#laundry') setTab(h.slice(1));
+  else if (h === '#passon' || h === '#lost' || h === '#map' || h === '#laundry' || h === '#srep') setTab(h.slice(1));
   else if (h === '#team' && S.me.role === 'mgr') setTab('team');
+}
+
+/* Shift Report (front desk): Arian's v3 report, same structure; Send puts it in Pass-on */
+const SR_SHIFTS = {
+  morning:   {en: 'Morning', es: 'Mañana', ic: '🌅', t: '7:00 AM – 3:00 PM', full: 'Morning | 7:00 AM to 3:00 PM'},
+  afternoon: {en: 'Afternoon', es: 'Tarde', ic: '☀️', t: '3:00 PM – 11:00 PM', full: 'Afternoon | 3:00 PM to 11:00 PM'},
+  night:     {en: 'Night Audit', es: 'Auditoría nocturna', ic: '🌙', t: '11:00 PM – 7:00 AM', full: 'Night Audit | 11:00 PM to 7:00 AM'}
+};
+const SR_F = {
+  guestName: ['Guest name', 'Nombre del huésped'], thirdParty: ['Third party', 'Tercero'], roomType: ['Room type', 'Tipo de habitación'],
+  room: ['Room number', 'Habitación'], confirmNum: ['Confirmation #', 'Confirmación #'], fromRoom: ['From room', 'De la habitación'],
+  toRoom: ['To room', 'A la habitación'], reason: ['Reason', 'Motivo']
+};
+const SR_BLOCKS = [
+  {key: 'ccDeclined', emoji: '💳', en: 'CC Declined', es: 'Tarjeta declinada', title: 'CC Declined', fields: ['guestName', 'thirdParty', 'roomType'],
+    line: e => `${srV(e.guestName)} — ${srV(e.thirdParty)}${e.roomType ? ' (' + e.roomType + ')' : ''}`},
+  {key: 'earlyCheckout', emoji: '🚪', en: 'Early check-out', es: 'Salida anticipada', title: 'Early Check-out', fields: ['room'],
+    line: e => `Room ${srV(e.room)}`},
+  {key: 'extensions', emoji: '📆', en: 'Extensions', es: 'Extensiones', title: 'Extensions', fields: ['guestName', 'room'],
+    line: e => `${srV(e.guestName)} — Room ${srV(e.room)}`},
+  {key: 'depositRefund', emoji: '💵', en: 'Deposit to refund', es: 'Depósito a devolver', title: 'Deposit to Refund', fields: ['guestName', 'confirmNum'],
+    line: e => `${srV(e.guestName)} — No. ${srV(e.confirmNum)}`},
+  {key: 'cancellation', emoji: '❌', en: 'Cancellation', es: 'Cancelación', title: 'Cancellation', fields: ['guestName', 'confirmNum'],
+    line: e => `${srV(e.guestName)} — No. ${srV(e.confirmNum)}`},
+  {key: 'reservations', emoji: '📝', en: 'Reservations created', es: 'Reservas creadas', title: 'Reservations Created', fields: ['guestName', 'confirmNum', 'thirdParty'],
+    line: e => `${srV(e.guestName)} (No. ${srV(e.confirmNum)}) — ${srV(e.thirdParty)}`},
+  {key: 'roomMoves', emoji: '🔄', en: 'Room moves', es: 'Cambios de habitación', title: 'Room Moves', fields: ['fromRoom', 'toRoom', 'reason'],
+    line: e => `Room ${srV(e.fromRoom)} → ${srV(e.toRoom)}${e.reason && e.reason.trim() ? ': ' + e.reason.trim() : ''}`}
+];
+const SR_NOSHOW = {key: 'noshows', fields: ['guestName', 'room', 'confirmNum']};
+const SR_METRICS = [
+  ['walkins', 'Walk-ins', 'Walk-ins', 'Walk-ins'],
+  ['wyndham', 'Wyndham Rewards arrivals', 'Llegadas Wyndham Rewards', 'Wyndham Rewards Members Arrivals'],
+  ['dayuse', 'Day-use', 'Day-use', 'Day-use'],
+  ['resortpass', 'Resort pass', 'Resort pass', 'Resort Pass'],
+  ['vacantdirty', 'Vacant/dirty rooms', 'Vacías sucias', 'Vacant/Dirty Rooms'],
+  ['outoforder', 'Out of order', 'Fuera de servicio', 'Out of Order'],
+  ['totalrooms', 'Total rooms available', 'Habitaciones disponibles', 'Total Rooms Available'],
+  ['arrivals', 'Arrivals tonight', 'Llegadas esta noche', 'Total Arrivals Tonight'],
+  ['departures', 'Departures today', 'Salidas hoy', 'Total Departures Today'],
+  ['stayovers', 'Stayovers', 'Stayovers', 'Stayovers'],
+  ['occupancy', "Today's occupancy", 'Ocupación de hoy', "Today's Occupancy", '%'],
+  ['adr', 'Expected ADR', 'ADR esperado', 'Expected ADR', '$'],
+  ['todayrate', "Today's rate", 'Tarifa de hoy', "Today's Rate", '$']
+];
+const SR_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const SR_SEP = '─────────────────────────────';
+const SR_MAX = 4000;
+const srV = x => (x && String(x).trim()) || '—';
+const srToday = () => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+const srNowShift = () => { const h = +new Intl.DateTimeFormat('en-US', {timeZone: TZ, hour: 'numeric', hourCycle: 'h23'}).format(new Date()) % 24;
+  return h >= 7 && h < 15 ? 'morning' : h >= 15 && h < 23 ? 'afternoon' : 'night'; };
+const srDay = d => d ? SR_DAYS[new Date(d + 'T12:00:00').getDay()] : '';
+const srDayL = d => d ? new Date(d + 'T12:00:00').toLocaleDateString(LANG === 'es' ? 'es-US' : 'en-US', {weekday: 'long'}) : '';
+const srKey = () => 'sc.srep.' + ((S.hotel && S.hotel.id) || '') + '.' + ((S.me && S.me.id) || '');
+const srBlank = () => ({agent: (S.me && S.me.name) || '', shift: srNowShift(), date: srToday(), comments: '', m: {},
+  e: Object.fromEntries(SR_BLOCKS.map(b => [b.key, []]).concat([['noshows', []]]))});
+let SR = null, SRK = '';
+function srLoad(){
+  const k = srKey(); if (SR && SRK === k) return;
+  SRK = k; const d = ls.get(k, null), b = srBlank();
+  SR = d && typeof d === 'object' ? {...b, ...d, m: {...(d.m || {})}, e: {...b.e, ...(d.e || {})}} : b;
+  Object.keys(SR.e).forEach(x => { if (!Array.isArray(SR.e[x])) SR.e[x] = []; });
+}
+const srSave = () => ls.set(SRK, SR);
+const srFields = key => key === 'noshows' ? SR_NOSHOW.fields : SR_BLOCKS.find(b => b.key === key).fields;
+function srEntries(key){
+  const list = SR.e[key];
+  return list.map((en, i) => `<div class="srent"><div class="srnum">${L2('Entry', 'Entrada')} #${i + 1}</div>
+    <div class="srgrid g${Math.min(srFields(key).length, 3)}">${srFields(key).map(f => `<label><span>${esc(L2(...SR_F[f]))}</span><input data-sre="${key}" data-i="${i}" data-f="${f}"
+      value="${esc(en[f] || '')}" ${f === 'reason' ? 'maxlength="80"' : 'maxlength="60"'}${f === 'roomType' ? ' list="srTypes"' : ''}${/room/i.test(f) && f !== 'roomType' ? ' inputmode="numeric"' : ''} autocomplete="off"></label>`).join('')}</div>
+    <button type="button" class="srdel" data-srdel="${key}" data-i="${i}" aria-label="${L2('Remove entry', 'Quitar entrada')}">×</button></div>`).join('');
+}
+function srBlock(b){
+  const n = SR.e[b.key].length;
+  return `<div class="srblk" data-blk="${b.key}"><div class="srbh"><span>${b.emoji} ${esc(L2(b.en, b.es))}</span><span class="srcnt${n ? ' on' : ''}">${n}</span></div>
+    <div class="srlist">${srEntries(b.key)}</div><button type="button" class="sradd" data-sradd="${b.key}">+ ${L2('Add', 'Agregar')}</button></div>`;
+}
+function srRender(){
+  srLoad();
+  const box = $('#srBody'); if (!box) return;
+  const night = SR.shift === 'night';
+  box.innerHTML = `<div class="enghead"><div class="grow"><h2>${L2('Shift Report', 'Reporte de turno')}</h2>
+      <div class="sub">${L2('Fill it during your shift. Send puts it in Pass-on.', 'Llénalo en tu turno. Enviar lo pone en Entregas.')}</div></div></div>
+    <div class="srshifts" role="group" aria-label="${L2('Shift', 'Turno')}">${Object.entries(SR_SHIFTS).map(([k, s]) =>
+      `<button type="button" class="srs srs-${k}" data-srshift="${k}" aria-pressed="${SR.shift === k}"><span class="ic">${s.ic}</span><b>${esc(L2(s.en, s.es))}</b><small>${s.t}</small></button>`).join('')}</div>
+    <div class="card"><h3 class="srh">${L2('General info', 'Información general')}</h3>
+      <div class="grid2"><div class="field"><label for="srAgent">${L2('Agent on duty', 'Agente de turno')}</label><input id="srAgent" maxlength="80" value="${esc(SR.agent)}" autocomplete="off"></div>
+      <div class="field"><label for="srDate">${L2('Date', 'Fecha')}</label><input id="srDate" type="date" value="${esc(SR.date)}"><div class="srday" id="srDay">${esc(srDayL(SR.date))}</div></div></div>
+      <div class="field"><label for="srComments">${L2('Comments', 'Comentarios')}</label><textarea id="srComments" rows="4" maxlength="2000" placeholder="${esc(L2('Events, issues or notes from your shift', 'Eventos, problemas o notas de tu turno'))}">${esc(SR.comments)}</textarea></div></div>
+    <div class="card"><h3 class="srh">${L2('Incidents & transactions', 'Incidentes y transacciones')}</h3>${SR_BLOCKS.map(srBlock).join('')}</div>
+    <div class="card"><h3 class="srh">${L2('Metrics', 'Métricas')}</h3><div class="srmet">${SR_METRICS.map(([id, en, es, , u]) =>
+      `<label><span>${esc(L2(en, es))}</span><span class="srin${u ? ' u' + (u === '$' ? 'd' : 'p') : ''}">${u === '$' ? '<i>$</i>' : ''}<input data-srm="${id}" type="number" min="0"${id === 'occupancy' ? ' max="100" step="0.1"' : u === '$' ? ' step="0.01"' : ' step="1"'} inputmode="decimal" placeholder="0" value="${esc(SR.m[id] ?? '')}">${u === '%' ? '<i>%</i>' : ''}</span></label>`).join('')}</div></div>
+    <div class="card srna" ${night ? '' : 'hidden'}><h3 class="srh">🌙 ${L2('Night audit: no-shows', 'Auditoría nocturna: no-shows')}</h3>
+      <div class="srblk" data-blk="noshows"><div class="srbh"><span>${L2('No-shows', 'No-shows')}</span><span class="srcnt${SR.e.noshows.length ? ' on' : ''}">${SR.e.noshows.length}</span></div>
+      <div class="srlist">${srEntries('noshows')}</div><button type="button" class="sradd" data-sradd="noshows">+ ${L2('Add no-show', 'Agregar no-show')}</button></div></div>
+    <datalist id="srTypes"><option value="RM1"><option value="RM2"><option value="AC1"></datalist>
+    <div class="srbar"><button type="button" class="btn pri" id="srSend">${L2('Send to Pass-on', 'Enviar a Entregas')}</button><button type="button" class="btn" id="srClear">${L2('Clear', 'Borrar')}</button></div>`;
+}
+function srReport(){
+  const L = [], v = srV, d = SR.date;
+  let shown = d; if (d) { const x = new Date(d + 'T12:00:00'); shown = (x.getMonth() + 1) + '/' + x.getDate() + '/' + x.getFullYear(); }
+  L.push('Agent on Duty: ' + v(SR.agent)); L.push('Shift: ' + (SR_SHIFTS[SR.shift] || SR_SHIFTS.morning).full);
+  L.push('Date: ' + (shown || '—')); L.push('Day: ' + (srDay(d) || '—')); L.push('');
+  const c = (SR.comments || '').trim();
+  if (c) { L.push('COMMENTS (issues reported or events during your shift)'); L.push(SR_SEP); L.push(c); L.push(''); }
+  const secs = [];
+  SR_BLOCKS.forEach(b => { const list = SR.e[b.key].filter(srFilled); if (!list.length) return;
+    secs.push([b.emoji + ' ' + b.title + ': ' + list.length].concat(list.map(e => '• ' + b.line(e))).join('\n')); });
+  if (secs.length) { L.push('INCIDENTS & TRANSACTIONS'); L.push(SR_SEP); L.push(secs.join('\n\n')); L.push(''); }
+  L.push('METRICS'); L.push(SR_SEP);
+  SR_METRICS.forEach(([id, , , lab, u]) => { const raw = SR.m[id];
+    L.push(lab + ': ' + (u === '$' ? '$' + (parseFloat(raw) || 0).toFixed(2) : (raw === '' || raw == null ? '0' : raw) + (u === '%' ? '%' : ''))); });
+  const ns = SR.e.noshows.filter(srFilled);
+  if (SR.shift === 'night' && ns.length) { L.push(''); L.push('No-Shows: ' + ns.length); L.push(SR_SEP);
+    ns.forEach(e => L.push(`• ${v(e.guestName)} — Room ${v(e.room)} — No. ${v(e.confirmNum)}`)); }
+  return L.join('\n');
+}
+const srFilled = e => Object.values(e || {}).some(x => String(x || '').trim());
+function srRooms(){
+  const r = [];
+  ['earlyCheckout', 'extensions', 'noshows'].forEach(k => SR.e[k].forEach(e => r.push(e.room)));
+  SR.e.roomMoves.forEach(e => { r.push(e.fromRoom); r.push(e.toRoom); });
+  return [...new Set(r.map(x => String(x || '').trim()).filter(x => /^[A-Za-z0-9-]{1,6}$/.test(x)))].slice(0, 10);
+}
+function srSendModal(){
+  if (!SR.agent.trim()) { toast(L2('Write the agent on duty.', 'Escribe el agente de turno.')); $('#srAgent').focus(); return; }
+  if (!SR.date) { toast(L2('Pick the date.', 'Elige la fecha.')); $('#srDate').focus(); return; }
+  const text = srReport();
+  if (text.length > SR_MAX) { toast(L2(`The report is too long (${text.length} of ${SR_MAX} characters). Shorten the comments.`, `El reporte es muy largo (${text.length} de ${SR_MAX} caracteres). Acorta los comentarios.`)); return; }
+  openModal(`<div data-noi18n><h2>${L2('Send to Pass-on?', '¿Enviar a Entregas?')}</h2><p class="hint">${L2('Everyone at this hotel will see it in Pass-on.', 'Todos en este hotel lo verán en Entregas.')}</p>
+    <pre class="srpre">${esc(text)}</pre><div class="btnrow" style="margin-top:10px"><button class="btn pri" type="button" id="srGo">${L2('Send', 'Enviar')}</button><button class="btn" type="button" data-close>${L2('Back', 'Volver')}</button></div></div>`);
+  $('#srGo').onclick = async () => {
+    const b = $('#srGo'); b.disabled = true;
+    try { await call('sc_post', {p_kind: 'handoff', p_body: text, p_rooms: srRooms(), p_orders: [], p_mentions: {}});
+      closeModal(); const agent = SR.agent; SR = {...srBlank(), agent}; srSave(); srRender();
+      toast(L2('Shift report sent to Pass-on', 'Reporte enviado a Entregas'), 'new'); setTab('passon'); refresh(); }
+    catch (err) { toast(esc(err.message)); b.disabled = false; }
+  };
+}
+function srShow(){ srLoad(); srRender(); }
+$('#view-srep').addEventListener('input', e => {
+  const t = e.target; if (!SR) return;
+  if (t.id === 'srAgent') SR.agent = t.value;
+  else if (t.id === 'srComments') SR.comments = t.value;
+  else if (t.id === 'srDate') { SR.date = t.value; $('#srDay').textContent = srDayL(t.value); }
+  else if (t.dataset.srm) SR.m[t.dataset.srm] = t.value;
+  else if (t.dataset.sre) { const row = SR.e[t.dataset.sre][+t.dataset.i]; if (row) row[t.dataset.f] = t.value;
+    const blk = t.closest('.srblk'), cnt = blk && blk.querySelector('.srcnt'); if (cnt) cnt.classList.toggle('on', SR.e[t.dataset.sre].length > 0); }
+  else return;
+  srSave();
+});
+$('#view-srep').addEventListener('change', e => { if (e.target.id === 'srDate') { SR.date = e.target.value; $('#srDay').textContent = srDayL(SR.date); srSave(); } });
+$('#view-srep').addEventListener('click', e => {
+  const s = e.target.closest('[data-srshift]');
+  if (s) { SR.shift = s.dataset.srshift; srSave();
+    document.querySelectorAll('#srBody [data-srshift]').forEach(x => x.setAttribute('aria-pressed', x.dataset.srshift === SR.shift));
+    $('#srBody .srna').hidden = SR.shift !== 'night'; return; }
+  const a = e.target.closest('[data-sradd]');
+  if (a) { const k = a.dataset.sradd; SR.e[k].push({}); srSave(); srRender();
+    const last = document.querySelector(`#srBody .srblk[data-blk="${k}"] .srent:last-child input`);
+    if (last) { last.scrollIntoView({block: 'center'}); setTimeout(() => last.focus({preventScroll: true}), 60); } return; }
+  const d = e.target.closest('[data-srdel]');
+  if (d) { SR.e[d.dataset.srdel].splice(+d.dataset.i, 1); srSave(); srRender(); return; }
+  if (e.target.closest('#srSend')) return srSendModal();
+  if (e.target.closest('#srClear')) {
+    if (!confirm(L2('Clear the whole report? This cannot be undone.', '¿Borrar todo el reporte? No se puede deshacer.'))) return;
+    const agent = SR.agent; SR = {...srBlank(), agent}; srSave(); srRender(); toast(L2('Report cleared', 'Reporte borrado'), 'new');
+  }
+});
+// a pass-on that is a Shift Report shows in the same sections it was written in
+const srIsReport = body => /^Agent on Duty: .*\nShift: /.test(String(body || ''));
+function srPoBody(x, acts, extra){
+  const out = []; let pt = -1, sec = '', grid = [];
+  const flush = () => { if (grid.length) { out.push(`<div class="srpm">${grid.join('')}</div>`); grid = []; } };
+  String(x.body || '').split('\n').forEach(raw => {
+    const l = raw.trim(); if (!l) { flush(); return; }
+    pt++;
+    if (/^─+$/.test(l)) return;
+    if (/^(COMMENTS\b|INCIDENTS & TRANSACTIONS$|METRICS$)/.test(l) || /^No-Shows: \d+$/.test(l)) { flush(); sec = l.startsWith('COMMENTS') ? 'c' : l === 'METRICS' ? 'm' : 'i';
+      out.push(`<h4 class="srph">${esc(l)}</h4>`); return; }
+    if (sec === 'm') { const i = l.indexOf(': '); grid.push(`<div><span>${esc(i > 0 ? l.slice(0, i) : l)}</span><b>${esc(i > 0 ? l.slice(i + 2) : '')}</b></div>`); return; }
+    flush();
+    if (!sec) { const i = l.indexOf(': '); out.push(`<div class="srphd"><span>${esc(l.slice(0, i))}</span> ${esc(l.slice(i + 2))}</div>`); return; }
+    if (sec === 'i' && !l.startsWith('•')) { out.push(`<div class="srpb">${esc(l)}</div>`); return; }
+    out.push(`<div class="poline srpl"><div class="ptxt">${roomLinks(l)}</div>${acts(pt)}</div>${extra(pt)}`);
+  });
+  flush();
+  return `<div class="srpo" data-noi18n>${out.join('')}</div>`;
+}
+
+/* ===== v1.5.0 desktop: icon rail, orders list, chat with its own header (phones keep the Menu) ===== */
+const DESK_MQ = window.matchMedia ? window.matchMedia('(min-width:900px)') : { matches: false, addEventListener(){} };
+const ICO_SEARCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
+const ICO_CARET = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px"><path d="m6 9 6 6 6-6"/></svg>';
+(function deskBuild(){
+  const tabs = $('#tabs'); if (!tabs) return;
+  // logo at the top of the rail
+  const mark = document.querySelector('header.top .brand svg.mark');
+  if (mark) {
+    const lg = document.createElement('div'); lg.className = 'raillogo deskonly'; lg.setAttribute('aria-hidden', 'true');
+    lg.innerHTML = mark.outerHTML.replace(/fsG1/g, 'fsG1r'); tabs.prepend(lg);
+  }
+  // profile photo at the bottom of the rail
+  const me = document.createElement('button'); me.type = 'button'; me.className = 'railme deskonly'; me.setAttribute('data-noi18n', '');
+  me.innerHTML = '<span class="av"></span>'; $('#app').appendChild(me);
+  me.onclick = () => $('#whoBtn').click();
+  const src = $('#whoAv');
+  const syncMe = () => { const a = me.firstChild; a.className = src.className; a.textContent = src.textContent; a.style.cssText = src.style.cssText; me.setAttribute('aria-label', L2('Your account', 'Tu cuenta')); };
+  new MutationObserver(syncMe).observe(src, { attributes: true, childList: true, characterData: true, subtree: true }); syncMe();
+  // names on hover (the rail shows icons only)
+  const tip = document.createElement('div'); tip.className = 'railtip'; tip.hidden = true; tip.setAttribute('data-noi18n', ''); document.body.appendChild(tip);
+  tabs.addEventListener('mouseover', e => {
+    if (!DESK_MQ.matches) return;
+    const b = e.target.closest('button'); if (!b) { tip.hidden = true; return; }
+    const t = b.classList.contains('railme') ? L2('Your account', 'Tu cuenta') : ((b.querySelector('.tl') || {}).textContent || '').trim();
+    if (!t) { tip.hidden = true; return; }
+    const r = b.getBoundingClientRect(); tip.textContent = t; tip.style.top = Math.round(r.top + r.height / 2 - 15) + 'px'; tip.hidden = false;
+  });
+  tabs.addEventListener('mouseleave', () => { tip.hidden = true; });
+  me.addEventListener('mouseenter', () => { if (!DESK_MQ.matches) return; const r = me.getBoundingClientRect(); tip.textContent = L2('Your account', 'Tu cuenta'); tip.style.top = Math.round(r.top + r.height / 2 - 15) + 'px'; tip.hidden = false; });
+  me.addEventListener('mouseleave', () => { tip.hidden = true; });
+  tabs.addEventListener('click', () => { tip.hidden = true; });
+  // chat header
+  const ch = document.createElement('div'); ch.className = 'chathead deskonly'; ch.setAttribute('data-noi18n', '');
+  ch.innerHTML = `<span class="hav"></span><div class="hti"><b></b><span></span></div><button type="button" class="hsw" hidden><i></i><span></span>${ICO_CARET}</button><button type="button" class="hsr">${ICO_SEARCH}</button>`;
+  document.querySelector('#main .chatcol').prepend(ch);
+  ch.querySelector('.hsw').onclick = () => hpkOpen(true);
+  ch.querySelector('.hsr').onclick = () => $('#roomsBtn').click();
+  // title bar for the other sections
+  const dt = document.createElement('div'); dt.className = 'desktitle deskonly'; dt.hidden = true; dt.setAttribute('data-noi18n', '');
+  dt.innerHTML = '<b></b><button type="button" class="dth"><i></i><span></span></button>';
+  $('#alarmBar').after(dt);
+  dt.querySelector('.dth').onclick = () => { if ((S.hotels || []).length > 1) hpkOpen(true); };
+  // search in the orders list
+  const sb = document.createElement('div'); sb.className = 'dsearch deskonly'; sb.setAttribute('data-noi18n', '');
+  sb.innerHTML = `${ICO_SEARCH}<input type="search" id="dsInput" autocomplete="off">`;
+  document.querySelector('#main .qhead').after(sb);
+  const none = document.createElement('div'); none.className = 'dsnone'; none.hidden = true; none.setAttribute('data-noi18n', '');
+  $('#orders').before(none);
+  const inp = $('#dsInput');
+  const apply = () => {
+    const q = DESK_MQ.matches ? norm(inp.value.trim()) : ''; let n = 0, all = 0;
+    document.querySelectorAll('#orders .order').forEach(o => { all++; const hit = !q || norm(o.textContent).includes(q); o.classList.toggle('dshide', !hit); if (hit) n++; });
+    none.hidden = !(q && all && !n); none.textContent = L2('No open order matches', 'Ninguna orden abierta coincide');
+  };
+  inp.addEventListener('input', apply);
+  new MutationObserver(apply).observe($('#orders'), { childList: true });
+  DESK_MQ.addEventListener && DESK_MQ.addEventListener('change', () => { apply(); deskSync(); });
+  new MutationObserver(() => deskSync()).observe($('#menuCur'), { childList: true, characterData: true, subtree: true });
+  new MutationObserver(() => deskSync()).observe($('#hotelName'), { childList: true, characterData: true, subtree: true });
+  setInterval(deskSync, 15000);
+})();
+function deskSync(){
+  const ch = document.querySelector('.chathead'), dt = document.querySelector('.desktitle'); if (!ch || !dt) return;
+  const inp = $('#dsInput'); if (inp) { inp.placeholder = L2('Search orders or a room', 'Buscar órdenes o habitación'); inp.setAttribute('aria-label', L2('Search orders', 'Buscar órdenes')); }
+  ch.querySelector('.hsr').setAttribute('aria-label', L2('Search a room', 'Buscar habitación'));
+  const h = S.hotel; if (!h) return;
+  const multi = (S.hotels || []).length > 1;
+  const n = (S.staff || []).filter(s => s.active !== false).length, now = Date.now();
+  const day = new Date(now).toLocaleDateString(LANG === 'es' ? 'es-US' : 'en-US', { weekday: 'long', month: 'short', day: 'numeric', timeZone: TZ });
+  ch.querySelector('.hav').textContent = h.id;
+  ch.querySelector('.hti b').textContent = h.name || h.id;
+  ch.querySelector('.hti span').textContent = [n ? n + ' ' + L2(n === 1 ? 'person' : 'people', n === 1 ? 'persona' : 'personas') : '', day.charAt(0).toUpperCase() + day.slice(1), tr(shiftOf(now))].filter(Boolean).join(' · ');
+  const sw = ch.querySelector('.hsw'); sw.hidden = !multi; sw.querySelector('span').textContent = L2('Switch hotel', 'Cambiar hotel');
+  dt.hidden = !S.tab || S.tab === 'chat';
+  dt.querySelector('b').textContent = ($('#menuCur').textContent || '').trim();
+  const dh = dt.querySelector('.dth'); dh.classList.toggle('sw', multi); dh.querySelector('span').textContent = h.name || h.id;
+  dh.setAttribute('aria-label', multi ? L2('Switch hotel', 'Cambiar de hotel') + ': ' + (h.name || '') : (h.name || ''));
+  if (multi) dh.removeAttribute('tabindex'); else dh.tabIndex = -1;
 }
 
 if (S.token && S.me) enterApp(); else showLogin();

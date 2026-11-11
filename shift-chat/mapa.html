@@ -25,7 +25,11 @@ var D={
 'Ala central':'Central wing','Ala noreste':'Northeast wing','Ala oeste':'West wing','Ala sur':'South wing','Alta':'High','Asignada':'Assigned','Asignada o en espera':'Assigned or on hold',
 'Asignó la orden a':'Assigned the order to','Baja':'Low','Creada':'Created','Creó la orden':'Created the order','Descartada':'Dismissed',
 'Ej.: gotea la llave del lavamanos':'E.g., sink faucet is dripping','Ej.: luz fundida junto a la puerta':'E.g., light out next to the door',
-'El mapa de este hotel todavía no está listo. Por ahora solo está el de Maingate.':'The map for this hotel is not ready yet. For now, only Maingate is available.',
+'El mapa de este hotel todavía no está listo. Por ahora están Maingate y Fundamental.':'The map for this hotel is not ready yet. For now, Maingate and Fundamental are available.',
+'Maqueta 3D del Developer Inn Fundamental':'3D model of Developer Inn Fundamental','Ingeniería, Developer Inn Fundamental':'Engineering, Developer Inn Fundamental',
+'Edificio 1':'Building 1','Edificio 2':'Building 2','Edificio 3':'Building 3','Edificio 4':'Building 4',
+'Escalera edificio 1':'Building 1 stairs','Escalera edificio 2':'Building 2 stairs','Escalera edificio 3':'Building 3 stairs','Escalera edificio 4':'Building 4 stairs',
+'Front desk y lobby':'Front desk and lobby',
 'Eléctrico':'Electrical','En espera':'On hold','En proceso':'In progress',
 'Entra primero en FrankShift con tu usuario y PIN, y luego abre el mapa.':'Sign in to FrankShift with your user code and PIN first, then open the map.',
 'Escalera ala central':'Central wing stairs','Escalera ala noreste':'Northeast wing stairs','Escalera ala oeste':'West wing stairs','Escalera ala sur este':'Southeast wing stairs','Escalera ala sur oeste':'Southwest wing stairs',
@@ -57,6 +61,8 @@ var R=[
 [/^Piso (\d+)$/,function(m){return 'Floor '+m[1];}],
 [/^Piso (\d+), (.+)$/,function(m){return 'Floor '+m[1]+', '+(T(m[2])||m[2]);}],
 [/^Junto a (\S+) y (\S+)$/,function(m){return 'Next to '+m[1]+' and '+m[2];}],
+[/^Junto a (\S+)$/,function(m){return 'Next to '+m[1];}],
+[/^Entre (\S+) y (\S+)$/,function(m){return 'Between '+m[1]+' and '+m[2];}],
 [/^Órdenes abiertas \((\d+)\)$/,function(m){return 'Open orders ('+m[1]+')';}],
 [/^(\d+) órdenes abiertas(, fuera de servicio)?$/,function(m){return m[1]+' open orders'+(m[2]?', out of order':'');}],
 [/^1 orden abierta(, fuera de servicio)?$/,function(m){return '1 open order'+(m[1]?', out of order':'');}],
@@ -100,6 +106,7 @@ document.addEventListener('DOMContentLoaded',function(){document.title=L(documen
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mapa de ingeniería · FrankShift</title>
 <meta name="theme-color" content="#2559A7">
+<script>(function(){var t="auto";try{t=JSON.parse(localStorage.getItem("sc.theme")||"\"auto\"")}catch(e){}var d=t==="dark"||(t!=="light"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.setAttribute("data-theme",d?"dark":"light");})();</script>
 <link rel="icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -334,8 +341,12 @@ const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
+/* ===== Qué hotel: FrankShift pasa ?h=; sin eso, Maingate ===== */
+const MAPS={MGT:{name:'MAINGATE',full:'Developer Inn Maingate'},FDT:{name:'FUNDAMENTAL',full:'Developer Inn Fundamental'}};
+const HOTEL=(function(){try{const h=new URLSearchParams(location.search).get('h');return MAPS[h]?h:'MGT';}catch(e){return'MGT';}})();
+$('.title h1 span').textContent=MAPS[HOTEL].name;$('#scene').setAttribute('aria-label',L('Maqueta 3D del '+MAPS[HOTEL].full));
 /* ===== Plano tomado del site map oficial (coordenadas en píxeles del mapa) ===== */
-const S=0.135, OX=490, OY=472;          // escala px → metros y centro
+const S=HOTEL==='FDT'?0.19:0.135, OX=HOTEL==='FDT'?338:490, OY=HOTEL==='FDT'?306:472;          // escala px → metros y centro
 const H=3.0, D=8.4, CORR=1.7;            // altura de piso, fondo de habitación, pasillo exterior
 const BLOCKS=[
   {name:'Ala oeste',   a:[228,360], b:[285,588], neg:[159,157,155,153,151,149,147,145,143], pos:[158,156,154,152,150,148,146,144,142]},
@@ -343,7 +354,7 @@ const BLOCKS=[
   {name:'Ala sur',     a:[352,648], b:[500,609], neg:[141,139,137,135,133,131], pos:[140,138,136,134,132,130]},
   {name:'Ala central', a:[525,532], b:[675,492], neg:[129,127,125,123,121,119], pos:[128,126,124,122,120,118]}
 ];
-const AREAS=[
+const AREAS_MGT=[
   {id:'recepcion', name:'Recepción', sub:'Front desk, desayuno y market', at:[700,672], w:150,d:52,h:4.6, rot:-14, col:'--bldg', op:.55},
   {id:'lavanderia',name:'Lavandería', sub:'Área común', at:[742,482], w:52,d:44,h:3, rot:-14, col:'--bldg', op:.55},
   {id:'piscina',   name:'Piscina', sub:'Área común', at:[437,282], pool:82, col:'--path', op:.95},
@@ -398,6 +409,7 @@ function strip(group,matKey,a,b,wpx,y){
   m.position.set((A.x+B.x)/2,y||.02,(A.z+B.z)/2);m.rotation.y=Math.atan2(-dir.z,dir.x);group.add(m);
 }
 // Terreno, estacionamientos y caminos como en el site map
+function buildMGT(){
 flat(deco,'ground',40,35,940,910,-.05,.06);
 flat(deco,'park',50,460,122,800,.01);
 flat(deco,'park',90,755,930,862,.01);
@@ -413,6 +425,7 @@ strip(deco,'path',[560,600],[640,600],22);
   const t=new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,1.4,6),M.tree);t.position.y=.7;g.add(c,t);g.position.copy(P(x,y));deco.add(g);
 });
 
+}
 /* ===== Habitaciones ===== */
 const targets=[], byKey={};
 function addRoom(o){
@@ -425,6 +438,7 @@ function addRoom(o){
     mesh,parent:floorG[o.floor-1],baseVar:o.floor===1?'--g1':'--g2',baseOp:.55,label:null,state:'ok'};
   mesh.userData.t=t;t.parent.add(mesh,edges);targets.push(t);byKey[t.key]=t;
 }
+function buildMGTRooms(){
 BLOCKS.forEach(b=>{
   const A=P(b.a[0],b.a[1]),B=P(b.b[0],b.b[1]);const n=b.neg.length;
   const len=A.distanceTo(B),along=B.clone().sub(A).normalize(),sp=len/(n-1),L=sp*n;
@@ -455,6 +469,85 @@ BLOCKS.forEach(b=>{
   const pad=new THREE.Mesh(new THREE.BoxGeometry(30*S+2,.06,75*S+2),M.path);pad.position.set(c.x,.03,c.z);deco.add(pad);
   addRoom({num:'261',floor:2,block:'Junto al ala sur',c,along:new V(1,0,0),front:new V(0,0,-1),sAl:30*S-.3,sAc:75*S-.3});
 })();
+}
+/* ===== Fundamental: plano tomado del site map oficial (coordenadas en puntos del PDF) ===== */
+// Cada celda del mapa es una habitación con su piso 1 y su piso 2 encima (21xx abajo, 22xx arriba).
+const FDT_COLS=[
+  // edificio 2: dos filas espalda con espalda, pasillos por fuera
+  {b:'Edificio 2',x:198,y0:80.8,step:14.236,front:-1,f1:[2114,2113,2112,2111,2110,2109,2108,2107,2106,2105,2104,2103,2102,2101,2100],f2:[2214,2213,2212,2211,2210,2209,2208,2207,2206,2205,2204,2203,2202,2201,2200]},
+  {b:'Edificio 2',x:244,y0:80.95,step:14.23,front:1,f1:[2115,2116,2117,2118,2119,2120,2121,2122,2123,2124,2125,2126,null],f2:[2215,2216,2217,2218,2219,2220,2221,2222,2223,2224,2225,2226,2227]},
+  // edificio 1: las dos últimas filas son solo piso 2 (1200, 1201, 1228, 1229)
+  {b:'Edificio 1',x:172.5,y0:304.6,step:14.24,front:-1,f1:[1112,1111,1110,1109,1108,1107,1106,1105,1104,1103,1102,1101,1100,null,null],f2:[1214,1213,1212,1211,1210,1209,1208,1207,1206,1205,1204,1203,1202,1201,1200]},
+  {b:'Edificio 1',x:219.4,y0:304.6,step:14.24,front:1,f1:[1113,1114,1115,1116,1117,1118,1119,1120,1121,1122,1123,1124,1125,null,null],f2:[1215,1216,1217,1218,1219,1220,1221,1222,1223,1224,1225,1226,1227,1228,1229]},
+  // edificio 4
+  {b:'Edificio 4',x:429.3,y0:69.7,step:14.26,front:-1,f1:[4111,4110,4109,4108,4107,4106,4105,4104,4103,4102,4101,4100],f2:[4211,4210,4209,4208,4207,4206,4205,4204,4203,4202,4201,4200]},
+  {b:'Edificio 4',x:475.9,y0:70.15,step:14.21,front:1,f1:[4112,4113,4114,4115,4116,4117,4118,4119,4120,4121,4122,4123],f2:[4212,4213,4214,4215,4216,4217,4218,4219,4220,4221,4222,4223]}
+];
+// edificio 3 va de oeste a este; 'ST' es escalera y 'H' la máquina de hielo
+const FDT_ROWS=[
+  {b:'Edificio 3',y:256.5,x0:333,step:19.29,front:-1,f1:['H',3100,3101,3102,3103,3104,'ST','ST',3107,3108,3109,3110],f2:[3200,3201,3202,3203,3204,3205,'ST','ST',3208,3209,3210,3211]},
+  {b:'Edificio 3',y:295.5,x0:332.5,step:19.39,front:1,f1:[3122,3121,3120,3119,3118,3117,3116,3115,3114,3113,3112,3111],f2:[3223,3222,3221,3220,3219,3218,3217,3216,3215,3214,3213,3212]}
+];
+const FDT_DEPTH=44, FDT_DEPTH3=39;
+const FDT_AREAS=[
+  {id:'recepcion',  name:'Recepción', sub:'Front desk y lobby', at:[200,532], w:62,d:33,h:4.6, rot:0, col:'--bldg', op:.55},
+  {id:'piscina',    name:'Piscina', sub:'Área común', at:[346,183], pool:44, water:[70,18], col:'--path', op:.95},
+  {id:'hielo-2',    name:'Máquina de hielo', sub:'Edificio 2', at:[252,276], w:10,d:10,h:1.7, rot:0, col:'--pool', op:.8},
+  {id:'hielo-3',    name:'Máquina de hielo', sub:'Edificio 3', at:[333,256.5], w:12,d:12,h:1.7, rot:0, col:'--pool', op:.8},
+  {id:'esc-2-no',   name:'Escalera edificio 2', sub:'Junto a 2114 y 2214', at:[164,88], w:14,d:9,h:6.2, rot:0, col:'--stair', op:.85, both:true},
+  {id:'esc-2-ne',   name:'Escalera edificio 2', sub:'Junto a 2115 y 2215', at:[276,88], w:14,d:9,h:6.2, rot:0, col:'--stair', op:.85, both:true},
+  {id:'esc-2-so',   name:'Escalera edificio 2', sub:'Junto a 2100 y 2200', at:[161,291], w:14,d:9,h:6.2, rot:0, col:'--stair', op:.85, both:true},
+  {id:'esc-2-se',   name:'Escalera edificio 2', sub:'Junto a 2227', at:[262,294], w:14,d:9,h:6.2, rot:0, col:'--stair', op:.85, both:true},
+  {id:'esc-1-so',   name:'Escalera edificio 1', sub:'Junto a 1100 y 1202', at:[141,470], w:14,d:9,h:6.2, rot:0, col:'--stair', op:.85, both:true},
+  {id:'esc-1-e',    name:'Escalera edificio 1', sub:'Junto a 1123 y 1124', at:[251,452], w:14,d:9,h:6.2, rot:0, col:'--stair', op:.85, both:true},
+  {id:'esc-4-no',   name:'Escalera edificio 4', sub:'Junto a 4111 y 4211', at:[396,90], w:14,d:9,h:6.2, rot:0, col:'--stair', op:.85, both:true},
+  {id:'esc-4-ne',   name:'Escalera edificio 4', sub:'Junto a 4112 y 4212', at:[507,90], w:14,d:9,h:6.2, rot:0, col:'--stair', op:.85, both:true},
+  {id:'esc-4-se',   name:'Escalera edificio 4', sub:'Junto a 4123 y 4223', at:[518,232], w:14,d:9,h:6.2, rot:0, col:'--stair', op:.85, both:true},
+  {id:'esc-3-c',    name:'Escalera edificio 3', sub:'Entre 3104 y 3107', at:[458.7,256.5], w:36,d:34,h:6.2, rot:0, col:'--stair', op:.85, both:true},
+  {id:'esc-3-so',   name:'Escalera edificio 3', sub:'Junto a 3121 y 3222', at:[362,323], w:14,d:9,h:6.2, rot:0, col:'--stair', op:.85, both:true},
+  {id:'esc-3-se',   name:'Escalera edificio 3', sub:'Junto a 3113 y 3214', at:[507,322], w:14,d:9,h:6.2, rot:0, col:'--stair', op:.85, both:true}
+];
+function buildFDT(){
+  flat(deco,'ground',70,24,606,588,-.05,.06);
+  flat(deco,'park',72,40,92,570,.01);flat(deco,'park',72,560,600,586,.01);flat(deco,'park',580,40,604,330,.01);
+  const pad=(x0,y0,x1,y1)=>flat(deco,'path',x0,y0,x1,y1,.03,.06);
+  const shell=(x0,y0,x1,y1,alongX)=>{ // contorno de 2 pisos y pasillos exteriores del piso 2
+    const c=P((x0+x1)/2,(y0+y1)/2),w=(x1-x0)*S,d=(y1-y0)*S;
+    const env=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(w,2*H,d)),envMat);env.position.set(c.x,H,c.z);envelope.add(env);
+    const L=alongX?w:d,cw=CORR;
+    [-1,1].forEach(sg=>{
+      const slab=new THREE.Mesh(alongX?new THREE.BoxGeometry(L,.18,cw):new THREE.BoxGeometry(cw,.18,L),M.slab);
+      slab.position.set(c.x+(alongX?0:sg*(w/2+cw/2)),H,c.z+(alongX?sg*(d/2+cw/2):0));floorG[1].add(slab);
+      const e=alongX?[new V(c.x-L/2,H+1,c.z+sg*(d/2+cw)),new V(c.x+L/2,H+1,c.z+sg*(d/2+cw))]:[new V(c.x+sg*(w/2+cw),H+1,c.z-L/2),new V(c.x+sg*(w/2+cw),H+1,c.z+L/2)];
+      floorG[1].add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(e),railMat));
+    });
+  };
+  pad(160,62,282,300);shell(176,73.7,266,287.2,false);   // edificio 2
+  pad(134,288,258,520);shell(150.5,297.5,241.5,511,false);  // edificio 1
+  pad(390,52,514,244);shell(407.3,62.6,497.9,233.7,false);  // edificio 4
+  pad(312,222,566,330);shell(323.4,237,555,315,true);     // edificio 3
+  pad(160,512,240,552);
+  const under=(c,sAl,sAc,rotY)=>{const g=new THREE.BoxGeometry(sAl,H-.2,sAc);const ue=new THREE.LineSegments(new THREE.EdgesGeometry(g),envMat);ue.position.set(c.x,(H-.2)/2,c.z);ue.rotation.y=rotY;floorG[0].add(ue);};
+  FDT_COLS.forEach(k=>{
+    const along=new V(0,0,1),front=new V(k.front,0,0),sAl=k.step*S-.3,sAc=FDT_DEPTH*S-.25;
+    k.f2.forEach((n2,i)=>{const c=P(k.x,k.y0+i*k.step);const n1=k.f1[i];
+      if(n1)addRoom({num:String(n1),floor:1,block:k.b,c,along,front,sAl,sAc});else under(c,sAl,sAc,Math.atan2(-along.z,along.x));
+      if(n2)addRoom({num:String(n2),floor:2,block:k.b,c,along,front,sAl,sAc});});
+  });
+  FDT_ROWS.forEach(k=>{
+    const along=new V(1,0,0),front=new V(0,0,k.front),sAl=k.step*S-.3,sAc=FDT_DEPTH3*S-.25;
+    k.f1.forEach((n1,i)=>{const c=P(k.x0+i*k.step,k.y);const n2=k.f2[i];
+      if(typeof n1==='number')addRoom({num:String(n1),floor:1,block:k.b,c,along,front,sAl,sAc});
+      if(typeof n2==='number')addRoom({num:String(n2),floor:2,block:k.b,c,along,front,sAl,sAc});});
+  });
+  [[118,70],[100,150],[104,240],[150,400],[110,520],[290,130],[300,250],[365,140],[380,210],[540,250],[560,120],[565,60],[540,330],[330,520],[480,360],[338,560]].forEach(([x,y])=>{
+    const g=new THREE.Group(),c=new THREE.Mesh(new THREE.SphereGeometry(1.5,14,10),M.tree);c.scale.y=1.25;c.position.y=2.6;
+    const t=new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,1.4,6),M.tree);t.position.y=.7;g.add(c,t);g.position.copy(P(x,y));deco.add(g);
+  });
+}
+
+const AREAS=HOTEL==='FDT'?FDT_AREAS:AREAS_MGT;
+if(HOTEL==='FDT')buildFDT();else{buildMGT();buildMGTRooms();}
 
 /* ===== Áreas comunes ===== */
 AREAS.forEach(a=>{
@@ -462,7 +555,8 @@ AREAS.forEach(a=>{
   const m=new THREE.MeshLambertMaterial({transparent:true,depthWrite:false});
   if(a.pool){
     geo=new THREE.CylinderGeometry(a.pool*S*.62,a.pool*S*.62,.16,40);mesh=new THREE.Mesh(geo,m);mesh.position.set(c.x,.1,c.z);top=.4;
-    const water=new THREE.Mesh(new THREE.BoxGeometry(132*S,.1,38*S),M.water);water.position.set(c.x,.22,c.z);deco.add(water);
+    const water=new THREE.Mesh(new THREE.BoxGeometry((a.water?a.water[0]:132)*S,.1,(a.water?a.water[1]:38)*S),M.water);
+    if(a.water){const deck=new THREE.Mesh(new THREE.CylinderGeometry(a.pool*S*.9,a.pool*S*.9,.05,40),M.path);deck.position.set(c.x,.02,c.z);deco.add(deck);}water.position.set(c.x,.22,c.z);deco.add(water);
   }else{
     geo=new THREE.BoxGeometry(a.w*S,a.h,a.d*S);mesh=new THREE.Mesh(geo,m);mesh.position.set(c.x,a.h/2+.06,c.z);mesh.rotation.y=-a.rot*Math.PI/180;top=a.h;
   }
@@ -490,10 +584,11 @@ function buildLabels(){
   targets.forEach(t=>{
     if(t.label){t.label.parent.remove(t.label);t.label.material.map.dispose();t.label.material.dispose();t.label=null;}
     if(t.kind==='room'){t.label=sprite(t.num,false,1.25);t.label.position.set(t.c.x,t.base+t.h+.3,t.c.z);t.parent.add(t.label);}
-    else if(!t.stairs){t.label=sprite(t.name==='Máquina de hielo'?'Hielo':t.name==='Parque infantil'?'Parque':t.name,true,t.key==='hielo'?1.6:2.4);t.label.position.set(t.c.x,t.top+1.6,t.c.z);t.parent.add(t.label);}
+    else if(!t.stairs){t.label=sprite(t.name==='Máquina de hielo'?'Hielo':t.name==='Parque infantil'?'Parque':t.name,true,t.name==='Máquina de hielo'?1.6:2.4);t.label.position.set(t.c.x,t.top+1.6,t.c.z);t.parent.add(t.label);}
   });
   extraLabels.forEach(s=>{deco.remove(s);s.material.map.dispose();s.material.dispose();});extraLabels.length=0;
-  [['Estacionamiento',[86,620]],['Estacionamiento',[470,810]],['Estacionamiento',[855,450]],['Irlo Bronson Blvd',[500,890]],['Polynesian Isle Blvd',[855,112]]].forEach(([s,p])=>{
+  (HOTEL==='FDT'?[['Estacionamiento',[110,300]],['Estacionamiento',[330,44]],['Estacionamiento',[556,176]],['Estacionamiento',[330,450]]]:
+  [['Estacionamiento',[86,620]],['Estacionamiento',[470,810]],['Estacionamiento',[855,450]],['Irlo Bronson Blvd',[500,890]],['Polynesian Isle Blvd',[855,112]]]).forEach(([s,p])=>{
     const l=sprite(s,true,2.4);const v=P(p[0],p[1]);l.position.set(v.x,1.3,v.z);deco.add(l);extraLabels.push(l);
   });
 }
@@ -591,7 +686,7 @@ $('#btnNorth').addEventListener('click',()=>{topView=false;applyView();flyTo(new
 // inside FrankShift's Map tab the app already has its own way back
 try{if(window.top!==window.self)document.documentElement.classList.add('embed');}catch(e){document.documentElement.classList.add('embed');}
 const API='https://ilqlluhsyxlwersrnmob.supabase.co',KEY='sb_publishable_FGX3oLS67ifrHc1CUGkmPQ_s338NdmZ';
-const MAP_HOTEL='MGT';
+const MAP_HOTEL=HOTEL;
 const STATUSES=['Abierta','Asignada','En proceso','En espera','Resuelta'];
 let issues={},team=[],store={mode:'db'},readOnly=false,meInfo=null,me='',gated=false;
 let token=null;try{token=JSON.parse(localStorage.getItem('sc.token')||'null');}catch(e){token=null;}
@@ -649,7 +744,8 @@ let syncing=false;
 async function sync(){
   if(syncing||gated)return false;syncing=true;
   try{const r=await rpc('sc_map_sync',{});
-    if(r.hotel!==MAP_HOTEL){gate('El mapa de este hotel todavía no está listo. Por ahora solo está el de Maingate.');return false;}
+    if(r.hotel!==MAP_HOTEL){if(MAPS[r.hotel]){gated=true;location.replace(location.pathname+'?h='+r.hotel+location.hash);return false;}
+      gate('El mapa de este hotel todavía no está listo. Por ahora están Maingate y Fundamental.');return false;}
     meInfo=r.me;me=r.me.name;team=r.team||[];const n={};(r.orders||[]).forEach(x=>{n[x.id]=x;});issues=n;setSync('ok');refresh();
     if(view==='team'&&sheet.classList.contains('open'))renderTeam();return true;
   }catch(e){const c=e&&e.code;if(signedOut(c)){gate('Tu sesión venció. Entra otra vez en FrankShift y vuelve al mapa.');return false;}setSync('err');return false;}
@@ -927,7 +1023,7 @@ function renderList(){
   const F={abiertas:['Abiertas',x=>isOpen(x)],mias:['Mías',x=>isOpen(x)&&meInfo&&x.assigneeId===meInfo.id],sin:['Sin asignar',x=>isOpen(x)&&!x.assignee],resueltas:['Resueltas',x=>!isOpen(x)]};
   const list=Object.entries(issues).filter(([,x])=>F[listFilter][1](x))
     .sort(listFilter==='resueltas'?(a,b)=>(b[1].resolvedAt||'').localeCompare(a[1].resolvedAt||''):(a,b)=>(PRANK[b[1].priority]-PRANK[a[1].priority])||((a[1].createdAt||'').localeCompare(b[1].createdAt||'')));
-  sheet.innerHTML=head('Órdenes de trabajo','Ingeniería, Developer Inn Maingate',false,'area')+
+  sheet.innerHTML=head('Órdenes de trabajo','Ingeniería, '+MAPS[HOTEL].full,false,'area')+
     '<div class="seg filters" role="group" aria-label="Filtro">'+Object.keys(F).map(k=>'<button data-act="filter" data-f="'+k+'" aria-pressed="'+(k===listFilter)+'">'+F[k][0]+'</button>').join('')+'</div>'+
     (
     list.length?'<div class="tlist">'+list.map(([id,x])=>ticketRow(id,x,true)).join('')+'</div>':
@@ -1025,7 +1121,8 @@ function applyTheme(){
   edgeMat.color.set(css('--edge'));envMat.color.set(css('--edge'));railMat.color.set(css('--edge'));selMat.color.set(css('--accent'));
   buildLabels();refresh();updateDraftPin();
 }
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);
+window.fsTheme=function(t){document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');applyTheme();};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){var t='auto';try{t=JSON.parse(localStorage.getItem('sc.theme')||'"auto"')}catch(e){}if(t!=='light'&&t!=='dark')window.fsTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');});
 
 resize();orbit.r=fitRadius();updateCam();applyTheme();applyView();
 (document.fonts&&document.fonts.ready?Promise.race([document.fonts.ready,sleep(2500)]):Promise.resolve()).then(()=>{buildLabels();requestRender();});
