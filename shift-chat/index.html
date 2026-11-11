@@ -816,19 +816,60 @@ button:focus-visible,a:focus-visible,[role="button"]:focus-visible,select:focus-
 .codelist td,.codelist th{padding:7px 6px;border-top:1px solid var(--line);text-align:left}
 .codelist td.c{font:700 16px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.08em}
 .codescroll{max-height:52vh;overflow:auto}
+
+/* v1.2.2: floating round buttons on top, every tab in the Menu */
+header.top{display:grid!important;grid-template-columns:56px minmax(0,1fr) 56px;align-items:start;gap:8px!important;background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  padding:10px max(14px,env(safe-area-inset-right,0px)) 4px max(14px,env(safe-area-inset-left,0px))!important;min-height:0!important;position:relative;z-index:6}
+header.top .spacer{display:none}
+.fbtn,header.top .who{background:var(--surface)!important;border:1px solid color-mix(in srgb,var(--line) 70%,transparent)!important;box-shadow:0 2px 10px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06)!important}
+.menubtn{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:var(--ink);cursor:pointer;position:relative;padding:0;margin-top:6px}
+.menubtn svg{width:24px;height:24px}
+.menubtn .mcnt{position:absolute;top:-2px;right:-2px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--urgent,#DC2626);color:#fff;font:700 11.5px/20px var(--f-body);text-align:center;box-shadow:0 0 0 2px var(--bg)}
+.menubtn .mcnt:empty{display:none}
+header.top .brand{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;justify-self:center;max-width:100%}
+header.top .brand svg.mark{display:none!important}
+header.top .ctr{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:var(--hotel,var(--ink));cursor:pointer;padding:0;flex:none}
+header.top .ctr svg{width:28px;height:28px}
+header.top .brand .bt{font-size:0!important;position:relative;display:flex;align-items:center;gap:6px;max-width:100%;background:var(--surface);border-radius:999px;padding:6px 12px;box-shadow:0 2px 10px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06);border:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+header.top .brand .bt .mcur{font:600 14px var(--f-body);color:var(--ink);white-space:nowrap}
+header.top .brand .bt .mdot{width:3px;height:3px;border-radius:50%;background:var(--ink-3);flex:none}
+header.top .brand .bt small#hotelName{font:600 13px var(--f-body)!important;margin:0!important;padding:0!important;background:none!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;display:inline-flex!important}
+header.top .who{width:52px;height:52px;padding:0!important;border-radius:50%!important;display:grid!important;place-items:center;justify-self:end;margin-top:6px}
+header.top .who .av{width:46px!important;height:46px!important;font-size:16px!important;box-shadow:none!important;background-size:cover;background-position:center}
+header.top .who #whoName,header.top .who .offtag{display:none!important}
+header.top > .iconbtn{display:none}
+.app .tabs{display:none!important}
+.menuscrim{position:fixed;inset:0;z-index:79;background:rgba(15,23,42,.28)}
+.menuscrim[hidden]{display:none}
+.app.menu-open .tabs{display:flex!important;position:fixed;z-index:80;flex-direction:column;gap:2px;overflow:auto;background:var(--surface);box-shadow:0 18px 50px rgba(15,23,42,.22);border:1px solid var(--line);padding:8px!important;
+  left:10px;top:calc(env(safe-area-inset-top,0px) + 72px);width:min(300px,calc(100vw - 20px));max-height:calc(100vh - 100px);border-radius:22px}
+.app.menu-open .tabs::before{content:attr(data-title);display:block;padding:6px 12px 8px;font:600 12px var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.app.menu-open .tabs button{flex:none!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;width:100%;min-height:52px;padding:6px 12px!important;border-radius:14px;color:var(--ink)!important;text-align:left;position:relative;background:none;border:0;cursor:pointer}
+.app.menu-open .tabs button[hidden]{display:none!important}
+.app.menu-open .tabs button::after{display:none!important}
+.app.menu-open .tabs button[aria-selected="true"]{background:var(--hotel-soft,rgba(99,91,255,.1))}
+.app.menu-open .tabs .tic{position:static!important;width:36px!important;height:36px!important;border-radius:10px;display:grid;place-items:center;background:var(--surface-2);color:var(--ink-2)}
+.app.menu-open .tabs .tic svg{width:20px;height:20px}
+.app.menu-open .tabs button[aria-selected="true"] .tic{background:var(--surface);color:var(--hotel)}
+.app.menu-open .tabs .tl{font:500 16px var(--f-body)!important;max-width:none!important;white-space:nowrap!important;flex:1;text-align:left!important}
+.app.menu-open .tabs .tic .cnt{position:absolute!important;right:14px;top:50%!important;transform:translateY(-50%);font-size:12px;line-height:20px;min-width:22px;text-align:center}
+.tabs .mtools{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line);margin-top:6px;padding-top:6px}
+.tabs .mtools button.iconbtn{width:100%!important;height:auto!important;box-shadow:none!important;border:0!important}
 </style>
 </head>
 <body>
 <div class="app" id="app" hidden>
+  <div class="menuscrim" id="menuScrim" hidden></div>
   <header class="top">
-    <div class="brand"><svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="fsG1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#635BFF"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#fsG1)"/><g fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="3.4" stroke-linecap="round"><path d="M10.39 24.13A23 23 0 0 1 49.09 16.61"/><path d="M53.61 39.87A23 23 0 0 1 14.91 47.39"/></g><g fill="#fff" fill-opacity=".9"><path d="M51.17 19.94L46.10 18.92L51.65 14.08Z"/><path d="M12.83 44.06L17.90 45.08L12.35 49.92Z"/></g><path d="M24 19h16a5 5 0 0 1 5 5v11a5 5 0 0 1-5 5H30l-6 5v-5a5 5 0 0 1-5-5V24a5 5 0 0 1 5-5z" fill="#fff"/><g fill="#5B5CF6"><circle cx="32" cy="25.2" r="1.5"/><path d="M25 33.6a7 7 0 0 1 14 0z"/><rect x="23.3" y="34.3" width="17.4" height="2.3" rx="1.15"/></g></svg><div class="bt">FrankShift<small id="hotelName" data-noi18n>—</small><select id="hotelSel" aria-label="Switch hotel" hidden></select></div></div>
+    <button class="menubtn fbtn" id="menuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="tabs" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h9"/></svg><span class="mcnt" id="menuCnt" data-noi18n></span></button>
+    <div class="brand"><button type="button" class="ctr fbtn" id="ctrBtn" aria-label="Where you are"></button><svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="fsG1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#635BFF"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#fsG1)"/><g fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="3.4" stroke-linecap="round"><path d="M10.39 24.13A23 23 0 0 1 49.09 16.61"/><path d="M53.61 39.87A23 23 0 0 1 14.91 47.39"/></g><g fill="#fff" fill-opacity=".9"><path d="M51.17 19.94L46.10 18.92L51.65 14.08Z"/><path d="M12.83 44.06L17.90 45.08L12.35 49.92Z"/></g><path d="M24 19h16a5 5 0 0 1 5 5v11a5 5 0 0 1-5 5H30l-6 5v-5a5 5 0 0 1-5-5V24a5 5 0 0 1 5-5z" fill="#fff"/><g fill="#5B5CF6"><circle cx="32" cy="25.2" r="1.5"/><path d="M25 33.6a7 7 0 0 1 14 0z"/><rect x="23.3" y="34.3" width="17.4" height="2.3" rx="1.15"/></g></svg><div class="bt">FrankShift<span class="mcur" id="menuCur" data-noi18n>Chat</span><span class="mdot" aria-hidden="true"></span><small id="hotelName" data-noi18n>—</small><select id="hotelSel" aria-label="Switch hotel" hidden></select></div></div>
     <div class="spacer"></div>
     <button class="who" id="whoBtn" aria-label="Your account"><span class="av" id="whoAv"></span><span id="whoName"></span><span class="offtag" id="whoOff" hidden>Off shift</span></button>
     <button class="iconbtn" id="soundBtn" aria-label="Sound on" title="Sound for new orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path id="soundWave" d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg></button>
     <button class="iconbtn" id="roomsBtn" aria-label="Search a room" title="Search a room"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
   </header>
   <div class="ticker" id="ticker" aria-label="Date and time" data-noi18n><div class="tk-track"><span class="tk-i"><b class="tk-d"></b><i></i><b class="tk-t"></b><i></i><span class="tk-s"></span><i></i></span><span class="tk-i"><b class="tk-d"></b><i></i><b class="tk-t"></b><i></i><span class="tk-s"></span><i></i></span><span class="tk-i"><b class="tk-d"></b><i></i><b class="tk-t"></b><i></i><span class="tk-s"></span><i></i></span><span class="tk-i"><b class="tk-d"></b><i></i><b class="tk-t"></b><i></i><span class="tk-s"></span><i></i></span></div></div>
-  <nav class="tabs" role="tablist" id="tabs">
+  <nav class="tabs" role="tablist" id="tabs" data-title="Menu">
     <button role="tab" data-tab="chat" aria-selected="true"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span class="tl">Chat</span></button>
     <button role="tab" data-tab="passon" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"/></svg><span class="cnt" id="poCnt"></span></span><span class="tl">Pass-on</span></button>
     <button role="tab" data-tab="orders" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8M13 12h8M13 18h8"/></svg><span class="cnt" id="tabCnt"></span></span><span class="tl">Orders</span></button>
@@ -3555,6 +3596,7 @@ function setTab(t){
   if (t === 'passon') { loadPassons(); markRead(); }
   if (t === 'team') loadTeam();
   if (t === 'chat') { $('#feed').scrollTop = $('#feed').scrollHeight; markRead(); }
+  menuSync(); menuOpen(false);
 }
 document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => setTab(b.dataset.tab));
 function setKind(k){
@@ -3901,8 +3943,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.2.1';
+const APP_VERSION = '1.2.2';
 const CHANGES = [
+  {v: '1.2.2', d: '2026-11-11', en: ['New top bar with three round buttons: Menu on the left, FrankShift in the middle, your profile on the right', 'The Menu opens Chat, Pass-on, Orders, Map and Manager, plus room search and sound', 'Under the logo you see where you are and your hotel; the Menu shows a red count when something waits'],
+    es: ['Barra de arriba nueva con tres botones redondos: Menú a la izquierda, FrankShift al centro y tu perfil a la derecha', 'El Menú abre Chat, Pass-on, Órdenes, Mapa y Gerente, más buscar habitación y el sonido', 'Debajo del logo ves dónde estás y tu hotel; el Menú muestra un número rojo cuando algo espera']},
   {v: '1.2.1', d: '2026-11-11', en: ['FrankShift has its own address: frankshift.app', 'The old link shows a notice with steps to move to frankshift.app'],
     es: ['FrankShift tiene su propia dirección: frankshift.app', 'El link viejo muestra un aviso con los pasos para pasar a frankshift.app']},
   {v: '1.2.0', d: '2026-11-10', en: ['First sign-in uses a one-time 6-digit start code from the manager instead of 0000', 'Managers make start codes one by one or for everyone not active yet, to send or print', 'Locks get longer after repeated wrong PINs, and managers get an alert', 'Too many wrong tries from one connection pause sign-in for 15 minutes', 'PINs that are easy to guess, like 1234 or 1111, are not allowed', 'The sign-in list shows only the first letter of the last name'],
@@ -3984,6 +4028,43 @@ function moveNotice(){
 }
 moveNotice();
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') moveNotice(); });
+
+/* ===== v1.2.2: Menu with every tab, room search and sound ===== */
+(function moveTools(){
+  const box = document.createElement('div'); box.className = 'mtools'; box.setAttribute('role', 'group');
+  [['roomsBtn', 'Search a room', 'Buscar habitación'], ['soundBtn', 'Sound for new orders', 'Sonido de órdenes nuevas']].forEach(([id, en, es]) => {
+    const b = $('#' + id); if (!b) return;
+    const ic = document.createElement('span'); ic.className = 'tic'; while (b.firstChild) ic.appendChild(b.firstChild);
+    const tl = document.createElement('span'); tl.className = 'tl'; tl.setAttribute('data-noi18n', ''); tl.textContent = L2(en, es);
+    b.append(ic, tl); b.removeAttribute('title'); box.appendChild(b);
+  });
+  $('#tabs').appendChild(box);
+  $('#roomsBtn').addEventListener('click', () => menuOpen(false));
+})();
+function menuOpen(on){
+  const app = $('#app'); if (!app) return;
+  app.classList.toggle('menu-open', !!on); $('#menuScrim').hidden = !on;
+  $('#menuBtn').setAttribute('aria-expanded', on ? 'true' : 'false');
+  $('#tabs').dataset.title = L2('Menu', 'Menú');
+  if (on) { const b = document.querySelector('#tabs button[data-tab][aria-selected="true"]'); if (b) b.focus(); }
+}
+function menuSync(){
+  const sel = document.querySelector('#tabs button[data-tab][aria-selected="true"]');
+  $('#menuCur').textContent = S.tab === 'rooms' ? L2('Rooms', 'Habitaciones') : sel ? (sel.querySelector('.tl') || sel).textContent.trim() : '';
+  const src = (S.tab === 'rooms' ? $('#roomsBtn') : sel || document.querySelector('#tabs button[data-tab]'))?.querySelector('svg');
+  const key = S.tab || 'chat', c = $('#ctrBtn');
+  if (src && c.dataset.k !== key) { c.dataset.k = key; c.innerHTML = ''; const g = src.cloneNode(true); g.removeAttribute('id'); g.querySelectorAll('[id]').forEach(x => x.removeAttribute('id')); g.style.display = ''; c.appendChild(g); }
+  c.setAttribute('aria-label', L2('You are in ', 'Estás en ') + $('#menuCur').textContent + '. ' + L2('Open the menu', 'Abrir el menú'));
+  let n = 0; document.querySelectorAll('#tabs button[data-tab]:not([hidden]) .cnt').forEach(c => { n += parseInt(c.textContent, 10) || 0; });
+  $('#menuCnt').textContent = n ? (n > 99 ? '99+' : String(n)) : '';
+  $('#menuBtn').setAttribute('aria-label', L2('Menu', 'Menú') + (n ? ' (' + n + ')' : ''));
+}
+$('#menuBtn').onclick = () => menuOpen(!$('#app').classList.contains('menu-open'));
+$('#ctrBtn').onclick = () => menuOpen(!$('#app').classList.contains('menu-open'));
+$('#menuScrim').onclick = () => menuOpen(false);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#app').classList.contains('menu-open')) { menuOpen(false); $('#menuBtn').focus(); } });
+new MutationObserver(menuSync).observe($('#tabs'), {subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['hidden', 'aria-selected']});
+menuSync();
 
 /* ===== v1.2: one-time start codes ===== */
 const untilTxt = u => new Date(u).toLocaleString(LANG === 'es' ? 'es-US' : 'en-US', {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit', timeZone: TZ});
