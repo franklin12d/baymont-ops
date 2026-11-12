@@ -290,6 +290,13 @@ body{margin:0}
 .pill.warn{background:var(--urgent-soft);color:var(--urgent);border-color:transparent}
 .pill.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
 .pill.prog{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.gpill{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:999px;background:#D6249F;color:#fff;font-weight:800;font-size:11.5px;letter-spacing:.02em;white-space:nowrap;margin-left:4px}
+.gpill::before{content:"\2605"}
+.order.guest{box-shadow:inset 4px 0 0 #D6249F,0 0 0 2px color-mix(in srgb,#D6249F 55%,transparent),var(--shadow)}
+.urgrow{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-bottom:12px;font-weight:600}
+.urgrow label{display:flex;gap:8px;align-items:center}
+.gchk{color:#D6249F;font-weight:700}
+.enchks{display:flex;flex-wrap:wrap;gap:8px 16px}
 .pill.paused{background:color-mix(in srgb,#F59E0B 18%,transparent);color:inherit;border-color:transparent}
 .pill.paused::before{content:"\23F8\FE0E  "}
 .order.paused{opacity:.82}
@@ -1623,6 +1630,7 @@ const ES = {
 "Assign to": "Asignar a",
 "More actions": "Más acciones",
 "Urgent": "Urgente",
+"Requested By Guest": "Pedido por huésped",
 "URGENT ·": "URGENTE ·",
 "in progress": "en proceso",
 "open": "abierta",
@@ -2309,6 +2317,7 @@ function summaryFor(o, firstName){
 const isLater = o => !!(o.scheduled_for && o.scheduled_for > Date.now() && o.status === 'open');
 const startAt = o => Math.max(o.created_at || 0, o.scheduled_for || 0);
 // 1.11: Pause Task. A paused order stays in progress with waiting = true; its paused time does not count
+const gTag = o => o && o.guest ? `<span class="gpill">${esc(L2('Requested By Guest', 'Pedido por huésped'))}</span>` : '';
 const isPaused = o => !!(o && o.status === 'in_progress' && o.waiting);
 const pausedMs = (o, at) => { const p = o.paused_at ? (typeof o.paused_at === 'number' ? o.paused_at : T(o.paused_at)) : null;
   return (+o.paused_s || 0) * 1000 + (p ? Math.max(0, (at || Date.now()) - p) : 0); };
@@ -2316,7 +2325,7 @@ const workMs = (o, end, from) => Math.max(0, (end || Date.now()) - (from != null
 const fmtWhen = ms => fmtDate(ms) + ' ' + fmtTime(ms);
 function prioOf(o){
   const ageMin = workMs(o) / 60000;
-  const score = o.base_priority + Math.floor(ageMin / 15);
+  const score = o.base_priority + Math.floor(ageMin / 15) + (o.guest ? 2 : 0);
   return {score, level: score >= 4 ? 'urgent' : score >= 2 ? 'high' : 'normal'};
 }
 
@@ -2646,10 +2655,10 @@ function orderCard(o, p, x){
   acts.push(`<button class="done" data-act="done" data-id="${o.id}">Done</button>`);
   if (x && x.map) acts.push(`<button data-engmap="${o.id}" data-noi18n>🗺 ${esc(L2('Map', 'Mapa'))}</button>`);
   acts.push(`<button data-act="more" data-id="${o.id}" aria-label="More actions">•••</button>`);
-  return `<div class="order p-${p.level}${isPaused(o) ? ' paused' : ''}" data-id="${o.id}">
+  return `<div class="order p-${p.level}${isPaused(o) ? ' paused' : ''}${o.guest ? ' guest' : ''}" data-id="${o.id}">
     ${(pl => !o.room && stRooms(o) ? `<button class="fob" style="border:0" title="${esc(stRooms(o).join(', '))}"><small>ROOMS</small>${stRooms(o).length}</button>` : pl && !o.room ? `<button class="fob place" style="border:0"><small>AREA</small>${esc(pl.label)}</button>` : `<button class="fob ${o.room ? '' : 'none'}" ${o.room ? `data-room="${esc(o.room)}"` : ''} style="border:0"><small>ROOM</small>${esc(o.room || 'n/a')}</button>`)(placeOf(o) || (!o.room && o.map_zone ? {label: o.map_zone} : null))}
     <div style="min-width:0">
-      <div class="ohead"><span class="ticket">${esc(o.ticket)}</span><span class="prio ${p.level}">${p.level}</span>${st}${x && x.cat ? `<span class="cat" data-noi18n>${esc(x.cat)}</span>` : `<span class="cat">${esc(CATS[o.category])}</span>`}<span class="age">${lt ? '' : ago(Date.now() - workMs(o))}</span></div>
+      <div class="ohead"><span class="ticket">${esc(o.ticket)}</span><span class="prio ${p.level}">${p.level}</span>${gTag(o)}${st}${x && x.cat ? `<span class="cat" data-noi18n>${esc(x.cat)}</span>` : `<span class="cat">${esc(CATS[o.category])}</span>`}<span class="age">${lt ? '' : ago(Date.now() - workMs(o))}</span></div>
       <div class="osum">${sum}</div>
       ${quote ? `<div class="oquote">${quote}</div>` : ''}
       ${o.assigned_name ? `<div class="assigned">Assigned to ${esc(o.assigned_name)}</div>` : ''}
@@ -2801,9 +2810,9 @@ async function refresh(){
       if (!S.firstLoad) {
         const lt = isLater(o);
         if (S.knownLater.has(o.id) && !lt && o.status === 'open') { const u = prioOf(o).level === 'urgent';
-          if (orderForMe(o, u) || o.created_by === S.me.id) { toast(`<b>${u ? 'URGENT · ' : ''}Scheduled order due · ${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = pickSound(newSound, o, u); } }
+          if (orderForMe(o, u) || o.created_by === S.me.id) { toast(`<b>${u ? 'URGENT · ' : ''}${o.guest ? L2('GUEST · ', 'HUÉSPED · ') : ''}Scheduled order due · ${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = pickSound(newSound, o, u); } }
         if (prev === undefined && o.status === 'open' && !lt && o.created_by !== S.me.id) { const u = prioOf(o).level === 'urgent';
-          if (orderForMe(o, u)) { toast(`<b>${u ? 'URGENT · ' : ''}${o.category === 'maintenance' ? '🔧 ' : ''}${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = pickSound(newSound, o, u); } }
+          if (orderForMe(o, u)) { toast(`<b>${u ? 'URGENT · ' : ''}${o.guest ? L2('GUEST · ', 'HUÉSPED · ') : ''}${o.category === 'maintenance' ? '🔧 ' : ''}${esc(o.ticket)}</b> ${esc(o.summary)}`, u ? 'new urgent' : 'new'); newSound = pickSound(newSound, o, u); } }
         const pa = S.knownAsg.get(o.id);
         if (prev !== undefined && prev === o.status && pa !== S.me.id && o.assigned_to === S.me.id && (o.status === 'open' || o.status === 'in_progress') && !isLater(o)) {
           const u = prioOf(o).level === 'urgent';
@@ -3030,7 +3039,7 @@ function orderDetail(id, fromCal){
   const stCls = stClass(o);
   const row = (k, v, raw) => v ? `<dt>${k}</dt><dd${raw ? ' data-noi18n' : ''}>${v}</dd>` : '';
   const what = o.items && o.items.length ? o.items.map(i => i.issue || String(i.label)).join(', ') : '';
-  openModal(`<div class="ohead"><span class="ticket">${esc(o.ticket)}</span>${open ? `<span class="prio ${p.level}">${p.level}</span>` : ''}<span class="pill ${stCls}" data-noi18n>${stTxt}</span><span class="cat">${esc(CATS[o.category] || '')}</span></div>
+  openModal(`<div class="ohead"><span class="ticket">${esc(o.ticket)}</span>${open ? `<span class="prio ${p.level}">${p.level}</span>` : ''}${gTag(o)}<span class="pill ${stCls}" data-noi18n>${stTxt}</span><span class="cat">${esc(CATS[o.category] || '')}</span></div>
     <h2 class="odsum">${esc(o.summary)}</h2>
     ${quote ? `<p class="odq" data-noi18n>${src ? '“' + esc(quote) + '”' : esc(quote)}</p>` : ''}
     <dl>
@@ -3092,14 +3101,14 @@ function editOrder(id){
     <div class="grid2"><div class="field"><label for="edCat">Department</label><select id="edCat">${opt('housekeeping', 'Housekeeping')}${opt('maintenance', 'Maintenance')}${opt('frontdesk', 'Front desk')}</select></div>
     <div class="field"><label for="edRoom">Room</label><input id="edRoom" inputmode="numeric" maxlength="6"></div></div>
     <div class="field"><label for="edDet">What needs to be done</label><textarea id="edDet" maxlength="500" rows="4"></textarea></div>
-    <label style="display:flex;gap:8px;align-items:center;margin-bottom:12px;font-weight:600"><input type="checkbox" id="edUrg"> Urgent</label>
+    <div class="urgrow"><label><input type="checkbox" id="edUrg"> Urgent</label><label class="gchk"><input type="checkbox" id="edGuest"> Requested By Guest</label></div>
     <div class="err" id="edErr"></div>
     <div class="btnrow"><button class="btn pri" id="edSave">Save changes</button><button class="btn" data-close>Cancel</button></div>`);
-  $('#edRoom').value = o.room || ''; $('#edDet').value = o.details || o.summary || ''; $('#edUrg').checked = o.base_priority >= 4;
+  $('#edRoom').value = o.room || ''; $('#edDet').value = o.details || o.summary || ''; $('#edUrg').checked = o.base_priority >= 4; $('#edGuest').checked = !!o.guest;
   $('#edSave').onclick = async () => {
     const b = $('#edSave'); b.disabled = true;
     try {
-      const r = await call('sc_order_edit', {p_order: id, p_category: $('#edCat').value, p_room: $('#edRoom').value, p_details: $('#edDet').value, p_urgent: $('#edUrg').checked});
+      const r = await call('sc_order_edit', {p_order: id, p_category: $('#edCat').value, p_room: $('#edRoom').value, p_details: $('#edDet').value, p_urgent: $('#edUrg').checked, p_guest: $('#edGuest').checked});
       closeModal();
       if (r.changed) {
         fetch(API + '/functions/v1/notify', { method: 'POST', headers: {'Content-Type': 'application/json', apikey: KEY}, body: JSON.stringify({token: S.token, edited_order: id}) }).catch(() => {});
@@ -3238,7 +3247,7 @@ function newOrder(day){
       <div class="grid2" id="noLater" hidden><div class="field"><label for="noDate">Day</label><input type="date" id="noDate"></div>
       <div class="field"><label for="noTime">Time (optional)</label><input type="time" id="noTime"></div></div>
       <div class="small" id="noLaterHint" hidden>If you leave the time empty, it goes out at 7 AM. The department gets the alert then.</div></div>
-    <label style="display:flex;gap:8px;align-items:center;margin-bottom:12px;font-weight:600"><input type="checkbox" id="noUrg"> Urgent</label>
+    <div class="urgrow"><label><input type="checkbox" id="noUrg"> Urgent</label><label class="gchk"><input type="checkbox" id="noGuest"> Requested By Guest</label></div>
     <div class="err" id="noErr"></div>
     <div class="btnrow"><button class="btn pri" id="noSave">Create order</button><button class="btn" data-close>Cancel</button></div>`);
   // day and time are the hotel's (New York), whatever clock the phone has
@@ -3262,7 +3271,7 @@ function newOrder(day){
       if (!(ms > Date.now() + 60000)) { $('#noErr').textContent = tr('Pick a day and time later than now.'); return; }
       at = new Date(ms).toISOString();
     }
-    try { const r = await call('sc_order_new', Object.assign({p_category: $('#noCat').value, p_room: $('#noRoom').value, p_details: $('#noDet').value, p_urgent: $('#noUrg').checked}, at ? {p_when: at} : {}));
+    try { const r = await call('sc_order_new', Object.assign({p_category: $('#noCat').value, p_room: $('#noRoom').value, p_details: $('#noDet').value, p_urgent: $('#noUrg').checked, p_guest: $('#noGuest').checked}, at ? {p_when: at} : {}));
       closeModal(); S.known.set(r.order_id, 'open');
       if (r.scheduled_for) { S.knownLater.add(r.order_id); toast(`<b>Scheduled for ${esc(fmtWhen(T(r.scheduled_for)))}</b> The department gets the alert then.`); }
       else notify([r.order_id]);
@@ -4208,7 +4217,7 @@ function dashRender(){
     : `<div class="dnone">${L2('Nothing completed in these days.', 'Nada completado en estos días.')}</div>`;
   // open table
   const st = o => isPaused(o) ? `<span class="pill paused">${L2('Paused', 'En pausa')}</span>${o.assigned_name ? ' ' + esc(o.assigned_name) : ''}` : o.status === 'in_progress' ? `<span class="pill prog">${L2('In progress', 'En proceso')}</span>${o.assigned_name ? ' ' + esc(o.assigned_name) : ''}` : `<span class="pill">${L2('Waiting', 'En espera')}</span>`;
-  const rows = open.slice(0, 60).map(({o, p}) => `<tr data-oid="${esc(o.id)}" tabindex="0"><td><span class="prio ${p.level}">${p.level === 'urgent' ? L2('Urgent', 'Urgente') : p.level === 'high' ? L2('High', 'Alta') : L2('Normal', 'Normal')}</span></td>
+  const rows = open.slice(0, 60).map(({o, p}) => `<tr data-oid="${esc(o.id)}" tabindex="0"><td><span class="prio ${p.level}">${p.level === 'urgent' ? L2('Urgent', 'Urgente') : p.level === 'high' ? L2('High', 'Alta') : L2('Normal', 'Normal')}</span>${gTag(o)}</td>
       <td><b>${esc(o.ticket)}</b></td><td>${o.room ? esc(o.room) : stRooms(o) ? esc(stRooms(o).join(', ')) : esc(placeOf(o) ? placeOf(o).label : o.map_zone || '—')}</td><td>${ICON[o.category] || ''} ${esc(CATL[o.category] || '')}</td>
       <td class="dsum">${esc(o.summary)}</td><td>${durTxt(workMs(o))}</td><td>${st(o)}</td></tr>`).join('');
   const table = open.length ? `<div class="dtwrap"><table class="dtable"><thead><tr><th>${L2('Priority', 'Prioridad')}</th><th>${L2('Ticket', 'Ticket')}</th><th>${L2('Room', 'Hab.')}</th><th>${L2('Department', 'Departamento')}</th><th>${L2('Request', 'Pedido')}</th><th>${L2('Open for', 'Abierta hace')}</th><th>${L2('Status', 'Estado')}</th></tr></thead><tbody>${rows}</tbody></table></div>`
@@ -4319,8 +4328,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.11.0';
+const APP_VERSION = '1.12.0';
 const CHANGES = [
+  {v: '1.12.0', d: '2026-11-12', en: ['New Requested By Guest next to Urgent when you create or edit an order, here and in Engineer', 'Guest requests show a bright pink tag and border and rank two levels higher, so they rise to the top of the list. Urgent and guest together go first of all', 'The tag also shows in the order detail, Engineer, the dashboard and the alert'],
+    es: ['Nuevo Pedido por huésped junto a Urgente al crear o editar una orden, aquí y en Engineer', 'Los pedidos de huéspedes llevan una etiqueta y un borde rosa fuerte y suben dos niveles de prioridad, así quedan arriba en la lista. Urgente y de huésped juntos van primero que todo', 'La etiqueta también sale en el detalle de la orden, Engineer, el tablero y el aviso']},
   {v: '1.11.0', d: '2026-11-12', en: ['Orders and maintenance orders: after I’m on it, a Pause Task button appears', 'A paused order stays in the pending list, marked Paused, and its time stops counting (age, priority and how long it took). Resume picks it back up', 'Pausing in the app shows the order as On hold on the maps, and the other way around'],
     es: ['Órdenes y órdenes de mantenimiento: después de Voy aparece el botón Pausar tarea', 'Una orden en pausa sigue en pendientes, marcada En pausa, y su tiempo deja de contar (tiempo abierta, prioridad y cuánto tardó). Reanudar la retoma', 'Pausar en la app muestra la orden En espera en los mapas, y al revés']},
   {v: '1.10.1', d: '2026-11-12', en: ['HK Game Plan: the housekeeper list opens in the app’s own picker, like the hotel picker, with a check on the one chosen and the line number of anyone already on another line', 'Shift Supervisor, Shift Inspector and Houseman use the same picker', 'The × that removes a line is now at the start of the line'],
@@ -4725,7 +4736,7 @@ function engRow(o){
   const when = o.done_at || o.created_at;
   const what = o.details || String(o.summary || '').replace(/^[^:]{1,40}:\s*/, '');
   return `<div class="li engrow" data-noi18n role="button" tabindex="0" data-id="${o.id}"><span class="engst ${st[0]}" aria-hidden="true">${st[1]}</span><div class="grow">
-    <div class="t1"><span class="engwhere">${esc(engWhere(o))}</span> · ${esc(engCatLabel(engCatOf(o)))}</div>
+    <div class="t1"><span class="engwhere">${esc(engWhere(o))}</span> · ${esc(engCatLabel(engCatOf(o)))}${gTag(o)}</div>
     ${what ? `<div class="engwhat">${esc(what)}</div>` : ''}
     <div class="t2">${esc(st[2])}${who ? ' · ' + esc(who) : ''} · ${esc(fmtDate(when))} ${esc(fmtTime(when))}${mins != null ? ' · ' + esc(L2('took ', 'tardó ') + durTxt(mins * 60000)) : ''} · <span class="engtk">${esc(o.ticket)}</span></div>
   </div></div>`;
@@ -4851,7 +4862,7 @@ function engNew(){
     <div class="field"><label>${esc(L2('Problem', 'Problema'))}</label><div class="filters encats" role="group">${ENG_CATS.map(c => `<button type="button" data-ec="${esc(c[0])}" aria-pressed="false">${esc(c[2] + ' ' + engCatName(c[0]))}</button>`).join('')}</div></div>
     <div class="field"><label for="enDet">${esc(L2('What is wrong (optional)', 'Qué pasa (opcional)'))}</label><textarea id="enDet" maxlength="500"></textarea></div>
     <div class="field"><label for="enAsg">${esc(L2('Assign to (optional)', 'Asignar a (opcional)'))}</label><select id="enAsg"><option value="">${esc(L2('Nobody yet: alert the team', 'Nadie todavía: avisar al equipo'))}</option>${eng.length ? `<optgroup label="${esc(L2('Maintenance', 'Mantenimiento'))}">${eng.map(opt).join('')}</optgroup>` : ''}${rest.length ? `<optgroup label="${esc(L2('Others', 'Otros'))}">${rest.map(opt).join('')}</optgroup>` : ''}</select></div>
-    <div class="enrow"><label class="enchk"><input type="checkbox" id="enUrg"> ${esc(L2('Urgent', 'Urgente'))}</label><label class="btn sm enph">📷 <span id="enPhT">${esc(L2('Photo', 'Foto'))}</span><input type="file" id="enPhoto" accept="image/*" capture="environment" hidden></label></div>
+    <div class="enrow"><span class="enchks"><label class="enchk"><input type="checkbox" id="enUrg"> ${esc(L2('Urgent', 'Urgente'))}</label><label class="enchk gchk"><input type="checkbox" id="enGuest"> ${esc(L2('Requested By Guest', 'Pedido por huésped'))}</label></span><label class="btn sm enph">📷 <span id="enPhT">${esc(L2('Photo', 'Foto'))}</span><input type="file" id="enPhoto" accept="image/*" capture="environment" hidden></label></div>
     <div class="err" id="enErr"></div>
     <div class="btnrow"><button class="btn pri" id="enSave">${esc(L2('Create order', 'Crear orden'))}</button><button class="btn" data-close>${esc(L2('Cancel', 'Cancelar'))}</button></div></div>`);
   let where = 'room', cat = '';
@@ -4869,7 +4880,7 @@ function engNew(){
     if (cat === 'Otro' && !det) { err.textContent = L2('Say what is wrong.', 'Di qué pasa.'); return; }
     const btn = $('#enSave'); btn.disabled = true; err.textContent = '';
     try {
-      const r = await call('sc_eng_new', {p_room: where === 'room' ? room : null, p_place: where === 'area' ? area : null, p_cat: cat, p_details: det, p_urgent: $('#enUrg').checked, p_assignee: $('#enAsg').value || null});
+      const r = await call('sc_eng_new', {p_room: where === 'room' ? room : null, p_place: where === 'area' ? area : null, p_cat: cat, p_details: det, p_urgent: $('#enUrg').checked, p_guest: $('#enGuest').checked, p_assignee: $('#enAsg').value || null});
       const f = $('#enPhoto').files[0];
       if (f) { try { await call('sc_photo_add', {p_order: r.order_id, p_data: await shrink(f, 1100, .72)}); } catch (e) { toast(esc(L2('Photo not saved: ', 'La foto no se guardó: ') + e.message)); } }
       S.known.set(r.order_id, 'open'); closeModal(); notify([r.order_id]);
