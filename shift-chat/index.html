@@ -931,7 +931,6 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .hkpeople{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
 .hkp{display:flex;flex-direction:column;gap:4px;min-width:0}
 .hkp span{font-size:12px;font-weight:600;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hkp select{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 8px;font-size:15px;width:100%;min-width:0;color:var(--ink)}
 .hkp b{font-size:15px;color:var(--ink)}
 .hkheads{grid-template-columns:repeat(5,1fr)}
 .hkbig{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -951,8 +950,14 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .hktab td.hkname{text-align:left;min-width:150px;position:sticky;left:0;background:var(--surface);z-index:1}
 .hktab th.hkname{position:sticky;left:0;background:var(--surface);z-index:1}
 .hktab td.hkname b{white-space:nowrap}
-.hktab select{width:100%;min-width:140px;border:1px solid var(--line);background:var(--ok-soft);color:var(--ok);border-radius:999px;padding:7px 10px;font:600 14px var(--f-body)}
-.hktab select.empty{background:var(--urgent-soft);color:var(--urgent)}
+.hkpb{display:flex;align-items:center;gap:6px;width:100%;min-width:140px;min-height:38px;border:1px solid transparent;background:var(--ok-soft);color:var(--ok);border-radius:999px;padding:6px 10px 6px 12px;font:600 14px var(--f-body);text-align:left;cursor:pointer}
+.hkpb span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hkpb svg{width:16px;height:16px;flex:none;opacity:.8}
+.hkpb.empty{background:var(--urgent-soft);color:var(--urgent)}
+.hkpb.hkhp{background:var(--surface-2);color:var(--ink);border-color:var(--line);border-radius:10px;min-width:0;min-height:40px}
+.hkpb.hkhp.empty{color:var(--ink-3)}
+.hkpk{max-height:min(70vh,560px);overflow-y:auto}
+.hkpk .hkused{flex:none;font:600 11.5px var(--f-body);color:var(--ink-3);background:var(--surface-2);border-radius:999px;padding:2px 8px}
 .hknm{display:flex;gap:4px}
 .hknm input{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:7px 8px;font-size:16px;color:var(--ink)}
 .hklist{flex:none;width:34px;border:0;border-radius:10px;background:var(--surface-2);color:var(--ink-3);cursor:pointer}
@@ -965,7 +970,7 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .hktab td.hkout b{font-size:15px}
 .hktab td.hkout b.hkot{color:var(--urgent)}
 .hktab td.hkmpr{width:70px;white-space:nowrap;font-size:13px;color:var(--ink-2)}
-.hktab td.hkx{width:40px}
+.hktab td.hkx,.hktab th:first-child{width:40px}
 .hktab .hkdel{width:34px;height:34px;border:0;border-radius:8px;background:var(--surface-2);color:var(--ink-3);font-size:20px;line-height:1;cursor:pointer}
 @media (max-width:560px){.hkheads{grid-template-columns:repeat(3,1fr)}.hkpeople{grid-template-columns:1fr 1fr}.hkpeople .hkp:first-child{grid-column:1/-1}}
 .mpform{margin-top:12px}
@@ -4295,8 +4300,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.10.0';
+const APP_VERSION = '1.10.1';
 const CHANGES = [
+  {v: '1.10.1', d: '2026-11-12', en: ['HK Game Plan: the housekeeper list opens in the app’s own picker, like the hotel picker, with a check on the one chosen and the line number of anyone already on another line', 'Shift Supervisor, Shift Inspector and Houseman use the same picker', 'The × that removes a line is now at the start of the line'],
+    es: ['HK Game Plan: la lista de camareras abre en el selector propio de la app, como el de hoteles, con check en la elegida y el número de línea de quien ya está en otra', 'Shift Supervisor, Shift Inspector y Houseman usan el mismo selector', 'La × para quitar una línea ahora está al inicio de la línea']},
   {v: '1.10.0', d: '2026-11-12', en: ['HK Game Plan now looks like the HK Productivity Chart: one row per room attendant, picked from a dropdown with the hotel’s housekeepers, with check-outs, stayovers, clock-in, estimated clock-out and minutes per room side by side', 'Top of the plan: Shift Supervisor, Shift Inspector and Houseman dropdowns; Arrivals, Departures, Stayovers, DND and Rooms to Strip; Room to Assign and Left to Assign worked out', 'Add all housekeepers in one tap, or type a name for someone without a user. Totals row at the bottom'],
     es: ['HK Game Plan ahora se ve como el HK Productivity Chart: una fila por camarera, elegida de un dropdown con las camareras del hotel, con check-outs, stayovers, entrada, salida aprox. y minutos por habitación lado a lado', 'Arriba: dropdowns de Shift Supervisor, Shift Inspector y Houseman; Arrivals, Departures, Stayovers, DND y Rooms to Strip; Room to Assign y Left to Assign calculados', 'Agrega todas las camareras con un toque, o escribe el nombre de alguien sin usuario. Fila de totales abajo']},
   {v: '1.9.0', d: '2026-11-12', en: ['New HK Game Plan in the Menu: the day’s arrivals, check-outs, stayovers and DND, and one line per room attendant with check-outs, stayovers and clock-in', 'The app works out each attendant’s minutes (27 per check-out, 15 per stayover) and the estimated clock-out with the 30-minute break, plus what is left to assign and the day’s totals', 'Everyone in the hotel can see it; managers and housekeeping can change and save it. Past days stay to look back on'],
@@ -5301,24 +5308,19 @@ const hkAtt = () => (HKD && HKD.attendants) || [];
 const hkTeam = () => (HKD && HKD.team) || hkAtt();
 // the attendant's name: a dropdown with the hotel's housekeepers, or a typed name for someone without a user
 function hkNameCell(r, i){
-  const list = hkAtt(), has = list.some(a => a.name === r.name);
   if (r.other) return `<div class="hknm"><input data-f="name" maxlength="80" autocomplete="off" value="${esc(r.name)}" placeholder="${esc(L2('Type the name', 'Escribe el nombre'))}" aria-label="${esc(L2('Name', 'Nombre'))}">
     <button type="button" class="hklist" data-hklist="${i}" aria-label="${esc(L2('Back to the list', 'Volver a la lista'))}">▾</button></div>`;
-  return `<select data-f="pick" aria-label="${esc(L2('Room attendant', 'Camarera'))}"${!r.name ? ' class="empty"' : ''}>
-    <option value="">${L2('Empty', 'Vacío')}</option>
-    ${list.map(a => `<option value="${esc(a.id)}"${a.name === r.name ? ' selected' : ''}>${esc(a.name)}</option>`).join('')}
-    ${r.name && !has ? `<option value="__keep" selected>${esc(r.name)}</option>` : ''}
-    <option value="__other">${L2('Other name…', 'Otro nombre…')}</option></select>`;
+  return `<button type="button" class="hkpb${r.name ? '' : ' empty'}" data-hkpick="${i}" aria-haspopup="dialog" aria-label="${esc(L2('Room attendant', 'Camarera') + ': ' + (r.name || L2('Empty', 'Vacío')))}"><span>${esc(r.name || L2('Empty', 'Vacío'))}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`;
 }
 function hkRowHtml(r, i, edit){
   const num = (f, v) => edit ? `<input type="number" inputmode="numeric" min="0" max="40" data-f="${f}" value="${v || ''}" placeholder="0" aria-label="${f === 'co' ? 'Check-outs' : 'Stayovers'}">` : `<b>${v || 0}</b>`;
   return `<tr class="hkrow${hkInt(r.co) + hkInt(r.so) ? '' : ' none'}" data-i="${i}">
-    <td class="hkn">${i + 1}</td>
+    ${edit ? `<td class="hkx"><button type="button" class="hkdel" data-hkdel="${i}" aria-label="${esc(L2('Remove', 'Quitar') + ' ' + (r.name || ''))}">×</button></td>` : ''}<td class="hkn">${i + 1}</td>
     <td class="hkname">${edit ? hkNameCell(r, i) : `<b>${esc(r.name)}</b>`}</td>
     <td class="hkco">${num('co', r.co)}</td><td class="hkso">${num('so', r.so)}</td>
     <td class="hkin">${edit ? `<input type="time" data-f="cin" value="${esc(r.cin)}" aria-label="${esc(L2('Clock-in', 'Entrada'))}">` : (r.cin ? esc(hkClock(hkMin(r.cin))) : '—')}</td>
     <td class="hkout" data-out="${i}"></td><td class="hkmpr" data-mpr="${i}"></td>
-    ${edit ? `<td class="hkx"><button type="button" class="hkdel" data-hkdel="${i}" aria-label="${esc(L2('Remove', 'Quitar'))}">×</button></td>` : ''}</tr>`;
+</tr>`;
 }
 function hkOutHtml(r){
   const c = hkCalc(r);
@@ -5330,9 +5332,7 @@ function hkMprHtml(r){ const c = hkCalc(r); return c.rooms ? `${Math.round(c.wor
 function hkPick(k, label, edit, list){
   const v = HKF[k] || '';
   if (!edit) return `<div class="hkp"><span>${label}</span><b>${v ? esc(v) : '—'}</b></div>`;
-  const has = list.some(a => a.name === v);
-  return `<label class="hkp"><span>${label}</span><select data-hp="${k}"><option value="">${L2('Empty', 'Vacío')}</option>
-    ${list.map(a => `<option${a.name === v ? ' selected' : ''}>${esc(a.name)}</option>`).join('')}${v && !has ? `<option selected>${esc(v)}</option>` : ''}</select></label>`;
+  return `<div class="hkp"><span>${label}</span><button type="button" class="hkpb hkhp${v ? '' : ' empty'}" data-hkhp="${k}" aria-haspopup="dialog" aria-label="${esc(label + ': ' + (v || L2('Empty', 'Vacío')))}"><span>${esc(v || L2('Empty', 'Vacío'))}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div>`;
 }
 function hkHeadHtml(edit){
   const f = (k, label, ph) => edit
@@ -5361,8 +5361,8 @@ function hkTotHtml(){
 }
 function hkFootHtml(){
   const t = hkTotals();
-  return `<td></td><td class="hkname"><b>${L2('Total', 'Total')}</b></td><td class="hkco"><b>${t.co}</b></td><td class="hkso"><b>${t.so}</b></td><td></td>
-    <td class="hkout"><b>${t.last != null ? esc(hkClock(t.last)) : '—'}</b></td><td class="hkmpr">${t.n ? Math.round(t.work / Math.max(1, t.co + t.so)) + ' min' : '—'}</td>${hkCan() && HKEdit ? '<td></td>' : ''}`;
+  return `${hkCan() && HKEdit ? '<td></td>' : ''}<td></td><td class="hkname"><b>${L2('Total', 'Total')}</b></td><td class="hkco"><b>${t.co}</b></td><td class="hkso"><b>${t.so}</b></td><td></td>
+    <td class="hkout"><b>${t.last != null ? esc(hkClock(t.last)) : '—'}</b></td><td class="hkmpr">${t.n ? Math.round(t.work / Math.max(1, t.co + t.so)) + ' min' : '—'}</td>`;
 }
 let HKEdit = false;
 function hkRefreshCalc(){
@@ -5393,7 +5393,7 @@ function hkRender(){
     <div class="card hkcard">${hkHeadHtml(edit)}</div>
     <div class="card hkcard"><h3 class="srh">${L2('Room attendants', 'Camareras')}</h3>
       ${!HKF.rows.length ? `<p class="hint">${edit ? L2('Add each room attendant, then their check-outs, stayovers and clock-in.', 'Agrega cada camarera y luego sus check-outs, stayovers y hora de entrada.') : L2('No plan for this day yet.', 'Todavía no hay plan para este día.')}</p>` : ''}
-      ${HKF.rows.length ? `<div class="hkwrap"><table class="hktab"><thead><tr><th>#</th><th class="hkname">${L2('Room attendant', 'Camarera')}</th><th>Check-outs</th><th>Stayovers</th><th>${L2('Clock-in', 'Entrada')}</th><th>${L2('Est. clock-out', 'Salida aprox.')}</th><th>${L2('Min/room', 'Min/hab.')}</th>${edit ? '<th></th>' : ''}</tr></thead>
+      ${HKF.rows.length ? `<div class="hkwrap"><table class="hktab"><thead><tr>${edit ? '<th></th>' : ''}<th>#</th><th class="hkname">${L2('Room attendant', 'Camarera')}</th><th>Check-outs</th><th>Stayovers</th><th>${L2('Clock-in', 'Entrada')}</th><th>${L2('Est. clock-out', 'Salida aprox.')}</th><th>${L2('Min/room', 'Min/hab.')}</th></tr></thead>
         <tbody id="hkRows">${HKF.rows.map((r, i) => hkRowHtml(r, i, edit)).join('')}</tbody><tfoot><tr id="hkFoot"></tr></tfoot></table></div>` : '<div id="hkRows"></div>'}
       ${edit ? `<div class="hkadds"><button type="button" class="btn hkadd" id="hkAdd" ${HKF.rows.length >= 30 ? 'disabled' : ''}>+ ${L2('Add a line', 'Agregar línea')}</button>
         ${missing && HKF.rows.length < 30 ? `<button type="button" class="btn hkadd" id="hkAddAll">+ ${L2('Add all housekeepers', 'Agregar todas las camareras')} (${missing})</button>` : ''}</div>` : ''}
@@ -5415,6 +5415,7 @@ async function hkFetch(quiet){
 function hkGo(d){
   const today = hkToday();
   if (!d || d > hkShift(today, 7) || d < hkShift(today, -60)) return hkRender();
+  if (HKPK) hkPkClose();
   const go = () => { HKDate = d; HKD = null; HKF = null; HKDirty = false; hkRender(); hkFetch(); };
   if (!HKDirty) return go();
   openModal(`<div data-noi18n><h2>${L2('Leave without saving?', '¿Salir sin guardar?')}</h2><p class="hint">${L2('The changes to this day’s plan will be lost.', 'Se pierden los cambios del plan de este día.')}</p>
@@ -5457,7 +5458,7 @@ const hkDirty = () => { HKDirty = true; hkRefreshCalc(); };
 $('#view-hkplan').addEventListener('input', e => {
   const t = e.target; if (!HKF) return;
   if (t.dataset.h) { HKF[t.dataset.h] = t.dataset.h === 'strip' && t.value === '' ? null : hkInt(t.value); return hkDirty(); }
-  const row = t.closest('.hkrow'); if (!row || !t.dataset.f || t.dataset.f === 'pick') return;
+  const row = t.closest('.hkrow'); if (!row || !t.dataset.f) return;
   const r = HKF.rows[+row.dataset.i]; if (!r) return;
   if (t.dataset.f === 'name') { r.name = t.value; r.staff_id = null; }
   else r[t.dataset.f] = t.dataset.f === 'co' || t.dataset.f === 'so' ? hkInt(t.value) : t.value;
@@ -5466,17 +5467,8 @@ $('#view-hkplan').addEventListener('input', e => {
 $('#view-hkplan').addEventListener('change', e => {
   const t = e.target; if (!HKF) return;
   if (t.id === 'hkDate') return hkGo(t.value);
-  if (t.dataset.hp) { HKF[t.dataset.hp] = t.value; return hkDirty(); }
   const row = t.closest('.hkrow'), r = row && HKF.rows[+row.dataset.i]; if (!r) return;
   if (t.dataset.f === 'cin') { if (r.cin !== t.value) { r.cin = t.value; hkDirty(); } return; }
-  if (t.dataset.f === 'pick') {
-    if (t.value === '__keep') return;
-    if (t.value === '__other') { r.other = true; r.name = ''; r.staff_id = null; HKDirty = true; hkRender();
-      const n = document.querySelector(`#hkRows tr[data-i="${row.dataset.i}"] [data-f="name"]`); if (n) n.focus(); return; }
-    const a = hkAtt().find(x => x.id === t.value);
-    r.name = a ? a.name : ''; r.staff_id = a ? a.id : null; t.classList.toggle('empty', !a);
-    HKDirty = true; hkRender();
-  }
 });
 $('#view-hkplan').addEventListener('click', e => {
   const dd = e.target.closest('[data-hkday]');
@@ -5486,7 +5478,7 @@ $('#view-hkplan').addEventListener('click', e => {
   if (e.target.closest('#hkAdd')) {
     if (HKF.rows.length >= 30) return;
     HKF.rows.push({staff_id: null, name: '', co: 0, so: 0, cin: lastIn(), other: false}); HKDirty = true; hkRender();
-    const ins = document.querySelectorAll('#hkRows [data-f="pick"]'); const n = ins[ins.length - 1]; if (n) n.focus();
+    hkPkOpen('row', HKF.rows.length - 1);
     return;
   }
   if (e.target.closest('#hkAddAll')) {
@@ -5494,12 +5486,70 @@ $('#view-hkplan').addEventListener('click', e => {
     hkAtt().filter(a => !HKF.rows.some(r => r.name === a.name)).forEach(a => { if (HKF.rows.length < 30) HKF.rows.push({staff_id: a.id, name: a.name, co: 0, so: 0, cin, other: false}); });
     HKDirty = true; hkRender(); return;
   }
+  const pb = e.target.closest('[data-hkpick]');
+  if (pb) return hkPkOpen('row', +pb.dataset.hkpick);
+  const hb = e.target.closest('[data-hkhp]');
+  if (hb) return hkPkOpen('head', hb.dataset.hkhp);
   const back = e.target.closest('[data-hklist]');
   if (back) { const r = HKF.rows[+back.dataset.hklist]; if (r) { r.other = false; if (!hkAtt().some(a => a.name === r.name)) r.name = r.name.trim(); } hkRender(); return; }
   const del = e.target.closest('[data-hkdel]');
   if (del) { HKF.rows.splice(+del.dataset.hkdel, 1); HKDirty = true; hkRender(); return; }
   if (e.target.closest('#hkSave')) return hkSave();
 });
+// in-app picker for names, like the hotel picker at the top: the row's housekeeper, or the supervisor / inspector / houseman
+let HKPK = null;
+function hkPkEls(){
+  let box = $('#hkPk');
+  if (!box) {
+    document.body.insertAdjacentHTML('beforeend', '<div class="hpkscrim" id="hkPkScrim" hidden></div><div class="hpk hkpk" id="hkPk" role="dialog" aria-modal="true" aria-labelledby="hkPkTitle" data-noi18n hidden></div>');
+    box = $('#hkPk');
+    $('#hkPkScrim').onclick = () => hkPkClose();
+    box.addEventListener('click', e => { const b = e.target.closest('[data-hkv]'); if (b) hkPkChoose(b.dataset.hkv); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && HKPK) hkPkClose(); });
+  }
+  return box;
+}
+function hkPkOpen(kind, key){
+  if (!HKF) return;
+  const box = hkPkEls();
+  let title, cur, list, other = false;
+  if (kind === 'row') {
+    const r = HKF.rows[key]; if (!r) return;
+    title = L2('Room attendant · line ', 'Camarera · línea ') + (key + 1); cur = r.name; list = hkAtt(); other = true;
+  } else {
+    title = {supervisor: 'Shift Supervisor', inspector: 'Shift Inspector', houseman: 'Houseman'}[key] || key; cur = HKF[key] || '';
+    const team = hkTeam(), hm = team.filter(a => a.role === 'hm'); list = key === 'houseman' && hm.length ? hm : team;
+  }
+  const used = kind === 'row' ? new Map(HKF.rows.map((r, j) => [r.name, j]).filter(([n, j]) => n && j !== key)) : new Map();
+  const CHK = '<svg class="hk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
+  const item = (v, name, on, extra) => `<button type="button" role="radio" data-hkv="${esc(v)}" aria-checked="${on}"><span class="hn">${esc(name)}</span>${extra || ''}${CHK}</button>`;
+  const names = list.map(a => a.name);
+  box.innerHTML = `<h3 id="hkPkTitle">${esc(title)}</h3><div role="radiogroup" aria-labelledby="hkPkTitle" class="hkpkl">
+    ${item('', L2('Empty', 'Vacío'), !cur, '')}
+    ${list.map(a => item('n:' + a.name, a.name, a.name === cur, used.has(a.name) ? `<span class="hkused">${esc(L2('line ', 'línea ') + (used.get(a.name) + 1))}</span>` : '')).join('')}
+    ${cur && !names.includes(cur) ? item('n:' + cur, cur, true, '') : ''}
+    ${other ? item('__other', L2('Other name…', 'Otro nombre…'), false, '') : ''}</div>`;
+  HKPK = {kind, key};
+  box.hidden = false; $('#hkPkScrim').hidden = false;
+  const sel = box.querySelector('[aria-checked="true"]') || box.querySelector('button'); if (sel && sel.focus) sel.focus();
+}
+function hkPkClose(){
+  const box = $('#hkPk'); if (box) box.hidden = true; const s = $('#hkPkScrim'); if (s) s.hidden = true;
+  const k = HKPK; HKPK = null;
+  if (k) { const b = document.querySelector(k.kind === 'row' ? `#hkRows [data-hkpick="${k.key}"]` : `#hkBody [data-hkhp="${k.key}"]`); if (b && b.focus) b.focus(); }
+}
+function hkPkChoose(v){
+  const k = HKPK; if (!k || !HKF) return hkPkClose();
+  const name = v.startsWith('n:') ? v.slice(2) : '';
+  if (k.kind === 'head') { HKF[k.key] = name; HKPK = null; hkPkClose(); HKDirty = true; hkRender(); return; }
+  const r = HKF.rows[k.key]; if (!r) return hkPkClose();
+  if (v === '__other') {
+    r.other = true; r.name = ''; r.staff_id = null; HKPK = null; hkPkClose(); HKDirty = true; hkRender();
+    const n = document.querySelector(`#hkRows tr[data-i="${k.key}"] [data-f="name"]`); if (n) n.focus(); return;
+  }
+  const a = hkAtt().find(x => x.name === name);
+  r.name = name; r.staff_id = a ? a.id : null; HKDirty = true; hkPkClose(); hkRender();
+}
 // keeps the plan fresh for whoever is only looking (not while someone is typing)
 setInterval(() => {
   if (S.tab === 'hkplan' && hkKey() !== HKK && !HKDirty) return hkShow();
