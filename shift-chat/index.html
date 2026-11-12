@@ -918,24 +918,8 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .hkpill.ok{background:var(--ok-soft);color:var(--ok)}
 .hkpill.over{background:var(--urgent-soft);color:var(--urgent)}
 .hkwarn{font-size:12.5px;color:var(--urgent);font-weight:600}
-.hkrow{border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
-.hkrow.ro{gap:4px}
-.hkname{display:flex;align-items:center;gap:8px}
-.hkname b{font-size:15px;color:var(--ink)}
-.hkname input{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 10px;font-size:16px;color:var(--ink)}
-.hkdel{flex:none;width:40px;height:40px;border:0;border-radius:10px;background:var(--surface-2);color:var(--ink-3);font-size:22px;line-height:1;cursor:pointer}
-.hknums{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px}
-.hknums label{display:flex;flex-direction:column;gap:3px;min-width:0}
-.hknums span{font-size:11.5px;font-weight:600;color:var(--ink-3)}
-.hknums input{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:8px;font-size:16px;width:100%;min-width:0;color:var(--ink)}
-.hknums input[type=number]{text-align:center}
-.hkout{display:flex;flex-direction:column;gap:2px}
-.hkest{font-size:14px;color:var(--ink-2)}
-.hkest b{font-size:16px;color:var(--accent)}
-.hkmeta{font-size:12px;color:var(--ink-3)}
-.hkro{font-size:13.5px;color:var(--ink-2)}
-.hkot{display:inline-block;margin-left:4px;font:700 11px var(--f-body);border-radius:999px;padding:1px 7px;background:var(--high-soft);color:var(--high)}
-.hkadd{width:100%;margin-top:10px;min-height:44px}
+.hkadds{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.hkadd{flex:1 1 180px;min-height:44px}
 .hktots{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
 .hkt{background:var(--surface-2);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
 .hkt span{font-size:11.5px;color:var(--ink-3)}
@@ -944,7 +928,46 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .hkbar{position:sticky;bottom:12px;margin-top:10px;z-index:2}
 .hkbar .btn{width:100%;min-height:48px;box-shadow:var(--shadow)}
 .hkbar .btn:disabled{opacity:.6}
-@media (min-width:900px){.hkrow{display:grid;grid-template-columns:minmax(180px,1.2fr) minmax(260px,1.4fr) minmax(200px,1fr);align-items:end}.hkrow.ro{display:flex}}
+.hkpeople{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.hkp{display:flex;flex-direction:column;gap:4px;min-width:0}
+.hkp span{font-size:12px;font-weight:600;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hkp select{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 8px;font-size:15px;width:100%;min-width:0;color:var(--ink)}
+.hkp b{font-size:15px;color:var(--ink)}
+.hkheads{grid-template-columns:repeat(5,1fr)}
+.hkbig{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hkbig>div{background:var(--surface-2);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
+.hkbig span{font-size:12px;font-weight:600;color:var(--ink-3)}
+.hkbig b{font:800 22px var(--f-display);color:var(--ink)}
+.hkbig .ok{background:var(--ok-soft)}.hkbig .ok b{color:var(--ok)}
+.hkbig .over{background:var(--urgent-soft)}.hkbig .over b{color:var(--urgent)}
+.hkbig .wait{background:var(--high-soft)}.hkbig .wait b{color:var(--high)}
+.hkwrap{overflow-x:auto;margin:0 -6px;-webkit-overflow-scrolling:touch}
+.hktab{border-collapse:separate;border-spacing:0;width:100%;min-width:600px;font-size:14px}
+.hktab th{font-size:11.5px;font-weight:700;color:var(--ink-3);text-align:center;padding:6px 4px;border-bottom:1px solid var(--line);white-space:nowrap}
+.hktab th.hkname{text-align:left}
+.hktab td{padding:5px 4px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle;color:var(--ink)}
+.hktab tfoot td{border-bottom:0;border-top:2px solid var(--line);padding-top:8px}
+.hktab .hkn{width:26px;color:var(--ink-3);font-size:12px}
+.hktab td.hkname{text-align:left;min-width:150px;position:sticky;left:0;background:var(--surface);z-index:1}
+.hktab th.hkname{position:sticky;left:0;background:var(--surface);z-index:1}
+.hktab td.hkname b{white-space:nowrap}
+.hktab select{width:100%;min-width:140px;border:1px solid var(--line);background:var(--ok-soft);color:var(--ok);border-radius:999px;padding:7px 10px;font:600 14px var(--f-body)}
+.hktab select.empty{background:var(--urgent-soft);color:var(--urgent)}
+.hknm{display:flex;gap:4px}
+.hknm input{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:7px 8px;font-size:16px;color:var(--ink)}
+.hklist{flex:none;width:34px;border:0;border-radius:10px;background:var(--surface-2);color:var(--ink-3);cursor:pointer}
+.hktab td.hkco,.hktab td.hkso{width:74px;background:var(--surface-2)}
+.hktab input[type=number]{width:60px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 4px;font-size:16px;text-align:center;color:var(--ink)}
+.hktab tr.none td.hkco input,.hktab tr.none td.hkso input{background:var(--urgent-soft)}
+.hktab td.hkin{width:116px;background:var(--ok-soft)}
+.hktab td.hkin input{width:108px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 4px;font-size:15px;color:var(--ink)}
+.hktab td.hkout{width:96px;background:var(--urgent-soft);white-space:nowrap}
+.hktab td.hkout b{font-size:15px}
+.hktab td.hkout b.hkot{color:var(--urgent)}
+.hktab td.hkmpr{width:70px;white-space:nowrap;font-size:13px;color:var(--ink-2)}
+.hktab td.hkx{width:40px}
+.hktab .hkdel{width:34px;height:34px;border:0;border-radius:8px;background:var(--surface-2);color:var(--ink-3);font-size:20px;line-height:1;cursor:pointer}
+@media (max-width:560px){.hkheads{grid-template-columns:repeat(3,1fr)}.hkpeople{grid-template-columns:1fr 1fr}.hkpeople .hkp:first-child{grid-column:1/-1}}
 .mpform{margin-top:12px}
 .mpday{font-size:12.5px;color:var(--ink-3);text-transform:capitalize}
 .mplab{font-size:12.5px;font-weight:600;color:var(--ink-2)}
@@ -4272,8 +4295,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.9.0';
+const APP_VERSION = '1.10.0';
 const CHANGES = [
+  {v: '1.10.0', d: '2026-11-12', en: ['HK Game Plan now looks like the HK Productivity Chart: one row per room attendant, picked from a dropdown with the hotel’s housekeepers, with check-outs, stayovers, clock-in, estimated clock-out and minutes per room side by side', 'Top of the plan: Shift Supervisor, Shift Inspector and Houseman dropdowns; Arrivals, Departures, Stayovers, DND and Rooms to Strip; Room to Assign and Left to Assign worked out', 'Add all housekeepers in one tap, or type a name for someone without a user. Totals row at the bottom'],
+    es: ['HK Game Plan ahora se ve como el HK Productivity Chart: una fila por camarera, elegida de un dropdown con las camareras del hotel, con check-outs, stayovers, entrada, salida aprox. y minutos por habitación lado a lado', 'Arriba: dropdowns de Shift Supervisor, Shift Inspector y Houseman; Arrivals, Departures, Stayovers, DND y Rooms to Strip; Room to Assign y Left to Assign calculados', 'Agrega todas las camareras con un toque, o escribe el nombre de alguien sin usuario. Fila de totales abajo']},
   {v: '1.9.0', d: '2026-11-12', en: ['New HK Game Plan in the Menu: the day’s arrivals, check-outs, stayovers and DND, and one line per room attendant with check-outs, stayovers and clock-in', 'The app works out each attendant’s minutes (27 per check-out, 15 per stayover) and the estimated clock-out with the 30-minute break, plus what is left to assign and the day’s totals', 'Everyone in the hotel can see it; managers and housekeeping can change and save it. Past days stay to look back on'],
     es: ['Nuevo HK Game Plan en el Menú: llegadas, check-outs, stayovers y DND del día, y una línea por camarera con sus check-outs, stayovers y hora de entrada', 'La app calcula los minutos de cada camarera (27 por check-out, 15 por stayover) y la hora de salida aproximada con el break de 30 minutos, más lo que falta asignar y los totales del día', 'Todo el hotel lo puede ver; managers y housekeeping lo cambian y lo guardan. Los días pasados quedan para consultar']},
   {v: '1.8.0', d: '2026-11-11', en: ['New 3D map for Highway: the east wing and the north wing with all 3 floors (106 to 338), front desk, pool, elevator, stairs and ice machine', 'Same controls as the other maps; P3 shows the third floor and Separate floors spreads all three'],
@@ -5255,8 +5280,9 @@ function hkKey(){ return ((S.me && S.me.id) || '') + '.' + ((S.hotel && S.hotel.
 function hkFormFrom(d){
   const p = (d && d.plan) || {};
   return {arrivals: p.arrivals || 0, departures: p.departures || 0, stayovers: p.stayovers || 0, dnd: p.dnd || 0,
+    strip: p.strip == null ? null : p.strip, supervisor: p.supervisor || '', inspector: p.inspector || '', houseman: p.houseman || '',
     mpr_co: p.mpr_co || HK_DEF.mpr_co, mpr_so: p.mpr_so || HK_DEF.mpr_so, break_min: p.break_min == null ? HK_DEF.break_min : p.break_min,
-    rows: (p.rows || []).map(r => ({staff_id: r.staff_id || null, name: r.name || '', co: r.co || 0, so: r.so || 0, cin: r.cin || ''}))};
+    rows: (p.rows || []).map(r => ({staff_id: r.staff_id || null, name: r.name || '', co: r.co || 0, so: r.so || 0, cin: r.cin || '', other: false}))};
 }
 // minutes of work, hours present (with break) and estimated clock-out for one attendant
 function hkCalc(r){
@@ -5271,39 +5297,59 @@ function hkTotals(){
   return {n, co, so, work, brk, last};
 }
 function hkCan(){ return !!(HKD && HKD.can_edit); }
+const hkAtt = () => (HKD && HKD.attendants) || [];
+const hkTeam = () => (HKD && HKD.team) || hkAtt();
+// the attendant's name: a dropdown with the hotel's housekeepers, or a typed name for someone without a user
+function hkNameCell(r, i){
+  const list = hkAtt(), has = list.some(a => a.name === r.name);
+  if (r.other) return `<div class="hknm"><input data-f="name" maxlength="80" autocomplete="off" value="${esc(r.name)}" placeholder="${esc(L2('Type the name', 'Escribe el nombre'))}" aria-label="${esc(L2('Name', 'Nombre'))}">
+    <button type="button" class="hklist" data-hklist="${i}" aria-label="${esc(L2('Back to the list', 'Volver a la lista'))}">▾</button></div>`;
+  return `<select data-f="pick" aria-label="${esc(L2('Room attendant', 'Camarera'))}"${!r.name ? ' class="empty"' : ''}>
+    <option value="">${L2('Empty', 'Vacío')}</option>
+    ${list.map(a => `<option value="${esc(a.id)}"${a.name === r.name ? ' selected' : ''}>${esc(a.name)}</option>`).join('')}
+    ${r.name && !has ? `<option value="__keep" selected>${esc(r.name)}</option>` : ''}
+    <option value="__other">${L2('Other name…', 'Otro nombre…')}</option></select>`;
+}
 function hkRowHtml(r, i, edit){
-  if (!edit) return `<div class="hkrow ro" data-i="${i}"><div class="hkname"><b>${esc(r.name)}</b></div><div class="hkout" data-out="${i}"></div></div>`;
-  return `<div class="hkrow" data-i="${i}">
-    <div class="hkname"><input list="hkNames" data-f="name" maxlength="80" autocomplete="off" placeholder="${esc(L2('Room attendant', 'Camarera / room attendant'))}" value="${esc(r.name)}" aria-label="${esc(L2('Name', 'Nombre'))}">
-      <button type="button" class="hkdel" data-hkdel="${i}" aria-label="${esc(L2('Remove', 'Quitar'))}">×</button></div>
-    <div class="hknums">
-      <label><span>Check-outs</span><input type="number" inputmode="numeric" min="0" max="40" data-f="co" value="${r.co || ''}" placeholder="0"></label>
-      <label><span>Stayovers</span><input type="number" inputmode="numeric" min="0" max="40" data-f="so" value="${r.so || ''}" placeholder="0"></label>
-      <label class="hkin"><span>${L2('Clock-in', 'Entrada')}</span><input type="time" data-f="cin" value="${esc(r.cin)}"></label>
-    </div>
-    <div class="hkout" data-out="${i}"></div></div>`;
+  const num = (f, v) => edit ? `<input type="number" inputmode="numeric" min="0" max="40" data-f="${f}" value="${v || ''}" placeholder="0" aria-label="${f === 'co' ? 'Check-outs' : 'Stayovers'}">` : `<b>${v || 0}</b>`;
+  return `<tr class="hkrow${hkInt(r.co) + hkInt(r.so) ? '' : ' none'}" data-i="${i}">
+    <td class="hkn">${i + 1}</td>
+    <td class="hkname">${edit ? hkNameCell(r, i) : `<b>${esc(r.name)}</b>`}</td>
+    <td class="hkco">${num('co', r.co)}</td><td class="hkso">${num('so', r.so)}</td>
+    <td class="hkin">${edit ? `<input type="time" data-f="cin" value="${esc(r.cin)}" aria-label="${esc(L2('Clock-in', 'Entrada'))}">` : (r.cin ? esc(hkClock(hkMin(r.cin))) : '—')}</td>
+    <td class="hkout" data-out="${i}"></td><td class="hkmpr" data-mpr="${i}"></td>
+    ${edit ? `<td class="hkx"><button type="button" class="hkdel" data-hkdel="${i}" aria-label="${esc(L2('Remove', 'Quitar'))}">×</button></td>` : ''}</tr>`;
 }
 function hkOutHtml(r){
   const c = hkCalc(r);
-  if (!c.rooms) return `<span class="hkmuted">${L2('No rooms yet', 'Sin habitaciones todavía')}</span>`;
-  const ro = !hkCan() ? `<span class="hkro">${hkInt(r.co)} CO · ${hkInt(r.so)} SO${r.cin ? ' · ' + esc(L2('in ', 'entra ') + hkClock(hkMin(r.cin))) : ''}</span>` : '';
-  const ot = c.work > 480 ? `<span class="hkot" title="${esc(L2('More than 8 hours of rooms', 'Más de 8 horas de habitaciones'))}">+8 h</span>` : '';
-  return `${ro}<span class="hkest">${c.out != null ? L2('Est. clock-out ', 'Sale aprox. ') + `<b>${esc(hkClock(c.out))}</b>` : L2('Add the clock-in to see the clock-out', 'Pon la entrada para ver la salida')}</span>
-    <span class="hkmeta">${c.work} min · ${esc(hkHrs(c.work))} h ${L2('of rooms', 'de habitaciones')} + ${c.brk} min break ${ot}</span>`;
+  if (!c.rooms) return '<span class="hkmuted">—</span>';
+  if (c.out == null) return `<span class="hkmuted">${L2('add clock-in', 'pon la entrada')}</span>`;
+  return `<b class="${c.work > 480 ? 'hkot' : ''}" title="${esc(c.work + ' min + ' + c.brk + ' min break' + (c.work > 480 ? ' · ' + L2('more than 8 hours of rooms', 'más de 8 horas de habitaciones') : ''))}">${esc(hkClock(c.out))}</b>`;
+}
+function hkMprHtml(r){ const c = hkCalc(r); return c.rooms ? `${Math.round(c.work / c.rooms)} min` : '<span class="hkmuted">—</span>'; }
+function hkPick(k, label, edit, list){
+  const v = HKF[k] || '';
+  if (!edit) return `<div class="hkp"><span>${label}</span><b>${v ? esc(v) : '—'}</b></div>`;
+  const has = list.some(a => a.name === v);
+  return `<label class="hkp"><span>${label}</span><select data-hp="${k}"><option value="">${L2('Empty', 'Vacío')}</option>
+    ${list.map(a => `<option${a.name === v ? ' selected' : ''}>${esc(a.name)}</option>`).join('')}${v && !has ? `<option selected>${esc(v)}</option>` : ''}</select></label>`;
 }
 function hkHeadHtml(edit){
-  const f = (k, label) => edit
-    ? `<label class="hkh"><span>${label}</span><input type="number" inputmode="numeric" min="0" max="999" data-h="${k}" value="${HKF[k] || ''}" placeholder="0"></label>`
-    : `<div class="hkh"><span>${label}</span><b>${HKF[k] || 0}</b></div>`;
-  return `<div class="hkheads">${f('arrivals', L2('Arrivals', 'Llegadas'))}${f('departures', 'Check-outs')}${f('stayovers', 'Stayovers')}${f('dnd', 'DND')}</div><div class="hkleft" id="hkLeft"></div>`;
+  const f = (k, label, ph) => edit
+    ? `<label class="hkh"><span>${label}</span><input type="number" inputmode="numeric" min="0" max="999" data-h="${k}" value="${k === 'strip' ? (HKF.strip == null ? '' : HKF.strip) : HKF[k] || ''}" placeholder="${ph == null ? 0 : ph}"></label>`
+    : `<div class="hkh"><span>${label}</span><b>${k === 'strip' ? (HKF.strip == null ? HKF.departures : HKF.strip) : HKF[k] || 0}</b></div>`;
+  const team = hkTeam(), hm = team.filter(a => a.role === 'hm');
+  return `<div class="hkpeople">${hkPick('supervisor', 'Shift Supervisor', edit, team)}${hkPick('inspector', 'Shift Inspector', edit, team)}${hkPick('houseman', 'Houseman', edit, hm.length ? hm : team)}</div>
+    <div class="hkheads">${f('arrivals', 'Arrivals')}${f('departures', 'Departures')}${f('stayovers', 'Stayovers')}${f('dnd', 'DND')}${f('strip', 'Rooms to Strip', HKF.departures)}</div>
+    <div class="hkleft" id="hkLeft"></div>`;
 }
 function hkLeftHtml(){
   const t = hkTotals();
-  const toClean = HKF.departures + Math.max(0, HKF.stayovers - HKF.dnd);
-  const coLeft = HKF.departures - t.co, soLeft = Math.max(0, HKF.stayovers - HKF.dnd) - t.so;
+  const assign = HKF.departures + HKF.stayovers, left = assign - HKF.dnd - t.co - t.so;
+  const coLeft = HKF.departures - t.co, soLeft = HKF.stayovers - HKF.dnd - t.so;
   const pill = (n, label) => `<span class="hkpill ${n === 0 ? 'ok' : n < 0 ? 'over' : ''}">${label} <b>${n}</b></span>`;
-  return `<div class="hkline">${L2('Rooms to clean', 'Habitaciones a limpiar')} <b>${toClean}</b> <span class="hkmuted">(${L2('check-outs + stayovers − DND', 'check-outs + stayovers − DND')})</span></div>
-    <div class="hkline">${L2('Left to assign', 'Falta asignar')} ${pill(coLeft, 'CO')} ${pill(soLeft, 'SO')}${coLeft < 0 || soLeft < 0 ? ` <span class="hkwarn">${L2('more assigned than the day has', 'hay más asignadas que las del día')}</span>` : ''}</div>`;
+  return `<div class="hkbig"><div><span>Room to Assign</span><b>${assign}</b></div><div class="${left === 0 ? 'ok' : left < 0 ? 'over' : 'wait'}"><span>Left to Assign</span><b>${left}</b></div></div>
+    <div class="hkline">${pill(coLeft, 'CO')} ${pill(soLeft, 'SO')}${left < 0 ? ` <span class="hkwarn">${L2('more assigned than the day has', 'hay más asignadas que las del día')}</span>` : ''}<span class="hkmuted">${L2('Left = departures + stayovers − DND − assigned', 'Left = departures + stayovers − DND − asignadas')}</span></div>`;
 }
 function hkTotHtml(){
   const t = hkTotals();
@@ -5313,10 +5359,22 @@ function hkTotHtml(){
     ${cell(L2('Hours of rooms', 'Horas de habitaciones'), esc(hkHrs(t.work)))}${cell(L2('Hours with break', 'Horas con break'), esc(hkHrs(t.work + t.brk)))}
     ${cell(L2('Avg. min per room', 'Prom. min por hab.'), Math.round(t.work / Math.max(1, t.co + t.so)))}${cell(L2('Last one out', 'Última en salir'), t.last != null ? esc(hkClock(t.last)) : '—')}</div>`;
 }
+function hkFootHtml(){
+  const t = hkTotals();
+  return `<td></td><td class="hkname"><b>${L2('Total', 'Total')}</b></td><td class="hkco"><b>${t.co}</b></td><td class="hkso"><b>${t.so}</b></td><td></td>
+    <td class="hkout"><b>${t.last != null ? esc(hkClock(t.last)) : '—'}</b></td><td class="hkmpr">${t.n ? Math.round(t.work / Math.max(1, t.co + t.so)) + ' min' : '—'}</td>${hkCan() && HKEdit ? '<td></td>' : ''}`;
+}
+let HKEdit = false;
 function hkRefreshCalc(){
-  HKF.rows.forEach((r, i) => { const o = document.querySelector(`#hkBody [data-out="${i}"]`); if (o) o.innerHTML = hkOutHtml(r); });
+  HKF.rows.forEach((r, i) => {
+    const o = document.querySelector(`#hkBody [data-out="${i}"]`); if (o) o.innerHTML = hkOutHtml(r);
+    const m = document.querySelector(`#hkBody [data-mpr="${i}"]`); if (m) m.innerHTML = hkMprHtml(r);
+    const tr = document.querySelector(`#hkBody tr.hkrow[data-i="${i}"]`); if (tr) tr.classList.toggle('none', !hkCalc(r).rooms);
+  });
   const l = $('#hkLeft'); if (l) l.innerHTML = hkLeftHtml();
+  const st = document.querySelector('#hkBody [data-h="strip"]'); if (st) st.placeholder = String(HKF.departures || 0);
   const t = $('#hkTot'); if (t) t.innerHTML = hkTotHtml();
+  const f = $('#hkFoot'); if (f) f.innerHTML = hkFootHtml();
   const s = $('#hkSave'); if (s) { s.disabled = !HKDirty || HKSaving; s.textContent = HKSaving ? L2('Saving…', 'Guardando…') : HKDirty ? L2('Save plan', 'Guardar plan') : L2('Saved', 'Guardado'); }
 }
 function hkRender(){
@@ -5328,15 +5386,17 @@ function hkRender(){
       <label class="hkdl"><input type="date" id="hkDate" value="${HKDate}" min="${hkShift(today, -60)}" max="${hkShift(today, 7)}"><span>${esc(hkDay(HKDate))}${HKDate === today ? ' · ' + L2('today', 'hoy') : ''}</span></label>
       <button type="button" class="btn" data-hkday="1" aria-label="${esc(L2('Next day', 'Día siguiente'))}" ${HKDate >= hkShift(today, 7) ? 'disabled' : ''}>›</button></div>`;
   if (!HKD || !HKF) { box.innerHTML = head + `<p class="hint">${L2('Loading…', 'Cargando…')}</p>`; return; }
-  const edit = hkCan() && HKDate >= hkShift(today, -7);
+  const edit = HKEdit = hkCan() && HKDate >= hkShift(today, -7);
   const p = HKD.plan;
+  const missing = hkAtt().filter(a => !HKF.rows.some(r => r.name === a.name)).length;
   box.innerHTML = head + `
-    <div class="card hkcard"><h3 class="srh">${L2('The day', 'El día')}</h3>${hkHeadHtml(edit)}</div>
+    <div class="card hkcard">${hkHeadHtml(edit)}</div>
     <div class="card hkcard"><h3 class="srh">${L2('Room attendants', 'Camareras')}</h3>
-      ${!HKF.rows.length ? `<p class="hint">${edit ? L2('Add each room attendant with their check-outs, stayovers and clock-in.', 'Agrega cada camarera con sus check-outs, stayovers y hora de entrada.') : L2('No plan for this day yet.', 'Todavía no hay plan para este día.')}</p>` : ''}
-      <div id="hkRows">${HKF.rows.map((r, i) => hkRowHtml(r, i, edit)).join('')}</div>
-      ${edit ? `<button type="button" class="btn hkadd" id="hkAdd" ${HKF.rows.length >= 30 ? 'disabled' : ''}>+ ${L2('Add room attendant', 'Agregar camarera')}</button>
-      <datalist id="hkNames">${(HKD.attendants || []).map(a => `<option value="${esc(a.name)}"></option>`).join('')}</datalist>` : ''}
+      ${!HKF.rows.length ? `<p class="hint">${edit ? L2('Add each room attendant, then their check-outs, stayovers and clock-in.', 'Agrega cada camarera y luego sus check-outs, stayovers y hora de entrada.') : L2('No plan for this day yet.', 'Todavía no hay plan para este día.')}</p>` : ''}
+      ${HKF.rows.length ? `<div class="hkwrap"><table class="hktab"><thead><tr><th>#</th><th class="hkname">${L2('Room attendant', 'Camarera')}</th><th>Check-outs</th><th>Stayovers</th><th>${L2('Clock-in', 'Entrada')}</th><th>${L2('Est. clock-out', 'Salida aprox.')}</th><th>${L2('Min/room', 'Min/hab.')}</th>${edit ? '<th></th>' : ''}</tr></thead>
+        <tbody id="hkRows">${HKF.rows.map((r, i) => hkRowHtml(r, i, edit)).join('')}</tbody><tfoot><tr id="hkFoot"></tr></tfoot></table></div>` : '<div id="hkRows"></div>'}
+      ${edit ? `<div class="hkadds"><button type="button" class="btn hkadd" id="hkAdd" ${HKF.rows.length >= 30 ? 'disabled' : ''}>+ ${L2('Add a line', 'Agregar línea')}</button>
+        ${missing && HKF.rows.length < 30 ? `<button type="button" class="btn hkadd" id="hkAddAll">+ ${L2('Add all housekeepers', 'Agregar todas las camareras')} (${missing})</button>` : ''}</div>` : ''}
     </div>
     <div class="card hkcard"><h3 class="srh">${L2('Totals', 'Totales')}</h3><div id="hkTot"></div></div>
     <p class="hkby">${p && p.updated_by ? esc(L2('Saved by ', 'Guardado por ') + p.updated_by + ', ' + hkWhen(p.updated_at)) : (edit ? L2('Not saved yet for this day.', 'Todavía no está guardado para este día.') : '')}${!hkCan() ? ' ' + L2('Only managers and housekeeping can change it.', 'Solo managers y housekeeping lo pueden cambiar.') : ''}</p>
@@ -5349,7 +5409,7 @@ function hkSet(d, keepForm){
 }
 async function hkFetch(quiet){
   if (!S.token || !S.me || HKBusy) return; HKBusy = true; const want = HKDate;
-  try { const d = await call('sc_hkplan', {p_date: want}); if (want === HKDate && !HKDirty) hkSet(d); else if (want === HKDate) HKD.attendants = d.attendants; }
+  try { const d = await call('sc_hkplan', {p_date: want}); if (want === HKDate && !HKDirty) hkSet(d); else if (want === HKDate) { HKD.attendants = d.attendants; HKD.team = d.team; } }
   catch (e) { if (!quiet) toast(esc(e.message)); } finally { HKBusy = false; }
 }
 function hkGo(d){
@@ -5368,12 +5428,13 @@ async function hkSave(){
   for (const r of HKF.rows) {
     const name = r.name.trim(), c = hkCalc(r);
     if (!name && !c.rooms) continue;
-    if (!name) { toast(L2('Write the name of each room attendant.', 'Escribe el nombre de cada camarera.')); return; }
+    if (!name) { toast(L2('Pick the room attendant on each line with rooms.', 'Elige la camarera en cada línea con habitaciones.')); return; }
     if (hkInt(r.co) > 40 || hkInt(r.so) > 40) { toast(L2('Up to 40 check-outs and 40 stayovers per person.', 'Máximo 40 check-outs y 40 stayovers por persona.')); return; }
-    const a = (HKD.attendants || []).find(x => x.name.toLowerCase() === name.toLowerCase());
+    const a = hkAtt().find(x => x.name.toLowerCase() === name.toLowerCase());
     rows.push({staff_id: a ? a.id : null, name, co: hkInt(r.co), so: hkInt(r.so), cin: r.cin || ''});
   }
-  const head = {arrivals: hkInt(HKF.arrivals), departures: hkInt(HKF.departures), stayovers: hkInt(HKF.stayovers), dnd: hkInt(HKF.dnd)};
+  const head = {arrivals: hkInt(HKF.arrivals), departures: hkInt(HKF.departures), stayovers: hkInt(HKF.stayovers), dnd: hkInt(HKF.dnd),
+    strip: HKF.strip == null ? null : hkInt(HKF.strip), supervisor: HKF.supervisor, inspector: HKF.inspector, houseman: HKF.houseman};
   HKSaving = true; hkRefreshCalc();
   try {
     const d = await call('sc_hkplan_save', {p_date: HKDate, p_head: head, p_rows: rows, p_seen: HKD.plan ? HKD.plan.updated_at : null});
@@ -5395,28 +5456,46 @@ function hkShow(){
 const hkDirty = () => { HKDirty = true; hkRefreshCalc(); };
 $('#view-hkplan').addEventListener('input', e => {
   const t = e.target; if (!HKF) return;
-  if (t.dataset.h) { HKF[t.dataset.h] = hkInt(t.value); return hkDirty(); }
-  const row = t.closest('.hkrow'); if (!row || !t.dataset.f) return;
+  if (t.dataset.h) { HKF[t.dataset.h] = t.dataset.h === 'strip' && t.value === '' ? null : hkInt(t.value); return hkDirty(); }
+  const row = t.closest('.hkrow'); if (!row || !t.dataset.f || t.dataset.f === 'pick') return;
   const r = HKF.rows[+row.dataset.i]; if (!r) return;
-  r[t.dataset.f] = t.dataset.f === 'co' || t.dataset.f === 'so' ? hkInt(t.value) : t.value;
+  if (t.dataset.f === 'name') { r.name = t.value; r.staff_id = null; }
+  else r[t.dataset.f] = t.dataset.f === 'co' || t.dataset.f === 'so' ? hkInt(t.value) : t.value;
   hkDirty();
 });
 $('#view-hkplan').addEventListener('change', e => {
   const t = e.target; if (!HKF) return;
   if (t.id === 'hkDate') return hkGo(t.value);
-  if (t.dataset.f === 'cin') { const row = t.closest('.hkrow'); const r = row && HKF.rows[+row.dataset.i]; if (r && r.cin !== t.value) { r.cin = t.value; hkDirty(); } }
+  if (t.dataset.hp) { HKF[t.dataset.hp] = t.value; return hkDirty(); }
+  const row = t.closest('.hkrow'), r = row && HKF.rows[+row.dataset.i]; if (!r) return;
+  if (t.dataset.f === 'cin') { if (r.cin !== t.value) { r.cin = t.value; hkDirty(); } return; }
+  if (t.dataset.f === 'pick') {
+    if (t.value === '__keep') return;
+    if (t.value === '__other') { r.other = true; r.name = ''; r.staff_id = null; HKDirty = true; hkRender();
+      const n = document.querySelector(`#hkRows tr[data-i="${row.dataset.i}"] [data-f="name"]`); if (n) n.focus(); return; }
+    const a = hkAtt().find(x => x.id === t.value);
+    r.name = a ? a.name : ''; r.staff_id = a ? a.id : null; t.classList.toggle('empty', !a);
+    HKDirty = true; hkRender();
+  }
 });
 $('#view-hkplan').addEventListener('click', e => {
   const dd = e.target.closest('[data-hkday]');
   if (dd) return hkGo(hkShift(HKDate, +dd.dataset.hkday));
   if (!HKF) return;
+  const lastIn = () => { const l = HKF.rows[HKF.rows.length - 1]; return (l && l.cin) || '09:00'; };
   if (e.target.closest('#hkAdd')) {
     if (HKF.rows.length >= 30) return;
-    const last = HKF.rows[HKF.rows.length - 1];
-    HKF.rows.push({staff_id: null, name: '', co: 0, so: 0, cin: (last && last.cin) || '09:00'}); HKDirty = true; hkRender();
-    const ins = document.querySelectorAll('#hkRows [data-f="name"]'); const n = ins[ins.length - 1]; if (n) n.focus();
+    HKF.rows.push({staff_id: null, name: '', co: 0, so: 0, cin: lastIn(), other: false}); HKDirty = true; hkRender();
+    const ins = document.querySelectorAll('#hkRows [data-f="pick"]'); const n = ins[ins.length - 1]; if (n) n.focus();
     return;
   }
+  if (e.target.closest('#hkAddAll')) {
+    const cin = lastIn();
+    hkAtt().filter(a => !HKF.rows.some(r => r.name === a.name)).forEach(a => { if (HKF.rows.length < 30) HKF.rows.push({staff_id: a.id, name: a.name, co: 0, so: 0, cin, other: false}); });
+    HKDirty = true; hkRender(); return;
+  }
+  const back = e.target.closest('[data-hklist]');
+  if (back) { const r = HKF.rows[+back.dataset.hklist]; if (r) { r.other = false; if (!hkAtt().some(a => a.name === r.name)) r.name = r.name.trim(); } hkRender(); return; }
   const del = e.target.closest('[data-hkdel]');
   if (del) { HKF.rows.splice(+del.dataset.hkdel, 1); HKDirty = true; hkRender(); return; }
   if (e.target.closest('#hkSave')) return hkSave();
