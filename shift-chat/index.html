@@ -290,6 +290,11 @@ body{margin:0}
 .pill.warn{background:var(--urgent-soft);color:var(--urgent);border-color:transparent}
 .pill.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
 .pill.prog{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.pill.paused{background:color-mix(in srgb,#F59E0B 18%,transparent);color:inherit;border-color:transparent}
+.pill.paused::before{content:"\23F8\FE0E  "}
+.order.paused{opacity:.82}
+.oact button.pause,.btn.pausebtn{background:color-mix(in srgb,#F59E0B 18%,transparent);border-color:color-mix(in srgb,#F59E0B 45%,transparent)}
+.engst.paused{color:#B45309}
 .small{font-size:12.5px;color:var(--ink-3)}
 .btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-weight:700;font-size:14px}
 .btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
@@ -1608,6 +1613,11 @@ const ES = {
 "All clear. New requests from the chat land here.": "Todo al día. Los pedidos nuevos del chat llegan aquí.",
 "Nothing here for this filter.": "Nada aquí con este filtro.",
 "I'm on it": "Voy",
+"Pause Task": "Pausar tarea",
+"Resume": "Reanudar",
+"Paused": "En pausa",
+"Time paused": "Tiempo en pausa",
+"paused": "en pausa",
 "Done": "Listo",
 "Assign": "Asignar",
 "Assign to": "Asignar a",
@@ -1993,6 +2003,7 @@ const ES_RX = [
   [/^(.+) · open$/, "$1 · abierta"],
   [/^(.+) · in_progress$/, "$1 · en proceso"],
   [/^(.+) · in progress$/, "$1 · en proceso"],
+  [/^(.+) · paused$/, "$1 · en pausa"],
   [/^(.+) · done$/, "$1 · lista"],
   [/^(.+) · dismissed$/, "$1 · descartada"],
   [/^Room (\w+) · orders \((\d+)\)$/, "Hab. $1 · órdenes ($2)"],
@@ -2297,9 +2308,14 @@ function summaryFor(o, firstName){
 // an order scheduled for later waits out of the queue; its age and priority count from when it comes due
 const isLater = o => !!(o.scheduled_for && o.scheduled_for > Date.now() && o.status === 'open');
 const startAt = o => Math.max(o.created_at || 0, o.scheduled_for || 0);
+// 1.11: Pause Task. A paused order stays in progress with waiting = true; its paused time does not count
+const isPaused = o => !!(o && o.status === 'in_progress' && o.waiting);
+const pausedMs = (o, at) => { const p = o.paused_at ? (typeof o.paused_at === 'number' ? o.paused_at : T(o.paused_at)) : null;
+  return (+o.paused_s || 0) * 1000 + (p ? Math.max(0, (at || Date.now()) - p) : 0); };
+const workMs = (o, end, from) => Math.max(0, (end || Date.now()) - (from != null ? from : startAt(o)) - pausedMs(o, end));
 const fmtWhen = ms => fmtDate(ms) + ' ' + fmtTime(ms);
 function prioOf(o){
-  const ageMin = Math.max(0, (Date.now() - startAt(o)) / 60000);
+  const ageMin = workMs(o) / 60000;
   const score = o.base_priority + Math.floor(ageMin / 15);
   return {score, level: score >= 4 ? 'urgent' : score >= 2 ? 'high' : 'normal'};
 }
@@ -2388,7 +2404,7 @@ function renderFeed(){
     if (sh !== last) { html += `<div class="shiftdiv">${esc(fmtDate(m.created_at))} · ${esc(shiftOf(m.created_at))}</div>`; last = sh; }
     const mine = m.staff_id === S.me.id; const tome = mentionsMe(m);
     const tag = m.kind === 'note' ? '<span class="kindtag">Guest note</span>' : m.kind === 'handoff' ? '<span class="kindtag">Shift handoff</span>' : '';
-    const chips = (byMsg[m.id] || []).map(o => `<span class="xchip ${o.status === 'done' || o.status === 'dismissed' ? 'done' : ''}"><b>${esc(o.ticket)}</b>${esc(o.room ? 'Room ' + o.room : stRooms(o) ? 'Rooms ' + stRooms(o).join(', ') : placeOf(o) ? placeOf(o).label : 'No room')} · ${esc(o.status === 'in_progress' ? 'in progress' : o.status === 'open' ? CATS[o.category] : o.status)}</span>`).join('');
+    const chips = (byMsg[m.id] || []).map(o => `<span class="xchip ${o.status === 'done' || o.status === 'dismissed' ? 'done' : ''}"><b>${esc(o.ticket)}</b>${esc(o.room ? 'Room ' + o.room : stRooms(o) ? 'Rooms ' + stRooms(o).join(', ') : placeOf(o) ? placeOf(o).label : 'No room')} · ${esc(isPaused(o) ? 'paused' : o.status === 'in_progress' ? 'in progress' : o.status === 'open' ? CATS[o.category] : o.status)}</span>`).join('');
     const rb = m.read_by ? `<button class="readby" data-readby="${esc(m.id)}">Read by ${m.read_by.length}</button>` : '';
     const rq = m.reply ? `<button class="rquote" data-jump="${esc(m.reply.id)}"><b>${esc(m.reply.staff_id === S.me.id ? 'You' : m.reply.author)}</b>${m.reply.body ? `<span class="rq">${esc(m.reply.body)}</span>` : `<span class="rqp">${m.reply.has_photo ? 'Photo' : ''}</span>`}</button>` : '';
     html += `<div class="msg ${m.kind} ${mine ? 'mine' : ''} ${tome ? 'tome' : ''} ${cont ? 'cont' : 'first'} ${more ? 'more' : 'last'}${pop}" data-mid="${esc(m.id)}">
@@ -2622,16 +2638,18 @@ function orderCard(o, p, x){
   const src = o.message_id && S.messages.find(m => m.id === o.message_id);
   const quote = src ? `“${esc(src.body)}”` : (o.details ? esc(o.details) : '');
   const lt = isLater(o);
-  const st = o.status === 'in_progress' ? '<span class="pill prog">In progress</span>' : lt ? `<span class="pill later">📅 ${esc(fmtWhen(o.scheduled_for))}</span>` : '';
+  const st = isPaused(o) ? '<span class="pill paused">Paused</span>' : o.status === 'in_progress' ? '<span class="pill prog">In progress</span>' : lt ? `<span class="pill later">📅 ${esc(fmtWhen(o.scheduled_for))}</span>` : '';
   const acts = [];
   if (o.status === 'open' && !lt) acts.push(`<button class="start" data-act="start" data-id="${o.id}">I'm on it</button>`);
+  else if (isPaused(o)) acts.push(`<button class="start" data-act="resume" data-id="${o.id}">Resume</button>`);
+  else if (o.status === 'in_progress') acts.push(`<button class="pause" data-act="pause" data-id="${o.id}">Pause Task</button>`);
   acts.push(`<button class="done" data-act="done" data-id="${o.id}">Done</button>`);
   if (x && x.map) acts.push(`<button data-engmap="${o.id}" data-noi18n>🗺 ${esc(L2('Map', 'Mapa'))}</button>`);
   acts.push(`<button data-act="more" data-id="${o.id}" aria-label="More actions">•••</button>`);
-  return `<div class="order p-${p.level}" data-id="${o.id}">
+  return `<div class="order p-${p.level}${isPaused(o) ? ' paused' : ''}" data-id="${o.id}">
     ${(pl => !o.room && stRooms(o) ? `<button class="fob" style="border:0" title="${esc(stRooms(o).join(', '))}"><small>ROOMS</small>${stRooms(o).length}</button>` : pl && !o.room ? `<button class="fob place" style="border:0"><small>AREA</small>${esc(pl.label)}</button>` : `<button class="fob ${o.room ? '' : 'none'}" ${o.room ? `data-room="${esc(o.room)}"` : ''} style="border:0"><small>ROOM</small>${esc(o.room || 'n/a')}</button>`)(placeOf(o) || (!o.room && o.map_zone ? {label: o.map_zone} : null))}
     <div style="min-width:0">
-      <div class="ohead"><span class="ticket">${esc(o.ticket)}</span><span class="prio ${p.level}">${p.level}</span>${st}${x && x.cat ? `<span class="cat" data-noi18n>${esc(x.cat)}</span>` : `<span class="cat">${esc(CATS[o.category])}</span>`}<span class="age">${lt ? '' : ago(startAt(o))}</span></div>
+      <div class="ohead"><span class="ticket">${esc(o.ticket)}</span><span class="prio ${p.level}">${p.level}</span>${st}${x && x.cat ? `<span class="cat" data-noi18n>${esc(x.cat)}</span>` : `<span class="cat">${esc(CATS[o.category])}</span>`}<span class="age">${lt ? '' : ago(Date.now() - workMs(o))}</span></div>
       <div class="osum">${sum}</div>
       ${quote ? `<div class="oquote">${quote}</div>` : ''}
       ${o.assigned_name ? `<div class="assigned">Assigned to ${esc(o.assigned_name)}</div>` : ''}
@@ -2975,7 +2993,7 @@ async function send(){
 }
 async function orderAction(id, act, assignee){
   try { await call('sc_order_update', {p_order: id, p_action: act, p_assignee: assignee || null});
-    if (act === 'start') fx('start'); else if (act === 'done') fx('done');
+    if (act === 'start' || act === 'resume') fx('start'); else if (act === 'done') fx('done');
     if (act === 'assign') notify([id]);
     if (act === 'start' || act === 'done' || act === 'dismiss') notifyStatus(id);
     await refresh(); }
@@ -3009,7 +3027,7 @@ function orderDetail(id, fromCal){
   const src = o.message_id && S.messages.find(m => m.id === o.message_id);
   const quote = src ? src.body : (o.details && o.details !== o.summary ? o.details : '');
   const stTxt = stLabel(o);
-  const stCls = o.status === 'done' ? 'ok' : o.status === 'in_progress' ? 'prog' : lt ? 'later' : '';
+  const stCls = stClass(o);
   const row = (k, v, raw) => v ? `<dt>${k}</dt><dd${raw ? ' data-noi18n' : ''}>${v}</dd>` : '';
   const what = o.items && o.items.length ? o.items.map(i => i.issue || String(i.label)).join(', ') : '';
   openModal(`<div class="ohead"><span class="ticket">${esc(o.ticket)}</span>${open ? `<span class="prio ${p.level}">${p.level}</span>` : ''}<span class="pill ${stCls}" data-noi18n>${stTxt}</span><span class="cat">${esc(CATS[o.category] || '')}</span></div>
@@ -3027,9 +3045,10 @@ function orderDetail(id, fromCal){
       ${o.status === 'done' ? row('Completed by', `${esc(o.done_by || '')}${o.done_role ? ' · <span>' + esc(roleOf(o.done_role).label) + '</span>' : ''}`) : ''}
       ${o.status === 'dismissed' ? row('Closed by', esc(o.done_by || '')) : ''}
       ${o.done_at && !open ? row(o.status === 'done' ? 'Completed' : 'Closed', fmtFull(o.done_at)) : ''}
-      ${open ? (lt ? '' : row('Open for', durTxt(Date.now() - startAt(o)))) : o.done_at ? row('Total time', durTxt(o.done_at - startAt(o))) : ''}
+      ${pausedMs(o, o.done_at) >= 60000 ? row('Time paused', durTxt(pausedMs(o, o.done_at))) : ''}
+      ${open ? (lt ? '' : row('Open for', durTxt(workMs(o)))) : o.done_at ? row('Total time', durTxt(workMs(o, o.done_at))) : ''}
     </dl>
-    <div class="btnrow" style="margin-bottom:10px">${open && o.status === 'open' && !lt ? '<button class="btn pri" data-oact="start">I\'m on it</button>' : ''}${open ? '<button class="btn okb" data-oact="done">Done</button>' : ''}${o.photos ? `<button class="btn" data-photos="${o.id}">See photos</button>` : ''}</div>
+    <div class="btnrow" style="margin-bottom:10px">${open && o.status === 'open' && !lt ? '<button class="btn pri" data-oact="start">I\'m on it</button>' : isPaused(o) ? '<button class="btn pri" data-oact="resume">Resume</button>' : o.status === 'in_progress' ? '<button class="btn pausebtn" data-oact="pause">Pause Task</button>' : ''}${open ? '<button class="btn okb" data-oact="done">Done</button>' : ''}${o.photos ? `<button class="btn" data-photos="${o.id}">See photos</button>` : ''}</div>
     <div class="btnrow">${fromCal ? '<button class="btn" data-calback>‹ Calendar</button>' : ''}${open ? '<button class="btn" data-oact="edit">✏️ Edit</button><button class="btn" data-oact="more">More actions</button>' : ''}<button class="btn" data-close>Close</button></div>`);
   $('#modalBody').classList.add('odet');
   $('#modalBody').querySelectorAll('[data-oact]').forEach(b => b.onclick = () => { const a = b.dataset.oact; if (a === 'more') return moreMenu(id); if (a === 'edit') return editOrder(id); closeModal(); orderAction(id, a); });
@@ -3094,10 +3113,10 @@ function editOrder(id){
   };
 }
 const stLabel = o => {
-  const k = o.status === 'done' ? 'done' : o.status === 'dismissed' ? 'dismissed' : o.status === 'in_progress' ? 'prog' : isLater(o) ? 'later' : 'open';
-  return (LANG === 'es' ? {done: 'Completada', dismissed: 'No es tarea', prog: 'En proceso', later: 'Programada', open: 'Abierta'} : {done: 'Completed', dismissed: 'Not a task', prog: 'In progress', later: 'Scheduled', open: 'Open'})[k];
+  const k = o.status === 'done' ? 'done' : o.status === 'dismissed' ? 'dismissed' : isPaused(o) ? 'paused' : o.status === 'in_progress' ? 'prog' : isLater(o) ? 'later' : 'open';
+  return (LANG === 'es' ? {done: 'Completada', dismissed: 'No es tarea', paused: 'En pausa', prog: 'En proceso', later: 'Programada', open: 'Abierta'} : {done: 'Completed', dismissed: 'Not a task', paused: 'Paused', prog: 'In progress', later: 'Scheduled', open: 'Open'})[k];
 };
-const stClass = o => o.status === 'done' ? 'ok' : o.status === 'in_progress' ? 'prog' : isLater(o) ? 'later' : '';
+const stClass = o => o.status === 'done' ? 'ok' : isPaused(o) ? 'paused' : o.status === 'in_progress' ? 'prog' : isLater(o) ? 'later' : '';
 
 /* calendar: work orders (maintenance) and guest requests (housekeeping, front desk) by hotel day */
 const CAL = { y: 0, m: 0, sel: '', kind: 'all', data: [], loading: false, partial: false, seq: 0 };
@@ -4141,7 +4160,7 @@ function dashRender(){
   const prog = open.filter(x => x.o.status === 'in_progress');
   const done = all.filter(o => o.status === 'done' && o.done_at);
   const doneToday = done.filter(o => dayNY(o.done_at) === today);
-  const avg = list => { const t = list.map(o => o.done_at - startAt(o)).filter(x => x >= 0); return t.length ? t.reduce((a, b) => a + b, 0) / t.length : null; };
+  const avg = list => { const t = list.map(o => workMs(o, o.done_at)).filter(x => x >= 0); return t.length ? t.reduce((a, b) => a + b, 0) / t.length : null; };
   const oldest = open.length ? Math.min(...open.map(x => startAt(x.o))) : null;
   const made = all.filter(o => o.created_at >= since), doneR = done.filter(o => o.done_at >= since);
   const tile = (n, l, cls, sub) => `<div class="dk ${cls || ''}"><div class="dkn">${n}</div><div class="dkl">${l}</div>${sub ? `<div class="dks">${sub}</div>` : ''}</div>`;
@@ -4183,15 +4202,15 @@ function dashRender(){
       <span class="dcats">${Object.entries(r.cats).map(([c, n]) => `${ICON[c] || ''}${n}`).join(' ')}</span><b>${r.n}</b></div>`).join('')
     : `<div class="dnone">${L2('No orders in these days.', 'No hay órdenes en estos días.')}</div>`;
   // team
-  const team = new Map(); doneR.forEach(o => { const k = o.done_by || '—'; const t = team.get(k) || {k, n: 0, ms: []}; t.n++; const d = o.done_at - startAt(o); if (d >= 0) t.ms.push(d); team.set(k, t); });
+  const team = new Map(); doneR.forEach(o => { const k = o.done_by || '—'; const t = team.get(k) || {k, n: 0, ms: []}; t.n++; const d = workMs(o, o.done_at); if (d >= 0) t.ms.push(d); team.set(k, t); });
   const topTeam = [...team.values()].sort((a, b) => b.n - a.n).slice(0, 10);
   const teamHtml = topTeam.length ? topTeam.map(t => `<div class="dli"><span>${esc(t.k)}</span><span class="dcats">${t.ms.length ? L2('avg.', 'prom.') + ' ' + durTxt(t.ms.reduce((a, b) => a + b, 0) / t.ms.length) : ''}</span><b>${t.n}</b></div>`).join('')
     : `<div class="dnone">${L2('Nothing completed in these days.', 'Nada completado en estos días.')}</div>`;
   // open table
-  const st = o => o.status === 'in_progress' ? `<span class="pill prog">${L2('In progress', 'En proceso')}</span>${o.assigned_name ? ' ' + esc(o.assigned_name) : ''}` : `<span class="pill">${L2('Waiting', 'En espera')}</span>`;
+  const st = o => isPaused(o) ? `<span class="pill paused">${L2('Paused', 'En pausa')}</span>${o.assigned_name ? ' ' + esc(o.assigned_name) : ''}` : o.status === 'in_progress' ? `<span class="pill prog">${L2('In progress', 'En proceso')}</span>${o.assigned_name ? ' ' + esc(o.assigned_name) : ''}` : `<span class="pill">${L2('Waiting', 'En espera')}</span>`;
   const rows = open.slice(0, 60).map(({o, p}) => `<tr data-oid="${esc(o.id)}" tabindex="0"><td><span class="prio ${p.level}">${p.level === 'urgent' ? L2('Urgent', 'Urgente') : p.level === 'high' ? L2('High', 'Alta') : L2('Normal', 'Normal')}</span></td>
       <td><b>${esc(o.ticket)}</b></td><td>${o.room ? esc(o.room) : stRooms(o) ? esc(stRooms(o).join(', ')) : esc(placeOf(o) ? placeOf(o).label : o.map_zone || '—')}</td><td>${ICON[o.category] || ''} ${esc(CATL[o.category] || '')}</td>
-      <td class="dsum">${esc(o.summary)}</td><td>${durTxt(now - startAt(o))}</td><td>${st(o)}</td></tr>`).join('');
+      <td class="dsum">${esc(o.summary)}</td><td>${durTxt(workMs(o))}</td><td>${st(o)}</td></tr>`).join('');
   const table = open.length ? `<div class="dtwrap"><table class="dtable"><thead><tr><th>${L2('Priority', 'Prioridad')}</th><th>${L2('Ticket', 'Ticket')}</th><th>${L2('Room', 'Hab.')}</th><th>${L2('Department', 'Departamento')}</th><th>${L2('Request', 'Pedido')}</th><th>${L2('Open for', 'Abierta hace')}</th><th>${L2('Status', 'Estado')}</th></tr></thead><tbody>${rows}</tbody></table></div>`
     : `<div class="dnone">${L2('No open orders right now.', 'No hay órdenes abiertas ahora.')}</div>`;
   const seg = [7, 30].map(d => `<button type="button" data-ddays="${d}" aria-pressed="${DASH.days === d}">${d} ${L2('days', 'días')}</button>`).join('');
@@ -4300,8 +4319,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.10.1';
+const APP_VERSION = '1.11.0';
 const CHANGES = [
+  {v: '1.11.0', d: '2026-11-12', en: ['Orders and maintenance orders: after I’m on it, a Pause Task button appears', 'A paused order stays in the pending list, marked Paused, and its time stops counting (age, priority and how long it took). Resume picks it back up', 'Pausing in the app shows the order as On hold on the maps, and the other way around'],
+    es: ['Órdenes y órdenes de mantenimiento: después de Voy aparece el botón Pausar tarea', 'Una orden en pausa sigue en pendientes, marcada En pausa, y su tiempo deja de contar (tiempo abierta, prioridad y cuánto tardó). Reanudar la retoma', 'Pausar en la app muestra la orden En espera en los mapas, y al revés']},
   {v: '1.10.1', d: '2026-11-12', en: ['HK Game Plan: the housekeeper list opens in the app’s own picker, like the hotel picker, with a check on the one chosen and the line number of anyone already on another line', 'Shift Supervisor, Shift Inspector and Houseman use the same picker', 'The × that removes a line is now at the start of the line'],
     es: ['HK Game Plan: la lista de camareras abre en el selector propio de la app, como el de hoteles, con check en la elegida y el número de línea de quien ya está en otra', 'Shift Supervisor, Shift Inspector y Houseman usan el mismo selector', 'La × para quitar una línea ahora está al inicio de la línea']},
   {v: '1.10.0', d: '2026-11-12', en: ['HK Game Plan now looks like the HK Productivity Chart: one row per room attendant, picked from a dropdown with the hotel’s housekeepers, with check-outs, stayovers, clock-in, estimated clock-out and minutes per room side by side', 'Top of the plan: Shift Supervisor, Shift Inspector and Houseman dropdowns; Arrivals, Departures, Stayovers, DND and Rooms to Strip; Room to Assign and Left to Assign worked out', 'Add all housekeepers in one tap, or type a name for someone without a user. Totals row at the bottom'],
@@ -4698,8 +4719,8 @@ const engCard = o => orderCard(o, prioOf(o), {cat: engCatLabel(engCatOf(o)), map
 // one finished (or found) order in a list: where, what, who and how long
 function engRow(o){
   const st = o.status === 'done' ? ['ok', '✓', L2('Done', 'Lista')] : o.status === 'dismissed' ? ['x', '✕', L2('Not a task', 'No es tarea')]
-    : o.status === 'in_progress' ? ['prog', '●', L2('In progress', 'En proceso')] : ['open', '○', isLater(o) ? L2('Scheduled', 'Programada') : L2('Open', 'Abierta')];
-  const mins = o.status === 'done' && o.done_at ? Math.max(0, Math.round((o.done_at - o.created_at) / 60000)) : null;
+    : isPaused(o) ? ['paused', '⏸', L2('Paused', 'En pausa')] : o.status === 'in_progress' ? ['prog', '●', L2('In progress', 'En proceso')] : ['open', '○', isLater(o) ? L2('Scheduled', 'Programada') : L2('Open', 'Abierta')];
+  const mins = o.status === 'done' && o.done_at ? Math.round(workMs(o, o.done_at, o.created_at) / 60000) : null;
   const who = o.status === 'done' || o.status === 'dismissed' ? (o.done_by || '') : (o.assigned_name || '');
   const when = o.done_at || o.created_at;
   const what = o.details || String(o.summary || '').replace(/^[^:]{1,40}:\s*/, '');
@@ -4736,7 +4757,7 @@ function renderEng(){
     tools.innerHTML = `<div class="filters engf">${engChips('data-ehd', [['1', L2('Today', 'Hoy')], ['7', L2('7 days', '7 días')], ['30', L2('30 days', '30 días')], ['90', L2('90 days', '90 días')]], String(ENG.histDays))}</div>`;
     if (!ENG.hist) { list.innerHTML = `<div class="small" data-noi18n>${esc(L2('Loading…', 'Cargando…'))}</div>`; return; }
     const today = dayNY(Date.now()), items = ENG.hist.filter(o => ENG.histDays !== 1 || dayNY(o.done_at || o.created_at) === today);
-    const done = items.filter(o => o.status === 'done' && o.done_at), avg = done.length ? done.reduce((s, o) => s + (o.done_at - o.created_at), 0) / done.length : null;
+    const done = items.filter(o => o.status === 'done' && o.done_at), avg = done.length ? done.reduce((s, o) => s + workMs(o, o.done_at, o.created_at), 0) / done.length : null;
     const days = []; items.forEach(o => { const k = dayNY(o.done_at || o.created_at); let d = days.find(z => z.k === k); if (!d) days.push(d = {k, at: o.done_at || o.created_at, items: []}); d.items.push(o); });
     list.innerHTML = `<div class="engsum" data-noi18n>${esc(done.length + ' ' + L2(done.length === 1 ? 'finished' : 'finished', done.length === 1 ? 'terminada' : 'terminadas'))}${avg != null ? ' · ' + esc(L2('average ', 'promedio ') + durTxt(avg)) : ''}</div>`
       + (days.length ? days.map(d => `<div class="engday" data-noi18n>${esc(d.k === today ? L2('Today', 'Hoy') : fmtDate(d.at))}</div>${d.items.map(engRow).join('')}`).join('')
