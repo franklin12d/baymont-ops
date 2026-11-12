@@ -1098,6 +1098,23 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .enchk{display:flex;gap:8px;align-items:center;font-weight:600}
 .enph{cursor:pointer}
 .lnhist .lnrow b{font-size:14px;color:var(--ink)}
+/* 1.13.0: shared laundry room, hotel colors, linen */
+.lncard[data-h],.lnhot[data-h]{--hc:#667085}
+.lncard[data-h="MGT"],.lnhot[data-h="MGT"]{--hc:#D92D20}
+.lncard[data-h="FDT"],.lnhot[data-h="FDT"]{--hc:#12A150}
+.lncard[data-h][data-st="run"]{border-top-color:var(--hc);border-color:color-mix(in srgb,var(--hc) 45%,var(--line));border-top-color:var(--hc);background:color-mix(in srgb,var(--hc) 10%,var(--surface))}
+.lncard[data-h][data-st="run"] .lnico{color:var(--hc);background:color-mix(in srgb,var(--hc) 16%,var(--surface-2))}
+.lncard[data-h][data-st="run"] .lnstate{color:var(--hc)}
+.lncard[data-h][data-st="run"] .lnbar i{background:var(--hc)}
+.lncard[data-h][data-st="ready"]{border-top-color:var(--hc)}
+.lnhot{display:inline-flex;align-items:center;gap:5px;align-self:flex-start;font:800 11.5px var(--f-body);padding:2px 9px;border-radius:999px;color:#fff;background:var(--hc);white-space:nowrap;letter-spacing:.01em}
+.lnhot::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff;opacity:.9}
+.lnhist .lnrow b .lnhot{margin-right:6px;vertical-align:1px}
+.lnshare{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:13px;color:var(--ink-2);margin:0 0 10px}
+.lnlins{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.lnlins button{min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font:600 14px var(--f-body);color:var(--ink)}
+.lnlins button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.lntag.lin{background:var(--accent-soft);color:var(--ink);border-color:transparent}
 .lnhist .lnrow span{font-size:13px;color:var(--ink-2)}
 
 /* ===== FrankShift theme v9 (1.5.0): one look in every part of the app ===== */
@@ -1305,6 +1322,7 @@ body{background:var(--bg)}
   <section class="view" id="view-dash" data-noi18n hidden aria-label="Dashboard"><div id="dashBody"></div></section>
 
   <section class="view" id="view-laundry" hidden data-noi18n aria-label="Laundry"><div class="inner">
+    <div class="lnshare" id="lnShare" hidden></div>
     <div class="lngrid" id="lnGrid"><div class="small">…</div></div>
     <div class="card lnhist"><h2 id="lnHistH">Last loads</h2><div id="lnHist"></div></div>
   </div></section>
@@ -4328,8 +4346,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.12.0';
+const APP_VERSION = '1.13.0';
 const CHANGES = [
+  {v: '1.13.0', d: '2026-11-12', en: ['Laundry: when you start a load, pick what is in it: flats, fitted sheet, pillow case, duvet, towels, face towel, hand towel, floor mat, wash cloth, general or other. It shows on the machine and in Last loads. A dryer starts with what the last washer load had', 'Maingate and Fundamental now share one Laundry, because they use the same machines. A running machine takes the color of the hotel washing: red for Maingate, green for Fundamental', 'Highway keeps its own machines'],
+    es: ['Laundry: al iniciar una tanda, elige qué lleva: sábana plana, sábana ajustable, funda de almohada, duvet, toallas, toalla de cara, toalla de mano, tapete de piso, toallita, general u otro. Se ve en la máquina y en Últimas tandas. La secadora empieza con lo que llevaba la última tanda de la lavadora', 'Maingate y Fundamental ahora comparten un solo Laundry, porque usan las mismas máquinas. La máquina en marcha toma el color del hotel que lava: rojo para Maingate, verde para Fundamental', 'Highway sigue con sus propias máquinas']},
   {v: '1.12.0', d: '2026-11-12', en: ['New Requested By Guest next to Urgent when you create or edit an order, here and in Engineer', 'Guest requests show a bright pink tag and border and rank two levels higher, so they rise to the top of the list. Urgent and guest together go first of all', 'The tag also shows in the order detail, Engineer, the dashboard and the alert'],
     es: ['Nuevo Pedido por huésped junto a Urgente al crear o editar una orden, aquí y en Engineer', 'Los pedidos de huéspedes llevan una etiqueta y un borde rosa fuerte y suben dos niveles de prioridad, así quedan arriba en la lista. Urgente y de huésped juntos van primero que todo', 'La etiqueta también sale en el detalle de la orden, Engineer, el tablero y el aviso']},
   {v: '1.11.0', d: '2026-11-12', en: ['Orders and maintenance orders: after I’m on it, a Pause Task button appears', 'A paused order stays in the pending list, marked Paused, and its time stops counting (age, priority and how long it took). Resume picks it back up', 'Pausing in the app shows the order as On hold on the maps, and the other way around'],
@@ -4521,6 +4541,14 @@ const LN_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
 const LN_ICON = $('#lnTab .tic svg').outerHTML;
 const lnName = m => { const x = LN_M.find(r => r[0] === m); return x ? L2(x[1], x[2]) : m; };
 const lnWash = m => m[0] === 'W';
+const LN_LIN = [['flats', 'Flats', 'Sábana plana'], ['fitted_sheet', 'Fitted sheet', 'Sábana ajustable'], ['pillow_case', 'Pillow case', 'Funda de almohada'],
+  ['duvet', 'Duvet', 'Duvet'], ['towels', 'Towels', 'Toallas'], ['face_towel', 'Face towel', 'Toalla de cara'], ['hand_towel', 'Hand towel', 'Toalla de mano'],
+  ['floor_mat', 'Floor mat', 'Tapete de piso'], ['wash_cloth', 'Wash cloth', 'Toallita'], ['general', 'General', 'General'], ['other', 'Other', 'Otro']];
+const lnLinName = k => { const x = LN_LIN.find(r => r[0] === k); return x ? L2(x[1], x[2]) : k; };
+const lnLinList = l => LN_LIN.map(r => r[0]).filter(k => (l.linen || []).includes(k)).map(k => k === 'other' && l.linen_other ? l.linen_other : lnLinName(k));
+const lnShared = () => !!(LN.data && (LN.data.shared || []).length > 1);
+const lnHotName = h => (LN.data && LN.data.names && LN.data.names[h]) || hotelShort(h);
+const lnHot = l => lnShared() && l && l.hotel ? `<span class="lnhot" data-h="${esc(l.hotel)}">${esc(lnHotName(l.hotel))}</span>` : '';
 const lnNow = () => Date.now() + LN.skew;
 const lnT = v => new Date(v).getTime();
 const lnShort = n => { const p = String(n || '').trim().split(/\s+/); return p.length > 1 ? p[0] + ' ' + p[p.length - 1][0] + '.' : p[0] || ''; };
@@ -4529,7 +4557,8 @@ function lnLeft(ms){ const s = Math.max(0, Math.ceil(ms / 1000)), h = Math.floor
 const lnState = l => !l ? 'idle' : lnT(l.ends_at) > lnNow() ? 'run' : 'ready';
 const lnCur = () => Object.fromEntries(((LN.data && LN.data.current) || []).map(l => [l.machine, l]));
 const lnWhen = ms => { const today = new Date(ms).toLocaleDateString('en-US', {timeZone: TZ}) === new Date().toLocaleDateString('en-US', {timeZone: TZ}); return (today ? '' : fmtDate(ms) + ', ') + fmtTime(ms); };
-function lnTags(l){ if (!lnWash(l.machine)) return ''; return '<div class="lntags">' + (l.soap ? `<span class="lntag">${esc(L2('Soap', 'Jabón'))}</span>` : '') + (l.bleach ? '<span class="lntag">Bleach</span>' : '') + (!l.soap && !l.bleach ? `<span class="lntag">${esc(L2('No soap or bleach', 'Sin jabón ni bleach'))}</span>` : '') + '</div>'; }
+function lnTags(l){ const lin = lnLinList(l).map(t => `<span class="lntag lin">${esc(t)}</span>`).join('');
+  if (!lnWash(l.machine)) return lin ? '<div class="lntags">' + lin + '</div>' : ''; return '<div class="lntags">' + lin + (l.soap ? `<span class="lntag">${esc(L2('Soap', 'Jabón'))}</span>` : '') + (l.bleach ? '<span class="lntag">Bleach</span>' : '') + (!l.soap && !l.bleach ? `<span class="lntag">${esc(L2('No soap or bleach', 'Sin jabón ni bleach'))}</span>` : '') + '</div>'; }
 async function lnLoad(quiet){
   if (!S.token || !S.me || LN.busy) return; LN.busy = true;
   try { lnSet(await call('sc_laundry')); } catch (e) { if (!quiet) toast(esc(e.message)); } finally { LN.busy = false; }
@@ -4543,7 +4572,13 @@ function lnRender(){
   lnMenu();
   const g = $('#lnGrid'); if (!g || $('#view-laundry').hidden) return;
   if (!LN.data) { g.innerHTML = `<div class="small">${esc(L2('Loading…', 'Cargando…'))}</div>`; return; }
-  const cur = lnCur(), now = lnNow();
+  const cur = lnCur(), now = lnNow(), sh = $('#lnShare');
+  if (lnShared()) {
+    const hs = LN.data.shared, nm = hs.map(lnHotName);
+    sh.innerHTML = esc(L2(nm.join(' and ') + ' use the same machines. The color shows who is washing:', nm.join(' y ') + ' usan las mismas máquinas. El color dice quién está lavando:'))
+      + hs.map(h => `<span class="lnhot" data-h="${esc(h)}">${esc(lnHotName(h))}</span>`).join('');
+    sh.hidden = false;
+  } else sh.hidden = true;
   g.innerHTML = LN_M.map(([m]) => {
     const l = cur[m], st = lnState(l), wash = lnWash(m);
     const stTxt = st === 'idle' ? L2('Free', 'Libre') : st === 'run' ? (wash ? L2('Washing', 'Lavando') : L2('Drying', 'Secando')) : L2('Ready to unload', 'Lista para sacar');
@@ -4553,13 +4588,13 @@ function lnRender(){
       const st0 = lnT(l.started_at), end = lnT(l.ends_at), pct = Math.min(100, Math.max(0, (now - st0) / Math.max(1, end - st0) * 100));
       body = (st === 'run' ? `<div class="lntime" data-lnends="${end}" role="timer" aria-label="${esc(L2('Time left', 'Tiempo restante'))}">${lnLeft(end - now)}</div>`
                            : `<div class="lntime">${esc(L2('Done at ', 'Terminó a las ') + fmtTime(end))}</div>`)
-        + `<div class="lnbar"><i data-lnfrom="${st0}" data-lnto="${end}" style="width:${pct.toFixed(1)}%"></i></div>`
+        + `<div class="lnbar"><i data-lnfrom="${st0}" data-lnto="${end}" style="width:${pct.toFixed(1)}%"></i></div>` + lnHot(l)
         + `<div class="lnmeta">${esc(L2('Started by ', 'La puso ') + lnShort(l.by))}<br>${esc(lnWhen(st0) + ' · ' + l.minutes + ' min')}</div>` + lnTags(l);
     }
     const act = st === 'idle' ? `<button type="button" class="btn pri" data-lnplay="${m}">${LN_PLAY}${esc(L2('Start', 'Iniciar'))}</button>`
       : st === 'run' ? `<button type="button" class="btn" data-lnstop="${esc(l.id)}">${esc(L2('Stop', 'Detener'))}</button>`
       : `<button type="button" class="btn pri" data-lnend="${esc(l.id)}">${esc(L2('Unload', 'Sacar ropa'))}</button><button type="button" class="btn" data-lnplay="${m}" aria-label="${esc(L2('New load in ', 'Nueva tanda en ') + lnName(m))}">${LN_PLAY}${esc(L2('New', 'Nueva'))}</button>`;
-    return `<div class="lncard" data-m="${m}" data-st="${st}"><div class="lnhead"><span class="lnico">${LN_ICON}</span><div style="min-width:0"><b>${esc(lnName(m))}</b><span class="lnstate">${esc(stTxt)}</span></div></div>${body}<div class="lnact">${act}</div></div>`;
+    return `<div class="lncard" data-m="${m}" data-st="${st}"${l && lnShared() && l.hotel ? ` data-h="${esc(l.hotel)}"` : ''}><div class="lnhead"><span class="lnico">${LN_ICON}</span><div style="min-width:0"><b>${esc(lnName(m))}</b><span class="lnstate">${esc(stTxt)}</span></div></div>${body}<div class="lnact">${act}</div></div>`;
   }).join('');
   $('#lnHistH').textContent = L2('Last loads', 'Últimas tandas');
   const h = LN.data.history || [];
@@ -4567,7 +4602,8 @@ function lnRender(){
     const end = l.ended_at ? (l.ended_how === 'stopped' ? L2('Stopped ', 'Detenida ') : L2('Unloaded ', 'Sacada ')) + fmtTime(lnT(l.ended_at)) + (l.ended_name ? L2(' by ', ' por ') + lnShort(l.ended_name) : '')
       : lnT(l.ends_at) > now ? L2('Running, ends ', 'Corriendo, termina ') + fmtTime(lnT(l.ends_at)) : L2('Ready since ', 'Lista desde ') + fmtTime(lnT(l.ends_at));
     const tags = lnWash(l.machine) ? ' · ' + ([l.soap ? L2('soap', 'jabón') : '', l.bleach ? 'bleach' : ''].filter(Boolean).join(L2(' and ', ' y ')) || L2('no soap or bleach', 'sin jabón ni bleach')) : '';
-    return `<div class="lnrow"><b>${esc(lnName(l.machine) + ' · ' + lnWhen(lnT(l.started_at)))}</b><span>${esc(l.minutes + ' min · ' + L2('started by ', 'la puso ') + lnShort(l.by) + tags)}</span><span>${esc(end)}</span></div>`;
+    const lin = lnLinList(l).join(', ');
+    return `<div class="lnrow"><b>${lnHot(l)}${esc(lnName(l.machine) + ' · ' + lnWhen(lnT(l.started_at)))}</b><span>${esc(l.minutes + ' min · ' + (lin ? lin + ' · ' : '') + L2('started by ', 'la puso ') + lnShort(l.by) + tags)}</span><span>${esc(end)}</span></div>`;
   }).join('') : `<div class="small">${esc(L2('No loads in the last day and a half.', 'No hay tandas en el último día y medio.'))}</div>`;
 }
 function lnMenu(){
@@ -4608,22 +4644,36 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 function lnPlay(m){
   const wash = lnWash(m), mins = ls.get('sc.lnMin', {}), last = ls.get('sc.lnAdd', {soap: true, bleach: false});
   const def = mins[m] || (wash ? 30 : 45), opts = wash ? [25, 30, 35, 40, 45] : [30, 40, 45, 50, 60];
+  // a dryer starts with what the last washer load had (from the last 4 hours); a washer starts empty
+  const lw = wash ? null : ((LN.data && LN.data.history) || []).find(x => lnWash(x.machine) && lnNow() - lnT(x.started_at) < 4 * 3600e3 && (x.linen || []).length);
+  const lin0 = lw ? lw.linen.slice() : [], oth0 = lw && lw.linen_other || '';
   openModal(`<div data-noi18n><h2>${esc(lnName(m))}</h2><p class="lead">${esc(L2('How long is the cycle?', '¿Cuánto dura el ciclo?'))}</p>
     <div class="lnmins" role="group" aria-label="${esc(L2('Minutes', 'Minutos'))}">${opts.map(n => `<button type="button" data-lnmin="${n}" aria-pressed="${n === def}">${n}</button>`).join('')}</div>
     <div class="field"><label for="lnMin">${esc(L2('Minutes', 'Minutos'))}</label><input id="lnMin" type="number" inputmode="numeric" min="1" max="240" value="${def}"></div>
+    <p class="lead" id="lnLinH">${esc(L2('What is in it?', '¿Qué lleva?'))}</p>
+    <div class="lnlins" role="group" aria-labelledby="lnLinH">${LN_LIN.map(r => `<button type="button" data-lnlin="${r[0]}" aria-pressed="${lin0.includes(r[0])}">${esc(L2(r[1], r[2]))}</button>`).join('')}</div>
+    <div class="field" id="lnOthF"${lin0.includes('other') ? '' : ' hidden'}><label for="lnOth">${esc(L2('Other: what is it?', 'Otro: ¿qué es?'))}</label><input id="lnOth" maxlength="60" value="${esc(oth0)}"></div>
     ${wash ? `<label class="lnchk"><input type="checkbox" id="lnSoap"${last.soap ? ' checked' : ''}> ${esc(L2('Soap', 'Jabón'))}</label><label class="lnchk"><input type="checkbox" id="lnBleach"${last.bleach ? ' checked' : ''}> Bleach</label>` : ''}
     <div class="err" id="lnErr"></div>
     <div class="btnrow"><button class="btn pri" id="lnGo">${LN_PLAY} ${esc(L2('Start', 'Iniciar'))}</button><button class="btn" data-close>${esc(L2('Cancel', 'Cancelar'))}</button></div></div>`);
   const sync = () => { const v = +$('#lnMin').value; document.querySelectorAll('[data-lnmin]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.lnmin === v)); };
   document.querySelectorAll('[data-lnmin]').forEach(b => b.onclick = () => { $('#lnMin').value = b.dataset.lnmin; sync(); });
   $('#lnMin').addEventListener('input', sync);
+  document.querySelectorAll('[data-lnlin]').forEach(b => b.onclick = () => {
+    b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true');
+    if (b.dataset.lnlin === 'other') { $('#lnOthF').hidden = b.getAttribute('aria-pressed') !== 'true'; if (!$('#lnOthF').hidden) $('#lnOth').focus(); }
+    $('#lnErr').textContent = '';
+  });
   $('#lnGo').onclick = async () => {
     const n = Math.round(+$('#lnMin').value);
     if (!(n >= 1 && n <= 240)) { $('#lnErr').textContent = L2('Pick from 1 to 240 minutes.', 'Elige de 1 a 240 minutos.'); return; }
+    const linen = [...document.querySelectorAll('[data-lnlin][aria-pressed="true"]')].map(b => b.dataset.lnlin);
+    if (!linen.length) { $('#lnErr').textContent = L2('Pick what is in the load.', 'Elige qué lleva la tanda.'); return; }
+    const other = linen.includes('other') ? $('#lnOth').value.trim().slice(0, 60) : '';
     const soap = wash && $('#lnSoap').checked, bleach = wash && $('#lnBleach').checked;
     $('#lnGo').disabled = true;
     try {
-      const d = await call('sc_laundry_start', {p_machine: m, p_minutes: n, p_soap: soap, p_bleach: bleach});
+      const d = await call('sc_laundry_start', {p_machine: m, p_minutes: n, p_soap: soap, p_bleach: bleach, p_linen: linen, p_linen_other: other || null});
       mins[m] = n; ls.set('sc.lnMin', mins); if (wash) ls.set('sc.lnAdd', {soap, bleach});
       closeModal(); fx('start'); lnSet(d);
       toast(`<b>${esc(lnName(m))}</b> <span>${esc(L2('started, ' + n + ' min.', 'en marcha, ' + n + ' min.'))}</span>`);
