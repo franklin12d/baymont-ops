@@ -23,7 +23,7 @@
   --accent:#2457F5; --accent-ink:#FFFFFF; --accent-soft:#EBF0FF;
   --urgent:#E0383E; --urgent-soft:#FDECEC; --high:#D97706; --high-soft:#FEF3E2; --ok:#16955A; --ok-soft:#E5F6EC;
   --note:#FFF8E1; --note-line:#F1DE9A; --handoff:#F1EEFF; --handoff-line:#D3CBFB;
-  --r-fd:#2457F5; --r-hk:#0E9F8E; --r-hm:#5C9A12; --r-eng:#E5730F; --r-mgr:#7457F0;
+  --r-fd:#2457F5; --r-hk:#0E9F8E; --r-hm:#5C9A12; --r-eng:#E5730F; --r-mgr:#7457F0; --r-sup:#C026D3; --r-sub:#4F46E5;
   --f-display:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -699,7 +699,7 @@ table.rep th,table.rep td{padding:6px 6px}
   --bg:#F5F6FB; --surface:#FFFFFF; --surface-2:#F2F3F9; --line:#E3E6EF;
   --ink:#0F172A; --ink-2:#475569; --ink-3:#8A94A6;
   --accent:#635BFF; --accent-ink:#FFFFFF; --accent-soft:#EEEDFF; --ok:#059669; --ok-soft:#E3F7EF;
-  --r-fd:#3B82F6; --r-mgr:#635BFF;
+  --r-fd:#3B82F6; --r-mgr:#635BFF; --r-sup:#C026D3; --r-sub:#4338CA;
   --grad:linear-gradient(135deg,#635BFF 0%,#3B82F6 100%);
   --f-display:"Outfit",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-body:"Outfit",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -709,7 +709,7 @@ table.rep th,table.rep td{padding:6px 6px}
   --accent:#7D76FF; --accent-ink:#FFFFFF; --accent-soft:#252457;
   --urgent:#FF6B6F; --urgent-soft:#3A1719; --high:#F5A524; --high-soft:#35260C; --ok:#34D399; --ok-soft:#0F2F27;
   --note:#2C2614; --note-line:#5E5021; --handoff:#221E3D; --handoff-line:#463D86;
-  --r-fd:#60A5FA; --r-hk:#2DD4BF; --r-hm:#A3E635; --r-eng:#FB923C; --r-mgr:#A78BFA;
+  --r-fd:#60A5FA; --r-hk:#2DD4BF; --r-hm:#A3E635; --r-eng:#FB923C; --r-mgr:#A78BFA; --r-sup:#E879F9; --r-sub:#818CF8;
   --bub:#1E2A44; --bub-ink:#EEF2F7; --feedbg:#0F172A;
   --shadow:0 1px 2px rgba(0,0,0,.35),0 6px 20px rgba(0,0,0,.28);
   --shadow-lift:0 2px 4px rgba(0,0,0,.35),0 14px 36px rgba(0,0,0,.45); color-scheme:dark}
@@ -910,6 +910,77 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .lnhist .lnrow:first-child{border-top:0}
 #view-srep .inner{padding-bottom:90px}
 #view-punch .inner{padding-bottom:90px}
+/* 1.14.0: Board and Menu permissions */
+#view-board .inner{padding-bottom:90px}
+.menuoff{display:none!important}
+.bddate{min-height:40px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:600 14px var(--f-body);padding:0 8px}
+.bdday{font-size:13px;color:var(--ink-2);margin:8px 0 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.bdmine,.bdstrip,.bdmaster{margin-top:12px}
+.bdhead{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.bdhead .srh{flex:1;margin:0}
+.bdsum{font-size:13px;color:var(--ink-2);font-weight:600}
+:is(.bdcard,.bdrow,.bdst,.bdchips button,.bdsel){--bc:#64748B}
+:is(.bdcard,.bdrow,.bdst,.bdchips button,.bdsel)[data-st="dirty"]{--bc:#C2410C}
+:is(.bdcard,.bdrow,.bdst,.bdchips button,.bdsel)[data-st="ready"]{--bc:#2563EB}
+:is(.bdcard,.bdrow,.bdst,.bdchips button,.bdsel)[data-st="cleaning"]{--bc:#7C3AED}
+:is(.bdcard,.bdrow,.bdst,.bdchips button,.bdsel)[data-st="paused"]{--bc:#64748B}
+:is(.bdcard,.bdrow,.bdst,.bdchips button,.bdsel)[data-st="insp"]{--bc:#CA8A04}
+:is(.bdcard,.bdrow,.bdst,.bdchips button,.bdsel)[data-st="vacant"]{--bc:#16A34A}
+:is(.bdcard,.bdrow,.bdst,.bdchips button,.bdsel)[data-st="dnd"]{--bc:#DC2626}
+:is(.bdcard,.bdrow,.bdst,.bdchips button,.bdsel)[data-st="refused"]{--bc:#BE123C}
+.bdcard{border:1px solid var(--line);border-left:6px solid var(--bc);border-radius:14px;padding:12px;margin-top:10px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.bdcard[data-st="insp"],.bdrow[data-st="insp"]{background:color-mix(in srgb,#FACC15 22%,var(--surface));border-color:#EAB308;border-left-color:#CA8A04}
+.bdtop{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.bdnum{font:800 22px var(--f-body);color:var(--ink);min-width:3.2ch;font-variant-numeric:tabular-nums}
+.bdrow .bdnum{font-size:17px}
+.bdkind{font:700 11.5px var(--f-body);padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.bdst{font:700 12px var(--f-body);padding:4px 10px;border-radius:999px;color:#fff;background:var(--bc)}
+.bdtop .bdst{margin-left:auto}
+.bdst[data-st="insp"]{color:#422006;background:#FACC15}
+.bdclock{font:800 28px var(--f-body);font-variant-numeric:tabular-nums;color:var(--bc)}
+.bdrow .bdclock{font-size:15px}
+.bdmpr{font-size:14px;color:var(--ink-2)}
+.bdmpr b{color:var(--ink)}
+.bdacts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.bdacts .btn{min-height:50px;flex:1;font-size:16px;font-weight:800}
+.btn.bdready,.btn.bdok{background:#16A34A;border-color:#16A34A;color:#fff}
+.bdwait{font-size:13px;color:var(--ink-3);flex-basis:100%}
+.bdset{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2)}
+.bdset select,.bdsel{min-height:38px;border:1px solid var(--line);border-left:4px solid var(--bc);border-radius:10px;background:var(--surface);color:var(--ink);font:600 13.5px var(--f-body);padding:0 6px;max-width:100%}
+.bdrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;border:1px solid var(--line);border-left:5px solid var(--bc);border-radius:12px;margin-top:6px;background:var(--surface)}
+.bdrow .grow{flex:1;min-width:0;font-size:14px;color:var(--ink-2)}
+.bdrow.done{opacity:.85}
+.bdx{width:34px;height:34px;border:0;border-radius:50%;background:var(--surface-2);color:var(--ink-3);font-size:18px;cursor:pointer;flex:none}
+.bdgrp{margin-top:14px}
+.bdgh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.bdgh b{font-size:15px;color:var(--ink)}
+.bdgh span{font-size:12.5px;color:var(--ink-2)}
+.bdinsp{background:#FACC15;color:#422006;font:800 14px var(--f-body);padding:8px 12px;border-radius:10px;margin:6px 0 8px}
+.bdchips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:6px 0 2px}
+.bdchips button{flex:none;min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);color:var(--ink-2);font:600 13px var(--f-body);cursor:pointer;white-space:nowrap}
+.bdchips button[data-st]{border-left:4px solid var(--bc)}
+.bdchips button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.bdchips i{font-style:normal;opacity:.8;margin-left:3px}
+.bdsub{margin-top:14px}
+.bdakinds{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
+.bdakinds button{min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink-2);font:700 14px var(--f-body);cursor:pointer}
+.bdakinds button[data-bdk="co"][aria-pressed="true"]{background:#C2410C;border-color:#C2410C;color:#fff}
+.bdakinds button[data-bdk="so"][aria-pressed="true"]{background:#2563EB;border-color:#2563EB;color:#fff}
+.bdawrap{max-height:46vh;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:4px 8px 10px;margin-top:8px}
+.bdfl{font:700 12px var(--f-body);color:var(--ink-3);margin:10px 0 4px}
+.bdgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:6px}
+.bdgrid button{min-height:46px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:700 14px var(--f-body);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15;padding:2px}
+.bdgrid button small{font:600 10px var(--f-body);color:var(--ink-3);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bdgrid button[aria-pressed="true"][data-k="co"]{background:#C2410C;border-color:#C2410C;color:#fff}
+.bdgrid button[aria-pressed="true"][data-k="so"]{background:#2563EB;border-color:#2563EB;color:#fff}
+.bdgrid button[aria-pressed="true"] small{color:inherit;opacity:.9}
+.bdgrid button:disabled{opacity:.5;cursor:default}
+.bdtype{display:flex;gap:8px;margin-top:10px}
+.bdtype input{flex:1;min-width:0}
+.mnchk{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0 10px}
+.mnchk label{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink);min-height:38px}
+.mnchk input{width:20px;height:20px;flex:none}
+.lockln{margin-top:6px}
 #view-hkplan .inner{padding-bottom:110px}
 .hkdate{display:flex;align-items:center;gap:8px;margin:12px 0}
 .hkdate .btn{min-width:44px;min-height:44px;font-size:20px;line-height:1;padding:0}
@@ -1227,6 +1298,7 @@ body{background:var(--bg)}
     <button role="tab" data-tab="laundry" aria-selected="false" id="lnTab"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h.01M11 6h.01"/><circle cx="12" cy="13.5" r="5"/><path class="drum" d="M9.3 14c.9-.8 1.8-.8 2.7 0s1.8.8 2.7 0"/></svg></span><span class="tl">Laundry</span><span class="lnst" id="lnSt" data-noi18n></span></button>
     <button role="tab" data-tab="punch" aria-selected="false" id="mpTab"><span class="tic"><span class="cnt" id="mpCnt" hidden></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4"/><path d="M12 16.5h.01"/><path d="M9 2h6"/></svg></span><span class="tl" data-noi18n>Missing Punch</span></button>
     <button role="tab" data-tab="hkplan" aria-selected="false" id="hkTab"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/></svg></span><span class="tl" data-noi18n>HK Game Plan</span></button>
+    <button role="tab" data-tab="board" aria-selected="false" id="boardTab"><span class="tic"><span class="cnt" id="bdCnt" hidden></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></span><span class="tl" data-noi18n>Board</span></button>
     <button role="tab" data-tab="team" aria-selected="false" id="teamTab" hidden><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="cnt" id="teamCnt"></span></span><span class="tl">Manager</span></button>
   </nav>
   <div class="banner" id="pushBanner" hidden><span class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span><span class="grow" id="pushText"></span><button class="btn sm pri" id="pushBtn">Turn on</button><button class="linkbtn" id="pushLater">Not now</button></div>
@@ -1291,6 +1363,7 @@ body{background:var(--bg)}
   <section class="view" id="view-srep" hidden data-noi18n aria-label="Shift Report"><div class="inner" id="srBody"></div></section>
   <section class="view" id="view-punch" hidden data-noi18n aria-label="Missing Punch"><div class="inner" id="mpBody"></div></section>
   <section class="view" id="view-hkplan" hidden data-noi18n aria-label="HK Game Plan"><div class="inner" id="hkBody"></div></section>
+  <section class="view" id="view-board" hidden data-noi18n aria-label="Board"><div class="inner" id="bdBody"></div></section>
 
   <section class="view" id="view-lost" hidden><div class="inner">
     <div><button type="button" class="btn sm" id="lfBack">‹ Pass-on</button></div>
@@ -1335,7 +1408,7 @@ body{background:var(--bg)}
   </div></section>
 
   <section class="view" id="view-team" hidden><div class="inner">
-    <div class="card">
+    <div class="card" id="teamRep">
       <h2>Last 7 days</h2>
       <div class="scroll-x"><table class="rep" id="repTable"></table></div>
       <div class="btnrow" style="margin-top:10px"><button class="btn" id="csvBtn">Download orders (CSV, 30 days)</button></div>
@@ -1351,6 +1424,7 @@ body{background:var(--bg)}
       <div class="err" id="sfErr"></div>
       <button class="btn pri" type="submit">Add to team</button>
     </form>
+    <div class="card" id="menuRoles"><div data-noi18n id="mrBody"></div></div>
     <div class="card"><h2>Team at <span id="teamHotel"></span></h2><p class="small" style="margin:-4px 0 10px">Each person signs in with their user and PIN. New users and PIN resets get a 6-digit start code from you that works once for 3 days.</p><div class="btnrow" style="margin-bottom:10px"><button class="btn sm pri" id="usersCodes">Start codes for who is not active</button><button class="btn sm" id="usersCsv">Download user list</button></div><div class="devsum" id="devSum" hidden></div><div class="tsearch"><input id="teamSearch" type="search" placeholder="Search name or user" aria-label="Search the team" autocomplete="off"><span class="small" id="teamFound"></span></div><div class="list" id="staffList"></div></div>
   </div></section>
 </div>
@@ -1399,6 +1473,8 @@ const ROLES = [
   {id:'hm',  label:'Houseman',    color:'--r-hm'},
   {id:'eng', label:'Engineering', color:'--r-eng'},
   {id:'mgr', label:'Manager',     color:'--r-mgr'},
+  {id:'sup', label:'HK Supervisor', color:'--r-sup'},
+  {id:'sub', label:'Sub Manager', color:'--r-sub'},
 ];
 const CATS = { housekeeping:'Housekeeping', maintenance:'Maintenance', frontdesk:'Front desk' };
 const CAT_GROUP = { housekeeping:'hk', maintenance:'eng', frontdesk:'fd' };
@@ -1424,6 +1500,8 @@ const ERR = {
   PIN_FORMAT: 'The PIN must be 4 digits.',
   SESSION_EXPIRED: 'Please sign in again.',
   MANAGER_ONLY: 'Only managers can do that.',
+  OWNER_ONLY: 'Only the superuser can do that.',
+  SUB_RESET_ONLY: 'A sub manager can only reset PINs, give start codes and add people.',
   DUPLICATE_NAME: 'Someone with that name is already on the team.',
   NOT_YOURSELF: 'You cannot remove your own manager access.',
   MAX_PHOTOS: 'An order can have up to 3 photos.',
@@ -1565,6 +1643,8 @@ const ES = {
 "Front Desk": "Recepción",
 "Front desk": "Recepción",
 "Housekeeper": "Camarista",
+"HK Supervisor": "Supervisora HK",
+"Sub Manager": "Sub gerente",
 "Houseman": "Houseman",
 "Engineering": "Mantenimiento",
 "Housekeeping": "Housekeeping",
@@ -2381,7 +2461,7 @@ function notify(orderIds, messageId){
 }
 /* who an alert is for: same rules as the server */
 const inGroup = (st, g) => g === 'all' || (g === 'mgr' && st.role === 'mgr')
-  || (g === 'hk' && (st.role === 'hk' || st.role === 'hm' || (st.depts || []).includes('hk')))
+  || (g === 'hk' && (st.role === 'hk' || st.role === 'hm' || st.role === 'sup' || (st.depts || []).includes('hk')))
   || (g === 'eng' && (st.role === 'eng' || (st.depts || []).includes('eng')))
   || (g === 'fd' && (st.role === 'fd' || (st.depts || []).includes('fd')));
 const onShift = () => !S.me || S.me.on_shift !== false;
@@ -2411,7 +2491,7 @@ function render(){
   $('#whoName').textContent = S.me.name;
   $('#whoAv').textContent = initials(S.me.name); $('#whoAv').style.background = roleColor(S.me.role); $('#whoAv').className = 'av' + avClass(S.me.id);
   $('#whoBtn').classList.toggle('off', !onShift()); $('#whoOff').hidden = onShift();
-  $('#teamTab').hidden = S.me.role !== 'mgr';
+  $('#teamTab').hidden = !isAdmin();
   renderFeed(); renderPins(); renderOrders(); renderKills(); renderLost(); markRead(); try { renderEng(); } catch {}
   if (!$('#view-dash').hidden) dashRender();
 }
@@ -3312,24 +3392,89 @@ async function roomHistory(room){
 
 /* manager */
 async function loadTeam(){
-  if (S.me.role !== 'mgr') return;
+  if (!isAdmin()) return;
+  const mgr = S.me.role === 'mgr';
   $('#teamHotel').textContent = S.hotel ? S.hotel.name : '';
+  $('#teamRep').hidden = !mgr;
   try {
-    const [rep, staff, dev] = await Promise.all([call('sc_report', {p_days: 7}), call('sc_staff_admin', {}), call('sc_device_status', {}).catch(() => null)]);
+    const [rep, staff, dev, rules, mine] = await Promise.all([mgr ? call('sc_report', {p_days: 7}) : null, call('sc_staff_admin', {}), mgr ? call('sc_device_status', {}).catch(() => null) : null,
+      call('sc_menu_rules', {}).catch(() => null), call('sc_menu', {}).catch(() => null)]);
+    if (mine) menuSet(mine);
+    MR.rules = rules || {roles: {}, staff: {}};
+    $('#sfRole').innerHTML = rolesICanGive().map(r => `<option value="${r.id}">${r.label}</option>`).join('');
+    menuRolesRender();
     S.dev = {}; (dev || []).forEach(d => { S.dev[d.id] = d; });
-    $('#repTable').innerHTML = '<tr><th>Hotel</th><th>Open now</th><th>New</th><th>Done</th><th>Avg time</th><th>Lost items</th><th>90+ days</th></tr>' +
+    if (rep) $('#repTable').innerHTML = '<tr><th>Hotel</th><th>Open now</th><th>New</th><th>Done</th><th>Avg time</th><th>Lost items</th><th>90+ days</th></tr>' +
       rep.map(r => `<tr><td>${esc(r.hotel)}</td><td>${r.open}</td><td>${r.created}</td><td>${r.done}</td><td>${r.avg_minutes == null ? '–' : r.avg_minutes + ' min'}</td><td>${r.lost_held}</td><td>${r.lost_over_90}</td></tr>`).join('');
     $('#staffList').innerHTML = staff.map(s => `<div class="li withav" data-staff="${s.id}"><span class="av${avClass(s.id)}" style="background:${roleColor(s.role)}">${esc(initials(s.first_name + ' ' + s.last_name))}</span><div class="grow">
         <div class="t1">${esc(s.first_name)} ${esc(s.last_name)} <span class="uname">${esc(s.username || '')}</span> ${S.hotel && s.home && s.home !== S.hotel.id ? `<span class="pill from">${esc(tr('From'))} <span data-noi18n>${esc(hotelShort(s.home))}</span></span>` : ''} ${s.reset_requested && s.active ? '<span class="pill ask">Asked for PIN reset</span>' : ''} ${!s.active ? '<span class="pill">Inactive</span>' : s.locked ? '<span class="pill warn">Locked</span>' : s.pin_set ? '<span class="pill ok">PIN set</span>' : s.code_until ? `<span class="pill ask">${esc(tr('Code until'))} <span data-noi18n>${esc(fmtDate(T(s.code_until)) + ' ' + fmtTime(T(s.code_until)))}</span></span>` : '<span class="pill warn">Not active yet</span>'}</div>
         <div class="t2">${s.last_seen ? 'Last seen ' + fmtDate(T(s.last_seen)) + ' ' + fmtTime(T(s.last_seen)) : 'Never signed in'}</div>${devPills(s)}${s.phone || s.email ? `<div class="t2" data-noi18n>${esc([s.phone, s.email].filter(Boolean).join(' · '))}</div>` : ''}
-        <div class="btnrow" style="margin-top:6px"><select class="btn sm" data-role>${ROLES.map(r => `<option value="${r.id}" ${r.id === s.role ? 'selected' : ''}>${r.label}</option>`).join('')}</select>
-        <button class="btn sm" data-save>Save</button>${s.pin_set || s.locked || s.reset_requested ? `<button class="btn sm ${s.reset_requested ? 'pri' : ''}" data-reset>Reset PIN</button>` : ''}
-        ${s.active && !s.pin_set ? '<button class="btn sm pri" data-code>Start code</button>' : s.active ? '<button class="btn sm pri" data-share>Share</button>' : ''}<button class="btn sm" data-active="${s.active ? 0 : 1}">${s.active ? 'Deactivate' : 'Reactivate'}</button><button class="btn sm" data-photo>Photo</button></div>
-        <div class="depts"><span>Also alerts for:</span>${DEPTS.map(d => `<label><input type="checkbox" data-dept="${d.id}" ${(s.depts || []).includes(d.id) ? 'checked' : ''}>${d.label}</label>`).join('')}</div>${accessHtml(s)}</div></div>`).join('');
+        ${staffCtl(s)}</div></div>`).join('');
     S.adminStaff = staff;
     devSummary();
     filterTeam();
   } catch (e) { toast(esc(e.message)); }
+}
+// what a manager may do on each person's row (the server checks the same)
+const isAdmin = () => !!(S.me && (S.me.role === 'mgr' || S.me.role === 'sub'));
+const rolesICanGive = () => ROLES.filter(r => S.owner || (r.id !== 'mgr' && r.id !== 'sub'));
+function staffCtl(s){
+  const self = s.id === S.me.id, sub = S.me.role === 'sub' && !S.owner;
+  if (s.can_edit === false) return `<div class="small lockln" data-noi18n>${esc(L2('Only the superuser can change this account.', 'Solo el superusuario puede cambiar esta cuenta.'))}</div>`;
+  const own = MR.rules && MR.rules.staff && MR.rules.staff[s.id];
+  const menuBtn = !self && s.active ? `<button class="btn sm" data-menu data-noi18n>${esc(L2('Menu', 'Menú') + (own ? ' ✓' : ''))}</button>` : '';
+  const codeBtn = s.active && !s.pin_set ? '<button class="btn sm pri" data-code>Start code</button>' : s.active ? '<button class="btn sm pri" data-share>Share</button>' : '';
+  const resetBtn = !self && (s.pin_set || s.locked || s.reset_requested) ? `<button class="btn sm ${s.reset_requested ? 'pri' : ''}" data-reset>Reset PIN</button>` : '';
+  if (sub) return `<div class="btnrow" style="margin-top:6px">${resetBtn}${codeBtn}${menuBtn}</div>`;
+  const roles = ROLES.filter(r => S.owner || (r.id !== 'mgr' && r.id !== 'sub') || r.id === s.role);
+  return `<div class="btnrow" style="margin-top:6px"><select class="btn sm" data-role ${self ? 'disabled' : ''}>${roles.map(r => `<option value="${r.id}" ${r.id === s.role ? 'selected' : ''}>${r.label}</option>`).join('')}</select>
+        <button class="btn sm" data-save>Save</button>${resetBtn}
+        ${codeBtn}${self ? '' : `<button class="btn sm" data-active="${s.active ? 0 : 1}">${s.active ? 'Deactivate' : 'Reactivate'}</button>`}<button class="btn sm" data-photo>Photo</button>${menuBtn}</div>
+        <div class="depts"><span>Also alerts for:</span>${DEPTS.map(d => `<label><input type="checkbox" data-dept="${d.id}" ${(s.depts || []).includes(d.id) ? 'checked' : ''}>${d.label}</label>`).join('')}</div>${accessHtml(s)}`;
+}
+/* Menu permissions: managers choose which sections each role, or each person, sees. Chat and Manager always show; the superuser always sees everything */
+const MENU_SECS = [['passon', 'Pass-on', 'Entregas'], ['srep', 'Shift Report', 'Shift Report'], ['orders', 'Orders', 'Órdenes'], ['eng', 'Engineer', 'Engineer'], ['map', 'Map', 'Mapa'],
+  ['laundry', 'Laundry', 'Laundry'], ['punch', 'Missing Punch', 'Missing Punch'], ['hkplan', 'HK Game Plan', 'HK Game Plan'], ['board', 'Board', 'Board']];
+const MR = {role: 'hk', rules: null};
+function menuSet(d){
+  if (!d) return; S.menuHid = d.hidden || []; S.owner = !!d.owner;
+  const hid = new Set(S.menuHid);
+  document.querySelectorAll('button[data-tab]').forEach(b => b.classList.toggle('menuoff', hid.has(b.dataset.tab)));
+  if (S.tab && hid.has(S.tab === 'lost' ? 'passon' : S.tab)) setTab('chat');
+}
+async function menuFetch(){ if (!S.token || !S.me) return; try { menuSet(await call('sc_menu', {})); } catch {} }
+const menuChecks = hidden => `<div class="mnchk">${MENU_SECS.map(([k, en, es]) => `<label><input type="checkbox" data-mn="${k}" ${hidden.includes(k) ? '' : 'checked'}><span>${esc(L2(en, es))}</span></label>`).join('')}</div>`;
+const menuPicked = box => MENU_SECS.map(x => x[0]).filter(k => { const c = box.querySelector(`[data-mn="${k}"]`); return c && !c.checked; });
+function menuRolesRender(){
+  const box = $('#mrBody'); if (!box) return;
+  const roles = rolesICanGive();
+  if (!roles.some(r => r.id === MR.role)) MR.role = roles[0].id;
+  const hid = (MR.rules && MR.rules.roles && MR.rules.roles[MR.role]) || [];
+  box.innerHTML = `<h2>${esc(L2('Menu by role', 'Menú por rol'))}</h2>
+    <p class="small" style="margin:-4px 0 10px">${esc(L2('Pick what each role sees in the Menu. Chat always shows. You can also set one person on their own with the Menu button on their row.', 'Elige qué ve cada rol en el Menú. El Chat siempre sale. También puedes ajustar a una persona sola con el botón Menú de su fila.'))}</p>
+    <div class="field"><label for="mrRole">${esc(L2('Role', 'Rol'))}</label><select id="mrRole">${roles.map(r => `<option value="${r.id}" ${r.id === MR.role ? 'selected' : ''}>${esc(tr(r.label))}</option>`).join('')}</select></div>
+    ${menuChecks(hid)}<button class="btn pri" type="button" id="mrSave">${esc(L2('Save for this role', 'Guardar para este rol'))}</button>`;
+  $('#mrRole').onchange = () => { MR.role = $('#mrRole').value; menuRolesRender(); };
+  $('#mrSave').onclick = async () => {
+    const b = $('#mrSave'); b.disabled = true;
+    try { MR.rules = await call('sc_menu_save', {p_scope: 'role:' + MR.role, p_hidden: menuPicked(box)}); menuRolesRender(); menuFetch();
+      toast(esc(L2('Menu saved for ', 'Menú guardado para ') + tr(roleOf(MR.role).label)), 'new'); }
+    catch (e) { b.disabled = false; toast(esc(e.message)); }
+  };
+}
+function menuPerson(s){
+  const own = MR.rules && MR.rules.staff && MR.rules.staff[s.id], role = (MR.rules && MR.rules.roles && MR.rules.roles[s.role]) || [];
+  openModal(`<div data-noi18n><h2>${esc(L2('Menu for ', 'Menú de ') + s.first_name + ' ' + s.last_name)}</h2>
+    <p class="hint">${esc(own ? L2('This person has their own setting.', 'Esta persona tiene su propio ajuste.') : L2('Now it uses the setting of the role ', 'Ahora usa el ajuste del rol ') + tr(roleOf(s.role).label) + '.')}</p>
+    <div id="mpsBox">${menuChecks(own || role)}</div>
+    <div class="btnrow" style="margin-top:12px"><button class="btn pri" type="button" id="mpsSave">${esc(L2('Save', 'Guardar'))}</button>${own ? `<button class="btn" type="button" id="mpsRole">${esc(L2('Use the role setting', 'Usar el ajuste del rol'))}</button>` : ''}<button class="btn" type="button" data-close>${esc(L2('Cancel', 'Cancelar'))}</button></div></div>`);
+  const save = async hidden => {
+    try { MR.rules = await call('sc_menu_save', {p_scope: 'staff:' + s.id, p_hidden: hidden}); closeModal();
+      toast(esc(L2('Menu saved for ', 'Menú guardado para ') + s.first_name), 'new'); loadTeam(); }
+    catch (e) { toast(esc(e.message)); }
+  };
+  $('#mpsSave').onclick = () => save(menuPicked($('#mpsBox')));
+  if ($('#mpsRole')) $('#mpsRole').onclick = () => save(null);
 }
 function devPills(s){
   const d = S.dev && S.dev[s.id]; if (!s.active || !d) return '';
@@ -3351,7 +3496,7 @@ function devSummary(){
 }
 const hotelShort = id => { const h = (S.hotels || []).find(x => x.id === id); return h ? h.name.replace(/^Developer Inn\s+/i, '') : id; };
 function accessHtml(s){
-  if (!S.me.all_hotels || (S.hotels || []).length < 2 || s.all_hotels || !s.active) return '';
+  if (S.me.role !== 'mgr' || !S.me.all_hotels || (S.hotels || []).length < 2 || s.all_hotels || !s.active) return '';
   return `<div class="acc"><span>Can use:</span>${S.hotels.map(h => h.id === s.home
       ? `<label class="home"><input type="checkbox" checked disabled><span data-noi18n>${esc(hotelShort(h.id))}</span></label>`
       : `<label><input type="checkbox" data-acc="${esc(h.id)}" ${(s.hotels || []).includes(h.id) ? 'checked' : ''}><span data-noi18n>${esc(hotelShort(h.id))}</span></label>`).join('')}</div>`;
@@ -3405,7 +3550,8 @@ async function shareInvite(s){
 }
 $('#staffList').addEventListener('click', async e => {
   const row = e.target.closest('[data-staff]'); if (!row) return; const s = (S.adminStaff || []).find(x => x.id === row.dataset.staff); if (!s) return;
-  const role = row.querySelector('[data-role]').value; let active = s.active, reset = false;
+  const rs = row.querySelector('[data-role]'), role = rs ? rs.value : s.role; let active = s.active, reset = false;
+  if (e.target.matches('[data-menu]')) return menuPerson(s);
   if (e.target.matches('[data-photo]')) return pickAvatar(s.id);
   if (e.target.matches('[data-share]')) return shareInvite(s);
   if (e.target.matches('[data-code]')) return giveCode(s);
@@ -3806,7 +3952,9 @@ function enterApp(){
   if (location.hash === '#lost') setTab('lost');
   if (location.hash === '#map') setTab('map');
   if (location.hash === '#laundry') setTab('laundry');
-  if (location.hash === '#team' && S.me && S.me.role === 'mgr') setTab('team');
+  if (location.hash === '#team' && isAdmin()) setTab('team');
+  if (location.hash === '#board') setTab('board');
+  menuFetch(); if (bdWatch()) bdFetch(true);
   setTimeout(() => { if (location.hash === '#eng' || ((!location.hash || location.hash === '#orders') && engIsMe())) setTab('eng'); });
 }
 
@@ -3984,12 +4132,14 @@ function openMap(o){
   if (f.dataset.h !== h || !f.getAttribute('src')) { f.dataset.h = h; f.src = 'mapa.html?h=' + encodeURIComponent(h); }
 }
 function setTab(t){
+  if ((S.menuHid || []).includes(t === 'lost' ? 'passon' : t)) t = 'chat';
   S.tab = t; document.querySelectorAll('#tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === t || (t === 'lost' && b.dataset.tab === 'passon')));
   const desktop = window.matchMedia('(min-width:900px)').matches;
   const inMain = t === 'chat' || t === 'orders', dash = desktop && t === 'orders';
   $('#main').hidden = !inMain || dash; $('#main').dataset.tab = t; $('#view-dash').hidden = !dash;
   if (dash) dashLoad();
-  ['passon','lost','rooms','team','map','laundry','eng','srep','punch','hkplan'].forEach(v => $('#view-' + v).hidden = t !== v);
+  ['passon','lost','rooms','team','map','laundry','eng','srep','punch','hkplan','board'].forEach(v => $('#view-' + v).hidden = t !== v);
+  if (t === 'board') setTimeout(bdShow);
   if (t === 'srep') setTimeout(srShow);
   if (t === 'punch') setTimeout(mpShow);
   if (t === 'hkplan') setTimeout(hkShow);
@@ -4346,8 +4496,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.13.0';
+const APP_VERSION = '1.14.0';
 const CHANGES = [
+  {v: '1.14.0', d: '2026-11-12', en: ['New Board in the Menu. The HK supervisor gives each housekeeper her rooms for the day, as Check-out or Stayover', 'Check-outs go first to the houseman, who sees only the rooms to strip and taps Stripped. Then the room is Ready to clean', 'The housekeeper taps Start when she goes in, Pause if she steps out, and the green Ready when she finishes. That gives the MPR, minutes per room, without the pauses', 'The supervisor and the managers see every room live. Rooms ready to be inspected show in yellow, and the supervisor closes them as Vacant/Ready', 'New roles: HK Supervisor and Sub Manager. A sub manager adds people, resets PINs and gives start codes, with no bigger changes', 'Managers choose which Menu sections each role sees, and can set one person on their own'],
+    es: ['Nuevo Board en el Menú. La supervisora de HK le da a cada housekeeper sus cuartos del día, como Check-out o Stayover', 'Los check-out pasan primero al houseman, que ve solo los cuartos por stripear y toca Stripeado. Ahí el cuarto queda Listo para limpiar', 'La housekeeper toca Start al entrar, Pausa si sale, y el Ready verde al terminar. Eso da el MPR, minutos por cuarto, sin contar las pausas', 'La supervisora y los gerentes ven cada cuarto en vivo. Los listos para inspección salen en amarillo, y la supervisora los cierra como Vacante/Lista', 'Roles nuevos: Supervisora HK y Sub gerente. El sub gerente agrega personas, reinicia PINs y da códigos de entrada, sin cambios mayores', 'Los gerentes eligen qué secciones del Menú ve cada rol, y pueden ajustar a una persona sola']},
   {v: '1.13.0', d: '2026-11-12', en: ['Laundry: when you start a load, pick what is in it: flats, fitted sheet, pillow case, duvet, towels, face towel, hand towel, floor mat, wash cloth, general or other. It shows on the machine and in Last loads. A dryer starts with what the last washer load had', 'Maingate and Fundamental now share one Laundry, because they use the same machines. A running machine takes the color of the hotel washing: red for Maingate, green for Fundamental', 'Highway keeps its own machines'],
     es: ['Laundry: al iniciar una tanda, elige qué lleva: sábana plana, sábana ajustable, funda de almohada, duvet, toallas, toalla de cara, toalla de mano, tapete de piso, toallita, general u otro. Se ve en la máquina y en Últimas tandas. La secadora empieza con lo que llevaba la última tanda de la lavadora', 'Maingate y Fundamental ahora comparten un solo Laundry, porque usan las mismas máquinas. La máquina en marcha toma el color del hotel que lava: rojo para Maingate, verde para Fundamental', 'Highway sigue con sus propias máquinas']},
   {v: '1.12.0', d: '2026-11-12', en: ['New Requested By Guest next to Urgent when you create or edit an order, here and in Engineer', 'Guest requests show a bright pink tag and border and rank two levels higher, so they rise to the top of the list. Urgent and guest together go first of all', 'The tag also shows in the order detail, Engineer, the dashboard and the alert'],
@@ -4947,7 +5099,8 @@ function goHash(h){
   if (h === '#eng' || (h === '#orders' && engIsMe())) setTab('eng');
   else if (h === '#orders') setTab('orders');
   else if (h === '#passon' || h === '#lost' || h === '#map' || h === '#laundry' || h === '#srep' || h === '#punch' || h === '#hkplan') setTab(h.slice(1));
-  else if (h === '#team' && S.me.role === 'mgr') setTab('team');
+  else if (h === '#team' && isAdmin()) setTab('team');
+  else if (h === '#board') setTab('board');
 }
 
 /* Shift Report (front desk): Arian's v3 report, same structure; Send puts it in Pass-on */
@@ -5318,6 +5471,234 @@ function mpReview(){
   };
 }
 function mpShow(){ mpLoad(); mpRender(); mpFetch(); }
+/* 1.14.0 Board: the HK supervisor gives each housekeeper her rooms; check-outs go first to the houseman to strip;
+   the housekeeper taps Start, Pause and Ready (MPR = minutes from Start to Ready without the pauses); the supervisor closes them as Vacant/Ready */
+const BD_ROOMS = {"MGT": "100-159,200-259,261", "FDT": "1100-1125,1200-1229,2100-2126,2200-2227,3100-3104,3107-3122,3200-3205,3208-3223,4100-4123,4200-4223", "HWY": "106-136,201-238,301-338"};
+const bdRange = txt => { const out = []; String(txt || '').split(/[\s,;]+/).forEach(p => { const m = p.match(/^(\d{3,4})(?:-(\d{3,4}))?$/); if (!m) return;
+  const a = +m[1], b = m[2] ? +m[2] : a; if (b < a || b - a > 400) return; for (let i = a; i <= b; i++) out.push(String(i)); }); return out; };
+const bdHotelRooms = () => bdRange(BD_ROOMS[S.hotel && S.hotel.id] || '');
+const BD_ST = {dirty: ['To strip', 'Por stripear'], ready: ['Ready to clean', 'Listo para limpiar'], cleaning: ['Cleaning', 'Limpiando'], paused: ['Paused', 'En pausa'],
+  insp: ['Ready to be inspected', 'Listo para inspección'], vacant: ['Vacant/Ready', 'Vacante/Lista'], dnd: ['DND', 'No molestar (DND)'], refused: ['Refused service', 'Rechazó servicio']};
+const BD_ORDER = ['dirty', 'ready', 'cleaning', 'paused', 'insp', 'vacant', 'dnd', 'refused'];
+const bdSt = k => BD_ST[k] ? L2(BD_ST[k][0], BD_ST[k][1]) : k;
+const bdKind = k => k === 'so' ? 'Stayover' : 'Check-out';
+const BD_ERR = {NOT_YOUR_ROOM: ['That room is not yours.', 'Ese cuarto no es tuyo.'], NOT_READY_TO_CLEAN: ['The room is not Ready to clean yet.', 'El cuarto todavía no está Listo para limpiar.'],
+  NOT_CLEANING: ['That room is not being cleaned.', 'Ese cuarto no se está limpiando.'], NOT_PAUSED: ['That room is not paused.', 'Ese cuarto no está en pausa.'],
+  NOT_DIRTY: ['That room was already stripped.', 'Ese cuarto ya fue stripeado.'], NOT_READY_FOR_INSPECTION: ['That room is not ready to be inspected.', 'Ese cuarto no está listo para inspección.'],
+  SUPERVISOR_ONLY: ['Only the HK supervisor or a manager can do that.', 'Solo la supervisora de HK o un gerente puede hacer eso.'],
+  HOUSEMAN_ONLY: ['Only the houseman can mark a room stripped.', 'Solo el houseman puede marcar un cuarto stripeado.'],
+  BAD_ROOM: ['That room number is not valid.', 'Ese número de cuarto no es válido.'], BAD_ROOMS: ['Up to 60 rooms at a time.', 'Hasta 60 cuartos a la vez.'],
+  BAD_DATE: ['Pick a day from yesterday to next week.', 'Elige un día entre ayer y la próxima semana.'], NOT_FOUND: ['That room is no longer on the board.', 'Ese cuarto ya no está en el board.']};
+const bdErr = e => { const m = (e && e.message) || ''; const x = BD_ERR[m]; return x ? L2(x[0], x[1]) : m; };
+let BD = null, BDDate = '', BDBusy = false, BDOff = 0, BDView = 'all', BDN = 0, BDA = null, BDSeen = null, BDPend = false;
+const bdT = x => x ? new Date(x).getTime() : 0;
+const bdNow = () => Date.now() + BDOff;
+const bdBoss = () => !!(S.me && (S.me.role === 'sup' || S.me.role === 'mgr'));
+const bdWatch = () => !!(S.me && (['hk', 'hm', 'sup', 'mgr'].includes(S.me.role) || (S.me.depts || []).includes('hk')));
+function bdSecs(r){
+  if (!r.started_at) return 0;
+  const end = r.finished_at ? bdT(r.finished_at) : r.status === 'cleaning' ? bdNow() : r.status === 'paused' && r.paused_at ? bdT(r.paused_at) : bdT(r.updated_at);
+  return Math.max(0, Math.round((end - bdT(r.started_at)) / 1000) - (r.paused_s || 0));
+}
+const bdClock = n => Math.floor(n / 60) + ':' + String(n % 60).padStart(2, '0');
+const bdAvg = list => { const v = list.map(r => r.mpr).filter(x => x != null); return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length * 10) / 10 : null; };
+const bdDone = list => list.filter(r => r.status === 'insp' || r.status === 'vacant').length;
+const bdMine = () => ((BD && BD.rooms) || []).filter(r => S.me && r.to === S.me.id);
+const bdDay = d => { try { return new Date(d + 'T12:00:00').toLocaleDateString(LANG === 'es' ? 'es-US' : 'en-US', {weekday: 'long', month: 'short', day: 'numeric'}); } catch { return d; } };
+function bdRender(){
+  const box = $('#bdBody'); if (!box) return;
+  const a = document.activeElement;
+  if (a && box.contains(a) && (a.tagName === 'SELECT' || a.tagName === 'INPUT')) { BDPend = true; return; }
+  BDPend = false;
+  if (!BD) { box.innerHTML = `<div class="enghead"><div class="grow"><h2>Board</h2></div></div><div class="small" style="margin-top:12px">…</div>`; return; }
+  const boss = BD.boss, mine = bdMine(), hm = !boss && BD.strip, hk = !boss && !hm && (S.me.role === 'hk' || mine.length > 0);
+  const sub = boss ? L2('Give each housekeeper her rooms. You see every room live, and you close the inspected ones as Vacant/Ready.', 'Dale a cada housekeeper sus cuartos. Ves cada cuarto en vivo y cierras los inspeccionados como Vacante/Lista.')
+    : hm ? L2('Check-out rooms to strip. Tap Stripped when a room is ready to clean.', 'Cuartos de check-out por stripear. Toca Stripeado cuando el cuarto quede listo para limpiar.')
+    : hk ? L2('Your rooms for today. Tap Start when you go in, Pause if you step out, and Ready when you finish.', 'Tus cuartos de hoy. Toca Start al entrar, Pausa si sales, y Ready al terminar.')
+    : L2('Housekeeping rooms of the day, live.', 'Los cuartos de housekeeping del día, en vivo.');
+  let h = `<div class="enghead"><div class="grow"><h2>Board</h2><div class="sub">${esc(sub)}</div></div>${boss ? `<input type="date" id="bdDate" class="bddate" value="${esc(BD.date)}" aria-label="${esc(L2('Day', 'Día'))}">` : ''}</div>`;
+  if (BD.date !== BD.today) h += `<div class="bdday"><span>${esc(L2('Showing ', 'Viendo ') + bdDay(BD.date))}</span><button class="linkbtn" type="button" data-bdtoday>${esc(L2('Back to today', 'Volver a hoy'))}</button></div>`;
+  if (mine.length) h += bdMineHtml(mine);
+  else if (hk) h += `<div class="card bdmine"><div class="small">${esc(L2('Your supervisor has not given you rooms yet today. They show here as soon as she does.', 'Tu supervisora todavía no te ha dado cuartos hoy. Salen aquí en cuanto los asigne.'))}</div></div>`;
+  if (hm) h += bdStripHtml();
+  if (boss || (!hk && !hm)) h += bdMasterHtml();
+  box.innerHTML = h;
+}
+function bdMineHtml(list){
+  const avg = bdAvg(list);
+  return `<div class="card bdmine"><div class="bdhead"><h3 class="srh">${esc(L2('My rooms', 'Mis cuartos'))}</h3><span class="bdsum">${esc(L2(`${bdDone(list)} of ${list.length} done`, `${bdDone(list)} de ${list.length} listos`) + (avg != null ? ' · MPR ' + avg + ' min' : ''))}</span></div>
+    ${list.map(bdCard).join('')}</div>`;
+}
+function bdCard(r){
+  const st = r.status, id = esc(r.id); let act = '';
+  if (st === 'ready') act = `<button class="btn pri" type="button" data-bdact="start" data-id="${id}">Start</button>`;
+  else if (st === 'dirty') act = `<button class="btn" type="button" disabled>Start</button><span class="bdwait">${esc(L2('Waiting for the houseman to strip it.', 'Esperando que el houseman lo stripee.'))}</span>`;
+  else if (st === 'cleaning') act = `<button class="btn" type="button" data-bdact="pause" data-id="${id}">${esc(L2('Pause', 'Pausa'))}</button><button class="btn bdready" type="button" data-bdact="done" data-id="${id}">Ready</button>`;
+  else if (st === 'paused') act = `<button class="btn pri" type="button" data-bdact="resume" data-id="${id}">${esc(L2('Resume', 'Seguir'))}</button><button class="btn bdready" type="button" data-bdact="done" data-id="${id}">Ready</button>`;
+  const list = ['ready', 'paused'].includes(st) ? [st, 'dnd', 'refused'] : ['dnd', 'refused'].includes(st) ? [st, st === 'dnd' ? 'refused' : 'dnd', 'ready'] : [];
+  const clock = st === 'cleaning' || st === 'paused';
+  return `<div class="bdcard" data-st="${st}" data-bdid="${id}">
+      <div class="bdtop"><b class="bdnum">${esc(r.room)}</b><span class="bdkind">${bdKind(r.kind)}</span><span class="bdst" data-st="${st}">${esc(bdSt(st))}</span></div>
+      ${clock ? `<div class="bdclock" data-bdclock="${id}">${bdClock(bdSecs(r))}</div>` : r.mpr != null ? `<div class="bdmpr">MPR <b>${r.mpr} min</b></div>` : ''}
+      ${act ? `<div class="bdacts">${act}</div>` : ''}
+      ${list.length ? `<label class="bdset"><span>${esc(L2('Status', 'Estatus'))}</span><select data-bdset="${id}">${list.map(k => `<option value="${k}" ${k === st ? 'selected' : ''}>${esc(bdSt(k))}</option>`).join('')}</select></label>` : ''}
+    </div>`;
+}
+function bdStripHtml(){
+  const rooms = BD.rooms || [], dirty = rooms.filter(r => r.status === 'dirty');
+  const done = rooms.filter(r => r.stripped_at).sort((a, b) => bdT(b.stripped_at) - bdT(a.stripped_at)).slice(0, 15);
+  return `<div class="card bdstrip"><div class="bdhead"><h3 class="srh">${esc(L2('To strip', 'Por stripear'))}</h3><span class="bdsum">${dirty.length}</span></div>
+    ${dirty.length ? dirty.map(r => `<div class="bdrow" data-st="dirty"><b class="bdnum">${esc(r.room)}</b><span class="grow">${esc(r.to_name || L2('Not assigned', 'Sin asignar'))}</span><button class="btn pri sm" type="button" data-bdact="strip" data-id="${esc(r.id)}">${esc(L2('Stripped', 'Stripeado'))}</button></div>`).join('')
+      : `<div class="small">${esc(L2('Nothing to strip right now.', 'No hay nada por stripear ahora.'))}</div>`}
+    ${done.length ? `<h3 class="srh bdsub">${esc(L2('Stripped today', 'Stripeados hoy'))}</h3>` + done.map(r => `<div class="bdrow done" data-st="${r.status}"><b class="bdnum">${esc(r.room)}</b><span class="grow">${esc((r.stripped_by || '') + ' · ' + fmtTime(T(r.stripped_at)))}</span><span class="bdst" data-st="${r.status}">${esc(bdSt(r.status))}</span></div>`).join('') : ''}
+  </div>`;
+}
+function bdMasterHtml(){
+  const rooms = BD.rooms || [], boss = BD.boss, cnt = k => rooms.filter(r => r.status === k).length;
+  if (BDView !== 'all' && !cnt(BDView)) BDView = 'all';
+  const chips = `<div class="bdchips"><button type="button" data-bdv="all" aria-pressed="${BDView === 'all'}">${esc(L2('All', 'Todos'))}<i>${rooms.length}</i></button>`
+    + BD_ORDER.filter(k => cnt(k)).map(k => `<button type="button" data-bdv="${k}" data-st="${k}" aria-pressed="${BDView === k}">${esc(bdSt(k))}<i>${cnt(k)}</i></button>`).join('') + '</div>';
+  const shown = rooms.filter(r => BDView === 'all' || r.status === BDView), groups = new Map();
+  shown.forEach(r => { const k = r.to || ''; if (!groups.has(k)) groups.set(k, {name: r.to_name || L2('Not assigned', 'Sin asignar'), rooms: []}); groups.get(k).rooms.push(r); });
+  const gs = [...groups.entries()].sort((a, b) => (!a[0]) - (!b[0]) || a[1].name.localeCompare(b[1].name));
+  const body = !rooms.length ? `<div class="small">${esc(boss ? L2('No rooms on the board yet. Tap Assign rooms to start the day.', 'Todavía no hay cuartos en el board. Toca Asignar cuartos para empezar el día.') : L2('No rooms on the board yet.', 'Todavía no hay cuartos en el board.'))}</div>`
+    : gs.map(([id, g]) => { const all = rooms.filter(r => (r.to || '') === id), avg = bdAvg(all), now = all.find(r => r.status === 'cleaning');
+        return `<div class="bdgrp"><div class="bdgh"><b>${esc(g.name)}</b><span>${esc(L2(`${bdDone(all)} of ${all.length} done`, `${bdDone(all)} de ${all.length} listos`) + (avg != null ? ' · MPR ' + avg + ' min' : '') + (now ? ' · ' + L2('cleaning ', 'limpiando la ') + now.room : ''))}</span></div>${g.rooms.map(r => bdRow(r, boss)).join('')}</div>`; }).join('');
+  return `<div class="card bdmaster"><div class="bdhead"><h3 class="srh">${esc(boss ? L2('Master board', 'Master board') : L2('All rooms', 'Todos los cuartos'))}</h3>${boss ? `<button class="btn pri sm" type="button" id="bdAssign">${esc(L2('Assign rooms', 'Asignar cuartos'))}</button>` : ''}</div>
+    ${cnt('insp') ? `<div class="bdinsp">${esc(L2(`${cnt('insp')} ready to be inspected`, `${cnt('insp')} listos para inspección`))}</div>` : ''}${rooms.length ? chips : ''}${body}</div>`;
+}
+function bdRow(r, boss){
+  const st = r.status, id = esc(r.id), clock = st === 'cleaning' || st === 'paused';
+  const time = clock ? `<span class="bdclock" data-bdclock="${id}">${bdClock(bdSecs(r))}</span>` : r.mpr != null ? `<span class="bdmpr">${r.mpr} min</span>` : '';
+  const opts = (BD_ORDER.filter(k => k !== 'cleaning' && k !== 'paused').includes(st) ? [] : [st]).concat(['dirty', 'ready', 'insp', 'vacant', 'dnd', 'refused']);
+  const ctl = boss ? `<select class="bdsel" data-bdset="${id}" data-st="${st}" aria-label="${esc(L2('Status of ', 'Estatus de la ') + r.room)}">${opts.map(k => `<option value="${k}" ${k === st ? 'selected' : ''}>${esc(bdSt(k))}</option>`).join('')}</select>`
+      + (st === 'insp' ? `<button class="btn sm bdok" type="button" data-bdact="inspect" data-id="${id}">✓ ${esc(bdSt('vacant'))}</button>` : '')
+      + `<button class="bdx" type="button" data-bdrm="${id}" aria-label="${esc(L2('Take off the board', 'Quitar del board'))}">×</button>`
+    : `<span class="bdst" data-st="${st}">${esc(bdSt(st))}</span>`;
+  return `<div class="bdrow" data-st="${st}" data-bdid="${id}"><b class="bdnum">${esc(r.room)}</b><span class="bdkind">${r.kind === 'so' ? 'SO' : 'CO'}</span>${time}<span class="grow"></span>${ctl}</div>`;
+}
+function bdCount(){
+  const c = $('#bdCnt'); if (!c) return;
+  let n = 0;
+  if (BD && BD.date === BD.today && BD.h === (S.hotel && S.hotel.id)) {
+    const rooms = BD.rooms || [];
+    n = BD.boss ? rooms.filter(r => r.status === 'insp').length : BD.strip ? rooms.filter(r => r.status === 'dirty').length : bdMine().filter(r => r.status === 'ready').length;
+  }
+  c.textContent = n ? String(n) : ''; c.hidden = !n;
+}
+function bdSet(d){
+  if (!d) return;
+  const h = S.hotel && S.hotel.id, same = BD && BD.h === h && BD.date === d.date;
+  BD = d; BD.h = h; BDOff = bdT(d.now) - Date.now();
+  // news since the last look: rooms ready to be inspected (supervisor), rooms ready to clean (housekeeper)
+  const keyOf = r => r.id + ':' + r.status, now = new Set((d.rooms || []).filter(r => d.boss ? r.status === 'insp' : (r.to === S.me.id && r.status === 'ready')).map(keyOf));
+  if (same && BDSeen && d.date === d.today) {
+    const fresh = (d.rooms || []).filter(r => now.has(keyOf(r)) && !BDSeen.has(keyOf(r))).map(r => r.room);
+    if (fresh.length) toast(esc(d.boss ? L2('Ready to be inspected: ', 'Listo para inspección: ') + fresh.join(', ') : L2('Ready to clean: ', 'Listo para limpiar: ') + fresh.join(', ')), 'new');
+  }
+  BDSeen = now;
+  bdCount();
+  if (S.tab === 'board') bdRender();
+}
+async function bdFetch(quiet){
+  if (!S.token || !S.me || BDBusy) return; BDBusy = true;
+  try { bdSet(await call('sc_board', {p_date: BDDate || null})); } catch (e) { if (!quiet) toast(esc(bdErr(e))); } finally { BDBusy = false; }
+}
+function bdShow(){ if (BD && BD.h !== (S.hotel && S.hotel.id)) BD = null; bdRender(); bdFetch(); }
+async function bdAct(id, act, status, el){
+  if (el) el.disabled = true;
+  try {
+    bdSet(await call('sc_board_act', {p_id: id, p_act: act, p_status: status || null}));
+    const r = (BD.rooms || []).find(x => x.id === id);
+    if (act === 'done') toast(esc(L2('Room ', 'Cuarto ') + (r ? r.room : '') + L2(' sent to inspection' + (r && r.mpr != null ? ` · ${r.mpr} min` : ''), ' enviado a inspección' + (r && r.mpr != null ? ` · ${r.mpr} min` : ''))), 'new');
+    else if (act === 'inspect') toast(esc(L2('Room ', 'Cuarto ') + (r ? r.room : '') + ': ' + bdSt('vacant')), 'new');
+    else if (act === 'strip') toast(esc(L2('Room ', 'Cuarto ') + (r ? r.room : '') + ': ' + bdSt('ready')), 'new');
+  } catch (e) { toast(esc(bdErr(e))); BDPend = false; if (document.activeElement) try { document.activeElement.blur(); } catch {} bdRender(); }
+}
+function bdRemove(id){
+  const r = (BD.rooms || []).find(x => x.id === id); if (!r) return;
+  openModal(`<div data-noi18n><h2>${esc(L2('Take room ', 'Quitar el cuarto ') + r.room + L2(' off the board?', ' del board?'))}</h2>
+    <p class="hint">${esc((r.to_name ? r.to_name + ' · ' : '') + bdSt(r.status))}</p>
+    <div class="btnrow" style="margin-top:12px"><button class="btn pri" type="button" id="bdRmGo">${esc(L2('Take off', 'Quitar'))}</button><button class="btn" type="button" data-close>${esc(L2('Cancel', 'Cancelar'))}</button></div></div>`);
+  $('#bdRmGo').onclick = async () => { $('#bdRmGo').disabled = true;
+    try { bdSet(await call('sc_board_remove', {p_id: id})); closeModal(); } catch (e) { $('#bdRmGo').disabled = false; toast(esc(bdErr(e))); } };
+}
+/* Assign rooms: pick the housekeeper, Check-out or Stayover, then tap rooms (or type them) */
+function bdAssign(){
+  const team = BD.team || [];
+  if (!team.length) return toast(esc(L2('No housekeepers at this hotel yet. Add them in Manager.', 'Todavía no hay housekeepers en este hotel. Agrégalas en Gerente.')));
+  BDA = {to: BDA && team.some(t => t.id === BDA.to) ? BDA.to : team[0].id, kind: 'co', pick: new Map()};
+  openModal(`<div data-noi18n><h2>${esc(L2('Assign rooms', 'Asignar cuartos'))}</h2>
+    <p class="hint">${esc(L2('Check-outs go to the houseman first to strip. Stayovers are Ready to clean right away.', 'Los check-out pasan primero al houseman para stripear. Los stayover quedan Listos para limpiar enseguida.'))}</p>
+    <div class="field"><label for="bdaTo">Housekeeper</label><select id="bdaTo">${team.map(t => `<option value="${esc(t.id)}" ${t.id === BDA.to ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}</select></div>
+    <div class="bdakinds" role="group" aria-label="${esc(L2('Kind of room', 'Tipo de cuarto'))}"><button type="button" data-bdk="co" aria-pressed="true">Check-out</button><button type="button" data-bdk="so" aria-pressed="false">Stayover</button></div>
+    <div class="bdawrap" id="bdaGrid"></div>
+    <div class="bdtype"><input id="bdaType" inputmode="numeric" autocomplete="off" placeholder="${esc(L2('Or type: 101-110, 215', 'O escribe: 101-110, 215'))}" aria-label="${esc(L2('Type rooms', 'Escribe cuartos'))}"><button class="btn" type="button" id="bdaAdd">${esc(L2('Add', 'Agregar'))}</button></div>
+    <div class="err" id="bdaErr"></div>
+    <div class="btnrow" style="margin-top:10px"><button class="btn pri" type="button" id="bdaGo"></button><button class="btn" type="button" data-close>${esc(L2('Cancel', 'Cancelar'))}</button></div></div>`);
+  bdaGrid();
+  $('#bdaTo').onchange = () => { BDA.to = $('#bdaTo').value; BDA.pick.clear(); bdaGrid(); };
+  document.querySelectorAll('#modal [data-bdk]').forEach(b => b.onclick = () => { BDA.kind = b.dataset.bdk; document.querySelectorAll('#modal [data-bdk]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+  $('#bdaGrid').onclick = e => {
+    const b = e.target.closest('[data-bdr]'); if (!b || b.disabled) return;
+    const n = b.dataset.bdr, k = BDA.pick.get(n);
+    if (k === BDA.kind) BDA.pick.delete(n); else BDA.pick.set(n, BDA.kind);
+    bdaBtn(b); bdaGo();
+  };
+  $('#bdaAdd').onclick = () => {
+    const all = new Set(bdHotelRooms()), got = bdRange($('#bdaType').value), bad = got.filter(n => all.size && !all.has(n)), own = bdaOwn();
+    got.filter(n => (!all.size || all.has(n)) && !own.has(n)).forEach(n => BDA.pick.set(n, BDA.kind));
+    $('#bdaErr').textContent = !got.length ? L2('Type rooms like 101-110, 215.', 'Escribe cuartos como 101-110, 215.') : bad.length ? L2('Not rooms of this hotel: ', 'No son cuartos de este hotel: ') + bad.slice(0, 8).join(', ') : '';
+    if (got.length) $('#bdaType').value = '';
+    bdaGrid();
+  };
+  $('#bdaGo').onclick = async () => {
+    if (!BDA.pick.size) { $('#bdaErr').textContent = L2('Tap the rooms to give.', 'Toca los cuartos a dar.'); return; }
+    const b = $('#bdaGo'); b.disabled = true;
+    const list = [...BDA.pick.entries()].sort((x, y) => +x[0] - +y[0]).map(([room, kind]) => ({room, kind})), who = (BD.team.find(t => t.id === BDA.to) || {}).name || '';
+    try { bdSet(await call('sc_board_assign', {p_date: BD.date, p_staff: BDA.to, p_rooms: list})); closeModal();
+      toast(esc(L2(`${list.length} rooms for ${who}`, `${list.length} cuartos para ${who}`)), 'new'); }
+    catch (e) { b.disabled = false; $('#bdaErr').textContent = bdErr(e); }
+  };
+}
+const bdaOwn = () => new Set((BD.rooms || []).filter(r => r.to === BDA.to).map(r => r.room));
+function bdaBtn(b){ const k = BDA.pick.get(b.dataset.bdr); b.setAttribute('aria-pressed', !!k); if (k) b.dataset.k = k; }
+function bdaGo(){ const b = $('#bdaGo'); if (b) b.textContent = BDA.pick.size ? L2(`Give ${BDA.pick.size} rooms`, `Dar ${BDA.pick.size} cuartos`) : L2('Give rooms', 'Dar cuartos'); }
+function bdaGrid(){
+  const box = $('#bdaGrid'); if (!box) return;
+  const by = new Map((BD.rooms || []).map(r => [r.room, r])), floors = new Map(), first = n => (n.split(' ')[0] || '').slice(0, 1);
+  bdHotelRooms().forEach(n => { const f = n.slice(0, n.length - 2); if (!floors.has(f)) floors.set(f, []); floors.get(f).push(n); });
+  box.innerHTML = [...floors.entries()].map(([f, list]) => `<div class="bdfl">${esc(f)}xx</div><div class="bdgrid">${list.map(n => {
+      const r = by.get(n), mine = r && r.to === BDA.to, k = BDA.pick.get(n) || (mine ? r.kind : '');
+      const tag = r ? (mine ? (r.kind === 'so' ? 'SO' : 'CO') : (r.to_name || '').split(' ').map(first).join('').toUpperCase() || '·') : '';
+      return `<button type="button" data-bdr="${n}" aria-pressed="${!!k}"${k ? ` data-k="${k}"` : ''}${mine ? ' disabled' : ''}>${n}${tag ? `<small>${esc(tag)}</small>` : ''}</button>`; }).join('')}</div>`).join('')
+    || `<div class="small">${esc(L2('Type the rooms below.', 'Escribe los cuartos abajo.'))}</div>`;
+  bdaGo();
+}
+$('#view-board').addEventListener('click', e => {
+  const a = e.target.closest('[data-bdact]'); if (a) return bdAct(a.dataset.id, a.dataset.bdact, null, a);
+  const v = e.target.closest('[data-bdv]'); if (v) { BDView = v.dataset.bdv; return bdRender(); }
+  const x = e.target.closest('[data-bdrm]'); if (x) return bdRemove(x.dataset.bdrm);
+  if (e.target.closest('#bdAssign')) return bdAssign();
+  if (e.target.closest('[data-bdtoday]')) { BDDate = ''; BD = null; bdRender(); return bdFetch(); }
+});
+$('#view-board').addEventListener('change', e => {
+  const t = e.target;
+  if (t.matches('[data-bdset]')) { const id = t.dataset.bdset, v = t.value; t.blur(); BDPend = false; return bdAct(id, 'set', v, t); }
+  if (t.id === 'bdDate' && t.value) { BDDate = t.value; t.blur(); BD = null; bdRender(); bdFetch(); }
+});
+$('#view-board').addEventListener('focusout', () => setTimeout(() => { if (BDPend && S.tab === 'board') bdRender(); }, 0));
+// live: every 10 s on the Board, every minute for housekeeping elsewhere; clocks tick every second
+setInterval(() => {
+  if (!S.token || !S.me || document.visibilityState !== 'visible' || navigator.onLine === false) return;
+  BDN++;
+  if (S.tab === 'board' || (BDN % 6 === 0 && bdWatch())) bdFetch(true);
+  if (BDN % 6 === 3) menuFetch();
+}, 10000);
+setInterval(() => {
+  if (S.tab !== 'board' || !BD) return;
+  document.querySelectorAll('#bdBody [data-bdclock]').forEach(el => { const r = (BD.rooms || []).find(x => x.id === el.dataset.bdclock); if (r) el.textContent = bdClock(bdSecs(r)); });
+}, 1000);
 $('#view-punch').addEventListener('input', e => {
   const t = e.target; if (!MP) return;
   if (t.id === 'mpName') MP.name = t.value;
