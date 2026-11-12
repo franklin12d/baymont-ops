@@ -898,6 +898,53 @@ header.top .brand .bt.hpkon{cursor:pointer}
 .lnhist .lnrow:first-child{border-top:0}
 #view-srep .inner{padding-bottom:90px}
 #view-punch .inner{padding-bottom:90px}
+#view-hkplan .inner{padding-bottom:110px}
+.hkdate{display:flex;align-items:center;gap:8px;margin:12px 0}
+.hkdate .btn{min-width:44px;min-height:44px;font-size:20px;line-height:1;padding:0}
+.hkdl{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.hkdl input{border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:8px 10px;font-size:16px;width:100%;color:var(--ink)}
+.hkdl span{font-size:12.5px;color:var(--ink-3);text-transform:capitalize}
+.hkcard{margin-top:12px}
+.hkheads{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.hkh{display:flex;flex-direction:column;gap:4px;min-width:0}
+.hkh span{font-size:12px;font-weight:600;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hkh input{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 8px;font-size:16px;width:100%;color:var(--ink);text-align:center}
+.hkh b{font:800 22px var(--f-display);color:var(--ink)}
+.hkleft{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.hkline{font-size:14px;color:var(--ink-2);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.hkline>b{color:var(--ink);font-size:15px}
+.hkmuted{font-size:12.5px;color:var(--ink-3)}
+.hkpill{font:600 12.5px var(--f-body);border-radius:999px;padding:3px 10px;background:var(--high-soft);color:var(--high)}
+.hkpill.ok{background:var(--ok-soft);color:var(--ok)}
+.hkpill.over{background:var(--urgent-soft);color:var(--urgent)}
+.hkwarn{font-size:12.5px;color:var(--urgent);font-weight:600}
+.hkrow{border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.hkrow.ro{gap:4px}
+.hkname{display:flex;align-items:center;gap:8px}
+.hkname b{font-size:15px;color:var(--ink)}
+.hkname input{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 10px;font-size:16px;color:var(--ink)}
+.hkdel{flex:none;width:40px;height:40px;border:0;border-radius:10px;background:var(--surface-2);color:var(--ink-3);font-size:22px;line-height:1;cursor:pointer}
+.hknums{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px}
+.hknums label{display:flex;flex-direction:column;gap:3px;min-width:0}
+.hknums span{font-size:11.5px;font-weight:600;color:var(--ink-3)}
+.hknums input{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:8px;font-size:16px;width:100%;min-width:0;color:var(--ink)}
+.hknums input[type=number]{text-align:center}
+.hkout{display:flex;flex-direction:column;gap:2px}
+.hkest{font-size:14px;color:var(--ink-2)}
+.hkest b{font-size:16px;color:var(--accent)}
+.hkmeta{font-size:12px;color:var(--ink-3)}
+.hkro{font-size:13.5px;color:var(--ink-2)}
+.hkot{display:inline-block;margin-left:4px;font:700 11px var(--f-body);border-radius:999px;padding:1px 7px;background:var(--high-soft);color:var(--high)}
+.hkadd{width:100%;margin-top:10px;min-height:44px}
+.hktots{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.hkt{background:var(--surface-2);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
+.hkt span{font-size:11.5px;color:var(--ink-3)}
+.hkt b{font:800 18px var(--f-display);color:var(--ink)}
+.hkby{font-size:12px;color:var(--ink-3);margin:10px 2px}
+.hkbar{position:sticky;bottom:12px;margin-top:10px;z-index:2}
+.hkbar .btn{width:100%;min-height:48px;box-shadow:var(--shadow)}
+.hkbar .btn:disabled{opacity:.6}
+@media (min-width:900px){.hkrow{display:grid;grid-template-columns:minmax(180px,1.2fr) minmax(260px,1.4fr) minmax(200px,1fr);align-items:end}.hkrow.ro{display:flex}}
 .mpform{margin-top:12px}
 .mpday{font-size:12.5px;color:var(--ink-3);text-transform:capitalize}
 .mplab{font-size:12.5px;font-weight:600;color:var(--ink-2)}
@@ -1122,6 +1169,7 @@ body{background:var(--bg)}
     <button role="tab" data-tab="map" aria-selected="false"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.1 6.1 9.9 3.9a2 2 0 0 0-1.8 0L3.6 6.2A1 1 0 0 0 3 7.1v12.3a1 1 0 0 0 1.4.9l3.7-1.9a2 2 0 0 1 1.8 0l4.2 2.2a2 2 0 0 0 1.8 0l4.5-2.3a1 1 0 0 0 .6-.9V5.1a1 1 0 0 0-1.4-.9l-3.7 1.9a2 2 0 0 1-1.8 0Z"/><path d="M9 3.6v15M15 5.6v15"/></svg><span class="cnt" id="mapCnt"></span></span><span class="tl">Map</span></button>
     <button role="tab" data-tab="laundry" aria-selected="false" id="lnTab"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h.01M11 6h.01"/><circle cx="12" cy="13.5" r="5"/><path class="drum" d="M9.3 14c.9-.8 1.8-.8 2.7 0s1.8.8 2.7 0"/></svg></span><span class="tl">Laundry</span><span class="lnst" id="lnSt" data-noi18n></span></button>
     <button role="tab" data-tab="punch" aria-selected="false" id="mpTab"><span class="tic"><span class="cnt" id="mpCnt" hidden></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4"/><path d="M12 16.5h.01"/><path d="M9 2h6"/></svg></span><span class="tl" data-noi18n>Missing Punch</span></button>
+    <button role="tab" data-tab="hkplan" aria-selected="false" id="hkTab"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/></svg></span><span class="tl" data-noi18n>HK Game Plan</span></button>
     <button role="tab" data-tab="team" aria-selected="false" id="teamTab" hidden><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="cnt" id="teamCnt"></span></span><span class="tl">Manager</span></button>
   </nav>
   <div class="banner" id="pushBanner" hidden><span class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span><span class="grow" id="pushText"></span><button class="btn sm pri" id="pushBtn">Turn on</button><button class="linkbtn" id="pushLater">Not now</button></div>
@@ -1185,6 +1233,7 @@ body{background:var(--bg)}
 
   <section class="view" id="view-srep" hidden data-noi18n aria-label="Shift Report"><div class="inner" id="srBody"></div></section>
   <section class="view" id="view-punch" hidden data-noi18n aria-label="Missing Punch"><div class="inner" id="mpBody"></div></section>
+  <section class="view" id="view-hkplan" hidden data-noi18n aria-label="HK Game Plan"><div class="inner" id="hkBody"></div></section>
 
   <section class="view" id="view-lost" hidden><div class="inner">
     <div><button type="button" class="btn sm" id="lfBack">‹ Pass-on</button></div>
@@ -3866,9 +3915,10 @@ function setTab(t){
   const inMain = t === 'chat' || t === 'orders', dash = desktop && t === 'orders';
   $('#main').hidden = !inMain || dash; $('#main').dataset.tab = t; $('#view-dash').hidden = !dash;
   if (dash) dashLoad();
-  ['passon','lost','rooms','team','map','laundry','eng','srep','punch'].forEach(v => $('#view-' + v).hidden = t !== v);
+  ['passon','lost','rooms','team','map','laundry','eng','srep','punch','hkplan'].forEach(v => $('#view-' + v).hidden = t !== v);
   if (t === 'srep') setTimeout(srShow);
   if (t === 'punch') setTimeout(mpShow);
+  if (t === 'hkplan') setTimeout(hkShow);
   if (t === 'laundry') setTimeout(() => { lnRender(); lnLoad(); });
   if (t === 'eng') setTimeout(engShow);
   if (t === 'map') openMap();
@@ -4222,8 +4272,10 @@ window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.
 { const d = +ls.get('sc.dashDays'); if (d === 7 || d === 30) DASH.days = d; }
 
 /* ===== v1.1: version, what's new, update banner, offline banner ===== */
-const APP_VERSION = '1.8.0';
+const APP_VERSION = '1.9.0';
 const CHANGES = [
+  {v: '1.9.0', d: '2026-11-12', en: ['New HK Game Plan in the Menu: the day’s arrivals, check-outs, stayovers and DND, and one line per room attendant with check-outs, stayovers and clock-in', 'The app works out each attendant’s minutes (27 per check-out, 15 per stayover) and the estimated clock-out with the 30-minute break, plus what is left to assign and the day’s totals', 'Everyone in the hotel can see it; managers and housekeeping can change and save it. Past days stay to look back on'],
+    es: ['Nuevo HK Game Plan en el Menú: llegadas, check-outs, stayovers y DND del día, y una línea por camarera con sus check-outs, stayovers y hora de entrada', 'La app calcula los minutos de cada camarera (27 por check-out, 15 por stayover) y la hora de salida aproximada con el break de 30 minutos, más lo que falta asignar y los totales del día', 'Todo el hotel lo puede ver; managers y housekeeping lo cambian y lo guardan. Los días pasados quedan para consultar']},
   {v: '1.8.0', d: '2026-11-11', en: ['New 3D map for Highway: the east wing and the north wing with all 3 floors (106 to 338), front desk, pool, elevator, stairs and ice machine', 'Same controls as the other maps; P3 shows the third floor and Separate floors spreads all three'],
     es: ['Nuevo mapa 3D de Highway: el ala este y el ala norte con los 3 pisos (106 a 338), recepción, piscina, elevador, escaleras y máquina de hielo', 'Los mismos controles de los otros mapas; P3 muestra el tercer piso y Separar pisos abre los tres']},
   {v: '1.7.0', d: '2026-11-11', en: ['Maps move like Google Maps: drag to move, scroll or double-click to zoom where you point, + and − buttons at the bottom right, Ctrl or Cmd + drag to turn and tilt', 'Click a room or area to open its panel (on the left on a computer) with its orders and history', 'Right-click (press and hold on a phone) for a menu: create an order right there, what is nearby, measure a distance, center, or add a marker saved on your device', 'The ? button explains every move for mouse and phone'],
@@ -4780,7 +4832,7 @@ function goHash(h){
   if (!S.me) return;
   if (h === '#eng' || (h === '#orders' && engIsMe())) setTab('eng');
   else if (h === '#orders') setTab('orders');
-  else if (h === '#passon' || h === '#lost' || h === '#map' || h === '#laundry' || h === '#srep' || h === '#punch') setTab(h.slice(1));
+  else if (h === '#passon' || h === '#lost' || h === '#map' || h === '#laundry' || h === '#srep' || h === '#punch' || h === '#hkplan') setTab(h.slice(1));
   else if (h === '#team' && S.me.role === 'mgr') setTab('team');
 }
 
@@ -5184,6 +5236,198 @@ setInterval(() => {
 }, 15000);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.token && S.me && mpMgr()) mpFetch(true); });
 if (S.token && S.me) setTimeout(() => { if (mpMgr()) mpFetch(true); }, 2000);
+
+/* HK Game Plan: the HK Productivity Chart inside the app. One plan per hotel and day.
+   Check-outs count 27 minutes, stayovers 15, and the estimated clock-out adds the 30-minute break.
+   Everyone in the hotel can see it; managers and housekeeping can edit and save it. */
+const HK_DEF = {mpr_co: 27, mpr_so: 15, break_min: 30};
+const hkLoc = () => LANG === 'es' ? 'es-US' : 'en-US';
+const hkToday = () => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+const hkShift = (d, n) => { const x = new Date(d + 'T12:00:00'); x.setDate(x.getDate() + n); return x.toISOString().slice(0, 10); };
+const hkDay = d => new Date(d + 'T12:00:00').toLocaleDateString(hkLoc(), {weekday: 'long', month: 'long', day: 'numeric'});
+const hkClock = min => { min = ((min % 1440) + 1440) % 1440; return new Date(2000, 0, 1, Math.floor(min / 60), min % 60).toLocaleTimeString(hkLoc(), {hour: 'numeric', minute: '2-digit'}); };
+const hkMin = t => /^\d\d:\d\d$/.test(t || '') ? (+t.slice(0, 2)) * 60 + (+t.slice(3)) : null;
+const hkHrs = m => (Math.round(m / 6) / 10).toLocaleString(hkLoc(), {minimumFractionDigits: 1, maximumFractionDigits: 1});
+const hkInt = v => { const n = parseInt(v, 10); return Number.isFinite(n) && n > 0 ? n : 0; };
+const hkWhen = x => x ? new Date(x).toLocaleString(hkLoc(), {month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: TZ}) : '';
+let HKD = null, HKF = null, HKDate = '', HKK = '', HKDirty = false, HKBusy = false, HKSaving = false;
+function hkKey(){ return ((S.me && S.me.id) || '') + '.' + ((S.hotel && S.hotel.id) || ''); }
+function hkFormFrom(d){
+  const p = (d && d.plan) || {};
+  return {arrivals: p.arrivals || 0, departures: p.departures || 0, stayovers: p.stayovers || 0, dnd: p.dnd || 0,
+    mpr_co: p.mpr_co || HK_DEF.mpr_co, mpr_so: p.mpr_so || HK_DEF.mpr_so, break_min: p.break_min == null ? HK_DEF.break_min : p.break_min,
+    rows: (p.rows || []).map(r => ({staff_id: r.staff_id || null, name: r.name || '', co: r.co || 0, so: r.so || 0, cin: r.cin || ''}))};
+}
+// minutes of work, hours present (with break) and estimated clock-out for one attendant
+function hkCalc(r){
+  const work = hkInt(r.co) * HKF.mpr_co + hkInt(r.so) * HKF.mpr_so;
+  const brk = work > 0 ? HKF.break_min : 0, start = hkMin(r.cin);
+  return {work, brk, rooms: hkInt(r.co) + hkInt(r.so), out: work > 0 && start != null ? start + work + brk : null};
+}
+function hkTotals(){
+  let co = 0, so = 0, work = 0, brk = 0, last = null, n = 0;
+  HKF.rows.forEach(r => { const c = hkCalc(r); if (!c.rooms) return; n++; co += hkInt(r.co); so += hkInt(r.so); work += c.work; brk += c.brk;
+    if (c.out != null && (last == null || c.out > last)) last = c.out; });
+  return {n, co, so, work, brk, last};
+}
+function hkCan(){ return !!(HKD && HKD.can_edit); }
+function hkRowHtml(r, i, edit){
+  if (!edit) return `<div class="hkrow ro" data-i="${i}"><div class="hkname"><b>${esc(r.name)}</b></div><div class="hkout" data-out="${i}"></div></div>`;
+  return `<div class="hkrow" data-i="${i}">
+    <div class="hkname"><input list="hkNames" data-f="name" maxlength="80" autocomplete="off" placeholder="${esc(L2('Room attendant', 'Camarera / room attendant'))}" value="${esc(r.name)}" aria-label="${esc(L2('Name', 'Nombre'))}">
+      <button type="button" class="hkdel" data-hkdel="${i}" aria-label="${esc(L2('Remove', 'Quitar'))}">×</button></div>
+    <div class="hknums">
+      <label><span>Check-outs</span><input type="number" inputmode="numeric" min="0" max="40" data-f="co" value="${r.co || ''}" placeholder="0"></label>
+      <label><span>Stayovers</span><input type="number" inputmode="numeric" min="0" max="40" data-f="so" value="${r.so || ''}" placeholder="0"></label>
+      <label class="hkin"><span>${L2('Clock-in', 'Entrada')}</span><input type="time" data-f="cin" value="${esc(r.cin)}"></label>
+    </div>
+    <div class="hkout" data-out="${i}"></div></div>`;
+}
+function hkOutHtml(r){
+  const c = hkCalc(r);
+  if (!c.rooms) return `<span class="hkmuted">${L2('No rooms yet', 'Sin habitaciones todavía')}</span>`;
+  const ro = !hkCan() ? `<span class="hkro">${hkInt(r.co)} CO · ${hkInt(r.so)} SO${r.cin ? ' · ' + esc(L2('in ', 'entra ') + hkClock(hkMin(r.cin))) : ''}</span>` : '';
+  const ot = c.work > 480 ? `<span class="hkot" title="${esc(L2('More than 8 hours of rooms', 'Más de 8 horas de habitaciones'))}">+8 h</span>` : '';
+  return `${ro}<span class="hkest">${c.out != null ? L2('Est. clock-out ', 'Sale aprox. ') + `<b>${esc(hkClock(c.out))}</b>` : L2('Add the clock-in to see the clock-out', 'Pon la entrada para ver la salida')}</span>
+    <span class="hkmeta">${c.work} min · ${esc(hkHrs(c.work))} h ${L2('of rooms', 'de habitaciones')} + ${c.brk} min break ${ot}</span>`;
+}
+function hkHeadHtml(edit){
+  const f = (k, label) => edit
+    ? `<label class="hkh"><span>${label}</span><input type="number" inputmode="numeric" min="0" max="999" data-h="${k}" value="${HKF[k] || ''}" placeholder="0"></label>`
+    : `<div class="hkh"><span>${label}</span><b>${HKF[k] || 0}</b></div>`;
+  return `<div class="hkheads">${f('arrivals', L2('Arrivals', 'Llegadas'))}${f('departures', 'Check-outs')}${f('stayovers', 'Stayovers')}${f('dnd', 'DND')}</div><div class="hkleft" id="hkLeft"></div>`;
+}
+function hkLeftHtml(){
+  const t = hkTotals();
+  const toClean = HKF.departures + Math.max(0, HKF.stayovers - HKF.dnd);
+  const coLeft = HKF.departures - t.co, soLeft = Math.max(0, HKF.stayovers - HKF.dnd) - t.so;
+  const pill = (n, label) => `<span class="hkpill ${n === 0 ? 'ok' : n < 0 ? 'over' : ''}">${label} <b>${n}</b></span>`;
+  return `<div class="hkline">${L2('Rooms to clean', 'Habitaciones a limpiar')} <b>${toClean}</b> <span class="hkmuted">(${L2('check-outs + stayovers − DND', 'check-outs + stayovers − DND')})</span></div>
+    <div class="hkline">${L2('Left to assign', 'Falta asignar')} ${pill(coLeft, 'CO')} ${pill(soLeft, 'SO')}${coLeft < 0 || soLeft < 0 ? ` <span class="hkwarn">${L2('more assigned than the day has', 'hay más asignadas que las del día')}</span>` : ''}</div>`;
+}
+function hkTotHtml(){
+  const t = hkTotals();
+  if (!t.n) return `<p class="hint">${L2('Totals show up when attendants have rooms.', 'Los totales salen cuando las camareras tengan habitaciones.')}</p>`;
+  const cell = (k, v) => `<div class="hkt"><span>${k}</span><b>${v}</b></div>`;
+  return `<div class="hktots">${cell(L2('Attendants', 'Camareras'), t.n)}${cell('Check-outs', t.co)}${cell('Stayovers', t.so)}
+    ${cell(L2('Hours of rooms', 'Horas de habitaciones'), esc(hkHrs(t.work)))}${cell(L2('Hours with break', 'Horas con break'), esc(hkHrs(t.work + t.brk)))}
+    ${cell(L2('Avg. min per room', 'Prom. min por hab.'), Math.round(t.work / Math.max(1, t.co + t.so)))}${cell(L2('Last one out', 'Última en salir'), t.last != null ? esc(hkClock(t.last)) : '—')}</div>`;
+}
+function hkRefreshCalc(){
+  HKF.rows.forEach((r, i) => { const o = document.querySelector(`#hkBody [data-out="${i}"]`); if (o) o.innerHTML = hkOutHtml(r); });
+  const l = $('#hkLeft'); if (l) l.innerHTML = hkLeftHtml();
+  const t = $('#hkTot'); if (t) t.innerHTML = hkTotHtml();
+  const s = $('#hkSave'); if (s) { s.disabled = !HKDirty || HKSaving; s.textContent = HKSaving ? L2('Saving…', 'Guardando…') : HKDirty ? L2('Save plan', 'Guardar plan') : L2('Saved', 'Guardado'); }
+}
+function hkRender(){
+  const box = $('#hkBody'); if (!box) return;
+  const today = hkToday();
+  const head = `<div class="enghead"><div class="grow"><h2>HK Game Plan</h2>
+      <div class="sub">${L2('Check-outs 27 min, stayovers 15 min. The clock-out adds the 30-minute break.', 'Check-outs 27 min, stayovers 15 min. La salida suma el break de 30 minutos.')}</div></div></div>
+    <div class="hkdate"><button type="button" class="btn" data-hkday="-1" aria-label="${esc(L2('Previous day', 'Día anterior'))}">‹</button>
+      <label class="hkdl"><input type="date" id="hkDate" value="${HKDate}" min="${hkShift(today, -60)}" max="${hkShift(today, 7)}"><span>${esc(hkDay(HKDate))}${HKDate === today ? ' · ' + L2('today', 'hoy') : ''}</span></label>
+      <button type="button" class="btn" data-hkday="1" aria-label="${esc(L2('Next day', 'Día siguiente'))}" ${HKDate >= hkShift(today, 7) ? 'disabled' : ''}>›</button></div>`;
+  if (!HKD || !HKF) { box.innerHTML = head + `<p class="hint">${L2('Loading…', 'Cargando…')}</p>`; return; }
+  const edit = hkCan() && HKDate >= hkShift(today, -7);
+  const p = HKD.plan;
+  box.innerHTML = head + `
+    <div class="card hkcard"><h3 class="srh">${L2('The day', 'El día')}</h3>${hkHeadHtml(edit)}</div>
+    <div class="card hkcard"><h3 class="srh">${L2('Room attendants', 'Camareras')}</h3>
+      ${!HKF.rows.length ? `<p class="hint">${edit ? L2('Add each room attendant with their check-outs, stayovers and clock-in.', 'Agrega cada camarera con sus check-outs, stayovers y hora de entrada.') : L2('No plan for this day yet.', 'Todavía no hay plan para este día.')}</p>` : ''}
+      <div id="hkRows">${HKF.rows.map((r, i) => hkRowHtml(r, i, edit)).join('')}</div>
+      ${edit ? `<button type="button" class="btn hkadd" id="hkAdd" ${HKF.rows.length >= 30 ? 'disabled' : ''}>+ ${L2('Add room attendant', 'Agregar camarera')}</button>
+      <datalist id="hkNames">${(HKD.attendants || []).map(a => `<option value="${esc(a.name)}"></option>`).join('')}</datalist>` : ''}
+    </div>
+    <div class="card hkcard"><h3 class="srh">${L2('Totals', 'Totales')}</h3><div id="hkTot"></div></div>
+    <p class="hkby">${p && p.updated_by ? esc(L2('Saved by ', 'Guardado por ') + p.updated_by + ', ' + hkWhen(p.updated_at)) : (edit ? L2('Not saved yet for this day.', 'Todavía no está guardado para este día.') : '')}${!hkCan() ? ' ' + L2('Only managers and housekeeping can change it.', 'Solo managers y housekeeping lo pueden cambiar.') : ''}</p>
+    ${edit ? `<div class="hkbar"><button type="button" class="btn pri" id="hkSave"></button></div>` : ''}`;
+  hkRefreshCalc();
+}
+function hkSet(d, keepForm){
+  HKD = d; if (!keepForm) { HKF = hkFormFrom(d); HKDirty = false; }
+  if (S.tab === 'hkplan') hkRender();
+}
+async function hkFetch(quiet){
+  if (!S.token || !S.me || HKBusy) return; HKBusy = true; const want = HKDate;
+  try { const d = await call('sc_hkplan', {p_date: want}); if (want === HKDate && !HKDirty) hkSet(d); else if (want === HKDate) HKD.attendants = d.attendants; }
+  catch (e) { if (!quiet) toast(esc(e.message)); } finally { HKBusy = false; }
+}
+function hkGo(d){
+  const today = hkToday();
+  if (!d || d > hkShift(today, 7) || d < hkShift(today, -60)) return hkRender();
+  const go = () => { HKDate = d; HKD = null; HKF = null; HKDirty = false; hkRender(); hkFetch(); };
+  if (!HKDirty) return go();
+  openModal(`<div data-noi18n><h2>${L2('Leave without saving?', '¿Salir sin guardar?')}</h2><p class="hint">${L2('The changes to this day’s plan will be lost.', 'Se pierden los cambios del plan de este día.')}</p>
+    <div class="btnrow"><button class="btn" type="button" id="hkStay">${L2('Keep editing', 'Seguir editando')}</button><button class="btn" type="button" id="hkDrop">${L2('Discard changes', 'Descartar cambios')}</button></div></div>`);
+  $('#hkStay').onclick = () => { closeModal(); hkRender(); };
+  $('#hkDrop').onclick = () => { closeModal(); go(); };
+}
+async function hkSave(){
+  if (HKSaving) return;
+  const rows = [];
+  for (const r of HKF.rows) {
+    const name = r.name.trim(), c = hkCalc(r);
+    if (!name && !c.rooms) continue;
+    if (!name) { toast(L2('Write the name of each room attendant.', 'Escribe el nombre de cada camarera.')); return; }
+    if (hkInt(r.co) > 40 || hkInt(r.so) > 40) { toast(L2('Up to 40 check-outs and 40 stayovers per person.', 'Máximo 40 check-outs y 40 stayovers por persona.')); return; }
+    const a = (HKD.attendants || []).find(x => x.name.toLowerCase() === name.toLowerCase());
+    rows.push({staff_id: a ? a.id : null, name, co: hkInt(r.co), so: hkInt(r.so), cin: r.cin || ''});
+  }
+  const head = {arrivals: hkInt(HKF.arrivals), departures: hkInt(HKF.departures), stayovers: hkInt(HKF.stayovers), dnd: hkInt(HKF.dnd)};
+  HKSaving = true; hkRefreshCalc();
+  try {
+    const d = await call('sc_hkplan_save', {p_date: HKDate, p_head: head, p_rows: rows, p_seen: HKD.plan ? HKD.plan.updated_at : null});
+    HKSaving = false; hkSet(d); toast(L2('HK Game Plan saved', 'HK Game Plan guardado'), 'new');
+  } catch (e) {
+    HKSaving = false; hkRefreshCalc();
+    if (/CHANGED/.test(e.message)) {
+      openModal(`<div data-noi18n><h2>${L2('Someone else saved this plan', 'Alguien más guardó este plan')}</h2><p class="hint">${L2('Load the newest plan to see their changes, then make yours again.', 'Carga el plan más nuevo para ver sus cambios y luego vuelve a hacer los tuyos.')}</p>
+        <div class="btnrow"><button class="btn pri" type="button" id="hkLoad">${L2('Load the newest', 'Cargar el más nuevo')}</button><button class="btn" type="button" data-close>${L2('Keep editing', 'Seguir editando')}</button></div></div>`);
+      $('#hkLoad').onclick = () => { closeModal(); HKDirty = false; hkFetch(); };
+    } else toast(/HK_ONLY/.test(e.message) ? L2('Only managers and housekeeping can change the plan.', 'Solo managers y housekeeping pueden cambiar el plan.') : esc(e.message));
+  }
+}
+function hkShow(){
+  const k = hkKey();
+  if (k !== HKK || !HKDate) { HKK = k; HKDate = hkToday(); HKD = null; HKF = null; HKDirty = false; }
+  hkRender(); if (!HKDirty) hkFetch();
+}
+const hkDirty = () => { HKDirty = true; hkRefreshCalc(); };
+$('#view-hkplan').addEventListener('input', e => {
+  const t = e.target; if (!HKF) return;
+  if (t.dataset.h) { HKF[t.dataset.h] = hkInt(t.value); return hkDirty(); }
+  const row = t.closest('.hkrow'); if (!row || !t.dataset.f) return;
+  const r = HKF.rows[+row.dataset.i]; if (!r) return;
+  r[t.dataset.f] = t.dataset.f === 'co' || t.dataset.f === 'so' ? hkInt(t.value) : t.value;
+  hkDirty();
+});
+$('#view-hkplan').addEventListener('change', e => {
+  const t = e.target; if (!HKF) return;
+  if (t.id === 'hkDate') return hkGo(t.value);
+  if (t.dataset.f === 'cin') { const row = t.closest('.hkrow'); const r = row && HKF.rows[+row.dataset.i]; if (r && r.cin !== t.value) { r.cin = t.value; hkDirty(); } }
+});
+$('#view-hkplan').addEventListener('click', e => {
+  const dd = e.target.closest('[data-hkday]');
+  if (dd) return hkGo(hkShift(HKDate, +dd.dataset.hkday));
+  if (!HKF) return;
+  if (e.target.closest('#hkAdd')) {
+    if (HKF.rows.length >= 30) return;
+    const last = HKF.rows[HKF.rows.length - 1];
+    HKF.rows.push({staff_id: null, name: '', co: 0, so: 0, cin: (last && last.cin) || '09:00'}); HKDirty = true; hkRender();
+    const ins = document.querySelectorAll('#hkRows [data-f="name"]'); const n = ins[ins.length - 1]; if (n) n.focus();
+    return;
+  }
+  const del = e.target.closest('[data-hkdel]');
+  if (del) { HKF.rows.splice(+del.dataset.hkdel, 1); HKDirty = true; hkRender(); return; }
+  if (e.target.closest('#hkSave')) return hkSave();
+});
+// keeps the plan fresh for whoever is only looking (not while someone is typing)
+setInterval(() => {
+  if (S.tab === 'hkplan' && hkKey() !== HKK && !HKDirty) return hkShow();
+  if (S.tab !== 'hkplan' || HKDirty || !S.token || !S.me || document.visibilityState !== 'visible' || navigator.onLine === false) return;
+  hkFetch(true);
+}, 30000);
+window.addEventListener('beforeunload', e => { if (HKDirty && S.tab === 'hkplan') { e.preventDefault(); e.returnValue = ''; } });
 
 if (S.token && S.me) enterApp(); else showLogin();
 })();
